@@ -479,7 +479,7 @@ class tlRestApi
 
         if (! is_null($tproject)) {
             $items = $this->tprojectMgr->get_all_testplans($tproject['id']);
-            $op['items'] = (! empty($items)) ? $items : null;
+            $op['items'] = (empty($items)) ? null : $items;
         } else {
             $op['message'] = "No Test Project identified by '" . $idCard . "'!";
             $op['status'] = 'error';
@@ -1513,7 +1513,7 @@ class tlRestApi
 
         if (! is_null($tplan)) {
             $items = $this->tplanMgr->get_builds($tplan['id']);
-            $op['items'] = (! empty($items)) ? $items : null;
+            $op['items'] = (empty($items)) ? null : $items;
         } else {
             $op['message'] = "No Test Plan identified by '" . $idCard . "'!";
             $op['status'] = 'error';
@@ -1692,7 +1692,7 @@ class tlRestApi
                     $oio = intval($build['is_open']);
                     $nio = intval($item->is_open);
                     if ($oio != $nio) {
-                        if ($nio) {
+                        if ($nio !== 0) {
                             $this->buildMgr->setOpen($id);
                         } else {
                             $this->buildMgr->setClosed($id);

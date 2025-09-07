@@ -217,7 +217,7 @@ class testsuite extends tlObjectWithAttachments
             }
         }
 
-        if ($ret['status_ok']) {
+        if ($ret['status_ok'] !== 0) {
             // get a new id
             $tsuite_id = $this->tree_manager->new_node($parent_id,
                 $this->my_node_type, $name, $node_order);
@@ -527,8 +527,8 @@ class testsuite extends tlObjectWithAttachments
             $gui->sqlResult = $sqlResult;
             $gui->sqlAction = $action;
         }
-
-        $gui->item_id = $tsuite_id = $id;
+        $gui->item_id = $id;
+        $tsuite_id = $id;
         if (! property_exists($gui, 'tproject_id')) {
             $gui->tproject_id = $this->getTestProjectFromTestSuite($tsuite_id,
                 null);
@@ -564,7 +564,8 @@ class testsuite extends tlObjectWithAttachments
         $gui->attachmentInfos = getAttachmentInfosFrom($this, $id);
         $gui->id = $id;
         $gui->page_title = lang_get('testsuite');
-        $gui->level = $gui->containerType = 'testsuite';
+        $gui->level = 'testsuite';
+        $gui->containerType = 'testsuite';
         $cfg = getWebEditorCfg('design');
         $gui->testDesignEditorType = $cfg['type'];
 
@@ -644,7 +645,7 @@ class testsuite extends tlObjectWithAttachments
         $smarty->assign('containerID', $parent_id);
         $smarty->assign('user_feedback', $internalMsg['user_feedback']);
 
-        if ($useUserInput) {
+        if ($useUserInput !== 0) {
             $webEditorData = $userInput;
         } else {
             $the_data = null;
@@ -1398,7 +1399,7 @@ class testsuite extends tlObjectWithAttachments
     {
         if (! $tproject_id) {
             $the_path = $this->tree_manager->get_path(
-                ! is_null($id) ? $id : $parent_id);
+                is_null($id) ? $parent_id : $id);
             $path_len = count($the_path);
             $tproject_id = ($path_len > 0) ? $the_path[$path_len - 1]['parent_id'] : $parent_id;
         }

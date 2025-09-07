@@ -24,7 +24,8 @@ require_once 'common.php';
 testlinkInitPage($db);
 
 $smarty = new TLSmarty();
-$smarty->tlTemplateCfg = $templateCfg = templateConfiguration();
+$smarty->tlTemplateCfg = templateConfiguration();
+$templateCfg = $smarty->tlTemplateCfg;
 
 $cfg = [
     'testcase' => config_get('testcase_cfg'),
@@ -46,7 +47,8 @@ switch ($args->feature) {
         $gui->id = $args->id;
         $gui->user = $args->user;
         if ($args->feature == 'testproject') {
-            $gui->id = $args->id = $args->tproject_id;
+            $gui->id = $args->tproject_id;
+            $args->id = $args->tproject_id;
             $item_mgr->show($smarty, $gui, $templateCfg->template_dir, $args->id);
         } else {
             $gui->direct_link = $item_mgr->buildDirectWebLink(
@@ -245,8 +247,8 @@ function initArgs(&$dbHandler)
     $args->cts = null;
 
     unset($tprojectMgr);
-    if ($args->codeTrackerEnabled = intval(
-        $args->tcaseTestProject['code_tracker_enabled'])) {
+    if (($args->codeTrackerEnabled = intval(
+        $args->tcaseTestProject['code_tracker_enabled'])) !== 0) {
         $ct_mgr = new tlCodeTracker($dbHandler);
         $args->ctsCfg = $ct_mgr->getLinkedTo($args->tproject_id);
         $args->cts = $ct_mgr->getInterfaceObject($args->tproject_id);

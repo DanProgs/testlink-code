@@ -209,7 +209,7 @@ function saveImportedResultData(&$db, $resultData, $context, $options)
     $tplan_mgr = null;
 
     $tc_qty = count($resultData);
-    if ($tc_qty) {
+    if ($tc_qty !== 0) {
         $tplan_mgr = new testplan($db);
         $tproject_mgr = new testproject($db);
         $build_mgr = new build_mgr($db);
@@ -708,8 +708,8 @@ function initArgs(&$dbHandler)
     $args->platformID = isset($_REQUEST['platformID']) ? intval(
         $_REQUEST['platformID']) : null;
     $args->tplanID = isset($_REQUEST['tplanID']) ? intval($_REQUEST['tplanID']) : null;
-    $args->tplanID = ! is_null($args->tplanID) ? $args->tplanID : intval(
-        $_SESSION['testplanID']);
+    $args->tplanID = is_null($args->tplanID) ? intval(
+        $_SESSION['testplanID']) : $args->tplanID;
 
     $args->tprojectID = isset($_REQUEST['tprojectID']) ? intval(
         $_REQUEST['tprojectID']) : null;

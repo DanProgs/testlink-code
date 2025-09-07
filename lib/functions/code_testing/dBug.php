@@ -220,7 +220,7 @@ class dBug
     public function varIsArray($var)
     {
         $var_ser = serialize($var);
-        array_push($this->arrHistory, $var_ser);
+        $this->arrHistory[] = $var_ser;
 
         $this->makeTableHeader("array", "array");
         if (is_array($var)) {
@@ -252,7 +252,7 @@ class dBug
     public function varIsObject($var)
     {
         $var_ser = serialize($var);
-        array_push($this->arrHistory, $var_ser);
+        $this->arrHistory[] = $var_ser;
         $this->makeTableHeader("object", "object");
 
         if (is_object($var)) {
@@ -335,7 +335,8 @@ class dBug
         echo "<tr><td class=\"dBug_resourceKey\">&nbsp;</td>";
         for ($i = 0; $i < $numfields; $i ++) {
             $field_header = "";
-            for ($j = 0; $j < count($arrFields); $j ++) {
+            $counter = count($arrFields);
+            for ($j = 0; $j < $counter; $j ++) {
                 $db_func = $db . "_field_" . $arrFields[$j];
                 if (function_exists($db_func)) {
                     $fheader = call_user_func($db_func, $var, $i) . " ";
@@ -413,7 +414,7 @@ class dBug
         $this->makeTDHeader("xml", "xmlRoot");
 
         // attempt to open xml file
-        $bFile = (! ($fp = @fopen($var, "r"))) ? false : true;
+        $bFile = ($fp = @fopen($var, "r")) ? true : false;
 
         // read xml file
         if ($bFile) {
@@ -435,7 +436,7 @@ class dBug
     // parse xml
     public function xmlParse($xml_parser, $data, $bFinal)
     {
-        if (! xml_parse($xml_parser, $data, $bFinal)) {
+        if (xml_parse($xml_parser, $data, $bFinal) === 0) {
             die(
                 sprintf("XML error: %s at line %d\n",
                     xml_error_string(xml_get_error_code($xml_parser)),
@@ -468,10 +469,10 @@ class dBug
         for ($i = 0; $i < $this->xmlCount; $i ++) {
             eval($this->xmlSData[$i]);
             $this->makeTDHeader("xml", "xmlText");
-            echo (! empty($this->xmlCData[$i])) ? $this->xmlCData[$i] : "&nbsp;";
+            echo (empty($this->xmlCData[$i])) ? "&nbsp;" : $this->xmlCData[$i];
             echo $this->closeTDRow();
             $this->makeTDHeader("xml", "xmlComment");
-            echo (! empty($this->xmlDData[$i])) ? $this->xmlDData[$i] : "&nbsp;";
+            echo (empty($this->xmlDData[$i])) ? "&nbsp;" : $this->xmlDData[$i];
             echo $this->closeTDRow();
             $this->makeTDHeader("xml", "xmlChildren");
             unset($this->xmlCData[$i], $this->xmlDData[$i]);

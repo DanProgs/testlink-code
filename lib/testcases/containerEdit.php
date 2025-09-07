@@ -464,14 +464,14 @@ function build_del_testsuite_warning_msg(&$tree_mgr, &$tcaseMgr, &$testcases,
             }
             $msg['link_msg'][] = $status;
 
-            if ($status_warning[$status]) {
+            if ($status_warning[$status] !== 0) {
                 $show_warning = 1;
                 $msg['delete_msg'] = $delete_notice[$status];
             }
         }
 
         $idx = 0;
-        if ($show_warning) {
+        if ($show_warning !== 0) {
             $msg['warning'] = [];
             foreach ($verbose as $elem) {
                 $msg['warning'][$idx] = '';
@@ -550,7 +550,7 @@ function initArgs(&$dbHandler, &$tprojectMgr, &$tsuiteMgr, $optionTransferCfg)
             break;
 
         case 'testsuite':
-            $nodeID = ! is_null($args->testsuiteID) ? $args->testsuiteID : $args->containerID;
+            $nodeID = is_null($args->testsuiteID) ? $args->containerID : $args->testsuiteID;
             $args->tprojectID = $tsuiteMgr->getTestProjectFromTestSuite($nodeID,
                 null);
             break;
@@ -846,7 +846,7 @@ function reorderTestSuiteViewer(&$smartyObj, &$treeMgr, $argsObj)
     $object_info = $treeMgr->get_node_hierarchy_info($oid);
     $object_name = $object_info['name'];
 
-    if (! count($children)) {
+    if (count($children) === 0) {
         $children = null;
     }
 
@@ -947,7 +947,8 @@ function copyTestSuite(&$smartyObj, $template_dir, &$tsuiteMgr, $argsObj)
     $guiObj->refreshTree = $op['status_ok'] && $argsObj->refreshTree;
     $guiObj->attachments = getAttachmentInfosFrom($tsuiteMgr, $argsObj->objectID);
     $guiObj->id = $argsObj->objectID;
-    $guiObj->treeFormToken = $guiObj->form_token = $argsObj->treeFormToken;
+    $guiObj->treeFormToken = $argsObj->treeFormToken;
+    $guiObj->form_token = $argsObj->treeFormToken;
 
     $guiObj->direct_link = $tsuiteMgr->buildDirectWebLink($_SESSION['basehref'],
         $guiObj->id, $argsObj->tprojectID);
@@ -1089,7 +1090,8 @@ function moveTestCasesViewer(&$dbHandler, &$smartyObj, &$tprojectMgr, &$treeMgr,
     }
 
     $gui = new stdClass();
-    $gui->treeFormToken = $gui->form_token = $argsObj->treeFormToken;
+    $gui->treeFormToken = $argsObj->treeFormToken;
+    $gui->form_token = $argsObj->treeFormToken;
 
     $dummy = getConfigAndLabels('testCaseStatus', 'code');
     $gui->domainTCStatus = [

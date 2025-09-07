@@ -185,13 +185,15 @@ class bugzillaxmlrpcInterface extends issueTrackerInterface
             $issue = new stdClass();
             $issue->id = $issueID;
             $issue->IDHTMLString = "<b>{$issueID} : </b>";
-            $issue->statusCode = $issue->statusVerbose = $resp['Bug.get']['bugs'][0]['status'];
+            $issue->statusCode = $resp['Bug.get']['bugs'][0]['status'];
+            $issue->statusVerbose = $resp['Bug.get']['bugs'][0]['status'];
             $issue->isResolved = isset(
                 $this->resolvedStatus->byCode[$issue->statusCode]);
 
             $issue->statusHTMLString = $this->buildStatusHTMLString(
                 $issue->statusVerbose);
-            $issue->summary = $issue->summaryHTMLString = $resp['Bug.get']['bugs'][0]['summary'];
+            $issue->summary = $resp['Bug.get']['bugs'][0]['summary'];
+            $issue->summaryHTMLString = $resp['Bug.get']['bugs'][0]['summary'];
         } else {
             tLog(
                 __METHOD__ . ' :: ' .
@@ -210,7 +212,7 @@ class bugzillaxmlrpcInterface extends issueTrackerInterface
     public function getIssueStatusCode($issueID)
     {
         $issue = $this->getIssue($issueID);
-        return ! is_null($issue) ? $issue->statusCode : false;
+        return is_null($issue) ? false : $issue->statusCode;
     }
 
     /**

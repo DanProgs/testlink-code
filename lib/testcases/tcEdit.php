@@ -170,10 +170,10 @@ if ($args->delete_tc_version) {
         ];
     }
 
-    if (intval($status_quo_map[$args->tcversion_id]['executed'])) {
+    if (intval($status_quo_map[$args->tcversion_id]['executed']) !== 0) {
         $msg = lang_get('warning') . TITLE_SEP .
             lang_get('delete_linked_and_exec');
-    } elseif (intval($status_quo_map[$args->tcversion_id]['linked'])) {
+    } elseif (intval($status_quo_map[$args->tcversion_id]['linked']) !== 0) {
         $msg = lang_get('warning') . TITLE_SEP . lang_get('delete_linked');
     }
 
@@ -383,7 +383,7 @@ function initArgs(&$cfgObj, $otName, &$tcaseMgr)
     $args->do_activate_this = isset($_REQUEST['activate_this_tcversion']) ? 1 : 0;
     $args->do_deactivate_this = isset($_REQUEST['deactivate_this_tcversion']) ? 1 : 0;
     $args->activeAttr = 0;
-    if ($args->do_activate_this) {
+    if ($args->do_activate_this !== 0) {
         $args->activeAttr = 1;
     }
 
@@ -406,10 +406,10 @@ function initArgs(&$cfgObj, $otName, &$tcaseMgr)
     $args->step_id = isset($_REQUEST['step_id']) ? intval($_REQUEST['step_id']) : 0;
     $args->step_set = isset($_REQUEST['step_set']) ? $_REQUEST['step_set'] : null;
     $args->tcaseSteps = isset($_REQUEST['tcaseSteps']) ? $_REQUEST['tcaseSteps'] : null;
-
     // from session
-    $args->testproject_id = $args->tproject_id = intval(
+    $args->testproject_id = intval(
         $_SESSION['testprojectID']);
+    $args->tproject_id = $args->testproject_id;
 
     $args->user = $_SESSION['currentUser'];
     $args->user_id = intval($_SESSION['userID']);
@@ -707,8 +707,9 @@ function initializeGui(&$dbHandler, &$argsObj, $cfgObj, &$tcaseMgr, &$tprojMgr)
     ];
     $guiObj->grants = new stdClass();
     foreach ($grant2check as $right) {
-        $guiObj->$right = $guiObj->grants->$right = $argsObj->user->hasRight(
+        $guiObj->$right = $argsObj->user->hasRight(
             $dbHandler, $right, $argsObj->tproject_id);
+        $guiObj->grants->$right = $guiObj->$right;
     }
 
     $guiObj->codeTrackerEnabled = $tprojMgr->isCodeTrackerEnabled(
@@ -930,7 +931,7 @@ function createNewVersion(&$tplEng, &$argsObj, &$guiObj, &$tcaseMgr,
     $identity = new stdClass();
     $identity->id = $argsObj->tcase_id;
     $identity->tproject_id = $argsObj->tproject_id;
-    $identity->version_id = ! is_null($argsObj->show_mode) ? $candidate : testcase::ALL_VERSIONS;
+    $identity->version_id = is_null($argsObj->show_mode) ? testcase::ALL_VERSIONS : $candidate;
 
     $guiObj->viewerArgs['action'] = "do_update";
     $guiObj->viewerArgs['refreshTree'] = DONT_REFRESH;

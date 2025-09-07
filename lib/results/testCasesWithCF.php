@@ -192,8 +192,11 @@ function initializeGui(&$dbHandler, &$argsObj)
 {
     $guiObj = new stdClass();
     $guiObj->pageTitle = lang_get('caption_testCasesWithCF');
-    $guiObj->warning_msg = $guiObj->tcasePrefix = '';
-    $guiObj->path_info = $guiObj->resultSet = $guiObj->tableSet = null;
+    $guiObj->warning_msg = '';
+    $guiObj->tcasePrefix = '';
+    $guiObj->path_info = null;
+    $guiObj->resultSet = null;
+    $guiObj->tableSet = null;
 
     $guiObj->tproject_name = $argsObj->tproject_name;
     $guiObj->tplan_name = $argsObj->tplan_name;
@@ -308,20 +311,23 @@ function getColumnsDefinition($showPlatforms, $customFields, $platforms)
             'filterOptions' => $platforms
         ];
     }
-    array_push($colDef, [
+    $colDef[] = [
         'title_key' => 'build',
         'width' => 35
-    ], [
+    ];
+    $colDef[] = [
         'title_key' => 'th_owner',
         'width' => 60
-    ], [
+    ];
+    $colDef[] = [
         'title_key' => 'date',
         'width' => 60
-    ], [
+    ];
+    $colDef[] = [
         'title_key' => 'status',
         'type' => 'status',
         'width' => 30
-    ]);
+    ];
 
     $colDef[] = [
         'title_key' => 'title_execution_notes',

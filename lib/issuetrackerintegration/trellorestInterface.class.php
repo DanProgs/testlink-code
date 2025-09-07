@@ -208,7 +208,7 @@ class trellorestInterface extends issueTrackerInterface
     public function getIssueStatusCode($issueID)
     {
         $issue = $this->getIssue($issueID);
-        return ! is_null($issue) ? $issue->statusCode : false;
+        return is_null($issue) ? false : $issue->statusCode;
     }
 
     /**
@@ -221,7 +221,7 @@ class trellorestInterface extends issueTrackerInterface
     public function getIssueStatusVerbose($issueID)
     {
         $issue = $this->getIssue($issueID);
-        return ! is_null($issue) ? $issue->statusVerbose : false;
+        return is_null($issue) ? false : $issue->statusVerbose;
     }
 
     /**
@@ -276,8 +276,10 @@ class trellorestInterface extends issueTrackerInterface
                 $issue->statusVerbose = (string) $silo->name;
                 $issue->statusHTMLString = "[{$issue->statusVerbose}]";
 
-                $verbose = (string) $jsonObj->name; // . " {{$jsonObj->dateLastActivity}}";
-                $issue->summary = $issue->summaryHTMLString = $verbose;
+                $verbose = (string) $jsonObj->name;
+                // . " {{$jsonObj->dateLastActivity}}";
+                $issue->summary = $verbose;
+                $issue->summaryHTMLString = $verbose;
 
                 $issue->isResolved = false;
             }

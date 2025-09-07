@@ -832,7 +832,7 @@ class testplan extends tlObjectWithAttachments
             intval($tcversionID) . " AND platform_id = " . intval($platformID);
 
         $linked_items = $this->db->fetchRowsIntoMap($sql, 'id');
-        return ! is_null($linked_items) ? key($linked_items) : - 1;
+        return is_null($linked_items) ? - 1 : key($linked_items);
     }
 
     /**
@@ -2384,7 +2384,7 @@ class testplan extends tlObjectWithAttachments
             // Need to get testplan parent (testproject id) in order to get custom fields
             // 20081122 - franciscom - need to check when we can call this with ID=NULL
             $the_path = $this->tree_manager->get_path(
-                ! is_null($id) ? $id : $parent_id);
+                is_null($id) ? $parent_id : $id);
             $path_len = count($the_path);
         }
         $tproject_id = ($path_len > 0) ? $the_path[$path_len - 1]['parent_id'] : $parent_id;
@@ -2414,7 +2414,7 @@ class testplan extends tlObjectWithAttachments
             // Need to get testplan parent (testproject id) in order to get custom fields
             // 20081122 - franciscom - need to check when we can call this with ID=NULL
             $the_path = $this->tree_manager->get_path(
-                ! is_null($id) ? $id : $parent_id);
+                is_null($id) ? $parent_id : $id);
             $path_len = count($the_path);
         }
         $tproject_id = ($path_len > 0) ? $the_path[$path_len - 1]['parent_id'] : $parent_id;
@@ -3879,7 +3879,7 @@ class testplan extends tlObjectWithAttachments
                         if (! is_null($versionAssignInfo)) {
                             foreach ($versionAssignInfo[$tcversID][$platform_id] as $vaInfo) {
                                 $assignedTesterId = intval($vaInfo['user_id']);
-                                if ($assignedTesterId) {
+                                if ($assignedTesterId !== 0) {
                                     $user = tlUser::getByID($this->db,
                                         $assignedTesterId);
                                     if ($user) {
@@ -3888,7 +3888,7 @@ class testplan extends tlObjectWithAttachments
                                 }
                             }
                         }
-                        (! empty($userList)) ? $tcaseExportOptions['ASSIGNED_USER'] = $userList : $tcaseExportOptions['ASSIGNED_USER'] = null;
+                        (empty($userList)) ? $tcaseExportOptions['ASSIGNED_USER'] = null : $tcaseExportOptions['ASSIGNED_USER'] = $userList;
 
                         $xmlTC .= $tcaseMgr->exportTestCaseDataToXML(
                             $cNode['id'], $cNode['tcversion_id'], $tproject_id,
@@ -8052,7 +8052,7 @@ class build_mgr extends tlObject
         }
 
         if (! is_null($members['is_open'])) {
-            $open_status = intval($members['is_open']) ? 1 : 0;
+            $open_status = intval($members['is_open']) !== 0 ? 1 : 0;
             $sql .= " , is_open=" . $open_status;
 
             if ($open_status == 1) {

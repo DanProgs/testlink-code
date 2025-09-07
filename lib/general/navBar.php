@@ -134,8 +134,9 @@ function initializeGui(&$db, &$args)
         $ckObj->name = $ckCfg->testProjectMemory . intval($_SESSION['userID']);
 
         if (isset($_COOKIE[$ckObj->name])) {
-            $gui->tproject_id = $gui->tprojectID = intval(
+            $gui->tproject_id = intval(
                 $_COOKIE[$ckObj->name]);
+            $gui->tprojectID = $gui->tproject_id;
         }
     }
 
@@ -146,7 +147,8 @@ function initializeGui(&$db, &$args)
             throw new Exception("Can't work without Test Project ID", 1);
         }
         $theOne = current(array_keys($gui->TestProjects));
-        $gui->tproject_id = $gui->tprojectID = $theOne;
+        $gui->tproject_id = $theOne;
+        $gui->tprojectID = $theOne;
     }
 
     $gui->tcasePrefix = '';
@@ -238,7 +240,7 @@ function initializeGui(&$db, &$args)
         'EVENT_TITLE_BAR'
     ] as $menu_item) {
         $menu_content = event_signal($menu_item);
-        $gui->plugins[$menu_item] = ! empty($menu_content) ? $menu_content : null;
+        $gui->plugins[$menu_item] = empty($menu_content) ? null : $menu_content;
     }
 
     $gui->ssodisable = $args->ssodisable;

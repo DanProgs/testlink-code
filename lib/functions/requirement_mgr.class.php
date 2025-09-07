@@ -753,7 +753,7 @@ class requirement_mgr extends tlObjectWithAttachments
             $result = $this->db->exec_query($sql);
         }
 
-        $result = (! $result) ? lang_get('error_deleting_req') : 'ok';
+        $result = ($result) ? 'ok' : lang_get('error_deleting_req');
 
         $ctx = [
             'id' => $id
@@ -888,7 +888,7 @@ class requirement_mgr extends tlObjectWithAttachments
             $ret['failure_reason'] = 'empty_reqdoc_id';
         }
 
-        if ($ret['status_ok']) {
+        if ($ret['status_ok'] !== 0) {
             $ret['msg'] = 'ok';
             $rs = $this->getByDocID($reqdoc_id, $tproject_id);
             if (! is_null($rs) && (is_null($id) || ! isset($rs[$id]))) {
@@ -901,7 +901,7 @@ class requirement_mgr extends tlObjectWithAttachments
 
         // check for duplicate title
         // BUGID 4150
-        if ($ret['status_ok']) {
+        if ($ret['status_ok'] !== 0) {
             $ret['msg'] = 'ok';
             $target = [
                 'key' => 'title',
@@ -1061,7 +1061,7 @@ class requirement_mgr extends tlObjectWithAttachments
 
         foreach ($reqSet as $reqID) {
             $reqData = $this->get_by_id($reqID, requirement_mgr::LATEST_VERSION);
-            $count = (! is_null($tc_count)) ? $tc_count[$reqID] : 1;
+            $count = (is_null($tc_count)) ? 1 : $tc_count[$reqID];
             $reqData = $reqData[0];
 
             // Generate name with progessive
@@ -1748,7 +1748,7 @@ class requirement_mgr extends tlObjectWithAttachments
 
         if ($status_ok && $doProcessCF && isset($req['custom_fields']) &&
             ! is_null($req['custom_fields'])) {
-            $req_version_id = ! is_null($newReq) ? $newReq['version_id'] : $last_version['id'];
+            $req_version_id = is_null($newReq) ? $last_version['id'] : $newReq['version_id'];
             $cf2insert = null;
 
             foreach ($req['custom_fields'] as $cfname => $cfvalue) {
@@ -2554,7 +2554,7 @@ class requirement_mgr extends tlObjectWithAttachments
     $freezeLinkedTCases = $freezeLinkOnNewReqVersion &
       $reqTCLinksCfg->freezeBothEndsOnNewREQVersion;
 
-        if ($freezeLinkedTCases) {
+        if ($freezeLinkedTCases !== 0) {
             $this->closeOpenTCVersionOnOpenLinks($from_version_id);
         }
 
@@ -3746,7 +3746,7 @@ class requirement_mgr extends tlObjectWithAttachments
         // in current project if interproject_linking is not set)
         $reqs = $this->getByDocIDInProject($source_doc_id,
             $rel['source_tproject'], $tproject_id, null, $options);
-        $source = (! is_null($reqs)) ? $reqs[$source_doc_id] : null;
+        $source = (is_null($reqs)) ? null : $reqs[$source_doc_id];
         if (! is_null($source) &&
             ($this->relationsCfg->interProjectLinking ||
             $source['testproject_id'] == $tproject_id)) {
@@ -3756,7 +3756,7 @@ class requirement_mgr extends tlObjectWithAttachments
         $destination_doc_id = $rel['destination_doc_id'];
         $reqs = $this->getByDocIDInProject($destination_doc_id,
             $rel['destination_tproject'], $tproject_id, null, $options);
-        $destination = (! is_null($reqs)) ? $reqs[$destination_doc_id] : null;
+        $destination = (is_null($reqs)) ? null : $reqs[$destination_doc_id];
         if (! is_null($destination) &&
             ($this->relationsCfg->interProjectLinking ||
             $destination['testproject_id'] == $tproject_id)) {

@@ -133,7 +133,8 @@ switch ($args->doAction) {
             $args->userID, $opt);
 
         $gui->pageTitle = lang_get('title_testproject_management');
-        $gui->itemQty = $tprojQty = count($gui->tprojects);
+        $gui->itemQty = count($gui->tprojects);
+        $tprojQty = $gui->itemQty;
 
         if ($gui->itemQty > 0) {
             $gui->pageTitle .= ' ' .
@@ -400,7 +401,7 @@ function doCreate($argsObj, &$tprojectMgr)
         $op->$key = $check_op[$key];
     }
 
-    if ($op->status_ok) {
+    if ($op->status_ok !== 0) {
         try {
             $shazam = false;
             $item = $argsObj;
@@ -458,7 +459,7 @@ function doCreate($argsObj, &$tprojectMgr)
         }
     }
 
-    if ($op->status_ok) {
+    if ($op->status_ok !== 0) {
         $op->reloadType = 'reloadNavBar';
         if ($argsObj->copy_from_tproject_id > 0) {
             $options = [
@@ -506,7 +507,7 @@ function doUpdate($argsObj, &$tprojectMgr, $sessionTprojectID)
         $op->$key = $check_op[$key];
     }
 
-    if ($op->status_ok) {
+    if ($op->status_ok !== 0) {
         $options = prepareOptions($argsObj);
         if ($tprojectMgr->update($argsObj->tprojectID,
             trim($argsObj->tprojectName), $argsObj->color, $argsObj->notes,
@@ -575,7 +576,7 @@ function doUpdate($argsObj, &$tprojectMgr, $sessionTprojectID)
             $op->status_ok = 0;
         }
     }
-    if ($op->status_ok) {
+    if ($op->status_ok !== 0) {
         if ($sessionTprojectID == $argsObj->tprojectID) {
             $op->reloadType = 'reloadNavBar';
         }
@@ -697,7 +698,8 @@ function create(&$argsObj, &$tprojectMgr)
 
     $gui->active = $argsObj->active;
     $gui->is_public = $argsObj->is_public;
-    $gui->projectOptions = $argsObj->projectOptions = prepareOptions($argsObj);
+    $gui->projectOptions = prepareOptions($argsObj);
+    $argsObj->projectOptions = $gui->projectOptions;
     $gui->doActionValue = 'doCreate';
     $gui->buttonValue = lang_get('btn_create');
     $gui->caption = lang_get('caption_new_tproject');

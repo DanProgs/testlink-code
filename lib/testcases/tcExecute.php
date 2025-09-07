@@ -111,7 +111,7 @@ function remoteExecTestcaseSet(&$db, $parent_id, $msg)
                 $tree_manager, $cfield_manager);
         }
     }
-    if ($executionResults) {
+    if ($executionResults !== []) {
         foreach ($executionResults as $key => $value) {
             $node_info = $tree_manager->get_node_hierarchy_info($key);
 

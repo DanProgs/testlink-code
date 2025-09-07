@@ -52,8 +52,8 @@ foreach ($testPlanSet as $rx) {
 }
 $gui->execSet = $tcaseMgr->getExecutionSet($args->tcase_id, null, $filters);
 
-$gui->warning_msg = (! is_null($gui->execSet)) ? '' : lang_get(
-    'tcase_never_executed');
+$gui->warning_msg = (is_null($gui->execSet)) ? lang_get(
+    'tcase_never_executed') : '';
 $gui->user_is_admin = ($args->user->globalRole->name == 'admin') ? true : false;
 
 $gui->execPlatformSet = null;
@@ -75,7 +75,7 @@ if (! is_null($gui->execSet)) {
     $gui->attachments = getAttachments($db, $gui->execSet);
 }
 
-$gui->displayPlatformCol = ! is_null($gui->execPlatformSet) ? 1 : 0;
+$gui->displayPlatformCol = is_null($gui->execPlatformSet) ? 0 : 1;
 $gui->main_descr = lang_get('execution_history');
 $gui->detailed_descr = lang_get('test_case') . ' ' . $idCard;
 $gui->tcase_id = intval($args->tcase_id);
@@ -162,7 +162,7 @@ function getCustomFields(&$tcaseMgr, &$execSet)
             $tplan_id = $execSet[$tcvid][$idx]['testplan_id'];
             $dummy = (array) $tcaseMgr->html_table_of_custom_field_values(
                 $tcvid, 'execution', null, $exec_id, $tplan_id);
-            $cf[$exec_id] = (! empty($dummy)) ? $dummy : '';
+            $cf[$exec_id] = (empty($dummy)) ? '' : $dummy;
         }
     }
     return $cf;

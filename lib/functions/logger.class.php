@@ -176,7 +176,7 @@ class tlLogger extends tlObject
             foreach ($this->loggers as $type => $loggerObj) {
                 $human = null;
                 foreach (self::$logLevels as $code => $verbose) {
-          if($loggerObj->logLevelFilter & $code)
+          if(($loggerObj->logLevelFilter & $code) !== 0)
           {
                         $human[$code] = $verbose;
                     }
@@ -436,7 +436,7 @@ class tlTransaction extends tlDBObject
         $this->startTime = null;
         $this->userID = null;
         $this->sessionID = null;
-        if (! ($options & self::TLOBJ_O_SEARCH_BY_ID)) {
+        if (($options & self::TLOBJ_O_SEARCH_BY_ID) === 0) {
             $this->dbID = null;
         }
     }
@@ -479,7 +479,7 @@ class tlTransaction extends tlDBObject
             " FROM {$this->tables['transactions']} ";
         $clauses = null;
 
-        if ($options & self::TLOBJ_O_SEARCH_BY_ID) {
+        if (($options & self::TLOBJ_O_SEARCH_BY_ID) !== 0) {
             $clauses[] = "id = " . intval($this->dbID);
         }
 
@@ -776,7 +776,7 @@ class tlEvent extends tlDBObject
         $this->objectID = null;
         $this->objectType = null;
         $this->transaction = null;
-        if (! ($options & self::TLOBJ_O_SEARCH_BY_ID)) {
+        if (($options & self::TLOBJ_O_SEARCH_BY_ID) === 0) {
             $this->dbID = null;
         }
     }
@@ -805,7 +805,7 @@ class tlEvent extends tlDBObject
             " FROM {$this->tables['events']} ";
         $clauses = null;
 
-        if ($options & self::TLOBJ_O_SEARCH_BY_ID) {
+        if (($options & self::TLOBJ_O_SEARCH_BY_ID) !== 0) {
             $clauses[] = "id = {$this->dbID}";
         }
 
@@ -854,8 +854,8 @@ class tlEvent extends tlDBObject
             $description = $db->prepare_string($dummy);
 
             $local = new stdClass();
-            $local->objectID = ! is_null($this->objectID) ? $db->prepare_int(
-                $this->objectID) : 0;
+            $local->objectID = is_null($this->objectID) ? 0 : $db->prepare_int(
+                    $this->objectID);
 
             $str2loop = [
                 'source',
@@ -863,8 +863,8 @@ class tlEvent extends tlDBObject
                 'activityCode'
             ];
             foreach ($str2loop as $tg) {
-                $local->$tg = ! is_null($this->$tg) ? ("'" .
-                    $db->prepare_string($this->$tg) . "'") : 'NULL';
+                $local->$tg = is_null($this->$tg) ? ('NULL') : "'" .
+                        $db->prepare_string($this->$tg) . "'";
             }
 
             $query = "/* {$debugMsg} */ " .
@@ -982,7 +982,7 @@ class tlDBLogger extends tlObjectWithDB
             return tl::OK;
         }
 
-    if (!($e->logLevel & $this->logLevelFilter))
+    if (($e->logLevel & $this->logLevelFilter) === 0)
     {
             return tl::OK;
         }
@@ -1096,14 +1096,14 @@ class tlFileLogger extends tlObject
         ];
 
         $bFinished = $t->endTime ? 1 : 0;
-        $formatString = $bFinished ? self::$closedTransactionFormatString : self::$openTransactionFormatString;
+        $formatString = $bFinished !== 0 ? self::$closedTransactionFormatString : self::$openTransactionFormatString;
         $replacements = [
-            $bFinished ? "<<" : ">>",
+            $bFinished !== 0 ? "<<" : ">>",
             $t->getObjectID(),
             $t->name,
             $t->entryPoint,
             gmdate(self::$gmdateMask, $t->startTime),
-            $bFinished ? gmdate(self::$gmdateMask, $t->endTime) : null,
+            $bFinished !== 0 ? gmdate(self::$gmdateMask, $t->endTime) : null,
             $t->duration
         ];
         $line = str_replace($subjects, $replacements, $formatString);
@@ -1114,7 +1114,7 @@ class tlFileLogger extends tlObject
      */
     public function writeEvent(&$e)
     {
-    if (!($e->logLevel & $this->logLevelFilter))
+    if (($e->logLevel & $this->logLevelFilter) === 0)
     {
             return;
         }
@@ -1286,7 +1286,7 @@ class tlMailLogger extends tlObjectWithDB
             return tl::OK;
         }
 
-    if (!($event->logLevel & $this->logLevelFilter))
+    if (($event->logLevel & $this->logLevelFilter) === 0)
     {
             return tl::OK;
         }

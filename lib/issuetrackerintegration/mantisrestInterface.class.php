@@ -219,7 +219,8 @@ class mantisrestInterface extends issueTrackerInterface
                 $issue->statusCode = intval($item->status->id);
                 $issue->statusVerbose = (string) $item->status->label;
                 $issue->statusHTMLString = "[{$issue->statusVerbose}]";
-                $issue->summary = $issue->summaryHTMLString = (string) $item->summary;
+                $issue->summary = (string) $item->summary;
+                $issue->summaryHTMLString = (string) $item->summary;
 
                 // Actors - Begin
                 $issue->reportedBy = (string) $item->reporter->real_name;
@@ -269,7 +270,7 @@ class mantisrestInterface extends issueTrackerInterface
     public function getIssueStatusCode($issueID)
     {
         $issue = $this->getIssue($issueID);
-        return ! is_null($issue) ? $issue->state : false;
+        return is_null($issue) ? false : $issue->state;
     }
 
     /**

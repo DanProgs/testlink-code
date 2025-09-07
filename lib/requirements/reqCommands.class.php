@@ -565,7 +565,7 @@ class reqCommands
         $my['options']['order_cfg']['type'] = $my['options']['output'] = 'rspec';
         $subtree = $this->reqMgr->tree_mgr->get_subtree($argsObj->tproject_id,
             $my['filters'], $my['options']);
-        if (count($subtree)) {
+        if (count($subtree) > 0) {
             $obj->containers = $this->reqMgr->tree_mgr->createHierarchyMap(
                 $subtree, 'dotted',
                 [
@@ -1059,7 +1059,8 @@ class reqCommands
         $guiObj->main_descr = '';
         $guiObj->action_descr = '';
         $guiObj->req_id = $argsObj->req_id;
-        $guiObj->suggest_revision = $guiObj->prompt_for_log = false;
+        $guiObj->suggest_revision = false;
+        $guiObj->prompt_for_log = false;
         $guiObj->template = "reqView.php?refreshTree=0&requirement_id={$argsObj->req_id}";
         $guiObj->uploadOp = $argsObj->uploadOp;
 

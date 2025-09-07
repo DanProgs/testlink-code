@@ -146,8 +146,8 @@ $gui->tableSet = [
 ];
 
 // show warning message instead of table if table is empty
-$gui->warning_message = ! empty($rows > 0) ? '' : lang_get(
-    'no_testers_per_build');
+$gui->warning_message = empty($rows > 0) ? lang_get(
+    'no_testers_per_build') : '';
 
 $smarty = new TLSmarty();
 $smarty->assign('gui', $gui);
@@ -367,7 +367,8 @@ function checkRights(&$db, &$user, $context = null)
 {
     if (is_null($context)) {
         $context = new stdClass();
-        $context->tproject_id = $context->tplan_id = null;
+        $context->tproject_id = null;
+        $context->tplan_id = null;
         $context->getAccessAttr = false;
     }
 

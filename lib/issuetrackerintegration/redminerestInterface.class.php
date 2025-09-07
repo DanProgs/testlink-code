@@ -216,7 +216,8 @@ class redminerestInterface extends issueTrackerInterface
                 $issue->statusCode = (string) $xmlObj->status['id'];
                 $issue->statusVerbose = (string) $xmlObj->status['name'];
                 $issue->statusHTMLString = "[$issue->statusVerbose] ";
-                $issue->summary = $issue->summaryHTMLString = (string) $xmlObj->subject;
+                $issue->summary = (string) $xmlObj->subject;
+                $issue->summaryHTMLString = (string) $xmlObj->subject;
                 $issue->redmineProject = [
                     'name' => (string) $xmlObj->project['name'],
                     'id' => (int) $xmlObj->project['id']
@@ -242,7 +243,7 @@ class redminerestInterface extends issueTrackerInterface
     public function getIssueStatusCode($issueID)
     {
         $issue = $this->getIssue($issueID);
-        return ! is_null($issue) ? $issue->statusCode : false;
+        return is_null($issue) ? false : $issue->statusCode;
     }
 
     /**
@@ -386,7 +387,7 @@ class redminerestInterface extends issueTrackerInterface
                 // Management of Dynamic Values From XML Configuration
                 $safeVal = [];
                 foreach ($opt->tagValue->value as $val) {
-                    array_push($safeVal, htmlentities($val, ENT_XML1));
+                    $safeVal[] = htmlentities($val, ENT_XML1);
                 }
                 $cf = str_replace($opt->tagValue->tag, $safeVal, $cf);
 

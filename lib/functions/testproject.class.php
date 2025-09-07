@@ -977,7 +977,7 @@ class testproject extends tlObjectWithAttachments
                 'exclude_testcases' => self::EXCLUDE_TESTCASES
             ]);
 
-        if (count($test_spec)) {
+        if (count($test_spec) > 0) {
             $ret = $this->_createHierarchyMap($test_spec, $mode);
         }
         return $ret;
@@ -1408,7 +1408,8 @@ class testproject extends tlObjectWithAttachments
             $xmlCode .= TL_XMLEXPORT_HEADER . "\n";
         }
         $xmlCode .= "<keywords>";
-        for ($idx = 0; $idx < count($kwIDs); $idx ++) {
+        $counter = count($kwIDs);
+        for ($idx = 0; $idx < $counter; $idx ++) {
             $keyword = new tlKeyword($kwIDs[$idx]);
             $keyword->readFromDb($this->db);
             $keyword->writeToXML($xmlCode, true);
@@ -1427,7 +1428,8 @@ class testproject extends tlObjectWithAttachments
     {
         $kwIDs = $this->getKeywordIDsFor($testproject_id);
         $csv = null;
-        for ($idx = 0; $idx < count($kwIDs); $idx ++) {
+        $counter = count($kwIDs);
+        for ($idx = 0; $idx < $counter; $idx ++) {
             $keyword = new tlKeyword($kwIDs[$idx]);
             $keyword->readFromDb($this->db);
             $keyword->writeToCSV($csv, $delim);
@@ -1626,7 +1628,7 @@ class testproject extends tlObjectWithAttachments
         ];
         $subtree = $this->tree_manager->get_subtree($id, $my['filters'],
             $my['options']);
-        if (count($subtree)) {
+        if (count($subtree) > 0) {
             $ret = $this->_createHierarchyMap($subtree, $mode, $dot, 'doc_id');
         }
         return $ret;
@@ -1889,7 +1891,7 @@ class testproject extends tlObjectWithAttachments
             $ret['msg'] = lang_get("warning_empty_req_title");
         }
 
-        if ($ret['status_ok']) {
+        if ($ret['status_ok'] !== 0) {
             $ret['msg'] = 'ok';
             $rs = $this->get_srs_by_title($testproject_id, $title, $ignore_case);
 
@@ -3331,8 +3333,8 @@ class testproject extends tlObjectWithAttachments
 
             $highlander = $this->db->fetchRowsIntoMap($ssx, 'tc_id');
             if ($filterOnTC) {
-                $ky = ! is_null($highlander) ? array_diff_key($tclist,
-                    $highlander) : $tclist;
+                $ky = is_null($highlander) ? $tclist : array_diff_key($tclist,
+                        $highlander);
                 if (! empty($ky)) {
                     foreach ($ky as $tcase) {
                         unset($rs[$tcase]);
@@ -3477,8 +3479,8 @@ class testproject extends tlObjectWithAttachments
             }
         }
 
-        $hits = ! is_null($sql) ? $this->db->fetchRowsIntoMap($sql,
-            'testcase_id') : null;
+        $hits = is_null($sql) ? null : $this->db->fetchRowsIntoMap($sql,
+                'testcase_id');
 
         // clean up
         if ($delTT) {
@@ -4213,8 +4215,8 @@ class testproject extends tlObjectWithAttachments
             }
         }
 
-        $hits = ! is_null($sql) ? $this->db->fetchRowsIntoMap($sql,
-            'testcase_id') : null;
+        $hits = is_null($sql) ? null : $this->db->fetchRowsIntoMap($sql,
+                'testcase_id');
 
         // clean up
         if ($delTT) {

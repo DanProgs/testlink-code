@@ -309,7 +309,7 @@ class requirement_spec_mgr extends tlObjectWithAttachments
             $getOptions, $getFilters);
 
         // get coverage
-        if (count($validReq)) {
+        if (count($validReq) > 0) {
             foreach ($validReq as $req) {
                 // collect TC for REQ
                 $arrCoverage = $this->req_mgr->get_coverage($req['id']);
@@ -472,7 +472,7 @@ class requirement_spec_mgr extends tlObjectWithAttachments
                 $result['status_ok'] = 0;
             }
 
-            if ($result['status_ok']) {
+            if ($result['status_ok'] !== 0) {
                 // need to update node on tree
                 $sql = " UPDATE {$this->tables['nodes_hierarchy']} " .
                     " SET name='" . $this->db->prepare_string($title) . "'";
@@ -678,7 +678,7 @@ class requirement_spec_mgr extends tlObjectWithAttachments
                     break;
 
                 case 'count':
-                    return ! is_null($rs) ? count($rs) : 0;
+                    return is_null($rs) ? 0 : count($rs);
                     break;
             }
         }
@@ -745,7 +745,7 @@ class requirement_spec_mgr extends tlObjectWithAttachments
                             break;
 
                         case 'count':
-                            $rs = ! is_null($rs) ? count($rs) : 0;
+                            $rs = is_null($rs) ? 0 : count($rs);
                             break;
                     }
                 }
@@ -765,7 +765,7 @@ class requirement_spec_mgr extends tlObjectWithAttachments
     {
         $children = $this->get_requirement_child_by_id_req($id);
         foreach ($children as $child) {
-            array_push($this->requirement_child_ids, $child);
+            $this->requirement_child_ids[] = $child;
             $this->get_requirement_child_by_id($child["destination_id"]);
         }
         return $this->requirement_child_ids;
@@ -878,7 +878,7 @@ class requirement_spec_mgr extends tlObjectWithAttachments
             $ret['msg'] = lang_get("warning_empty_req_title");
         }
 
-        if ($ret['status_ok']) {
+        if ($ret['status_ok'] !== 0) {
             $ret['msg'] = 'ok';
             $rs = $this->get_by_title($title, $tproject_id, $parent_id,
                 $case_analysis);
@@ -946,7 +946,7 @@ class requirement_spec_mgr extends tlObjectWithAttachments
             $ret['msg'] = lang_get("warning_empty_doc_id");
         }
 
-        if ($ret['status_ok']) {
+        if ($ret['status_ok'] !== 0) {
             $ret['msg'] = 'ok';
             $rs = $this->getByDocID($doc_id, $tproject_id);
             if (! is_null($rs) && (is_null($id) || ! isset($rs[$id]))) {
@@ -2433,7 +2433,7 @@ class requirement_spec_mgr extends tlObjectWithAttachments
         if (! is_null($ret) && $my['options']['decode_user']) {
             $this->decode_users($ret);
         }
-        return ! is_null($ret) ? $ret[0] : null;
+        return is_null($ret) ? null : $ret[0];
     }
 
     /**

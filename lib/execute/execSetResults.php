@@ -70,7 +70,7 @@ $_SESSION['history_on'] = $gui->history_on;
 $attachmentInfos = null;
 
 $do_show_instructions = ($args->level == "" || $args->level == 'testproject') ? 1 : 0;
-if ($do_show_instructions) {
+if ($do_show_instructions !== 0) {
     show_instructions('executeTest');
     exit();
 }
@@ -628,7 +628,7 @@ function initArgs(&$dbHandler, $cfgObj)
     $args->doMoveNext = isset($_REQUEST['move2next']) ? 1 : 0;
 
     $args->doMovePrevious = isset($_REQUEST['move2previous']) ? $_REQUEST['move2previous'] : 0;
-    $args->moveTowards = $args->doMoveNext ? 'forward' : ($args->doMovePrevious ? 'backward' : null);
+    $args->moveTowards = $args->doMoveNext !== 0 ? 'forward' : ($args->doMovePrevious ? 'backward' : null);
 
     // can be a list, will arrive via form POST
     $args->tc_versions = isset($_REQUEST['tc_version']) ? $_REQUEST['tc_version'] : null;
@@ -762,7 +762,7 @@ function initArgs(&$dbHandler, $cfgObj)
     $args->ctsCfg = null;
     $cts = null;
 
-    if ($args->codeTrackerEnabled = intval($info['code_tracker_enabled'])) {
+    if (($args->codeTrackerEnabled = intval($info['code_tracker_enabled'])) !== 0) {
         $ct_mgr = new tlCodeTracker($dbHandler);
         $args->ctsCfg = $ct_mgr->getLinkedTo($args->tproject_id);
         $cts = $ct_mgr->getInterfaceObject($args->tproject_id);
@@ -1240,7 +1240,7 @@ function setTesterAssignment(&$db, $exec_info, &$tcaseMgr, $tplan_id,
         if (! is_null($p3)) {
             foreach ($p3[$version_id][$platform_id] as $uu) {
                 $assignedTesterId = intval($uu['user_id']);
-                if ($assignedTesterId) {
+                if ($assignedTesterId !== 0) {
                     $user = tlUser::getByID($db, $assignedTesterId);
                     if ($user) {
                         $exec_info[$version_id]['assigned_user'][] = $user->getDisplayName();
@@ -1507,8 +1507,8 @@ function initializeGui(&$dbHandler, &$argsObj, &$cfgObj, &$tplanMgr, &$tcaseMgr,
     $gui->issueSummaryForStep = null;
     $gui->addIssueOp = null;
     $gui->allowStepAttachments = true;
-
-    $gui->remoteExecFeedback = $gui->user_feedback = '';
+    $gui->remoteExecFeedback = '';
+    $gui->user_feedback = '';
     $gui->tplan_id = $argsObj->tplan_id;
     $gui->tproject_id = $argsObj->tproject_id;
     $gui->build_id = $argsObj->build_id;
@@ -1624,7 +1624,7 @@ function initializeGui(&$dbHandler, &$argsObj, &$cfgObj, &$tplanMgr, &$tcaseMgr,
     $gui->history_status_btn_name = $gui->history_on ? 'btn_history_off' : 'btn_history_on';
 
     $dummy = $platformMgr->getLinkedToTestplan($argsObj->tplan_id);
-    $gui->has_platforms = ! is_null($dummy) ? 1 : 0;
+    $gui->has_platforms = is_null($dummy) ? 0 : 1;
 
     $gui->platform_info['id'] = 0;
     $gui->platform_info['name'] = '';
@@ -1903,7 +1903,7 @@ function getBackupSteps(&$tcaseMgr, $guiObj, $testPlanId, $platformId, $buildId)
     $stepsIds = [];
     foreach ($guiObj->map_last_exec as $tcId => $elements) {
         foreach ($guiObj->map_last_exec[$tcId]['steps'] as $step) {
-            array_push($stepsIds, $step["id"]);
+            $stepsIds[] = $step["id"];
         }
     }
 
@@ -2262,8 +2262,8 @@ function getLinkedItems($argsObj, $historyOn, $cfgObj, $tcaseMgr, $tplanMgr,
             //
             // $tex = $tcaseMgr->db->$kmethod($sql2run,'tcase_id',database::CUMULATIVE);
             $sql2run .= ' ORDER BY exec_order ';
-
-            $ltcv = $tex = $tcaseMgr->db->$kmethod($sql2run, 'tcase_id');
+            $ltcv = $tcaseMgr->db->$kmethod($sql2run, 'tcase_id');
+            $tex = $ltcv;
             if (! is_null($tex)) {
                 // We need to create:
                 // one set for Custom fields that apply to DESIGN
@@ -2566,7 +2566,8 @@ function initExecValuesMenus($tcStatusCfg, $execStatusToExclude)
     $remove = [
         $tcStatusCfg['not_run']
     ];
-    $execStatusTestCase = $execStatusTestCaseStep = createResultsMenu($remove);
+    $execStatusTestCase = createResultsMenu($remove);
+    $execStatusTestCaseStep = $execStatusTestCase;
 
     foreach ($execStatusToExclude['testcase'] as $code) {
         if (isset($execStatusTestCase[$code])) {

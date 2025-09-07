@@ -172,7 +172,7 @@ function gen_spec_view(&$db, $specViewType, $tobj_id, $id, $name, &$linked_items
         $tproject_id = $tobj_id;
     }
 
-    $testplan_id = $is_tplan_view_type ? $tobj_id : null;
+    $testplan_id = $is_tplan_view_type !== 0 ? $tobj_id : null;
 
     $tcaseMgr = new testcase($db);
     $hash_descr_id = $tcaseMgr->tree_manager->get_available_node_types();
@@ -358,7 +358,7 @@ function gen_coverage_view(&$db, $specViewType, $tobj_id, $id, $name,
         $tproject_id = $tobj_id;
     }
 
-    $testplan_id = $is_tplan_view_type ? $tobj_id : null;
+    $testplan_id = $is_tplan_view_type !== 0 ? $tobj_id : null;
 
     $tcaseMgr = new testcase($db);
     $hash_descr_id = $tcaseMgr->tree_manager->get_available_node_types();
@@ -659,8 +659,8 @@ function getFilteredSpecView(&$dbHandler, &$argsObj, &$tplanMgr, &$tcaseMgr,
     // when $testCaseSet is null because we have
     // applied filters => we do not need to call other
     // method because we know we are going to get NOTHING
-    $testCaseSet = ! is_null($testCaseSet) ? array_combine($testCaseSet,
-        $testCaseSet) : null;
+    $testCaseSet = is_null($testCaseSet) ? null : array_combine($testCaseSet,
+            $testCaseSet);
     if ($filterApplied && is_null($testCaseSet)) {
         return null;
     }
@@ -955,8 +955,8 @@ function getTestSpecFromNode(&$dbHandler, &$tcaseMgr, &$linkedItems,
                         // because we have applied it before on:
                         // $tcversionSet = $tcaseMgr->get_last_active_version()
                         if ($useFilter['cfields']) {
-                            $filteredSet = (! empty($allowedSet)) ? array_keys(
-                                $allowedSet) : $tcvidSet;
+                            $filteredSet = (empty($allowedSet)) ? $tcvidSet : array_keys(
+                                    $allowedSet);
                             $dummySet = $tcaseMgr->filter_tcversions_by_cfields(
                                 $filteredSet, $filters['cfields'], $options);
 
@@ -1517,8 +1517,8 @@ function getFilteredSpecViewFlat(&$dbHandler, &$argsObj, &$tplanMgr, &$tcaseMgr,
     // when $testCaseSet is null because we have applied filters
     // => we do not need to call other
     // method because we know we are going to get NOTHING
-    $testCaseSet = ! is_null($testCaseSet) ? array_combine($testCaseSet,
-        $testCaseSet) : null;
+    $testCaseSet = is_null($testCaseSet) ? null : array_combine($testCaseSet,
+            $testCaseSet);
     if ($filterApplied && is_null($testCaseSet)) {
         return null;
     }
@@ -1584,7 +1584,7 @@ function genSpecViewFlat(&$db, $specViewType, $tobj_id, $id, $name,
         $tproject_id = $tobj_id;
     }
 
-    $testplan_id = $is_tplan_view_type ? $tobj_id : null;
+    $testplan_id = $is_tplan_view_type !== 0 ? $tobj_id : null;
 
     $tcaseMgr = new testcase($db);
     $hash_descr_id = $tcaseMgr->tree_manager->get_available_node_types();

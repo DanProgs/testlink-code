@@ -67,7 +67,7 @@ if ($args->useRecursion) {
 }
 $gui->export_filename = is_null($args->export_filename) ? $gui->export_filename : $args->export_filename;
 
-if ($check_children) {
+if ($check_children !== 0) {
     // Check if there is something to export
     $children = $tree_mgr->get_children($node_id,
         [
@@ -235,7 +235,7 @@ function initializeGui($argsObj)
     $guiObj->exportTypes = $argsObj->exportTypes;
     $guiObj->tproject_id = $argsObj->tproject_id;
 
-    $guiObj->goback_url = ! is_null($argsObj->goback_url) ? $argsObj->goback_url : '';
+    $guiObj->goback_url = is_null($argsObj->goback_url) ? '' : $argsObj->goback_url;
     $guiObj->oneTestCaseExport = ($argsObj->tcase_id && $argsObj->tcversion_id);
 
     $guiObj->cancelActionJS = 'location.href=fRoot+' . "'" .
