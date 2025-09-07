@@ -489,7 +489,7 @@ class tlAttachmentRepository extends tlObjectWithDB
      */
     public function createAttachmentTempFile($base64encodedContent)
     {
-        $resultInfo = array();
+        $resultInfo = [];
         $filename = tempnam(sys_get_temp_dir(), 'tl-');
 
         $resultInfo["tmp_name"] = $filename;

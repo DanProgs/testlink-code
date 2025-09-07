@@ -86,57 +86,57 @@ $smarty->display($tpl);
  */
 function initArgs()
 {
-    $iParams = array(
-        "id" => array(
+    $iParams = [
+        "id" => [
             tlInputParameter::INT_N
-        ),
-        "req_id" => array(
+        ],
+        "req_id" => [
             tlInputParameter::ARRAY_INT
-        ),
-        "link_id" => array(
+        ],
+        "link_id" => [
             tlInputParameter::ARRAY_INT
-        ),
+        ],
 
-        "req" => array(
+        "req" => [
             tlInputParameter::INT_N
-        ),
-        "showCloseButton" => array(
+        ],
+        "showCloseButton" => [
             tlInputParameter::STRING_N,
             0,
             1
-        ),
-        "doAction" => array(
+        ],
+        "doAction" => [
             tlInputParameter::STRING_N,
             0,
             100
-        ),
-        "edit" => array(
+        ],
+        "edit" => [
             tlInputParameter::STRING_N,
             0,
             100
-        ),
-        "unassign" => array(
+        ],
+        "unassign" => [
             tlInputParameter::STRING_N,
             0,
             1
-        ),
-        "assign" => array(
+        ],
+        "assign" => [
             tlInputParameter::STRING_N,
             0,
             1
-        ),
-        "form_token" => array(
+        ],
+        "form_token" => [
             tlInputParameter::INT_N
-        ),
-        "callback" => array(
+        ],
+        "callback" => [
             tlInputParameter::STRING_N,
             0,
             1
-        ),
-        "idSRS" => array(
+        ],
+        "idSRS" => [
             tlInputParameter::INT_N
-        )
-    );
+        ]
+    ];
 
     $args = new stdClass();
     R_PARAMS($iParams, $args);
@@ -209,9 +209,9 @@ function processTestSuite(&$dbHandler, &$argsObj, &$guiObj)
 
         $req_spec_mgr = new requirement_spec_mgr($dbHandler);
 
-        $getOpt = array(
+        $getOpt = [
             'output' => 'array'
-        );
+        ];
         $guiObj->requirements = $req_spec_mgr->getAllLatestRQVOnReqSpec(
             $guiObj->selectedReqSpec, $getOpt);
 
@@ -241,7 +241,7 @@ function doBulkAssignment(&$dbHandler, &$argsObj, $targetTestCaseSet = null)
     $req_mgr = new requirement_mgr($dbHandler);
     $assignmentCounter = 0;
     $requirements = array_keys($argsObj->reqIdSet);
-    if (! is_null($requirements) && count($requirements) > 0) {
+    if (! is_null($requirements) && $requirements !== []) {
         $tcase_set = $targetTestCaseSet;
         if (is_null($tcase_set)) {
             $tsuite_mgr = new testsuite($dbHandler);
@@ -381,12 +381,12 @@ function processTestCase(&$dbHandler, &$argsObj, &$guiObj)
 
             if ($argsObj->idReqSpec) {
                 $req_spec_mgr = new requirement_spec_mgr($dbHandler);
-                $fx = array(
-                    'link_status' => array(
+                $fx = [
+                    'link_status' => [
                         LINK_TC_REQ_OPEN,
                         LINK_TC_REQ_CLOSED_BY_EXEC
-                    )
-                );
+                    ]
+                ];
                 $theAssigned = $req_spec_mgr->getReqsOnSpecForLatestTCV(
                     $argsObj->idReqSpec, $argsObj->id, null, $fx);
 

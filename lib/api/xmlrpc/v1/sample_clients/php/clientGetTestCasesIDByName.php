@@ -19,7 +19,7 @@ $method = 'getTestCaseIDByName';
 $test_num = 1;
 $unitTestDescription = "Test {$test_num} - {$method}";
 
-$args = array();
+$args = [];
 $args["devKey"] = DEV_KEY;
 $args["testcasename"] = '100% moisture conditions';
 
@@ -38,7 +38,7 @@ runTest($client, $method, $args);
 $test_num ++;
 $unitTestDescription = "Test {$test_num} - {$method}";
 
-$args = array();
+$args = [];
 $args["devKey"] = DEV_KEY;
 $args["testcasename"] = 'Full speed unload';
 $args["testcasepathname"] = 'ZATHURA::Holodeck::Apollo 10 Simulation::Unload::Full speed unload';

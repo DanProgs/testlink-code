@@ -17,7 +17,7 @@
 // require('aouth.microsoft.inc.php');
 //
 // -------------------------------------------------------------
-$tlCfg->OAuthServers['microsoft'] = array();
+$tlCfg->OAuthServers['microsoft'] = [];
 $tlCfg->OAuthServers['microsoft']['redirect_uri'] = '';
 
 $tlCfg->OAuthServers['microsoft']['oauth_enabled'] = true;

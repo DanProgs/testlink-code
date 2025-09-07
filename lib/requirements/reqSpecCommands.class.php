@@ -47,9 +47,9 @@ class reqSpecCommands
         $this->reqSpecTypeDomain = init_labels($req_spec_cfg->type_labels);
         $this->commandMgr = new reqCommands($db);
         $this->submit_button_label = lang_get('btn_save');
-        $this->getRequirementsOptions = array(
+        $this->getRequirementsOptions = [
             'order_by' => " ORDER BY NH_REQ.node_order "
-        );
+        ];
 
         $tproject_mgr = new testproject($this->db);
         $info = $tproject_mgr->get_by_id($tproject_id);
@@ -201,11 +201,11 @@ class reqSpecCommands
             null, null, $argsObj->tproject_id, $request);
         // manage new order
         $order = 0;
-        $nt2exclude = array(
+        $nt2exclude = [
             'testplan' => 'exclude_me',
             'testsuite' => 'exclude_me',
             'testcase' => 'exclude_me'
-        );
+        ];
         $siblings = $this->treeMgr->get_children($argsObj->parentID, $nt2exclude);
         if (! is_null($siblings)) {
             $dummy = end($siblings);
@@ -222,9 +222,9 @@ class reqSpecCommands
             $argsObj->scope = "";
             $guiObj->user_feedback = sprintf(lang_get('req_spec_created'),
                 $argsObj->title);
-            $idCard = array(
+            $idCard = [
                 'tproject_id' => $argsObj->tproject_id
-            );
+            ];
             $cf_map = $this->reqSpecMgr->get_linked_cfields($idCard);
 
             $this->reqSpecMgr->values_to_db($request, $ret['revision_id'],
@@ -269,21 +269,21 @@ class reqSpecCommands
             $guiObj = $this->processRevision($guiObj, $argsObj, $request);
         } else {
             // need to manage things in order to NOT LOOSE user input
-            $user_inputs = array(
-                'title' => array(
+            $user_inputs = [
+                'title' => [
                     'prefix' => 'req_spec_'
-                ),
-                'scope' => array(
+                ],
+                'scope' => [
                     'prefix' => ''
-                ),
-                'doc_id' => array(
+                ],
+                'doc_id' => [
                     'prefix' => 'req_spec_'
-                ),
-                'reqSpecType' => array(
+                ],
+                'reqSpecType' => [
                     prefix => '',
                     'item_key' => 'type'
-                )
-            );
+                ]
+            ];
 
             foreach ($user_inputs as $from => $convert_to) {
                 $prefix_to = isset($convert_to['prefix_to']) ? $convert_to['prefix_to'] : '';
@@ -427,14 +427,14 @@ class reqSpecCommands
         $obj = $this->initGuiBean();
         $req_spec = $this->reqSpecMgr->get_by_id($argsObj->req_spec_id);
 
-        $my['options'] = array(
+        $my['options'] = [
             'get_items' => true
-        );
+        ];
         $my['options'] = array_merge($my['options'], (array) $options);
         if ($my['options']['get_items']) {
-            $opt = $this->getRequirementsOptions + array(
+            $opt = $this->getRequirementsOptions + [
                 'output' => 'minimal'
-            );
+            ];
             $obj->items = $this->reqSpecMgr->get_requirements(
                 $argsObj->req_spec_id, 'all', null, $opt);
         }
@@ -447,27 +447,27 @@ class reqSpecCommands
         $obj->doActionButton = 'doCopyRequirements';
         $obj->req_spec_id = $argsObj->req_spec_id;
 
-        $exclude_node_types = array(
+        $exclude_node_types = [
             'testplan' => 'exclude_me',
             'testsuite' => 'exclude_me',
             'testcase' => 'exclude_me',
             'requirement' => 'exclude_me',
             'requirement_spec_revision' => 'exclude_me'
-        );
+        ];
 
-        $my['filters'] = array(
+        $my['filters'] = [
             'exclude_node_types' => $exclude_node_types
-        );
+        ];
         $my['options']['order_cfg']['type'] = $my['options']['output'] = 'rspec';
         $subtree = $this->reqMgr->tree_mgr->get_subtree($argsObj->tproject_id,
             $my['filters'], $my['options']);
         if (count($subtree)) {
             $obj->containers = $this->reqMgr->tree_mgr->createHierarchyMap(
                 $subtree, 'dotted',
-                array(
+                [
                     'field' => 'doc_id',
                     'format' => '%s:'
-                ));
+                ]);
         }
         return $obj;
     }
@@ -477,18 +477,18 @@ class reqSpecCommands
     public function doCopyRequirements(&$argsObj)
     {
         $this->initGuiBean();
-        $obj = $this->copyRequirements($argsObj, array(
+        $obj = $this->copyRequirements($argsObj, [
             'get_items' => false
-        ));
+        ]);
         $obj->req = null;
         $obj->req_spec_id = $argsObj->req_spec_id;
-        $obj->array_of_msg = array();
+        $obj->array_of_msg = [];
 
-        $copyOptions = array(
-            'copy_also' => array(
+        $copyOptions = [
+            'copy_also' => [
                 'testcase_assignment' => $argsObj->copy_testcase_assignment
-            )
-        );
+            ]
+        ];
 
         foreach ($argsObj->itemSet as $itemID) {
             $ret = $this->reqMgr->copy_to($itemID, $argsObj->containerID,
@@ -531,9 +531,9 @@ class reqSpecCommands
         $obj = $this->initGuiBean();
         $req_spec = $this->reqSpecMgr->get_by_id($argsObj->req_spec_id);
 
-        $my['options'] = array(
+        $my['options'] = [
             'get_items' => true
-        );
+        ];
         $my['options'] = array_merge($my['options'], (array) $options);
 
         $obj->main_descr = lang_get('req_spec') . TITLE_SEP . $req_spec['title'];
@@ -547,22 +547,22 @@ class reqSpecCommands
         $obj->top_checked = ' checked = "checked" ';
         $obj->bottom_checked = ' ';
 
-        $exclude_node_types = array(
+        $exclude_node_types = [
             'testplan' => 'exclude_me',
             'testsuite' => 'exclude_me',
             'testcase' => 'exclude_me',
             'requirement' => 'exclude_me'
-        );
+        ];
 
-        $my['filters'] = array(
+        $my['filters'] = [
             'exclude_node_types' => $exclude_node_types
-        );
+        ];
         $root = $this->treeMgr->get_node_hierarchy_info($argsObj->tproject_id);
-        $subtree = array_merge(array(
+        $subtree = array_merge([
             $root
-        ), $this->treeMgr->get_subtree($argsObj->tproject_id, $my['filters']));
+        ], $this->treeMgr->get_subtree($argsObj->tproject_id, $my['filters']));
 
-        if (count($subtree)) {
+        if ($subtree !== []) {
             $obj->containers = $this->treeMgr->createHierarchyMap($subtree);
         }
         return $obj;
@@ -590,7 +590,7 @@ class reqSpecCommands
         $obj->template = 'reqSpecCopy.tpl';
         $obj->containers = null;
         $obj->page2call = 'lib/requirements/reqSpecEdit.php';
-        $obj->array_of_msg = array();
+        $obj->array_of_msg = [];
         $obj->doActionButton = 'doCopy';
         $obj->req_spec_id = $argsObj->req_spec_id;
         $obj->top_checked = ' checked = "checked" ';
@@ -605,22 +605,22 @@ class reqSpecCommands
                 $req_spec['doc_id'], $req_spec['title'], $new_req_spec['doc_id']);
         }
 
-        $exclude_node_types = array(
+        $exclude_node_types = [
             'testplan' => 'exclude_me',
             'testsuite' => 'exclude_me',
             'testcase' => 'exclude_me',
             'requirement' => 'exclude_me'
-        );
+        ];
 
-        $my['filters'] = array(
+        $my['filters'] = [
             'exclude_node_types' => $exclude_node_types
-        );
+        ];
         $root = $this->treeMgr->get_node_hierarchy_info($argsObj->tproject_id);
-        $subtree = array_merge(array(
+        $subtree = array_merge([
             $root
-        ), $this->treeMgr->get_subtree($argsObj->tproject_id, $my['filters']));
+        ], $this->treeMgr->get_subtree($argsObj->tproject_id, $my['filters']));
 
-        if (count($subtree)) {
+        if ($subtree !== []) {
             $obj->containers = $this->treeMgr->createHierarchyMap($subtree);
         }
         return $obj;
@@ -673,26 +673,26 @@ class reqSpecCommands
         // - log message is only forced to be entered when a custom field, title or document ID is changed
         // - when only changes where made to scope user is free to create a new revision or
         // overwrite the old revision (Cancel -> overwrite)
-        $ret = array(
+        $ret = [
             'force' => false,
             'suggest' => false,
             'nochange' => false,
             'changeon' => null
-        );
+        ];
 
         // key: var name to be used on $old
         // value: var name to be used on $new
         // Then to compare old and new
         // $old[$key] compare to $new[$value]
         //
-        $suggest_revision = array(
+        $suggest_revision = [
             'scope' => 'scope'
-        );
-        $force_revision = array(
+        ];
+        $force_revision = [
             'type' => 'reqSpecType',
             'doc_id' => 'doc_id',
             'title' => 'title'
-        );
+        ];
 
         foreach ($force_revision as $access_key => $access_prop) {
             if ($ret['force'] = ($old[$access_key] != $new->$access_prop)) {
@@ -734,10 +734,10 @@ class reqSpecCommands
      */
     public function doCreateRevision(&$argsObj, $request)
     {
-        $item = array(
+        $item = [
             'log_message' => $argsObj->log_message,
             'author_id' => $argsObj->user_id
-        );
+        ];
         $ret = $this->reqSpecMgr->clone_revision($argsObj->req_spec_id, $item);
 
         $obj = $this->initGuiBean();
@@ -755,9 +755,9 @@ class reqSpecCommands
     {
         // TICKET 4661
         $itemOnDB = $this->reqSpecMgr->get_by_id($argsObj->req_spec_id);
-        $who = array(
+        $who = [
             'tproject_id' => $argsObj->tproject_id
-        );
+        ];
         $cf_map = $this->reqSpecMgr->get_linked_cfields($who);
         $newCFields = $this->reqSpecMgr->cfield_mgr->_build_cfield($userInput,
             $cf_map);
@@ -775,12 +775,12 @@ class reqSpecCommands
             // Need Change several values with user input data, to match logic on
             // edit php page on function renderGui()
             // $map = array('status' => 'reqStatus', 'type' => 'reqSpecType','scope' => 'scope',
-            $map = array(
+            $map = [
                 'type' => 'reqSpecType',
                 'scope' => 'scope',
                 'doc_id' => 'doc_id',
                 'title' => 'title'
-            );
+            ];
 
             foreach ($map as $k => $w) {
                 $guiObj->req_spec[$k] = $argsObj->$w;
@@ -795,7 +795,7 @@ class reqSpecCommands
                 $createRev = ($argsObj->save_rev == 1);
             }
 
-            $item = array();
+            $item = [];
             $item['id'] = $argsObj->req_spec_id;
             $item['revision_id'] = $createRev ? - 1 : $argsObj->req_spec_revision_id;
             $item['doc_id'] = $argsObj->doc_id;
@@ -807,11 +807,11 @@ class reqSpecCommands
             $user_key = $createRev ? 'author_id' : 'modifier_id';
             $item[$user_key] = $argsObj->user_id;
 
-            $opt = array(
+            $opt = [
                 'skip_controls' => true,
                 'create_rev' => $createRev,
                 'log_message' => $argsObj->log_message
-            );
+            ];
             $ret = $this->reqSpecMgr->update($item, $opt);
 
             $guiObj->user_feedback = $ret['msg'];
@@ -892,24 +892,24 @@ class reqSpecCommands
         $obj = $this->initGuiBean();
         $req_spec = $this->reqSpecMgr->get_by_id($argsObj->req_spec_id);
 
-        $my['options'] = array(
+        $my['options'] = [
             'get_items' => true
-        );
+        ];
         $my['options'] = array_merge($my['options'], (array) $options);
 
         if ($my['options']['get_items']) {
             $opt = $this->getRequirementsOptions +
-                array(
+                [
                     'outputLevel' => 'minimal',
                     'decodeUsers' => false
-                );
+                ];
             $obj->items = $this->reqSpecMgr->get_requirements(
                 $argsObj->req_spec_id, 'all', null, $opt);
         }
 
-        $opx = array(
+        $opx = [
             'reqSpecID' => $argsObj->req_spec_id
-        );
+        ];
         $monSet = $this->reqMgr->getMonitoredByUser($argsObj->user_id,
             $argsObj->tproject_id, $opx);
 
@@ -947,9 +947,9 @@ class reqSpecCommands
         $m2r = null;
         switch ($argsObj->op) {
             case 'toogleMon':
-                $opx = array(
+                $opx = [
                     'reqSpecID' => $argsObj->req_spec_id
-                );
+                ];
                 $monSet = $this->reqMgr->getMonitoredByUser($argsObj->user_id,
                     $argsObj->tproject_id, $opx);
 

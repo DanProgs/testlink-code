@@ -12,7 +12,7 @@ require_once 'common.php';
 testlinkInitPage($db, false, false, "checkRights");
 $templateCfg = templateConfiguration();
 
-list ($args, $gui, $commandMgr) = initScript($db);
+[$args, $gui, $commandMgr] = initScript($db);
 
 $pFn = $args->doAction;
 $op = null;
@@ -31,14 +31,14 @@ function renderGui(&$argsObj, $guiObj, $opObj, $templateCfg)
 
     // key: gui action
     // value: next gui action (used to set value of action button on gui)
-    $actionOperation = array(
+    $actionOperation = [
         'create' => 'doCreate',
         'edit' => 'doUpdate',
         'doDelete' => '',
         'doCreate' => 'doCreate',
         'doUpdate' => 'doUpdate',
         'checkConnection' => 'doCreate'
-    );
+    ];
 
     if ($argsObj->id > 0) {
         $actionOperation['checkConnection'] = 'doUpdate';
@@ -96,15 +96,15 @@ function renderGui(&$argsObj, $guiObj, $opObj, $templateCfg)
 function initScript(&$dbHandler)
 {
     $mgr = new issueTrackerCommands($dbHandler);
-    $args = initArgs(array(
+    $args = initArgs([
         'doAction' => $mgr->getGuiOpWhiteList()
-    ));
+    ]);
     $gui = initializeGui($dbHandler, $args, $mgr);
-    return array(
+    return [
         $args,
         $gui,
         $mgr
-    );
+    ];
 }
 
 /**
@@ -118,29 +118,29 @@ function initArgs($whiteList)
     $_REQUEST = strings_stripSlashes($_REQUEST);
     $args = new stdClass();
 
-    $iParams = array(
-        "id" => array(
+    $iParams = [
+        "id" => [
             tlInputParameter::INT_N
-        ),
-        "doAction" => array(
+        ],
+        "doAction" => [
             tlInputParameter::STRING_N,
             0,
             20
-        ),
-        "name" => array(
+        ],
+        "name" => [
             tlInputParameter::STRING_N,
             0,
             100
-        ),
-        "cfg" => array(
+        ],
+        "cfg" => [
             tlInputParameter::STRING_N,
             0,
             2000
-        ),
-        "type" => array(
+        ],
+        "type" => [
             tlInputParameter::INT_N
-        )
-    );
+        ]
+    ];
 
     R_PARAMS($iParams, $args);
 
@@ -148,7 +148,7 @@ function initArgs($whiteList)
     foreach ($whiteList as $inputKey => $allowedValues) {
         if (property_exists($args, $inputKey) &&
             ! isset($allowedValues[$args->$inputKey])) {
-            $msg = "Input parameter $inputKey - white list validation failure - " .
+            $msg = "Input parameter {$inputKey} - white list validation failure - " .
                 "Value:" . $args->$inputKey . " - " . "File: " .
                 basename(__FILE__) . " - Function: " . __FUNCTION__;
             tLog($msg, 'ERROR');
@@ -174,10 +174,10 @@ function initializeGui(&$dbHandler, &$argsObj, &$commandMgr)
     $gui = new stdClass();
     $gui->main_descr = '';
     $gui->action_descr = '';
-    $gui->user_feedback = array(
+    $gui->user_feedback = [
         'type' => '',
         'message' => ''
-    );
+    ];
     $gui->mgt_view_events = $argsObj->currentUser->hasRight($dbHandler,
         'mgt_view_events');
 
@@ -186,9 +186,9 @@ function initializeGui(&$dbHandler, &$argsObj, &$commandMgr)
     if ($argsObj->id > 0) {
         // just to fix erroneous test project delete
         $dummy = $commandMgr->issueTrackerMgr->getLinks($argsObj->id,
-            array(
+            [
                 'getDeadLinks' => true
-            ));
+            ]);
         if (! is_null($dummy)) {
             foreach ($dummy as $key => $elem) {
                 $commandMgr->issueTrackerMgr->unlink($argsObj->id, $key);

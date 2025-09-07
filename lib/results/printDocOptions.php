@@ -46,14 +46,14 @@ switch ($args->doc_type) {
             $gui->buildInfoSet = $tplan_mgr->get_builds($args->tplan_id);
 
             if (null != $gui->buildInfoSet) {
-                $gui->buildRptLinkSet = array();
+                $gui->buildRptLinkSet = [];
                 $dl = $args->basehref . "lnl.php?apikey=" .
                     $args->tplan_info['api_key'] .
                     "&tproject_id=$args->tproject_id" .
                     "&tplan_id=$args->tplan_id" . "&type=testreport_onbuild";
 
                 foreach ($gui->buildInfoSet as $bid => $nunu) {
-                    $gui->buildRptLinkSet[$bid] = $dl . "&build_id=$bid";
+                    $gui->buildRptLinkSet[$bid] = $dl . "&build_id={$bid}";
                 }
             }
         }
@@ -77,7 +77,7 @@ switch ($args->doc_type) {
                 $opt_etree->hideTestCases = SHOW_TESTCASES;
                 $opt_etree->tc_action_enabled = false;
                 $opt_etree->showTestCaseExecStatus = false;
-                $opt_etree->nodeHelpText = array();
+                $opt_etree->nodeHelpText = [];
                 $opt_etree->nodeHelpText['testproject'] = lang_get(
                     'gen_test_plan_design_report');
                 $opt_etree->nodeHelpText['testsuite'] = $opt_etree->nodeHelpText['testproject'];
@@ -93,7 +93,7 @@ switch ($args->doc_type) {
 
         $filters = null;
         $treeContents = null;
-        list ($treeContents, $testcases_to_show) = testPlanTree($db,
+        [$treeContents, $testcases_to_show] = testPlanTree($db,
             $rightPaneAction, $args->tproject_id, $args->tproject_name,
             $args->tplan_id, $testplan_name, $filters, $opt_etree);
 
@@ -138,27 +138,27 @@ $smarty->display($templateCfg->template_dir . $templateCfg->default_template);
 function initArgs(&$dbHandler)
 {
     $args = new stdClass();
-    $iParams = array(
-        "tplan_id" => array(
+    $iParams = [
+        "tplan_id" => [
             tlInputParameter::INT_N
-        ),
-        "format" => array(
+        ],
+        "format" => [
             tlInputParameter::INT_N,
             999
-        ),
-        "type" => array(
+        ],
+        "type" => [
             tlInputParameter::STRING_N,
             0,
             100
-        ),
-        "activity" => array(
+        ],
+        "activity" => [
             tlInputParameter::STRING_N,
             1,
             10
-        )
-    );
+        ]
+    ];
 
-    $l18n = array();
+    $l18n = [];
     $l18n['addTC'] = lang_get('navigator_add_remove_tcase_to_tplan');
     $l18n['test_plan'] = lang_get('test_plan');
 
@@ -220,10 +220,10 @@ function initializeGui(&$db, $args)
     $gui->showHelpIcon = $args->showHelpIcon;
 
     $gui->mainTitle = '';
-    $gui->outputFormat = array(
+    $gui->outputFormat = [
         FORMAT_HTML => lang_get('format_html'),
         FORMAT_MSWORD => lang_get('format_pseudo_msword')
-    );
+    ];
 
     $gui->outputOptions = init_checkboxes($args);
     if (! $gui->showOptions) {
@@ -264,7 +264,7 @@ function initializeGui(&$db, $args)
 
             $req_qty = $tprojectMgr->count_all_requirements($args->tproject_id);
             $gui->ajaxTree->root_node->name = htmlspecialchars(
-                $args->tproject_name) . " ($req_qty)";
+                $args->tproject_name) . " ({$req_qty})";
             $gui->ajaxTree->cookiePrefix .= "tproject_id_" .
                 $gui->ajaxTree->root_node->id . "_";
             $gui->mainTitle = lang_get('requirement_specification_report');
@@ -284,7 +284,7 @@ function initializeGui(&$db, $args)
 
             $tcase_qty = $tprojectMgr->count_testcases($args->tproject_id);
             $gui->ajaxTree->root_node->name = htmlspecialchars(
-                $args->tproject_name) . " ($tcase_qty)";
+                $args->tproject_name) . " ({$tcase_qty})";
             $gui->ajaxTree->cookiePrefix .= "tproject_id_" .
                 $gui->ajaxTree->root_node->id . "_";
             $gui->mainTitle = lang_get('testspecification_report');
@@ -344,7 +344,7 @@ function init_checkboxes(&$args)
     $optCfg = new printDocOptions();
 
     // Check Box Set
-    $cbSet = array();
+    $cbSet = [];
 
     $cbSet += $optCfg->getDocOpt();
     switch ($args->doc_type) {

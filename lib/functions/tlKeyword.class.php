@@ -342,12 +342,12 @@ class tlKeyword extends tlDBObject implements iSerialization,
      */
     public function getInfo()
     {
-        return array(
+        return [
             "id" => $this->dbID,
             "keyword" => $this->name,
             "notes" => $this->notes,
             "testproject_id" => $this->testprojectID
-        );
+        ];
     }
 
     /**
@@ -389,10 +389,10 @@ class tlKeyword extends tlDBObject implements iSerialization,
     public static function doesKeywordExist(&$db, $name, $tprojectID,
         $kwID = null)
     {
-        $op = array(
+        $op = [
             'status' => tl::OK,
             'kwID' => $kwID
-        );
+        ];
 
         $tables = tlObjectWithDB::getDBTables("keywords");
 
@@ -432,15 +432,15 @@ class tlKeyword extends tlDBObject implements iSerialization,
      */
     public function writeToXML(&$xml, $noHeader = false)
     {
-        $keywords = array(
+        $keywords = [
             $this->getInfo()
-        );
+        ];
         $keywordElemTpl = '<keyword name="{{NAME}}"><notes><![CDATA[' .
             "\n||NOTES||\n]]>" . '</notes></keyword>' . "\n";
-        $keywordInfo = array(
+        $keywordInfo = [
             "{{NAME}}" => "keyword",
             "||NOTES||" => "notes"
-        );
+        ];
         $xml .= exportDataToXML($keywords, "{{XMLCODE}}", $keywordElemTpl,
             $keywordInfo, $noHeader);
     }
@@ -449,16 +449,16 @@ class tlKeyword extends tlDBObject implements iSerialization,
      */
     public function toXMLString($keywordSet = null, $noHeader = false)
     {
-        $keywords = is_null($keywordSet) ? array(
+        $keywords = is_null($keywordSet) ? [
             $this->getInfo()
-        ) : $keywordSet;
+        ] : $keywordSet;
         $rootElem = "{{XMLCODE}}";
         $elemXMLTemplate = '<keyword name="{{NAME}}"><notes><![CDATA[' .
             "\n||NOTES||\n]]>" . '</notes></keyword>' . "\n";
-        $keywordInfo = array(
+        $keywordInfo = [
             "{{NAME}}" => "keyword",
             "||NOTES||" => "notes"
-        );
+        ];
         return exportDataToXML($keywords, $rootElem, $elemXMLTemplate,
             $keywordInfo, $noHeader);
     }
@@ -521,13 +521,13 @@ class tlKeyword extends tlDBObject implements iSerialization,
      */
     public function writeToCSV(&$csv, $delimiter = ';')
     {
-        $keyword = array(
+        $keyword = [
             $this->getInfo()
-        );
-        $sKeys = array(
+        ];
+        $sKeys = [
             "keyword",
             "notes"
-        );
+        ];
         $csv .= exportDataToCSV($keyword, $sKeys, $sKeys);
     }
 
@@ -554,12 +554,12 @@ class tlKeyword extends tlDBObject implements iSerialization,
      */
     public static function getSimpleSet(&$db, $opt = null)
     {
-        $options = array(
+        $options = [
             'tproject_id' => 0,
             'cols' => '*',
             'accessKey' => null,
             'kwSet' => null
-        );
+        ];
 
         $options = array_merge($options, (array) $opt);
         $tables = tlObjectWithDB::getDBTables("keywords");

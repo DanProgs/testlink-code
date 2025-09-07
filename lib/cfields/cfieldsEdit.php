@@ -111,7 +111,7 @@ function getCFCfg(&$args, &$cfield_mgr)
 
     $cfg->cfieldCfg = cfieldCfgInit($cfield_mgr);
 
-    $cfg->emptyCF = array(
+    $cfg->emptyCF = [
         'id' => $args->cfield_id,
         'name' => '',
         'label' => '',
@@ -123,7 +123,7 @@ function getCFCfg(&$args, &$cfield_mgr)
         'enable_on_execution' => 0,
         'show_on_testplan_design' => 0,
         'enable_on_testplan_design' => 0
-    );
+    ];
 
     $cfg->emptyCF['node_type_id'] = $cfg->cfieldCfg->allowed_nodes['testcase'];
 
@@ -168,7 +168,7 @@ function request2cf($hash)
     // *_on_design keys, that right now will not present only for
     // req spec and requirements.
     //
-    $missing_keys = array(
+    $missing_keys = [
         'show_on_design' => 0,
         'enable_on_design' => 0,
         'show_on_execution' => 0,
@@ -176,12 +176,12 @@ function request2cf($hash)
         'show_on_testplan_design' => 0,
         'enable_on_testplan_design' => 0,
         'possible_values' => ' '
-    );
+    ];
 
     $cf_prefix = 'cf_';
     $len_cfp = tlStringLen($cf_prefix);
     $start_pos = $len_cfp;
-    $cf = array();
+    $cf = [];
     foreach ($hash as $key => $value) {
         if (strncmp($key, $cf_prefix, $len_cfp) == 0) {
             $dummy = substr($key, $start_pos);
@@ -203,11 +203,11 @@ function request2cf($hash)
     // IMPORTANT/CRITIC:
     // this KEY MUST BE ALIGNED WITH name on User Inteface
     // then if is changed on UI must be changed HERE
-    $setter = array(
+    $setter = [
         'design' => 0,
         'execution' => 0,
         'testplan_design' => 0
-    );
+    ];
     switch ($cf['enable_on']) {
         case 'design':
         case 'execution':
@@ -299,11 +299,11 @@ function doCreate(&$hash_request, &$cfieldMgr, &$argsObj)
     $op->user_feedback = '';
     $op->cf = request2cf($hash_request);
 
-    $keys2trim = array(
+    $keys2trim = [
         'name',
         'label',
         'possible_values'
-    );
+    ];
     foreach ($keys2trim as $key) {
         $op->cf[$key] = trim($op->cf[$key]);
     }
@@ -321,9 +321,9 @@ function doCreate(&$hash_request, &$cfieldMgr, &$argsObj)
 
             if ($hash_request['do_action'] == 'do_add_and_assign') {
                 $cfieldMgr->link_to_testproject($argsObj->tproject_id,
-                    array(
+                    [
                         $ret['id']
-                    ));
+                    ]);
             }
         }
     } else {
@@ -353,11 +353,11 @@ function doUpdate(&$hash_request, &$argsObj, &$cfieldMgr)
     $op->operation_descr = lang_get('title_cfield_edit') . TITLE_SEP_TYPE3 .
         $oldname;
 
-    $keys2trim = array(
+    $keys2trim = [
         'name',
         'label',
         'possible_values'
-    );
+    ];
     foreach ($keys2trim as $key) {
         $op->cf[$key] = trim($op->cf[$key]);
     }
@@ -412,11 +412,11 @@ function cfieldCfgInit($cfieldMgr)
     $cfg = new stdClass();
     $cfAppAreas = $cfieldMgr->get_application_areas();
     foreach ($cfAppAreas as $area) {
-        $cfg->disabled_cf_enable_on[$area] = array();
+        $cfg->disabled_cf_enable_on[$area] = [];
         $cfg->cf_show_on[$area]['disabled'] = '';
         $cfg->cf_show_on[$area]['style'] = '';
 
-        $cfg->cf_enable_on[$area] = array();
+        $cfg->cf_enable_on[$area] = [];
         $cfg->cf_enable_on[$area]['label'] = lang_get($area);
         $cfg->cf_enable_on[$area]['value'] = 0;
 
@@ -426,7 +426,7 @@ function cfieldCfgInit($cfieldMgr)
 
     $cfg->possible_values_cfg = $cfieldMgr->get_possible_values_cfg();
     $cfg->allowed_nodes = $cfieldMgr->get_allowed_nodes();
-    $cfg->cf_allowed_nodes = array();
+    $cfg->cf_allowed_nodes = [];
     foreach ($cfg->allowed_nodes as $verbose_type => $type_id) {
         $cfg->cf_allowed_nodes[$type_id] = lang_get($verbose_type);
     }

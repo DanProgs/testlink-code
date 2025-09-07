@@ -33,9 +33,9 @@ if (isset($_REQUEST['testplan'])) {
 $testplanID = intval($testplanID);
 
 $accessibleItems = $tproject_mgr->get_accessible_for_user($user->dbID,
-    array(
+    [
         'output' => 'map_name_with_inactive_mark'
-    ));
+    ]);
 $tprojectQty = $tproject_mgr->getItemCount();
 $userIsBlindFolded = (is_null($accessibleItems) || count($accessibleItems) == 0) &&
     $tprojectQty > 0;
@@ -69,9 +69,9 @@ if ($gui->hasTestCases) {
  * @todo - franciscom - we must understand if these two calls are really needed,
  *       or is enough just call to getAccessibleTestPlans()
  */
-$filters = array(
+$filters = [
     'plan_status' => ACTIVE
-);
+];
 $gui->num_active_tplans = $tproject_mgr->getActiveTestPlansCount($testprojectID);
 
 // get Test Plans available for the user
@@ -123,7 +123,7 @@ if ($testplanID) {
             $tlCfg->gui->role_separator_close;
     }
 }
-$rights2check = array(
+$rights2check = [
     'testplan_execute',
     'testplan_create_build',
     'testplan_metrics',
@@ -140,7 +140,7 @@ $rights2check = array(
     'testplan_update_linked_testcase_versions',
     'testplan_set_urgent_testcases',
     'testplan_show_testcases_newest_versions'
-);
+];
 
 foreach ($rights2check as $the_right) {
     $gui->grants[$the_right] = $userIsBlindFolded ? 'no' : $currentUser->hasRight(
@@ -154,10 +154,10 @@ if ($currentUser->hasRight($db, "testproject_user_role_assignment",
     $gui->grants['tproject_user_role_assignment'] = "yes";
 }
 
-$gui->url = array(
+$gui->url = [
     'metrics_dashboard' => 'lib/results/metricsDashboard.php',
     'testcase_assignments' => 'lib/testcases/tcAssignedToUser.php'
-);
+];
 $gui->launcher = 'lib/general/frmWorkArea.php';
 $gui->arrPlans = $arrPlans;
 $gui->countPlans = count($gui->arrPlans);
@@ -179,13 +179,13 @@ if ((strcmp($secCfg, 'ALWAYS') == 0) ||
 $gui->opt_requirements = isset(
     $_SESSION['testprojectOptions']->requirementsEnabled) ? $_SESSION['testprojectOptions']->requirementsEnabled : null;
 
-$gui->plugins = array();
-foreach (array(
+$gui->plugins = [];
+foreach ([
     'EVENT_LEFTMENU_TOP',
     'EVENT_LEFTMENU_BOTTOM',
     'EVENT_RIGHTMENU_TOP',
     'EVENT_RIGHTMENU_BOTTOM'
-) as $menu_item) {
+] as $menu_item) {
     # to be compatible with PHP 5.4
     $menu_content = event_signal($menu_item);
     if (! empty($menu_content)) {
@@ -246,7 +246,7 @@ function getGrants($dbHandler, $user, $tproject_id, $forceToNo = false)
     //
     // key: more or less verbose
     // value: string present on rights table
-    $right2check = array(
+    $right2check = [
         'project_edit' => 'mgt_modify_product',
         'reqs_view' => "mgt_view_req",
         'monitor_req' => "monitor_requirement",
@@ -276,7 +276,7 @@ function getGrants($dbHandler, $user, $tproject_id, $forceToNo = false)
         'testplan_unlink_executed_testcases' => 'testplan_unlink_executed_testcases',
         'testproject_delete_executed_testcases' => 'testproject_delete_executed_testcases',
         'exec_ro_access' => 'exec_ro_access'
-    );
+    ];
     if ($forceToNo) {
         return array_fill_keys(array_keys($right2check), 'no');
     }
@@ -299,10 +299,10 @@ function getGrants($dbHandler, $user, $tproject_id, $forceToNo = false)
 
     // check right ONLY if option is enables
     if ($_SESSION['testprojectOptions']->inventoryEnabled) {
-        $invr = array(
+        $invr = [
             'project_inventory_view',
             'project_inventory_management'
-        );
+        ];
         foreach ($invr as $r) {
             $grants[$r] = ($user->hasRight($dbHandler, $r, $tproject_id) == 'yes') ? 1 : 0;
         }

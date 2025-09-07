@@ -19,11 +19,11 @@ require_once 'common.php';
 testlinkInitPage($db);
 
 // check if this is really needed
-$exclude_node_types = array(
+$exclude_node_types = [
     'testplan' => 1,
     'requirement' => 1,
     'requirement_spec' => 1
-);
+];
 
 $args = initArgs();
 $treeMgr = new tree($db);
@@ -48,20 +48,20 @@ function initArgs()
 {
     $args = new stdClass();
 
-    $key2loop = array(
+    $key2loop = [
         'nodeid',
         'newparentid',
         'nodeorder'
-    );
+    ];
     foreach ($key2loop as $key) {
         $args->$key = isset($_REQUEST[$key]) ? intval($_REQUEST[$key]) : null;
     }
 
-    $key2loop = array(
+    $key2loop = [
         'doAction',
         'top_or_bottom',
         'nodelist'
-    );
+    ];
     foreach ($key2loop as $key) {
         $args->$key = isset($_REQUEST[$key]) ? $_REQUEST[$key] : null;
     }

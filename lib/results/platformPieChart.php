@@ -34,10 +34,10 @@ if (isset($dummy->info[$args->platform_id])) {
     // create empty set
     $status = $metricsMgr->getStatusForReports();
     foreach ($status as $statusVerbose) {
-        $totals[$statusVerbose] = array(
+        $totals[$statusVerbose] = [
             'qty' => 0,
             'percentage' => 0
-        );
+        ];
     }
     unset($status);
 }
@@ -45,13 +45,13 @@ if (isset($dummy->info[$args->platform_id])) {
 unset($dummy);
 unset($metricsMgr);
 
-$values = array();
-$labels = array();
-$series_color = array();
+$values = [];
+$labels = [];
+$series_color = [];
 foreach ($totals as $key => $value) {
     $value = $value['qty'];
     $values[] = $value;
-    $labels[] = lang_get($resultsCfg['status_label'][$key]) . " ($value)";
+    $labels[] = lang_get($resultsCfg['status_label'][$key]) . " ({$value})";
     if (isset($resultsCfg['charts']['status_colour'][$key])) {
         $series_color[] = $resultsCfg['charts']['status_colour'][$key];
     }
@@ -114,22 +114,22 @@ function checkRights(&$db, &$user)
  */
 function initArgs(&$dbHandler)
 {
-    $iParams = array(
-        "apikey" => array(
+    $iParams = [
+        "apikey" => [
             tlInputParameter::STRING_N,
             0,
             64
-        ),
-        "platform_id" => array(
+        ],
+        "platform_id" => [
             tlInputParameter::INT_N
-        ),
-        "tproject_id" => array(
+        ],
+        "tproject_id" => [
             tlInputParameter::INT_N
-        ),
-        "tplan_id" => array(
+        ],
+        "tplan_id" => [
             tlInputParameter::INT_N
-        )
-    );
+        ]
+    ];
 
     $args = new stdClass();
     R_PARAMS($iParams, $args);

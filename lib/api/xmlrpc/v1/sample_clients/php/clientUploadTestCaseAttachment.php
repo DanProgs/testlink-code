@@ -19,7 +19,7 @@ $unitTestDescription = "Test {$test_num} - {$method}";
 
 $attach = file_get_contents('./other/marilyn-monroe.jpg');
 $encoded = base64_encode($attach);
-$args = array();
+$args = [];
 $args["devKey"] = 'developer';
 $args["testcaseid"] = 118951;
 $args["version"] = 2;
@@ -43,7 +43,7 @@ $test_num = 2;
 $unitTestDescription = "Test {$test_num} - {$method}";
 $attach = file_get_contents('./other/marilyn-monroe.jpg');
 $encoded = base64_encode($attach);
-$args = array();
+$args = [];
 $args["devKey"] = 'developer';
 $args["testcaseid"] = 118951;
 $args["version"] = 2;

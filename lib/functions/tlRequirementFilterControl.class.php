@@ -40,42 +40,42 @@ class tlRequirementFilterControl extends tlFilterControl
      *
      * @var array
      */
-    private $all_filters = array(
-        'filter_doc_id' => array(
+    private $all_filters = [
+        'filter_doc_id' => [
             "POST",
             tlInputParameter::STRING_N
-        ),
-        'filter_title' => array(
+        ],
+        'filter_title' => [
             "POST",
             tlInputParameter::STRING_N
-        ),
-        'filter_status' => array(
+        ],
+        'filter_status' => [
             "POST",
             tlInputParameter::ARRAY_STRING_N
-        ),
-        'filter_type' => array(
+        ],
+        'filter_type' => [
             "POST",
             tlInputParameter::ARRAY_INT
-        ),
-        'filter_spec_type' => array(
+        ],
+        'filter_spec_type' => [
             "POST",
             tlInputParameter::ARRAY_INT
-        ),
-        'filter_coverage' => array(
+        ],
+        'filter_coverage' => [
             "POST",
             tlInputParameter::INT_N
-        ),
-        'filter_relation' => array(
+        ],
+        'filter_relation' => [
             "POST",
             tlInputParameter::ARRAY_STRING_N
-        ),
-        'filter_tc_id' => array(
+        ],
+        'filter_tc_id' => [
             "POST",
             tlInputParameter::STRING_N
-        ),
+        ],
         'filter_custom_fields' => null,
         'filter_result' => false
-    );
+    ];
 
     /**
      * This array contains all possible settings.
@@ -85,12 +85,12 @@ class tlRequirementFilterControl extends tlFilterControl
      *
      * @var array
      */
-    private $all_settings = array(
-        'setting_refresh_tree_on_action' => array(
+    private $all_settings = [
+        'setting_refresh_tree_on_action' => [
             "POST",
             tlInputParameter::CB_BOOL
-        )
-    );
+        ]
+    ];
 
     /**
      */
@@ -147,7 +147,7 @@ class tlRequirementFilterControl extends tlFilterControl
         parent::init_args();
 
         // add settings and filters to parameter info array for request parsers
-        $params = array();
+        $params = [];
         foreach ($this->all_settings as $name => $info) {
             if (is_array($info)) {
                 $params[$name] = $info;
@@ -171,7 +171,7 @@ class tlRequirementFilterControl extends tlFilterControl
     protected function init_settings()
     {
         foreach ($this->all_settings as $name => $info) {
-            $init_method = "init_$name";
+            $init_method = "init_{$name}";
             if (method_exists($this, $init_method)) {
                 // is valid, configured, exists and therefore can be used, so initialize this setting
                 $this->$init_method();
@@ -203,7 +203,7 @@ class tlRequirementFilterControl extends tlFilterControl
         // iterate through all filters and activate the needed ones
         if ($this->configuration->show_filters == ENABLED) {
             foreach ($this->all_filters as $name => $info) {
-                $init_method = "init_$name";
+                $init_method = "init_{$name}";
                 if (method_exists($this, $init_method) &&
                     $this->configuration->{$name} == ENABLED) {
                     $this->$init_method();
@@ -262,10 +262,10 @@ class tlRequirementFilterControl extends tlFilterControl
         // when we use filtering, the tree will be statically built,
         // otherwise it will be lazy loaded
         if ($this->do_filtering) {
-            $options = array(
+            $options = [
                 'for_printing' => NOT_FOR_PRINTING,
                 'exclude_branches' => null
-            );
+            ];
 
             $tree_menu = generate_reqspec_tree($this->db, $this->testproject_mgr,
                 $this->args->testproject_id, $this->args->testproject_name,
@@ -287,7 +287,7 @@ class tlRequirementFilterControl extends tlFilterControl
             $root_node = new stdClass();
             $root_node->href = "javascript:TPROJECT_REQ_SPEC_MGMT({$this->args->testproject_id})";
             $root_node->id = $this->args->testproject_id;
-            $root_node->name = $this->args->testproject_name . " ($req_qty)";
+            $root_node->name = $this->args->testproject_name . " ({$req_qty})";
             $root_node->testlink_node_type = 'testproject';
         }
 
@@ -308,7 +308,7 @@ class tlRequirementFilterControl extends tlFilterControl
         $hidden_key = 'hidden_setting_refresh_tree_on_action';
         $selection = 0;
 
-        $this->settings[$key] = array();
+        $this->settings[$key] = [];
         $this->settings[$key][$hidden_key] = 0;
 
         // look where we can find the setting - POST, SESSION, config?
@@ -340,9 +340,9 @@ class tlRequirementFilterControl extends tlFilterControl
             $this->do_filtering = true;
         }
 
-        $this->filters[$key] = array(
+        $this->filters[$key] = [
             'selected' => $selection
-        );
+        ];
         $this->active_filters[$key] = $selection;
     }
 
@@ -357,9 +357,9 @@ class tlRequirementFilterControl extends tlFilterControl
             $this->do_filtering = true;
         }
 
-        $this->filters[$key] = array(
+        $this->filters[$key] = [
             'selected' => $selection
-        );
+        ];
         $this->active_filters[$key] = $selection;
     }
 
@@ -369,9 +369,9 @@ class tlRequirementFilterControl extends tlFilterControl
         $selection = $this->args->{$key};
 
         // get configured statuses and add "any" string to menu
-        $items = array(
+        $items = [
             self::ANY => $this->option_strings['any']
-        ) + (array) init_labels($this->configuration->req_cfg->status_labels);
+        ] + (array) init_labels($this->configuration->req_cfg->status_labels);
 
         // BUGID 3852
         if (! $selection || $this->args->reset_filters ||
@@ -381,10 +381,10 @@ class tlRequirementFilterControl extends tlFilterControl
             $this->do_filtering = true;
         }
 
-        $this->filters[$key] = array(
+        $this->filters[$key] = [
             'selected' => $selection,
             'items' => $items
-        );
+        ];
         $this->active_filters[$key] = $selection;
     }
 
@@ -396,9 +396,9 @@ class tlRequirementFilterControl extends tlFilterControl
         $selection = $this->args->{$key};
 
         // get configured types and add "any" string to menu
-        $items = array(
+        $items = [
             self::ANY => $this->option_strings['any']
-        ) + (array) init_labels($this->configuration->req_cfg->type_labels);
+        ] + (array) init_labels($this->configuration->req_cfg->type_labels);
 
         if (! $selection || $this->args->reset_filters ||
             (is_array($selection) && in_array(self::ANY, $selection))) {
@@ -407,10 +407,10 @@ class tlRequirementFilterControl extends tlFilterControl
             $this->do_filtering = true;
         }
 
-        $this->filters[$key] = array(
+        $this->filters[$key] = [
             'selected' => $selection,
             'items' => $items
-        );
+        ];
         $this->active_filters[$key] = $selection;
     }
 
@@ -422,9 +422,9 @@ class tlRequirementFilterControl extends tlFilterControl
         $selection = $this->args->{$key};
 
         // get configured types and add "any" string to menu
-        $items = array(
+        $items = [
             self::ANY => $this->option_strings['any']
-        ) + (array) init_labels($this->configuration->req_spec_cfg->type_labels);
+        ] + (array) init_labels($this->configuration->req_spec_cfg->type_labels);
 
         if (! $selection || $this->args->reset_filters ||
             (is_array($selection) && in_array(self::ANY, $selection))) {
@@ -433,10 +433,10 @@ class tlRequirementFilterControl extends tlFilterControl
             $this->do_filtering = true;
         }
 
-        $this->filters[$key] = array(
+        $this->filters[$key] = [
             'selected' => $selection,
             'items' => $items
-        );
+        ];
         $this->active_filters[$key] = $selection;
     }
 
@@ -459,9 +459,9 @@ class tlRequirementFilterControl extends tlFilterControl
                 $this->do_filtering = true;
             }
 
-            $this->filters[$key] = array(
+            $this->filters[$key] = [
                 'selected' => $selection
-            );
+            ];
             $this->active_filters[$key] = $selection;
         }
     }
@@ -492,9 +492,9 @@ class tlRequirementFilterControl extends tlFilterControl
                 unset($req_relations['items'][$old_key]);
             }
 
-            $items = array(
+            $items = [
                 self::ANY => $this->option_strings['any']
-            ) + (array) $req_relations['items'];
+            ] + (array) $req_relations['items'];
 
             if (! $selection || $this->args->reset_filters ||
                 (is_array($selection) && in_array(self::ANY, $selection))) {
@@ -503,10 +503,10 @@ class tlRequirementFilterControl extends tlFilterControl
                 $this->do_filtering = true;
             }
 
-            $this->filters[$key] = array(
+            $this->filters[$key] = [
                 'selected' => $selection,
                 'items' => $items
-            );
+            ];
             $this->active_filters[$key] = $selection;
         } else {
             // not enabled, just nullify
@@ -538,9 +538,9 @@ class tlRequirementFilterControl extends tlFilterControl
             $this->do_filtering = true;
         }
 
-        $this->filters[$key] = array(
+        $this->filters[$key] = [
             'selected' => $selection ? $selection : $tc_prefix
-        );
+        ];
         $this->active_filters[$key] = $selection;
     }
 

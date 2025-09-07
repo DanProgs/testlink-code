@@ -31,14 +31,14 @@ $smarty->display($templateCfg->template_dir . 'reqViewRevisionRO.tpl');
  */
 function initArgs()
 {
-    $iParams = array(
-        "item_id" => array(
+    $iParams = [
+        "item_id" => [
             tlInputParameter::INT_N
-        ),
-        "showReqSpecTitle" => array(
+        ],
+        "showReqSpecTitle" => [
             tlInputParameter::INT_N
-        )
-    );
+        ]
+    ];
 
     $args = new stdClass();
     R_PARAMS($iParams, $args);
@@ -81,9 +81,9 @@ function initializeGui(&$dbHandler, $argsObj)
     // target_is is db id of item, item['id'] is the REQ ID.
     // for several logics we need to DB id (target_id)
     $info = null;
-    $getOpt = array(
+    $getOpt = [
         'renderImageInline' => true
-    );
+    ];
     switch ($node_id_type[$item['node_type_id']]) {
         case 'requirement_version':
             $info = $req_mgr->get_version($gui->item_id, $getOpt);

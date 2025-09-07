@@ -42,7 +42,7 @@ class issueTrackerCommands
         $this->grants->canManage = false;
 
         $this->guiOpWhiteList = array_flip(
-            array(
+            [
                 'checkConnection',
                 'create',
                 'edit',
@@ -50,7 +50,7 @@ class issueTrackerCommands
                 'doCreate',
                 'doUpdate',
                 'doDelete'
-            ));
+            ]);
     }
 
     /**
@@ -76,20 +76,20 @@ class issueTrackerCommands
         $obj->typeDomain = $this->issueTrackerMgr->getTypes();
         $obj->canManage = $argsObj->currentUser->hasRight($this->db,
             'issuetracker_management');
-        $obj->user_feedback = array(
+        $obj->user_feedback = [
             'type' => '',
             'message' => ''
-        );
+        ];
 
         $obj->l18n = init_labels(
-            array(
+            [
                 'issuetracker_management' => null,
                 'btn_save' => null,
                 'create' => null,
                 'edit' => null,
                 'checkConnection' => 'btn_check_connection',
                 'issuetracker_deleted' => null
-            ));
+            ]);
 
         // we experiment on way to get Action Description for GUI using __FUNCTION__
         $obj->l18n['doUpdate'] = $obj->l18n['edit'];
@@ -125,9 +125,9 @@ class issueTrackerCommands
         $guiObj->canManage = $argsObj->currentUser->hasRight($this->db,
             'issuetracker_management');
 
-        $guiObj->item = array(
+        $guiObj->item = [
             'id' => 0
-        );
+        ];
         foreach ($this->entitySpec as $property => $type) {
             $guiObj->item[$property] = ($type == 'int') ? 0 : '';
         }

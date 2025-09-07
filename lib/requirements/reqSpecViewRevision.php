@@ -32,14 +32,14 @@ $smarty->display($templateCfg->template_dir . 'reqSpecViewRevision.tpl');
  */
 function initArgs()
 {
-    $iParams = array(
-        "item_id" => array(
+    $iParams = [
+        "item_id" => [
             tlInputParameter::INT_N
-        ),
-        "showContextInfo" => array(
+        ],
+        "showContextInfo" => [
             tlInputParameter::INT_N
-        )
-    );
+        ]
+    ];
 
     $args = new stdClass();
     R_PARAMS($iParams, $args);
@@ -73,9 +73,9 @@ function initializeGui(&$dbHandler, $argsObj)
 
     $gui->item_id = $argsObj->item_id;
     $info = $itemMgr->getRevisionByID($gui->item_id,
-        array(
+        [
             'decode_user' => true
-        ));
+        ]);
     $gui->item = $info;
 
     $gui->cfields = $itemMgr->html_table_of_custom_field_values(null,

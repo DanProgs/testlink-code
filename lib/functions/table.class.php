@@ -78,7 +78,7 @@ abstract class tlTable
     /*
      * Used by titleToColumnName() to create unique column identifiers.
      */
-    protected $usedNames = array();
+    protected $usedNames = [];
 
     /**
      *
@@ -113,7 +113,7 @@ abstract class tlTable
     {
         // Expand the simple column format (array-of-titles) to full
         // array-of-arrays and compute js friendly column names.
-        $this->columns = array();
+        $this->columns = [];
         foreach ($columns as $column) {
             if (is_array($column)) {
                 if (isset($column['title_key'])) {
@@ -134,10 +134,10 @@ abstract class tlTable
                 }
                 $this->columns[] = $column;
             } elseif (is_string($column)) {
-                $this->columns[] = array(
+                $this->columns[] = [
                     'title' => $column,
                     'col_id' => $this->titleToColumnName($column)
-                );
+                ];
             } else {
                 throw new Exception("Invalid column header: " . $column);
             }

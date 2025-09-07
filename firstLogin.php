@@ -90,56 +90,56 @@ function init_args()
     $args = new stdClass();
     $args->pwdInputSize = config_get('loginPagePasswordSize');
 
-    $iParams = array(
-        "doEditUser" => array(
+    $iParams = [
+        "doEditUser" => [
             'POST',
             tlInputParameter::STRING_N,
             0,
             1
-        ),
-        "login" => array(
+        ],
+        "login" => [
             'POST',
             tlInputParameter::STRING_N,
             0,
             30
-        ),
-        "password" => array(
+        ],
+        "password" => [
             'POST',
             tlInputParameter::STRING_N,
             0,
             $args->pwdInputSize
-        ),
-        "password2" => array(
+        ],
+        "password2" => [
             'POST',
             tlInputParameter::STRING_N,
             0,
             $args->pwdInputSize
-        ),
-        "firstName" => array(
+        ],
+        "firstName" => [
             'POST',
             tlInputParameter::STRING_N,
             0,
             30
-        ),
-        "lastName" => array(
+        ],
+        "lastName" => [
             'POST',
             tlInputParameter::STRING_N,
             0,
             30
-        ),
-        "email" => array(
+        ],
+        "email" => [
             'POST',
             tlInputParameter::STRING_N,
             0,
             100
-        ),
-        "viewer" => array(
+        ],
+        "viewer" => [
             'GET',
             tlInputParameter::STRING_N,
             0,
             3
-        )
-    );
+        ]
+    ];
     I_PARAMS($iParams, $args);
 
     return $args;
@@ -157,9 +157,9 @@ function notifyGlobalAdmins(&$dbHandler, &$userObj)
     // Get email addresses for all users that have default role = administrator
     $cfg = config_get('notifications');
     if (! is_null($cfg->userSignUp->to->roles)) {
-        $opt = array(
+        $opt = [
             'active' => 1
-        );
+        ];
         foreach ($cfg->userSignUp->to->roles as $roleID) {
             $roleMgr = new tlRole($roleID);
             $userSet = $roleMgr->getUsersWithGlobalRole($dbHandler, $opt);

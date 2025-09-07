@@ -33,9 +33,9 @@ class stashrestInterface extends codeTrackerInterface
         if ($this->setCfg($config) && $this->checkCfg()) {
             $this->completeCfg();
             $this->connect();
-            $this->guiCfg = array(
+            $this->guiCfg = [
                 'use_decoration' => true
-            );
+            ];
         }
     }
 
@@ -93,11 +93,11 @@ class stashrestInterface extends codeTrackerInterface
             // CRITIC NOTICE for developers
             // $this->cfg is a simpleXML Object, then seems very conservative and safe
             // to cast properties BEFORE using it.
-            $this->stashCfg = array(
+            $this->stashCfg = [
                 'username' => (string) trim($this->cfg->username),
                 'password' => (string) trim($this->cfg->password),
                 'host' => (string) trim($this->cfg->uriapi)
-            );
+            ];
 
             $this->stashCfg['proxy'] = config_get('proxy');
             if (! is_null($this->stashCfg['proxy']) &&
@@ -217,10 +217,10 @@ class stashrestInterface extends codeTrackerInterface
                 if ($slashPos !== false) {
                     $tmpName = substr($tmpName, 0, $slashPos);
                 }
-                $ret[$tmpName] = array(
+                $ret[$tmpName] = [
                     $elem->type,
                     $path
-                );
+                ];
             }
         }
         return $ret;

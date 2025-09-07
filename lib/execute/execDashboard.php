@@ -21,7 +21,7 @@ $tproject_mgr = new testproject($db);
 $tree_mgr = new tree($db);
 $attachmentRepository = tlAttachmentRepository::create($db);
 
-list ($args, $tplan_mgr) = initArgs($db);
+[$args, $tplan_mgr] = initArgs($db);
 $gui = initializeGui($db, $args, $cfg, $tplan_mgr);
 
 $smarty->assign('gui', $gui);
@@ -90,10 +90,10 @@ function initArgs(&$dbHandler)
             }
         }
     }
-    return array(
+    return [
         $args,
         $tplan_mgr
-    );
+    ];
 }
 
 /*
@@ -204,15 +204,15 @@ function initializeGui(&$dbHandler, &$argsObj, &$cfgObj, &$tplanMgr)
     // custom fields for test plan can be edited ONLY on design, that's reason why we are using
     // scope = 'design' instead of 'execution'
     $gui->testplan_cfields = $tplanMgr->html_table_of_custom_field_values(
-        $argsObj->tplan_id, 'design', array(
+        $argsObj->tplan_id, 'design', [
             'show_on_execution' => 1
-        ));
+        ]);
 
     $gui->build_cfields = $buildMgr->html_table_of_custom_field_values(
         $argsObj->build_id, $argsObj->tproject_id, 'design',
-        array(
+        [
             'show_on_execution' => 1
-        ));
+        ]);
 
     $dummy = $platformMgr->getLinkedToTestplan($argsObj->tplan_id);
     $gui->has_platforms = ! is_null($dummy) ? 1 : 0;
@@ -241,14 +241,14 @@ function initializeGui(&$dbHandler, &$argsObj, &$cfgObj, &$tplanMgr)
  */
 function getContextFromGlobalScope(&$argsObj)
 {
-    $settings = array(
+    $settings = [
         'build_id' => 'setting_build',
         'platform_id' => 'setting_platform'
-    );
-    $isNumeric = array(
+    ];
+    $isNumeric = [
         'build_id' => 0,
         'platform_id' => 0
-    );
+    ];
 
     $argsObj->form_token = isset($_REQUEST['form_token']) ? $_REQUEST['form_token'] : 0;
     $sf = isset($_SESSION['execution_mode']) &&

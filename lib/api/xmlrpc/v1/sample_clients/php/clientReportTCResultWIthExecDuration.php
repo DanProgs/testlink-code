@@ -24,7 +24,7 @@ $test_num = 0;
 $test_num ++;
 $unitTestDescription = "Test {$test_num} - {$method}";
 
-$args = array();
+$args = [];
 $args["devKey"] = 'admin';
 $args['testcaseexternalid'] = 'IU7206-1';
 $args["testplanid"] = 279324;

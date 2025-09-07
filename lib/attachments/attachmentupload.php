@@ -37,7 +37,7 @@ if ($args->bPostBack) {
             $fSize = isset($fInfo['size'][$fdx]) ? $fInfo['size'][$fdx] : 0;
             $fTmpName = isset($fInfo['tmp_name'][$fdx]) ? $fInfo['tmp_name'][$fdx] : '';
 
-            $fin = array();
+            $fin = [];
             $fin['size'] = $fSize;
             $fin['tmp_name'] = $fTmpName;
             $fin['type'] = $fInfo['type'][$fdx];
@@ -75,27 +75,27 @@ $smarty->display('attachmentupload.tpl');
  */
 function initArgs()
 {
-    $iParams = array(
+    $iParams = [
         // the id (attachments.fk_id) of the object, to which the attachment belongs to
-        "id" => array(
+        "id" => [
             "GET",
             tlInputParameter::INT_N
-        ),
+        ],
         // the table to which the fk_id refers to (attachments.fk_table) of the attachment
-        "tableName" => array(
+        "tableName" => [
             "GET",
             tlInputParameter::STRING_N,
             0,
             250
-        ),
+        ],
         // the title of the attachment (attachments.title)
-        "title" => array(
+        "title" => [
             "POST",
             tlInputParameter::STRING_N,
             0,
             250
-        )
-    );
+        ]
+    ];
     $args = new stdClass();
     I_PARAMS($iParams, $args);
 

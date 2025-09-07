@@ -16,7 +16,7 @@ $method = "addPlatformToTestPlan";
 
 $unitTestDescription = "Test - {$method} - ";
 
-$args = array();
+$args = [];
 $args["devKey"] = 'd74058494841b830b6fb0f03f8b24d67';
 $args["testplanid"] = 1205;
 $args["platformname"] = 'MANZA';

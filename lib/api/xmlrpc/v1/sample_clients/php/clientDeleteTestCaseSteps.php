@@ -18,14 +18,14 @@ $tcCounter ++;
 $method = 'deleteTestCaseSteps';
 $unitTestDescription = "Test #{$tcCounter}- {$method}";
 
-$args = array();
+$args = [];
 $args["devKey"] = DEV_KEY;
 $args["testcaseexternalid"] = 'MKO-1';
 $args["version"] = 1;
-$args["steps"] = array(
+$args["steps"] = [
     12,
     1
-);
+];
 
 $debug = true;
 echo $unitTestDescription;

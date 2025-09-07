@@ -19,7 +19,7 @@ $method = 'getTestCasesForTestSuite';
 $test_num = 1;
 $unitTestDescription = "Test {$test_num} - {$method}";
 
-$args = array();
+$args = [];
 $args["devKey"] = isset($_REQUEST['apiKey']) ? $_REQUEST['apiKey'] : '21232f297a57a5a743894a0e4a801fc3';
 $args["testprojectid"] = 792;
 $args["testsuiteid"] = 793;
@@ -43,7 +43,7 @@ $method = 'getTestCasesForTestSuite';
 $test_num ++;
 $unitTestDescription = "Test {$test_num} - {$method}";
 
-$args = array();
+$args = [];
 $args["devKey"] = isset($_REQUEST['apiKey']) ? $_REQUEST['apiKey'] : DEV_KEY;
 $args["testprojectid"] = 12222;
 $args["testsuiteid"] = 186;

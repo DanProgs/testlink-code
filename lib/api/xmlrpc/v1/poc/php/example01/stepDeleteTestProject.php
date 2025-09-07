@@ -10,7 +10,7 @@ $method = 'deleteTestProject';
 $unitTestDescription = "";
 $devKey = isset($_REQUEST['apiKey']) ? $_REQUEST['apiKey'] : $tlDevKey;
 
-$args = array();
+$args = [];
 $args["devKey"] = $devKey;
 $args["prefix"] = $tlTestCasePrefix;
 $additionalInfo = '';

@@ -16,7 +16,7 @@ $tplCfg = templateConfiguration();
 
 testlinkInitPage($db, 'init_project' == 'dont_init_project', true);
 
-list ($tplan_mgr, $args) = initArgsForReports($db);
+[$tplan_mgr, $args] = initArgsForReports($db);
 if (null == $tplan_mgr) {
     $tplan_mgr = new testplan($db);
 }
@@ -25,19 +25,19 @@ $gui = initializeGui($db, $args, $tplan_mgr);
 $mailCfg = buildMailCfg($gui);
 $mgr = new tlTestPlanMetrics($db);
 
-$statsBy = array();
-$statsBy['month'] = array(
+$statsBy = [];
+$statsBy['month'] = [
     'timeline' => 'month',
     'workforce' => true
-);
-$statsBy['day'] = array(
+];
+$statsBy['day'] = [
     'timeline' => 'day',
     'workforce' => true
-);
-$statsBy['day_hour'] = array(
+];
+$statsBy['day_hour'] = [
     'timeline' => 'day_hour',
     'workforce' => true
-);
+];
 
 $gui->statsBy = $statsBy;
 $gui->group = $group = 'day';
@@ -51,25 +51,25 @@ if ($stats != null) {
     if (! is_null($gui->statistics->exec)) {
         switch ($group) {
             case 'day':
-                $gui->columnsDefinition->exec = array(
+                $gui->columnsDefinition->exec = [
                     lang_get('qty'),
                     lang_get('yyyy_mm_dd')
-                );
+                ];
                 break;
 
             case 'month':
-                $gui->columnsDefinition->exec = array(
+                $gui->columnsDefinition->exec = [
                     lang_get('qty'),
                     lang_get('yyyy_mm')
-                );
+                ];
                 break;
 
             case 'day_hour':
-                $gui->columnsDefinition->exec = array(
+                $gui->columnsDefinition->exec = [
                     lang_get('qty'),
                     lang_get('yyyy_mm_dd'),
                     lang_get('hh')
-                );
+                ];
                 break;
         }
 
@@ -94,10 +94,10 @@ displayReport($tplCfg->tpl, $smarty, $args->format, $mailCfg);
  */
 function buildMailCfg(&$guiObj)
 {
-    $labels = array(
+    $labels = [
         'testplan' => lang_get('testplan'),
         'testproject' => lang_get('testproject')
-    );
+    ];
     $cfg = new stdClass();
     $cfg->cc = '';
     $cfg->subject = $guiObj->title . ' : ' . $labels['testproject'] . ' : ' .
@@ -120,16 +120,16 @@ function initializeGui(&$dbHandler, $argsObj, &$tplanMgr)
     $gui->tproject_id = $argsObj->tproject_id;
 
     if ($argsObj->accessType == 'gui') {
-        list (, $gui) = initUserEnv($dbHandler, $argsObj);
+        [, $gui] = initUserEnv($dbHandler, $argsObj);
     }
 
     $gui->apikey = $argsObj->apikey;
     $gui->accessType = $argsObj->accessType;
-    $gui->fakePlatform = array(
+    $gui->fakePlatform = [
         ''
-    );
+    ];
     $gui->title = lang_get('execTimelineStats_report');
-    $gui->do_report = array();
+    $gui->do_report = [];
     $gui->showPlatforms = true;
     $gui->columnsDefinition = new stdClass();
     $gui->columnsDefinition->keywords = null;
@@ -151,13 +151,13 @@ function initializeGui(&$dbHandler, $argsObj, &$tplanMgr)
     $gui->tplan_id = intval($argsObj->tplan_id);
 
     $gui->platformSet = $tplanMgr->getPlatforms($argsObj->tplan_id,
-        array(
+        [
             'outputFormat' => 'map'
-        ));
+        ]);
     if (is_null($gui->platformSet)) {
-        $gui->platformSet = array(
+        $gui->platformSet = [
             ''
-        );
+        ];
         $gui->showPlatforms = false;
     } else {
         natsort($gui->platformSet);
@@ -191,7 +191,7 @@ function createSpreadsheet($gui, &$tplanMgr)
     $style = initStyleSpreadsheet();
 
     // Common
-    $dataHeaderMetrics = array();
+    $dataHeaderMetrics = [];
     $dataHeaderMetrics[] = $lbl['qty_of_executions'];
     switch ($gui->group) {
         case 'day':
@@ -211,7 +211,7 @@ function createSpreadsheet($gui, &$tplanMgr)
     $objPHPExcel = new PHPExcel();
     $lines2write = xlsStepOne($objPHPExcel, $style, $lbl, $gui);
     $startingRow = count($lines2write); // MAGIC
-    $dataHeader = array();
+    $dataHeader = [];
     foreach ($dataHeaderMetrics as $val) {
         $dataHeader[] = $val;
     }
@@ -268,20 +268,20 @@ function createSpreadsheet($gui, &$tplanMgr)
 function xlsStepOne(&$oj, $style, &$lbl, &$gui)
 {
     $dummy = '';
-    $lines2write = array(
-        array(
+    $lines2write = [
+        [
             $lbl['testproject'],
             $gui->tproject_name
-        ),
-        array(
+        ],
+        [
             $lbl['testplan'],
             $gui->tplan_name
-        ),
-        array(
+        ],
+        [
             $lbl['generated_by_TestLink_on'],
             localize_dateOrTimeStamp(null, $dummy, 'timestamp_format', time())
-        )
-    );
+        ]
+    ];
 
     $cellArea = "A1:";
     foreach ($lines2write as $zdx => $fields) {
@@ -306,7 +306,7 @@ function xlsStepOne(&$oj, $style, &$lbl, &$gui)
 function initLblSpreadsheet()
 {
     return init_labels(
-        array(
+        [
             'qty' => null,
             'yyyy_mm_dd' => null,
             'qty_of_executions' => null,
@@ -316,7 +316,7 @@ function initLblSpreadsheet()
             'testplan' => null,
             'testproject' => null,
             'generated_by_TestLink_on' => null
-        ));
+        ]);
 }
 
 /**
@@ -325,65 +325,65 @@ function initLblSpreadsheet()
  */
 function initStyleSpreadsheet()
 {
-    $style = array();
-    $style['ReportContext'] = array(
-        'font' => array(
+    $style = [];
+    $style['ReportContext'] = [
+        'font' => [
             'bold' => true
-        )
-    );
-    $style['DataHeader'] = array(
-        'font' => array(
+        ]
+    ];
+    $style['DataHeader'] = [
+        'font' => [
             'bold' => true
-        ),
-        'borders' => array(
-            'outline' => array(
+        ],
+        'borders' => [
+            'outline' => [
                 'style' => PHPExcel_Style_Border::BORDER_MEDIUM
-            ),
-            'vertical' => array(
+            ],
+            'vertical' => [
                 'style' => PHPExcel_Style_Border::BORDER_THIN
-            )
-        ),
-        'fill' => array(
+            ]
+        ],
+        'fill' => [
             'type' => PHPExcel_Style_Fill::FILL_SOLID,
-            'startcolor' => array(
+            'startcolor' => [
                 'argb' => 'FF9999FF'
-            )
-        )
-    );
+            ]
+        ]
+    ];
 
-    $style['rowA'] = array(
-        'borders' => array(
-            'outline' => array(
+    $style['rowA'] = [
+        'borders' => [
+            'outline' => [
                 'style' => PHPExcel_Style_Border::BORDER_THIN
-            ),
-            'vertical' => array(
+            ],
+            'vertical' => [
                 'style' => PHPExcel_Style_Border::BORDER_THIN
-            )
-        ),
-        'fill' => array(
+            ]
+        ],
+        'fill' => [
             'type' => PHPExcel_Style_Fill::FILL_SOLID,
-            'startcolor' => array(
+            'startcolor' => [
                 'argb' => 'FFFFFFFF'
-            )
-        )
-    );
+            ]
+        ]
+    ];
 
-    $style['rowB'] = array(
-        'borders' => array(
-            'outline' => array(
+    $style['rowB'] = [
+        'borders' => [
+            'outline' => [
                 'style' => PHPExcel_Style_Border::BORDER_THIN
-            ),
-            'vertical' => array(
+            ],
+            'vertical' => [
                 'style' => PHPExcel_Style_Border::BORDER_THIN
-            )
-        ),
-        'fill' => array(
+            ]
+        ],
+        'fill' => [
             'type' => PHPExcel_Style_Fill::FILL_SOLID,
-            'startcolor' => array(
+            'startcolor' => [
                 'argb' => 'DCDCDCDC'
-            )
-        )
-    );
+            ]
+        ]
+    ];
 
     return $style;
 }

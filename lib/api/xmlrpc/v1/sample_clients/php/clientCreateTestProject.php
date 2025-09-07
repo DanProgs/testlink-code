@@ -25,7 +25,7 @@ $prefix = uniqid();
 $devKey = '985978c915f50e47a4b1a54a943d1b76';
 $devKey = isset($_REQUEST['apiKey']) ? $_REQUEST['apiKey'] : $devKey;
 
-$args = array();
+$args = [];
 $args["devKey"] = $devKey;
 $args["testcaseprefix"] = $prefix . $test_num;
 $args["testprojectname"] = "API Methods Test Project {$args['testcaseprefix']}";
@@ -47,11 +47,11 @@ die();
 $test_num ++;
 $unitTestDescription = "Test {$test_num} - {$method}() ::: ";
 
-$args = array();
+$args = [];
 // requirementsEnabled,testPriorityEnabled,automationEnabled,inventoryEnabled
-$args["options"] = array(
+$args["options"] = [
     'requirementsEnabled' => 0
-);
+];
 $dummy = 'Options[';
 foreach ($args["options"] as $key => $value) {
     $dummy .= $key . ' -> ' . $value . ' ';
@@ -80,12 +80,12 @@ runTest($client, $method, $args);
 $test_num ++;
 $unitTestDescription = "Test {$test_num} - {$method}() ::: ";
 
-$args = array();
+$args = [];
 // requirementsEnabled,testPriorityEnabled,automationEnabled,inventoryEnabled
-$args["options"] = array(
+$args["options"] = [
     'requirementsEnabled' => 0,
     'testPriorityEnabled' => 0
-);
+];
 $dummy = 'Options[';
 foreach ($args["options"] as $key => $value) {
     $dummy .= $key . ' -> ' . $value . ' ';
@@ -114,15 +114,15 @@ runTest($client, $method, $args);
 $test_num ++;
 $unitTestDescription = "Test {$test_num} - {$method}() ::: ";
 
-$args = array();
+$args = [];
 
 // requirementsEnabled,testPriorityEnabled,automationEnabled,inventoryEnabled
-$args["options"] = array(
+$args["options"] = [
     'requirementsEnabled' => 0,
     'testPriorityEnabled' => 0,
     'automationEnabled' => 0,
     'inventoryEnabled' => 0
-);
+];
 $dummy = 'Options[';
 foreach ($args["options"] as $key => $value) {
     $dummy .= $key . ' -> ' . $value . ' ';
@@ -151,15 +151,15 @@ runTest($client, $method, $args);
 $test_num ++;
 $unitTestDescription = "Test {$test_num} - {$method}() ::: ";
 
-$args = array();
+$args = [];
 
 // requirementsEnabled,testPriorityEnabled,automationEnabled,inventoryEnabled
-$args["options"] = array(
+$args["options"] = [
     'requirementsEnabled' => 0,
     'testPriorityEnabled' => 0,
     'automationEnabled' => 0,
     'inventoryEnabled' => 0
-);
+];
 $dummy = 'Options[';
 foreach ($args["options"] as $key => $value) {
     $dummy .= $key . ' -> ' . $value . ' ';
@@ -188,15 +188,15 @@ runTest($client, $method, $args);
 $test_num ++;
 $unitTestDescription = "Test {$test_num} - {$method}() ::: ";
 
-$args = array();
+$args = [];
 
 // requirementsEnabled,testPriorityEnabled,automationEnabled,inventoryEnabled
-$args["options"] = array(
+$args["options"] = [
     'requirementsEnabled' => 0,
     'testPriorityEnabled' => 0,
     'automationEnabled' => 0,
     'inventoryEnabled' => 0
-);
+];
 $dummy = 'Options[';
 foreach ($args["options"] as $key => $value) {
     $dummy .= $key . ' -> ' . $value . ' ';
@@ -225,15 +225,15 @@ runTest($client, $method, $args);
 $test_num ++;
 $unitTestDescription = "Test {$test_num} - {$method}() ::: ";
 
-$args = array();
+$args = [];
 
 // requirementsEnabled,testPriorityEnabled,automationEnabled,inventoryEnabled
-$args["options"] = array(
+$args["options"] = [
     'requirementsEnabled' => 0,
     'testPriorityEnabled' => 0,
     'automationEnabled' => 0,
     'inventoryEnabled' => 0
-);
+];
 $dummy = 'Options[';
 foreach ($args["options"] as $key => $value) {
     $dummy .= $key . ' -> ' . $value . ' ';

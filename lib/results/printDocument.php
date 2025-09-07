@@ -25,9 +25,9 @@ $docText = '';
 $topText = '';
 $doc_data = new stdClass(); // gather content and tests related data
 
-list ($args, $tproject_mgr, $decode) = initArgs($db);
+[$args, $tproject_mgr, $decode] = initArgs($db);
 $tree_manager = &$tproject_mgr->tree_manager;
-list ($doc_info, $my) = initEnv($db, $args, $tproject_mgr, $args->user_id);
+[$doc_info, $my] = initEnv($db, $args, $tproject_mgr, $args->user_id);
 
 $printingOptions = initPrintOpt($_REQUEST, $doc_info);
 
@@ -68,9 +68,9 @@ switch ($doc_info->type) {
                 $tInfo = $tsuite->get_by_id($args->itemID);
                 $tInfo['childNodes'] = isset($subtree['childNodes']) ? $subtree['childNodes'] : null;
 
-                $treeForPlatform[0]['childNodes'] = array(
+                $treeForPlatform[0]['childNodes'] = [
                     $tInfo
-                );
+                ];
 
                 $doc_info->title = htmlspecialchars(
                     isset($tInfo['name']) ? $args->tproject_name .
@@ -89,9 +89,9 @@ switch ($doc_info->type) {
 
         if ($args->build_id > 0) {
             $xx = $tplan_mgr->get_builds($args->tplan_id, null, null,
-                array(
+                [
                     'buildID' => $args->build_id
-                ));
+                ]);
             $doc_info->build_name = htmlspecialchars(
                 $xx[$args->build_id]['name']);
             $doc_info->build_notes = $xx[$args->build_id]['notes'];
@@ -102,19 +102,19 @@ switch ($doc_info->type) {
         $doc_info->title = $doc_info->testplan_name;
 
         // Changed to get ALL platform attributes.
-        $getOpt = array(
+        $getOpt = [
             'outputFormat' => 'mapAccessByID',
             'addIfNull' => true
-        );
+        ];
         $platforms = $tplan_mgr->getPlatforms($args->tplan_id, $getOpt);
         $platformIDSet = array_keys($platforms);
 
         $printingOptions['priority'] = $doc_info->test_priority_enabled;
-        $items2use = (object) array(
+        $items2use = (object) [
             'estimatedExecTime' => null,
             'realExecTime' => null
-        );
-        $treeForPlatform = array();
+        ];
+        $treeForPlatform = [];
 
         $filters = null;
         $ctx = new stdClass();
@@ -125,14 +125,14 @@ switch ($doc_info->type) {
         if ($doc_info->type == DOC_TEST_PLAN_EXECUTION_ON_BUILD) {
             $ctx->build_id = ($args->build_id > 0) ? $args->build_id : null;
 
-            $opx = array(
+            $opx = [
                 'setAssignedTo' => false
-            );
+            ];
             $ctx->with_user_assignment = $args->with_user_assignment;
             if ($ctx->build_id > 0 && $args->with_user_assignment) {
-                $opx = array(
+                $opx = [
                     'setAssignedTo' => true
-                );
+                ];
             }
         }
 
@@ -146,7 +146,7 @@ switch ($doc_info->type) {
                 $ctx->branchRoot = $args->itemID;
                 $opx = array_merge((array) $opx,
                     (array) $my['options']['prepareNode']);
-                list ($treeForPlatform, $items2use) = buildContentForTestPlanBranch(
+                [$treeForPlatform, $items2use] = buildContentForTestPlanBranch(
                     $db, $subtree, $ctx, $doc_info, $decode, $tplan_mgr, $opx);
                 break;
         }
@@ -193,9 +193,9 @@ if ($treeForPlatform) {
                 $docText .= renderBuildItem($doc_info);
             }
 
-            $cfieldFormatting = array(
+            $cfieldFormatting = [
                 'table_css_style' => 'class="cf"'
-            );
+            ];
             if ($printingOptions['cfields']) {
                 $cfields = $tplan_mgr->html_table_of_custom_field_values(
                     $args->tplan_id, 'design', null, $cfieldFormatting);
@@ -298,53 +298,53 @@ echo $docText;
  */
 function initArgs(&$dbHandler)
 {
-    $iParams = array(
-        "apikey" => array(
+    $iParams = [
+        "apikey" => [
             tlInputParameter::STRING_N,
             32,
             64
-        ),
-        "tproject_id" => array(
+        ],
+        "tproject_id" => [
             tlInputParameter::INT_N
-        ),
-        "tplan_id" => array(
+        ],
+        "tplan_id" => [
             tlInputParameter::INT_N
-        ),
-        "build_id" => array(
+        ],
+        "build_id" => [
             tlInputParameter::INT_N
-        ),
-        "docTestPlanId" => array(
+        ],
+        "docTestPlanId" => [
             tlInputParameter::INT_N
-        ),
-        "id" => array(
+        ],
+        "id" => [
             tlInputParameter::INT_N
-        ),
-        "type" => array(
+        ],
+        "type" => [
             tlInputParameter::STRING_N,
             0,
             20
-        ),
-        "format" => array(
+        ],
+        "format" => [
             tlInputParameter::INT_N
-        ),
-        "level" => array(
+        ],
+        "level" => [
             tlInputParameter::STRING_N,
             0,
             32
-        ),
-        "with_user_assignment" => array(
+        ],
+        "with_user_assignment" => [
             tlInputParameter::INT_N
-        )
-    );
+        ]
+    ];
 
     $args = new stdClass();
     R_PARAMS($iParams, $args);
 
     // really UGLY HACK
-    $typeDomain = array(
+    $typeDomain = [
         'test_plan' => 'testplan',
         'test_report' => 'testreport'
-    );
+    ];
     $args->type = isset($typeDomain[$args->type]) ? $typeDomain[$args->type] : $args->type;
 
     if (! is_null($args->apikey)) {
@@ -389,18 +389,18 @@ function initArgs(&$dbHandler)
     $args->user_id = isset($_SESSION['userID']) ? intval($_SESSION['userID']) : null;
 
     $resultsCfg = config_get('results');
-    $dcd = array();
+    $dcd = [];
     $dcd['node_descr_id'] = $tproject_mgr->tree_manager->get_available_node_types();
     $dcd['node_id_descr'] = array_flip($dcd['node_descr_id']);
 
     $dcd['status_descr_code'] = $resultsCfg['status_code'];
     $dcd['status_code_descr'] = array_flip($dcd['status_descr_code']);
 
-    return array(
+    return [
         $args,
         $tproject_mgr,
         $dcd
-    );
+    ];
 }
 
 /**
@@ -430,7 +430,7 @@ function getDecode(&$treeMgr)
 {
     $resultsCfg = config_get('results');
 
-    $dcd = array();
+    $dcd = [];
     $dcd['node_descr_id'] = $treeMgr->get_available_node_types();
     $dcd['node_id_descr'] = array_flip($dcd['node_descr_id']);
 
@@ -447,35 +447,35 @@ function getDecode(&$treeMgr)
  */
 function initEnv(&$dbHandler, &$argsObj, &$tprojectMgr, $userID)
 {
-    $my = array();
+    $my = [];
     $doc = new stdClass();
 
-    $my['options'] = array(
+    $my['options'] = [
         'recursive' => true,
         'prepareNode' => null,
-        'order_cfg' => array(
+        'order_cfg' => [
             "type" => 'spec_order'
-        )
-    );
-    $my['filters'] = array(
-        'exclude_node_types' => array(
+        ]
+    ];
+    $my['filters'] = [
+        'exclude_node_types' => [
             'testplan' => 'exclude me',
             'requirement_spec' => 'exclude me',
             'requirement' => 'exclude me'
-        ),
-        'exclude_children_of' => array(
+        ],
+        'exclude_children_of' => [
             'testcase' => 'exclude my children',
             'requirement_spec' => 'exclude my children'
-        )
-    );
+        ]
+    ];
 
-    $lblKey = array(
+    $lblKey = [
         DOC_TEST_SPEC => 'title_test_spec',
         DOC_TEST_PLAN_DESIGN => 'report_test_plan_design',
         DOC_TEST_PLAN_EXECUTION => 'report_test_plan_execution',
         DOC_TEST_PLAN_EXECUTION_ON_BUILD => 'report_test_plan_execution_on_build',
         DOC_REQ_SPEC => 'req_spec'
-    );
+    ];
 
     $doc->content_range = $argsObj->level;
     $doc->type = $argsObj->doc_type;
@@ -487,36 +487,36 @@ function initEnv(&$dbHandler, &$argsObj, &$tprojectMgr, $userID)
 
     switch ($doc->type) {
         case DOC_TEST_PLAN_DESIGN:
-            $my['options']['order_cfg'] = array(
+            $my['options']['order_cfg'] = [
                 "type" => 'exec_order',
                 "tplan_id" => $argsObj->tplan_id
-            );
+            ];
             break;
 
         case DOC_TEST_PLAN_EXECUTION:
         case DOC_TEST_PLAN_EXECUTION_ON_BUILD:
-            $my['options']['order_cfg'] = array(
+            $my['options']['order_cfg'] = [
                 "type" => 'exec_order',
                 "tplan_id" => $argsObj->tplan_id
-            );
-            $my['options']['prepareNode'] = array(
+            ];
+            $my['options']['prepareNode'] = [
                 'viewType' => 'executionTree'
-            );
+            ];
             break;
 
         case DOC_REQ_SPEC:
-            $my['filters'] = array(
-                'exclude_node_types' => array(
+            $my['filters'] = [
+                'exclude_node_types' => [
                     'testplan' => 'exclude me',
                     'testsuite' => 'exclude me',
                     'testcase' => 'exclude me'
-                ),
-                'exclude_children_of' => array(
+                ],
+                'exclude_children_of' => [
                     'testcase' => 'exclude my children',
                     'testsuite' => 'exclude my children',
                     'requirement' => 'exclude my children'
-                )
-            );
+                ]
+            ];
             break;
     }
 
@@ -532,17 +532,17 @@ function initEnv(&$dbHandler, &$argsObj, &$tprojectMgr, $userID)
 
     $doc->test_priority_enabled = $dummy['opt']->testPriorityEnabled;
 
-    return array(
+    return [
         $doc,
         $my
-    );
+    ];
 }
 
 /**
  */
 function getStatsEstimatedExecTime(&$tplanMgr, &$items2use, $tplanID)
 {
-    $min = array();
+    $min = [];
     $stat = null;
     if (is_null($items2use)) {
         // will work on all test cases present on Test Plan.
@@ -551,7 +551,7 @@ function getStatsEstimatedExecTime(&$tplanMgr, &$items2use, $tplanID)
     } else {
         $min['totalMinutes'] = 0;
         $min['totalTestCases'] = 0;
-        $min['platform'] = array();
+        $min['platform'] = [];
         foreach ($items2use as $platID => $itemsForPlat) {
             if (! is_null($itemsForPlat)) {
                 $tmp = $tplanMgr->get_estimated_execution_time($tplanID,
@@ -578,10 +578,10 @@ function getStatsEstimatedExecTime(&$tplanMgr, &$items2use, $tplanID)
  */
 function getStatsRealExecTime(&$tplanMgr, &$lastExecBy, $context, $decode)
 {
-    $min = array();
+    $min = [];
     $stat = null;
     $executed_qty = 0;
-    $items2use = array();
+    $items2use = [];
 
     if (! is_null($lastExecBy) && ! empty($lastExecBy)) {
         // divide execution by Platform ID
@@ -604,7 +604,7 @@ function getStatsRealExecTime(&$tplanMgr, &$lastExecBy, $context, $decode)
         if ($executed_qty > 0) {
             $min['totalMinutes'] = 0;
             $min['totalTestCases'] = 0;
-            $min['platform'] = array();
+            $min['platform'] = [];
             $ecx = $context;
 
             foreach ($items2use as $platID => $itemsForPlat) {
@@ -641,27 +641,27 @@ function getStatsRealExecTime(&$tplanMgr, &$lastExecBy, $context, $decode)
 function buildContentForTestPlan(&$dbHandler, $itemsTree, $ctx, &$tplanMgr,
     $pnFilters = null, $opt = null)
 {
-    $linkedBy = array();
-    $contentByPlatform = array();
+    $linkedBy = [];
+    $contentByPlatform = [];
 
     $tplanID = $ctx->tplan_id;
     $platformIDSet = $ctx->platformIDSet;
 
-    $my['opt'] = array(
+    $my['opt'] = [
         'setAssignedTo' => false
-    );
+    ];
     $my['opt'] = array_merge($my['opt'], (array) $opt);
 
     // due to Platforms we need to use 'viewType' => 'executionTree',
     // if not we get ALWAYS the same set of test cases linked to test plan
     // for each platform -> WRONG
-    $pnOptions = array(
+    $pnOptions = [
         'hideTestCases' => 0,
         'showTestCaseID' => 1,
         'viewType' => 'executionTree',
         'getExternalTestCaseID' => 0,
         'ignoreInactiveTestCases' => 0
-    );
+    ];
 
     $pnOptions['setAssignedTo'] = $my['opt']['setAssignedTo'];
 
@@ -672,9 +672,9 @@ function buildContentForTestPlan(&$dbHandler, $itemsTree, $ctx, &$tplanMgr,
     } else {
         $px = 'build_id';
         if (property_exists($ctx, $px)) {
-            $filters = array(
+            $filters = [
                 $px => $ctx->$px
-            );
+            ];
         }
     }
 
@@ -706,18 +706,18 @@ function buildContentForTestPlan(&$dbHandler, $itemsTree, $ctx, &$tplanMgr,
 function buildContentForTestPlanBranch(&$dbHandler, $itemsTree, $ctx, &$docInfo,
     $decode, &$tplanMgr, $options = null)
 {
-    $linkedBy = array();
+    $linkedBy = [];
     $branch_tsuites = null;
-    $contentByPlatform = array();
+    $contentByPlatform = [];
 
     $branchRoot = &$ctx->branchRoot;
     $tplanID = &$ctx->tplan_id;
     $platformIDSet = &$ctx->platformIDSet;
 
-    $pnOptions = array(
+    $pnOptions = [
         'hideTestCases' => 0,
         'setAssignedTo' => false
-    );
+    ];
     $pnOptions = array_merge($pnOptions, (array) $options);
 
     $tsuite = new testsuite($dbHandler);
@@ -733,13 +733,13 @@ function buildContentForTestPlanBranch(&$dbHandler, $itemsTree, $ctx, &$docInfo,
     }
     $branch_tsuites[] = $branchRoot;
 
-    $metrics = (object) array(
+    $metrics = (object) [
         'estimatedExecTime' => null,
         'realExecTime' => null
-    );
-    $filters = array(
+    ];
+    $filters = [
         'tsuites_id' => $branch_tsuites
-    );
+    ];
 
     $getLTCVOpt['addExecInfo'] = true;
     if ($docInfo->type == DOC_TEST_PLAN_EXECUTION_ON_BUILD) {
@@ -785,30 +785,30 @@ function buildContentForTestPlanBranch(&$dbHandler, $itemsTree, $ctx, &$docInfo,
         // Prepare Node -> pn
         $pnFilters = null;
         $dummy4reference = null;
-        $contentByPlatform[$platform_id]['childNodes'] = array();
+        $contentByPlatform[$platform_id]['childNodes'] = [];
 
         if (! is_null($linkedBy[$platform_id])) {
             prepareNode($dbHandler, $tInfo, $dummy4reference, $dummy4reference,
                 $linkedBy[$platform_id], $pnFilters, $pnOptions);
 
-            $contentByPlatform[$platform_id]['childNodes'] = array(
+            $contentByPlatform[$platform_id]['childNodes'] = [
                 $tInfo
-            );
+            ];
         }
     }
 
     $metrics->realExecTime = $linkedBy;
-    return array(
+    return [
         $contentByPlatform,
         $metrics
-    );
+    ];
 }
 
 /**
  */
 function timeStatistics($items, $context, $decode, $tplanMgr)
 {
-    $stats = array();
+    $stats = [];
     $stats['estimated_execution'] = getStatsEstimatedExecTime($tplanMgr,
         $items->estimatedExecTime, $context->tplan_id);
 

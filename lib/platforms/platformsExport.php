@@ -40,21 +40,21 @@ $smarty->display($templateCfg->template_dir . $templateCfg->default_template);
 function initArgs(&$dbH)
 {
     $args = new stdClass();
-    $iParams = array(
-        "doAction" => array(
+    $iParams = [
+        "doAction" => [
             tlInputParameter::STRING_N,
             0,
             50
-        ),
-        "export_filename" => array(
+        ],
+        "export_filename" => [
             tlInputParameter::STRING_N,
             0,
             255
-        ),
-        "tproject_id" => array(
+        ],
+        "tproject_id" => [
             tlInputParameter::INT
-        )
-    );
+        ]
+    ];
 
     R_PARAMS($iParams, $args);
     if (0 == $args->tproject_id) {
@@ -62,9 +62,9 @@ function initArgs(&$dbH)
     }
 
     $args->testproject_name = '';
-    $tables = tlDBObject::getDBTables(array(
+    $tables = tlDBObject::getDBTables([
         'nodes_hierarchy'
-    ));
+    ]);
     $sql = "SELECT name FROM {$tables['nodes_hierarchy']}
           WHERE id={$args->tproject_id}";
     $info = $dbH->get_recordset($sql);
@@ -88,9 +88,9 @@ function initializeGui(&$argsObj)
     $guiObj->page_title = lang_get('export_platforms');
     $guiObj->do_it = 1;
     $guiObj->nothing_todo_msg = '';
-    $guiObj->exportTypes = array(
+    $guiObj->exportTypes = [
         'XML' => 'XML'
-    );
+    ];
 
     $guiObj->tproject_id = $argsObj->tproject_id;
     $guiObj->goback_url = $_SESSION['basehref'] .
@@ -111,12 +111,12 @@ function initializeGui(&$argsObj)
 function doExport(&$db, $filename, $tproject_id)
 {
     $debugMsg = 'File:' . __FILE__ . ' - Function: ' . __FUNCTION__;
-    $tables = tlObjectWithDB::getDBTables(array(
+    $tables = tlObjectWithDB::getDBTables([
         'platforms'
-    ));
+    ]);
     $adodbXML = new ADODB_XML("1.0", "UTF-8");
 
-    $sql = "/* $debugMsg */
+    $sql = "/* {$debugMsg} */
           SELECT name,notes,enable_on_design,enable_on_execution,is_open
           FROM {$tables['platforms']} PLAT
           WHERE PLAT.testproject_id=" . intval($tproject_id);

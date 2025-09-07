@@ -18,7 +18,7 @@ show_api_db_sample_msg();
 $method = 'getTestCaseIDByName';
 $test_num = 1;
 $unitTestDescription = "Test {$test_num} - {$method}";
-$args = array();
+$args = [];
 $args["devKey"] = isset($_REQUEST['apiKey']) ? $_REQUEST['apiKey'] : DEV_KEY;
 $args["testcasename"] = 'KOMODO';
 
@@ -38,7 +38,7 @@ die();
 $test_num = 2;
 $unitTestDescription = "Test {$test_num} - {$method}";
 
-$args = array();
+$args = [];
 $args["devKey"] = isset($_REQUEST['apiKey']) ? $_REQUEST['apiKey'] : DEV_KEY;
 $args["testcaseexternalid"] = 'API-2';
 $args["version"] = 1;
@@ -57,7 +57,7 @@ runTest($client, $method, $args);
 $test_num = 2;
 $unitTestDescription = "Test {$test_num} - {$method}";
 
-$args = array();
+$args = [];
 $args["devKey"] = isset($_REQUEST['apiKey']) ? $_REQUEST['apiKey'] : DEV_KEY;
 $args["testcaseid"] = '1667';
 $args["version"] = 1;

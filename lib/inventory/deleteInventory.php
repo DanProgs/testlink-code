@@ -38,11 +38,11 @@ echo json_encode($data);
 function initArgs()
 {
     $_REQUEST = strings_stripSlashes($_REQUEST);
-    $iParams = array(
-        "machineID" => array(
+    $iParams = [
+        "machineID" => [
             tlInputParameter::INT_N
-        )
-    );
+        ]
+    ];
 
     $args = new stdClass();
     R_PARAMS($iParams, $args);

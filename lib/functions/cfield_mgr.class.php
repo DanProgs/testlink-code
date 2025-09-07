@@ -75,11 +75,11 @@ class cfield_mgr extends tlObject
      *      IMPORTANT: this values are used as access keys in several properties of this object.
      *      then if you add one here, remember to update other properties.
      */
-    private $application_areas = array(
+    private $application_areas = [
         'execution',
         'design',
         'testplan_design'
-    );
+    ];
 
     /**
      *
@@ -91,7 +91,7 @@ class cfield_mgr extends tlObject
      *      Added specific type for test automation related custom fields.
      *      Start at code 500
      */
-    public $custom_field_types = array(
+    public $custom_field_types = [
         0 => 'string',
         1 => 'numeric',
         2 => 'float',
@@ -105,7 +105,7 @@ class cfield_mgr extends tlObject
         20 => 'text area',
         500 => 'script',
         501 => 'server'
-    );
+    ];
 
     /**
      *
@@ -113,7 +113,7 @@ class cfield_mgr extends tlObject
      *      Keys of this map must be the values present in:
      *      <code>$this->custom_field_types</code>
      */
-    public $possible_values_cfg = array(
+    public $possible_values_cfg = [
         'string' => 0,
         'numeric' => 0,
         'float' => 0,
@@ -127,17 +127,17 @@ class cfield_mgr extends tlObject
         'text area' => 0,
         'script' => 0,
         'server' => 0
-    );
+    ];
 
     /**  @var array only the types listed here can have custom fields */
-    private $node_types = array(
+    private $node_types = [
         'build',
         'testsuite',
         'testplan',
         'testcase',
         'requirement_spec',
         'requirement'
-    );
+    ];
 
     /**
      *
@@ -181,60 +181,60 @@ class cfield_mgr extends tlObject
     // 0 => combo will not displayed
     //
     // May be need a review, because after the changes, seems a little bit silly.
-    private $enable_on_cfg = array(
-        'execution' => array(
+    private $enable_on_cfg = [
+        'execution' => [
             'build' => 0,
             'testsuite' => 0,
             'testplan' => 0,
             'testcase' => 1,
             'requirement_spec' => 0,
             'requirement' => 0
-        ),
-        'design' => array(
+        ],
+        'design' => [
             'build' => 0,
             'testsuite' => 0,
             'testplan' => 0,
             'testcase' => 1,
             'requirement_spec' => 0,
             'requirement' => 0
-        ),
-        'testplan_design' => array(
+        ],
+        'testplan_design' => [
             'build' => 0,
             'testsuite' => 0,
             'testplan' => 0,
             'testcase' => 1,
             'requirement_spec' => 0,
             'requirement' => 0
-        )
-    );
+        ]
+    ];
 
     // 0 => combo will not displayed
-    private $show_on_cfg = array(
-        'execution' => array(
+    private $show_on_cfg = [
+        'execution' => [
             'testsuite' => 1,
             'testplan' => 1,
             'testcase' => 1,
             'build' => 1,
             'requirement_spec' => 0,
             'requirement' => 0
-        ),
-        'design' => array(
+        ],
+        'design' => [
             'testsuite' => 1,
             'testplan' => 1,
             'testcase' => 1,
             'build' => 0,
             'requirement_spec' => 0,
             'requirement' => 0
-        ),
-        'testplan_design' => array(
+        ],
+        'testplan_design' => [
             'testsuite' => 1,
             'testplan' => 1,
             'testcase' => 1,
             'build' => 0,
             'requirement_spec' => 0,
             'requirement' => 0
-        )
-    );
+        ]
+    ];
 
     // the name of html input will have the following format
     // <name_prefix>_<custom_field_type_id>_<progressive>
@@ -257,12 +257,12 @@ class cfield_mgr extends tlObject
 
     private $decode;
 
-    private $html_date_input_suffix = array(
+    private $html_date_input_suffix = [
         'input' => true,
         'hour' => true,
         'minute' => true,
         'second' => true
-    );
+    ];
 
     /**
      * Class constructor
@@ -354,7 +354,7 @@ class cfield_mgr extends tlObject
      */
     public function get_allowed_nodes()
     {
-        $allowed_nodes = array();
+        $allowed_nodes = [];
         foreach ($this->node_types as $verbose_type) {
             $allowed_nodes[$verbose_type] = $this->decode['nodes'][$verbose_type];
         }
@@ -396,7 +396,7 @@ class cfield_mgr extends tlObject
      */
     private function _get_ui_mgtm_cfg_for_node_type($map_node_id_cfg)
     {
-        $enabled_mgmt = array();
+        $enabled_mgmt = [];
         $tl_node_types = $this->decode['nodes'];
         foreach ($this->node_types as $verbose_type) {
             $type_id = $tl_node_types[$verbose_type];
@@ -418,7 +418,7 @@ class cfield_mgr extends tlObject
      */
     public function get_possible_values_cfg()
     {
-        $pv_cfg = array();
+        $pv_cfg = [];
         $custom_field_types_id = array_flip($this->custom_field_types);
 
         foreach ($this->possible_values_cfg as $verbose_cf_type => $use_on_ui) {
@@ -438,12 +438,12 @@ class cfield_mgr extends tlObject
     public function getLinkedCfieldsAtDesign($context, $filters = null,
         $access_key = 'id')
     {
-        $ctx = array(
+        $ctx = [
             'tproject_id' => null,
             'enabled' => true,
             'node_type' => null,
             'node_id' => null
-        );
+        ];
         $ctx = array_merge($ctx, $context);
         if (null == $ctx['tproject_id']) {
             throw new Exception(
@@ -562,7 +562,7 @@ class cfield_mgr extends tlObject
             }
 
             $additional_join .= " LEFT OUTER JOIN {$this->tables[$table_key]} CFDV ON CFDV.field_id=CF.id
-          AND CFDV.node_id IN ($inClause) ";
+          AND CFDV.node_id IN ({$inClause}) ";
         }
 
         $locFilter = [];
@@ -593,7 +593,7 @@ class cfield_mgr extends tlObject
             $filterKey = 'location';
             if (isset($filters[$filterKey]) && ! is_null($filters[$filterKey])) {
                 $locFilter = (array) $filters[$filterKey];
-                $additional_filter .= " AND CFTP.$filterKey IN(" .
+                $additional_filter .= " AND CFTP.{$filterKey} IN(" .
                     implode(",", $locFilter) . ") ";
 
                 if ($replaceLocation = (count($locFilter) > 1)) {
@@ -602,7 +602,7 @@ class cfield_mgr extends tlObject
                 }
             }
         }
-        $sql = "/* $debugMsg */ SELECT CF.*,CFTP.display_order,CFTP.location,CFTP.required ";
+        $sql = "/* {$debugMsg} */ SELECT CF.*,CFTP.display_order,CFTP.location,CFTP.required ";
         if ($replaceLocation) {
             $sql = str_replace('CFTP.location', $targetLocationCode, $sql);
         }
@@ -655,12 +655,12 @@ class cfield_mgr extends tlObject
      */
     public function string_custom_field_input($p_field_def, $opt = null)
     {
-        $options = array(
+        $options = [
             'name_suffix' => '',
             'field_size' => 0,
             'show_on_filters' => false,
             'remove_required' => false
-        );
+        ];
         $options = array_merge($options, (array) $opt);
         extract($options);
 
@@ -683,12 +683,12 @@ class cfield_mgr extends tlObject
             $required = $p_field_def['required'] ? ' class="required" required ' : ' class="" ';
         }
 
-        $dateOpt = array(
+        $dateOpt = [
             'default_disable' => false,
             'allow_blank' => true,
             'required' => $required,
             'show_on_filters' => $show_on_filters
-        );
+        ];
 
         if ($field_size > 0) {
             $size = $field_size;
@@ -887,7 +887,7 @@ class cfield_mgr extends tlObject
                 $value = $type_and_value['cf_value'];
 
                 // do I need to update or insert this value?
-                $sql = "/* $debugMsg */ SELECT value FROM {$this->tables[$table_key]} " .
+                $sql = "/* {$debugMsg} */ SELECT value FROM {$this->tables[$table_key]} " .
                     " WHERE field_id=" . intval($field_id) . " AND	node_id=" .
                     $safeNodeID;
 
@@ -903,11 +903,11 @@ class cfield_mgr extends tlObject
                 $rowCount = $this->db->num_rows($result);
                 if ($rowCount > 0) {
                     if ($value != "") {
-                        $sql = "/* $debugMsg */ UPDATE {$this->tables[$table_key]} " .
+                        $sql = "/* {$debugMsg} */ UPDATE {$this->tables[$table_key]} " .
                             " SET value='{$safe_value}' ";
                     } else {
                         // bye, bye record
-                        $sql = "/* $debugMsg */ DELETE FROM {$this->tables[$table_key]} ";
+                        $sql = "/* {$debugMsg} */ DELETE FROM {$this->tables[$table_key]} ";
                     }
                     $sql .= " WHERE field_id=" . intval($field_id) .
                         " AND node_id=" . $safeNodeID;
@@ -917,7 +917,7 @@ class cfield_mgr extends tlObject
                     # Always store the value, even if it's the dafault value
                     # This is important, as the definitions might change but the
                     # values stored with a bug must not change
-                    $sql = "/* $debugMsg */ INSERT INTO {$this->tables[$table_key]} " .
+                    $sql = "/* {$debugMsg} */ INSERT INTO {$this->tables[$table_key]} " .
                         " ( field_id, node_id, value ) " . " VALUES	( " .
                         intval($field_id) . ", {$safeNodeID}, '{$safe_value}' )";
                     $this->db->exec_query($sql);
@@ -953,7 +953,7 @@ class cfield_mgr extends tlObject
                 break;
         }
 
-        $sql = "/* $debugMsg */ DELETE FROM {$this->tables[$table_key]} ";
+        $sql = "/* {$debugMsg} */ DELETE FROM {$this->tables[$table_key]} ";
         if (is_array($node_id)) {
             $sql .= " WHERE node_id IN(" . implode(",", $node_id) . ") ";
         } else {
@@ -980,11 +980,11 @@ class cfield_mgr extends tlObject
 
         if (! $lbl) {
             $lbl = init_labels(
-                array(
+                [
                     'context_design' => null,
                     'context_exec' => null,
                     'context_testplan_design' => null
-                ));
+                ]);
         }
 
         $not_in_clause = "";
@@ -1033,9 +1033,9 @@ class cfield_mgr extends tlObject
     public function get_linked_to_testproject($tproject_id, $active = null,
         $opt = null)
     {
-        $options = array(
+        $options = [
             'name' => null
-        );
+        ];
         $options = array_merge($options, (array) $opt);
 
         $sql = "SELECT CF.*,NT.description AS node_description,NT.id AS node_type_id, " .
@@ -1085,7 +1085,7 @@ class cfield_mgr extends tlObject
         $safeID = intval($tproject_id);
         $tproject_info = $this->tree_manager->get_node_hierarchy_info($safeID);
         foreach ($cfield_ids as $field_id) {
-            $sql = "/* $debugMsg */ INSERT INTO {$this->tables['cfield_testprojects']} " .
+            $sql = "/* {$debugMsg} */ INSERT INTO {$this->tables['cfield_testprojects']} " .
                 " (testproject_id,field_id) " . " VALUES({$safeID},{$field_id})";
 
             if ($this->db->exec_query($sql)) {
@@ -1123,7 +1123,7 @@ class cfield_mgr extends tlObject
             $tproject_id);
         $auditMsg = $active_val ? "audit_cfield_activated" : "audit_cfield_deactivated";
         foreach ($cfield_ids as $field_id) {
-            $sql = "/* $debugMsg */ UPDATE {$this->tables['cfield_testprojects']} " .
+            $sql = "/* {$debugMsg} */ UPDATE {$this->tables['cfield_testprojects']} " .
                 " SET active={$active_val} " . " WHERE testproject_id=" .
                 $this->db->prepare_int($tproject_id) . " AND field_id=" .
                 $this->db->prepare_int($field_id);
@@ -1157,7 +1157,7 @@ class cfield_mgr extends tlObject
         $info = $this->tree_manager->get_node_hierarchy_info($safe->tproject_id);
         $auditMsg = $val ? "audit_cfield_required_on" : "audit_cfield_required_off";
         foreach ($cfieldSet as $field_id) {
-            $sql = "/* $debugMsg */ UPDATE {$this->tables['cfield_testprojects']} " .
+            $sql = "/* {$debugMsg} */ UPDATE {$this->tables['cfield_testprojects']} " .
                 " SET required=" . $safe->val . " WHERE testproject_id=" .
                 $safe->tproject_id . " AND field_id=" .
                 $this->db->prepare_int($field_id);
@@ -1196,7 +1196,7 @@ class cfield_mgr extends tlObject
         $tproject_info = $this->tree_manager->get_node_hierarchy_info(
             $tproject_id);
         foreach ($cfield_ids as $field_id) {
-            $sql = "/* $debugMsg */ DELETE FROM {$this->tables['cfield_testprojects']} " .
+            $sql = "/* {$debugMsg} */ DELETE FROM {$this->tables['cfield_testprojects']} " .
                 " WHERE field_id = " . $this->db->prepare_int($field_id) .
                 " AND testproject_id = " . $this->db->prepare_int($tproject_id);
             if ($this->db->exec_query($sql)) {
@@ -1224,7 +1224,7 @@ class cfield_mgr extends tlObject
         $debugMsg = $this->debugMsg . __FUNCTION__;
         $my_name = $this->db->prepare_string(trim($name));
 
-        $sql = "/* $debugMsg */  SELECT CF.*, CFNT.node_type_id,NT.description AS node_type" .
+        $sql = "/* {$debugMsg} */  SELECT CF.*, CFNT.node_type_id,NT.description AS node_type" .
             " FROM {$this->tables['custom_fields']} CF, {$this->tables['cfield_node_types']} CFNT," .
             " {$this->tables['node_types']} NT" . " WHERE CF.id=CFNT.field_id " .
             " AND CFNT.node_type_id=NT.id " . " AND name='{$my_name}' ";
@@ -1243,7 +1243,7 @@ class cfield_mgr extends tlObject
     public function get_by_id($id)
     {
         $debugMsg = $this->debugMsg . __FUNCTION__;
-        $sql = "/* $debugMsg */ SELECT CF.*, CFNT.node_type_id" .
+        $sql = "/* {$debugMsg} */ SELECT CF.*, CFNT.node_type_id" .
             " FROM {$this->tables['custom_fields']}  CF, {$this->tables['cfield_node_types']} CFNT" .
             " WHERE CF.id=CFNT.field_id " . " AND CF.id IN (" .
             implode(',', (array) $id) . ")";
@@ -1262,7 +1262,7 @@ class cfield_mgr extends tlObject
     private function get_available_item_type($id)
     {
         $debugMsg = $this->debugMsg . __FUNCTION__;
-        $sql = "/* $debugMsg */ SELECT CFNT.field_id,CFNT.node_type_id " .
+        $sql = "/* {$debugMsg} */ SELECT CFNT.field_id,CFNT.node_type_id " .
             " FROM {$this->tables['cfield_node_types']} CFNT, " .
             "      {$this->tables['nodes_types']} NT " .
             " WHERE NT.id=CFNT.node_type_id " . " CFNt.field_id=" .
@@ -1294,10 +1294,10 @@ class cfield_mgr extends tlObject
         // "\r" - carriage return
         // and spaces
         // fortunatelly this is trim standard behaviour
-        $k2san = array(
+        $k2san = [
             'name',
             'label'
-        );
+        ];
         foreach ($k2san as $key) {
             $safe[$key] = $this->db->prepare_string(trim($cf[$key]));
         }
@@ -1306,14 +1306,14 @@ class cfield_mgr extends tlObject
         $safe['possible_values'] = $this->db->prepare_string(
             $cf['possible_values']);
 
-        $onezero = array(
+        $onezero = [
             'show_on_design',
             'enable_on_design',
             'show_on_testplan_design',
             'enable_on_testplan_design',
             'show_on_execution',
             'enable_on_execution'
-        );
+        ];
 
         foreach ($onezero as $key) {
             $safe[$key] = intval($cf[$key]) > 0 ? 1 : 0;
@@ -1345,11 +1345,11 @@ class cfield_mgr extends tlObject
     public function create($cf)
     {
         $debugMsg = 'Class:' . __CLASS__ . ' - Method: ' . __FUNCTION__;
-        $ret = array(
+        $ret = [
             'status_ok' => 0,
             'id' => 0,
             'msg' => 'ko'
-        );
+        ];
 
         $safecf = $this->sanitize($cf);
 
@@ -1362,7 +1362,7 @@ class cfield_mgr extends tlObject
             $safecf['enable_on_execution'] = 0;
         }
 
-        $sql = "/* $debugMsg */ INSERT INTO {$this->object_table} " .
+        $sql = "/* {$debugMsg} */ INSERT INTO {$this->object_table} " .
             " (name,label,type,possible_values, " .
             "  show_on_design,enable_on_design, " .
             "  show_on_testplan_design,enable_on_testplan_design, " .
@@ -1378,18 +1378,18 @@ class cfield_mgr extends tlObject
             // at least for Postgres DBMS table name is needed.
             $field_id = $this->db->insert_id($this->object_table);
 
-            $sql = "/* $debugMsg */ INSERT INTO {$this->tables['cfield_node_types']} " .
+            $sql = "/* {$debugMsg} */ INSERT INTO {$this->tables['cfield_node_types']} " .
                 " (field_id,node_type_id) " .
                 " VALUES({$field_id},{$safecf['node_type_id']}) ";
             $result = $this->db->exec_query($sql);
         }
 
         if ($result) {
-            $ret = array(
+            $ret = [
                 'status_ok' => 1,
                 'id' => $field_id,
                 'msg' => 'ok'
-            );
+            ];
         }
         return $ret;
     }
@@ -1533,7 +1533,7 @@ class cfield_mgr extends tlObject
 
         switch ($this->custom_field_types[intval($p_field_def['type'])]) {
             case 'email':
-                return "<a href=\"mailto:$cfValue\">$cfValue</a>";
+                return "<a href=\"mailto:{$cfValue}\">{$cfValue}</a>";
                 break;
 
             case 'enum':
@@ -1799,7 +1799,7 @@ class cfield_mgr extends tlObject
                         " VALUES	( {$field_id}, {$node_id}, {$execution_id}, {$testplan_id}, '{$safe_value}' )";
                     $this->db->exec_query($sql);
                 } elseif ($howMany > 0 && $value == "") {
-                    $sql = "/* $debugMsg */ DELETE FROM {$this->tables['cfield_execution_values']} " .
+                    $sql = "/* {$debugMsg} */ DELETE FROM {$this->tables['cfield_execution_values']} " .
                         $where_clause;
                     $this->db->exec_query($sql);
                 }
@@ -1858,10 +1858,10 @@ class cfield_mgr extends tlObject
 
         if (! is_null($cf_map)) {
             foreach ($cf_map as $key => $value) {
-                $cfield[$key] = array(
+                $cfield[$key] = [
                     "type_id" => $value['type'],
                     "cf_value" => ''
-                );
+                ];
             }
         }
 
@@ -1904,10 +1904,10 @@ class cfield_mgr extends tlObject
                         $the_value = $value;
                     }
 
-                    $cfield[$dummy[$cfid_pos]] = array(
+                    $cfield[$dummy[$cfid_pos]] = [
                         "type_id" => $dummy[$cftype_pos],
                         "cf_value" => $the_value
-                    );
+                    ];
                 }
             }
         }
@@ -2117,7 +2117,7 @@ class cfield_mgr extends tlObject
 
             // First Search at test plan design time
             if (! is_null($tplanLinkID)) {
-                $sql = " /* $debugMsg */ SELECT cf.name, cfv.value " .
+                $sql = " /* {$debugMsg} */ SELECT cf.name, cfv.value " .
                     " FROM {$this->tables['cfield_testplan_design_values']} cfv " .
                     " JOIN {$this->tables['custom_fields']}  cf ON " .
                     " cfv.field_id = cf.id " .
@@ -2129,7 +2129,7 @@ class cfield_mgr extends tlObject
 
             if (is_null($server_info)) {
 
-                $sql = " /* $debugMsg */ SELECT cf.name, cfv.value " .
+                $sql = " /* {$debugMsg} */ SELECT cf.name, cfv.value " .
                     " FROM {$this->tables['cfield_design_values']} cfv " .
                     " JOIN {$this->tables['custom_fields']}  cf ON " .
                     " cfv.field_id = cf.id " .
@@ -2243,7 +2243,7 @@ class cfield_mgr extends tlObject
                     $this->db->exec_query($sql);
                     // BUGID 3989
                 } elseif ($this->db->num_rows($result) > 0 && $value == "") {
-                    $sql = "/* $debugMsg */ DELETE FROM {$this->tables['cfield_testplan_design_values']} " .
+                    $sql = "/* {$debugMsg} */ DELETE FROM {$this->tables['cfield_testplan_design_values']} " .
                         " WHERE field_id={$field_id} AND	link_id={$link_id}";
                     $this->db->exec_query($sql);
                 }
@@ -2370,9 +2370,9 @@ class cfield_mgr extends tlObject
     private function string_input_radio($p_field_def, $p_input_name,
         $p_custom_field_value, $opt = null)
     {
-        $options = array(
+        $options = [
             'remove_required' => false
-        );
+        ];
         $options = array_merge($options, (array) $opt);
 
         $str_out = '';
@@ -2447,9 +2447,9 @@ class cfield_mgr extends tlObject
     private function string_input_string($p_field_def, $p_input_name,
         $p_custom_field_value, $p_size, $opt = null)
     {
-        $options = array(
+        $options = [
             'remove_required' => false
-        );
+        ];
         $options = array_merge($options, (array) $opt);
         if ($options['remove_required']) {
             $required = ' class="" ';
@@ -2486,10 +2486,10 @@ class cfield_mgr extends tlObject
             "<custom_field>\n\t\t\t<name><![CDATA[||NAME||]]></name>\n\t\t\t" .
             "<value><![CDATA[||VALUE||]]></value>\n" . "\t\t\t" .
             "</custom_field>\n";
-        $cfDecode = array(
+        $cfDecode = [
             "||NAME||" => "name",
             "||VALUE||" => "value"
-        );
+        ];
         return exportDataToXML($cfMap, $cfRootElem, $cfElemTemplate, $cfDecode,
             true);
     }
@@ -2505,12 +2505,12 @@ class cfield_mgr extends tlObject
     private function remove_all_scopes_values($id)
     {
         // some sort of blind delete
-        $tables = array(
+        $tables = [
             'cfield_design_values',
             'cfield_build_design_values',
             'cfield_execution_values',
             'cfield_testplan_design_values'
-        );
+        ];
         $safe_id = intval($id);
         foreach ($tables as $tt) {
             $sql = "DELETE FROM {$this->tables[$tt]} WHERE field_id={$safe_id} ";
@@ -2571,10 +2571,10 @@ class cfield_mgr extends tlObject
      */
     public function getByLinkID($linkID, $options = null)
     {
-        $my['options'] = array(
+        $my['options'] = [
             'scope' => 'design',
             'output' => 'field_id'
-        );
+        ];
         $my['options'] = array_merge($my['options'], (array) $options);
 
         switch ($my['options']['output']) {
@@ -2620,15 +2620,15 @@ class cfield_mgr extends tlObject
         $input_values = null, $opt = null)
     {
         $cf_smarty = '';
-        $getOpt = array(
+        $getOpt = [
             'name_suffix' => $name_suffix
-        );
+        ];
 
-        $my['opt'] = array(
+        $my['opt'] = [
             'addCheck' => false,
             'addTable' => true,
             'forceOptional' => false
-        );
+        ];
         $my['opt'] = array_merge($my['opt'], (array) $opt);
 
         if (! is_null($cfields_map)) {
@@ -2781,10 +2781,10 @@ class cfield_mgr extends tlObject
     public function html_inputs($cfields_map, $name_suffix = '',
         $input_values = null)
     {
-        $inputSet = array();
-        $getOpt = array(
+        $inputSet = [];
+        $getOpt = [
             'name_suffix' => $name_suffix
-        );
+        ];
 
         if (! is_null($cfields_map)) {
             $cf_map = $this->getValuesFromUserInput($cfields_map, $name_suffix,
@@ -2808,12 +2808,12 @@ class cfield_mgr extends tlObject
                     strstr($cf_html_string, 'id="custom_field_'));
                 $label_id = str_replace('id="', 'id="label_', $dummy[0]);
 
-                $inputSet[] = array(
+                $inputSet[] = [
                     'label' => htmlspecialchars($label),
                     'label_id' => $label_id,
                     'input' => $this->string_custom_field_input($cf_info,
                         $getOpt)
-                );
+                ];
             }
         }
         return $inputSet;
@@ -2824,7 +2824,7 @@ class cfield_mgr extends tlObject
     public function getByIDAndEnableOn($id, $enableOn = null)
     {
         $debugMsg = $this->debugMsg . __FUNCTION__;
-        $sql = "/* $debugMsg */ SELECT CF.*, CFNT.node_type_id" .
+        $sql = "/* {$debugMsg} */ SELECT CF.*, CFNT.node_type_id" .
             " FROM {$this->tables['custom_fields']}  CF, {$this->tables['cfield_node_types']} CFNT" .
             " WHERE CF.id=CFNT.field_id " . " AND CF.id IN (" .
             implode(',', (array) $id) . ")";
@@ -2859,7 +2859,7 @@ class cfield_mgr extends tlObject
         $info = $this->tree_manager->get_node_hierarchy_info($safe->tproject_id);
         $auditMsg = $val ? "audit_cfield_{$field}_on" : "audit_cfield_{$field}_off";
         foreach ($cfieldSet as $field_id) {
-            $sql = "/* $debugMsg */ UPDATE {$this->tables['cfield_testprojects']} " .
+            $sql = "/* {$debugMsg} */ UPDATE {$this->tables['cfield_testprojects']} " .
                 " SET {$field}=" . $safe->val . " WHERE testproject_id=" .
                 $safe->tproject_id . " AND field_id=" .
                 $this->db->prepare_int($field_id);
@@ -2903,7 +2903,7 @@ class cfield_mgr extends tlObject
     {
         $debugMsg = $this->debugMsg . __FUNCTION__;
 
-        $sql = " /* $debugMsg */ " .
+        $sql = " /* {$debugMsg} */ " .
             " SELECT field_id,active,required,monitorable " .
             " FROM {$this->tables['cfield_testprojects']} CFTP " .
             " WHERE testproject_id =" . intval($tproject_id);

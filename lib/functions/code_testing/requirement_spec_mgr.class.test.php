@@ -15,14 +15,14 @@ testlinkInitPage($db);
 $classUnderTest = 'requirement_spec_mgr';
 
 echo "<h1> Class Under Test : {$classUnderTest} </h1>";
-echo "<pre> {$classUnderTest}.class - constructor - $classUnderTest(&\$db)";
+echo "<pre> {$classUnderTest}.class - constructor - {$classUnderTest}(&\$db)";
 echo "</pre>";
 $obj_mgr = new $classUnderTest($db);
 new dBug($obj_mgr);
 
 $method2test = "create_revision";
 $rspecID = '12';
-$item = array();
+$item = [];
 $item['revision'] = 2;
 $item['doc_id'] = 'DOCO';
 $item['name'] = 'NIKO';
@@ -32,7 +32,7 @@ $item['type'] = 'K';
 $item['log_message'] = 'This is a log message';
 $item['author_id'] = 1;
 
-echo "<pre> {$method2test} - $$method2test(&\$rspecID,&\$item,)";
+echo "<pre> {$method2test} - {${$method2test}}(&\$rspecID,&\$item,)";
 echo "</pre>";
 
 new dBug($obj_mgr->$method2test($rspecID, $item));

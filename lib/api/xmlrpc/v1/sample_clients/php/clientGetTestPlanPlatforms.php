@@ -19,7 +19,7 @@ $method = 'getTestPlanPlatforms';
 $test_num = 1;
 $unitTestDescription = "Test {$test_num} - {$method}";
 
-$args = array();
+$args = [];
 $args["devKey"] = DEV_KEY;
 $args["testplanid"] = - 123;
 
@@ -38,7 +38,7 @@ runTest($client, $method, $args);
 $test_num ++;
 $unitTestDescription = "Test {$test_num} - {$method}";
 
-$args = array();
+$args = [];
 $args["devKey"] = DEV_KEY;
 $args["testplanid"] = 380;
 
@@ -60,7 +60,7 @@ runTest($client, $method, $args);
 $test_num ++;
 $unitTestDescription = "Test {$test_num} - {$method}";
 
-$args = array();
+$args = [];
 $args["devKey"] = DEV_KEY;
 $args["testplanid"] = 1651;
 
@@ -82,7 +82,7 @@ runTest($client, $method, $args);
 $test_num ++;
 $unitTestDescription = "Test {$test_num} - {$method}";
 
-$args = array();
+$args = [];
 $args["devKey"] = DEV_KEY;
 $args["tesid"] = 1651;
 

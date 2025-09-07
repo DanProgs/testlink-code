@@ -44,7 +44,7 @@ if ($build_count == 0) {
 
 // -----------------------------------------------------------------------------
 // get navigation data
-$gui->menuItems = array();
+$gui->menuItems = [];
 if ($gui->do_report['status_ok']) {
     // create a list or reports
     $context = new stdClass();
@@ -73,17 +73,17 @@ $smarty->display($templateCfg->template_dir . $templateCfg->default_template);
  */
 function initArgs()
 {
-    $iParams = array(
-        "format" => array(
+    $iParams = [
+        "format" => [
             tlInputParameter::INT_N
-        ),
-        "tplan_id" => array(
+        ],
+        "tplan_id" => [
             tlInputParameter::INT_N
-        ),
-        "show_inactive_tplans" => array(
+        ],
+        "show_inactive_tplans" => [
             tlInputParameter::CB_BOOL
-        )
-    );
+        ]
+    ];
     $args = new stdClass();
     R_PARAMS($iParams, $args);
 
@@ -122,10 +122,10 @@ function initializeGui(&$dbHandler, $argsObj)
 
     $gui->workframe = $_SESSION['basehref'] .
         "lib/general/staticPage.php?key=showMetrics";
-    $gui->do_report = array(
+    $gui->do_report = [
         'status_ok' => 1,
         'msg' => ''
-    );
+    ];
     $gui->tplan_id = $argsObj->tplan_id;
     $gui->tproject_id = $argsObj->tproject_id;
     $gui->checked_show_inactive_tplans = $argsObj->checked_show_inactive_tplans;
@@ -137,10 +137,10 @@ function initializeGui(&$dbHandler, $argsObj)
     $activeAttr = $argsObj->show_only_active_tplans ? 1 : null;
     $gui->tplans = $argsObj->user->getAccessibleTestPlans($dbHandler,
         $argsObj->tproject_id, null,
-        array(
+        [
             'output' => 'combo',
             'active' => $activeAttr
-        ));
+        ]);
 
     return $gui;
 }

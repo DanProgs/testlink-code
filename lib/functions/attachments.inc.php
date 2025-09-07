@@ -80,12 +80,12 @@ function getAttachmentInfosFrom(&$object, $fkid, $storeListInSession = true,
 function storeAttachmentsInSession($attachmentInfos, $counter = 0)
 {
     if (! $attachmentInfos) {
-        $attachmentInfos = array();
+        $attachmentInfos = [];
     }
 
     if (! isset($_SESSION['s_lastAttachmentInfos']) ||
         ! $_SESSION['s_lastAttachmentInfos']) {
-        $_SESSION['s_lastAttachmentInfos'] = array();
+        $_SESSION['s_lastAttachmentInfos'] = [];
     }
 
     if ($counter == 0) {

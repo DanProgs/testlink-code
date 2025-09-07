@@ -41,24 +41,24 @@ function getGrants(&$db, &$userObj)
  */
 function initArgs(&$dbH)
 {
-    $iParams = array(
-        "testproject" => array(
+    $iParams = [
+        "testproject" => [
             tlInputParameter::INT_N
-        ),
-        "tproject_id" => array(
+        ],
+        "tproject_id" => [
             tlInputParameter::INT_N
-        ),
-        "caller" => array(
+        ],
+        "caller" => [
             tlInputParameter::STRING_N,
             1,
             6
-        ),
-        "viewer" => array(
+        ],
+        "viewer" => [
             tlInputParameter::STRING_N,
             0,
             3
-        )
-    );
+        ]
+    ];
     $args = new stdClass();
     G_PARAMS($iParams, $args);
 
@@ -71,10 +71,10 @@ function initArgs(&$dbH)
     // Check if any project exists to display error
     $args->newInstallation = false;
     if ($args->testproject <= 0 || $args->tproject_id <= 0) {
-        $sch = tlObject::getDBTables(array(
+        $sch = tlObject::getDBTables([
             'testprojects',
             'nodes_hierarchy'
-        ));
+        ]);
         $sql = " SELECT NH.id, NH.name
              FROM {$sch['nodes_hierarchy']} NH
              JOIN {$sch['testprojects']} TPRJ
@@ -103,11 +103,11 @@ function initializeGui(&$db, &$args)
 
     $gui = new stdClass();
 
-    $opx = array(
+    $opx = [
         'output' => 'map_name_with_inactive_mark',
         'field_set' => $guiCfg->tprojects_combo_format,
         'order_by' => $guiCfg->tprojects_combo_order_by
-    );
+    ];
 
     $gui->TestProjects = $tproject_mgr->get_accessible_for_user(
         $args->user->dbID, $opx);
@@ -233,10 +233,10 @@ function initializeGui(&$db, &$args)
     $gui->grants = getGrants($db, $args->user);
     $gui->viewer = $args->viewer;
 
-    $gui->plugins = array();
-    foreach (array(
+    $gui->plugins = [];
+    foreach ([
         'EVENT_TITLE_BAR'
-    ) as $menu_item) {
+    ] as $menu_item) {
         $menu_content = event_signal($menu_item);
         $gui->plugins[$menu_item] = ! empty($menu_content) ? $menu_content : null;
     }

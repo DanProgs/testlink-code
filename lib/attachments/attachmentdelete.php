@@ -38,11 +38,11 @@ $smarty->display('attachmentdelete.tpl');
 function initArgs()
 {
     // the id (attachments.id) of the attachment to be deleted
-    $iParams = array(
-        "id" => array(
+    $iParams = [
+        "id" => [
             tlInputParameter::INT_N
-        )
-    );
+        ]
+    ];
     $args = new stdClass();
     G_PARAMS($iParams, $args);
 

@@ -11,7 +11,7 @@
 $method = 'createTestCase';
 $devKey = isset($_REQUEST['apiKey']) ? $_REQUEST['apiKey'] : $tlDevKey;
 
-$args = array();
+$args = [];
 $args["devKey"] = $devKey;
 $args["testprojectid"] = $env->tlProjectID;
 $args["testsuiteid"] = $env->tlSuiteID;
@@ -21,11 +21,11 @@ $args["summary"] = 'Test Case created via API';
 $args["preconditions"] = 'Test Link API Up & Running';
 $args["authorlogin"] = 'admin';
 $args["checkduplicatedname"] = 0;
-$args["steps"][] = array(
+$args["steps"][] = [
     'step_number' => 1,
     'actions' => 'Start Server',
     'expected_results' => 'green light'
-);
+];
 
 $unitTestDescription = "";
 echo $unitTestDescription;

@@ -55,31 +55,31 @@ class tracxmlrpcInterface extends issueTrackerInterface
             return false;
         }
 
-        $this->methodOpt['buildViewBugLink'] = array(
+        $this->methodOpt['buildViewBugLink'] = [
             'addSummary' => true,
             'colorByStatus' => false
-        );
+        ];
 
-        $this->defaultResolvedStatus = array();
-        $this->defaultResolvedStatus[] = array(
+        $this->defaultResolvedStatus = [];
+        $this->defaultResolvedStatus[] = [
             'code' => 'r',
             'verbose' => 'resolved'
-        );
-        $this->defaultResolvedStatus[] = array(
+        ];
+        $this->defaultResolvedStatus[] = [
             'code' => 'v',
             'verbose' => 'verified'
-        );
-        $this->defaultResolvedStatus[] = array(
+        ];
+        $this->defaultResolvedStatus[] = [
             'code' => 'c',
             'verbose' => 'closed'
-        );
+        ];
 
         $this->setResolvedStatusCfg();
         $this->completeCfg();
         $this->connect();
-        $this->guiCfg = array(
+        $this->guiCfg = [
             'use_decoration' => true
-        ); // add [] on summary
+        ]; // add [] on summary
     }
 
     /**
@@ -140,15 +140,15 @@ class tracxmlrpcInterface extends issueTrackerInterface
             $this->connected = true;
         } catch (Exception $e) {
             $logDetails = '';
-            foreach (array(
+            foreach ([
                 'uribase',
                 'apikey'
-            ) as $v) {
-                $logDetails .= "$v={$this->cfg->$v} / ";
+            ] as $v) {
+                $logDetails .= "{$v}={$this->cfg->$v} / ";
             }
             $logDetails = trim($logDetails, '/ ');
             $this->connected = false;
-            tLog(__METHOD__ . " [$logDetails] " . $e->getMessage(), 'ERROR');
+            tLog(__METHOD__ . " [{$logDetails}] " . $e->getMessage(), 'ERROR');
         }
     }
 

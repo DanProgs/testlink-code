@@ -32,7 +32,7 @@ if ($args->deleteAttachmentID > 0) {
 }
 
 // Struture defined in printDocument.php
-$printingOptions = array(
+$printingOptions = [
     'toc' => 0,
     'body' => 1,
     'summary' => 1,
@@ -48,16 +48,16 @@ $printingOptions = array(
     'displayDates' => 1,
     'docType' => SINGLE_TESTCASE,
     'importance' => 1
-);
+];
 
 $level = 0;
 $tplanID = 0;
 $prefix = null;
 $text2print = '';
 $text2print .= renderHTMLHeader($gui->page_title, $_SESSION['basehref'],
-    SINGLE_TESTCASE, array(
+    SINGLE_TESTCASE, [
         'gui/javascript/testlink_library.js'
-    ));
+    ]);
 
 $text2print .= renderExecutionForPrinting($db, $_SESSION['basehref'], $args->id,
     $_SESSION['currentUser']);

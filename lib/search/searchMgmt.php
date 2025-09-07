@@ -19,18 +19,18 @@ function initArgs(&$dbHandler)
 {
     $_REQUEST = strings_stripSlashes($_REQUEST);
 
-    $iParams = array(
-        "target" => array(
+    $iParams = [
+        "target" => [
             tlInputParameter::STRING_N,
             0,
             200
-        ),
-        "caller" => array(
+        ],
+        "caller" => [
             tlInputParameter::STRING_N,
             0,
             20
-        )
-    );
+        ]
+    ];
 
     $args = new stdClass();
     R_PARAMS($iParams, $args);
@@ -54,7 +54,7 @@ function initializeEnv($dbHandler)
     $args = initArgs($dbHandler);
     $gui = new stdClass();
 
-    $grant2check = array(
+    $grant2check = [
         'mgt_modify_tc',
         'mgt_view_req',
         'testplan_planning',
@@ -63,7 +63,7 @@ function initializeEnv($dbHandler)
         'testcase_freeze',
         'testproject_edit_executed_testcases',
         'testproject_delete_executed_testcases'
-    );
+    ];
     $grants = new stdClass();
     foreach ($grant2check as $right) {
         $grants->$right = $_SESSION['currentUser']->hasRight($dbHandler, $right,
@@ -76,11 +76,11 @@ function initializeEnv($dbHandler)
     $gui->tproject_id = $args->tproject_id;
     $gui->page_title = lang_get('container_title_' . $args->feature);
     $gui->caller = trim($args->caller);
-    return array(
+    return [
         $args,
         $gui,
         $grants
-    );
+    ];
 }
 
 /**

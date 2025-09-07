@@ -34,20 +34,20 @@ class redminerestInterface extends issueTrackerInterface
     {
         $this->name = $name;
         $this->interfaceViaDB = false;
-        $this->methodOpt['buildViewBugLink'] = array(
+        $this->methodOpt['buildViewBugLink'] = [
             'addSummary' => true,
             'colorByStatus' => false
-        );
+        ];
 
-        $this->defaultResolvedStatus = array();
-        $this->defaultResolvedStatus[] = array(
+        $this->defaultResolvedStatus = [];
+        $this->defaultResolvedStatus[] = [
             'code' => 3,
             'verbose' => 'resolved'
-        );
-        $this->defaultResolvedStatus[] = array(
+        ];
+        $this->defaultResolvedStatus[] = [
             'code' => 5,
             'verbose' => 'closed'
-        );
+        ];
 
         $this->canSetReporter = true;
         if (! $this->setCfg($config)) {
@@ -93,9 +93,9 @@ class redminerestInterface extends issueTrackerInterface
                     $cc = current($elem);
                     $kk = key($elem);
                     foreach ($cc as $value) {
-                        $this->issueOtherAttr[$name][] = array(
+                        $this->issueOtherAttr[$name][] = [
                             $kk => (string) $value
-                        );
+                        ];
                     }
                 } else {
                     $this->issueOtherAttr[$name] = (string) $elem;
@@ -107,9 +107,9 @@ class redminerestInterface extends issueTrackerInterface
         // are managed through the issueAdditionalAttributes
         //
         // On Redmine 1 seems to be standard for Issues/Bugs
-        $this->issueDefaults = array(
+        $this->issueDefaults = [
             'trackerid' => 1
-        );
+        ];
         foreach ($this->issueDefaults as $prop => $default) {
             if (! isset($this->issueAttr[$prop])) {
                 $this->issueAttr[$prop] = $default;
@@ -178,15 +178,15 @@ class redminerestInterface extends issueTrackerInterface
 
         if ($processCatch) {
             $logDetails = '';
-            foreach (array(
+            foreach ([
                 'uribase',
                 'apikey'
-            ) as $v) {
-                $logDetails .= "$v={$this->cfg->$v} / ";
+            ] as $v) {
+                $logDetails .= "{$v}={$this->cfg->$v} / ";
             }
             $logDetails = trim($logDetails, '/ ');
             $this->connected = false;
-            tLog(__METHOD__ . " [$logDetails] " . $e->getMessage(), 'ERROR');
+            tLog(__METHOD__ . " [{$logDetails}] " . $e->getMessage(), 'ERROR');
         }
     }
 
@@ -217,10 +217,10 @@ class redminerestInterface extends issueTrackerInterface
                 $issue->statusVerbose = (string) $xmlObj->status['name'];
                 $issue->statusHTMLString = "[$issue->statusVerbose] ";
                 $issue->summary = $issue->summaryHTMLString = (string) $xmlObj->subject;
-                $issue->redmineProject = array(
+                $issue->redmineProject = [
                     'name' => (string) $xmlObj->project['name'],
                     'id' => (int) $xmlObj->project['id']
-                );
+                ];
 
                 $issue->isResolved = isset(
                     $this->resolvedStatus->byCode[$issue->statusCode]);
@@ -384,7 +384,7 @@ class redminerestInterface extends issueTrackerInterface
                 $cf = (string) $this->cfg->custom_fields;
 
                 // Management of Dynamic Values From XML Configuration
-                $safeVal = array();
+                $safeVal = [];
                 foreach ($opt->tagValue->value as $val) {
                     array_push($safeVal, htmlentities($val, ENT_XML1));
                 }
@@ -402,19 +402,19 @@ class redminerestInterface extends issueTrackerInterface
                 throw new Exception($msg, 1);
             }
 
-            $ret = array(
+            $ret = [
                 'status_ok' => true,
                 'id' => (string) $op->id,
                 'msg' => sprintf(lang_get('redmine_bug_created'), $summary, $pid)
-            );
+            ];
         } catch (Exception $e) {
             $msg = "Create REDMINE Ticket FAILURE => " . $e->getMessage();
             tLog($msg, 'WARNING');
-            $ret = array(
+            $ret = [
                 'status_ok' => false,
                 'id' => - 1,
                 'msg' => $msg . ' - serialized issue:' . serialize($xml)
-            );
+            ];
         }
         return $ret;
     }
@@ -435,20 +435,20 @@ class redminerestInterface extends issueTrackerInterface
             }
             $op = $this->APIClient->addIssueNoteFromSimpleXML($issueID,
                 $issueXmlObj, $reporter);
-            $ret = array(
+            $ret = [
                 'status_ok' => true,
                 'id' => (string) $op->id,
                 'msg' => sprintf(lang_get('redmine_bug_created'), $summary,
                     $issueXmlObj->project_id)
-            );
+            ];
         } catch (Exception $e) {
             $msg = "REDMINE Add Note to Ticket FAILURE => " . $e->getMessage();
             tLog($msg, 'WARNING');
-            $ret = array(
+            $ret = [
                 'status_ok' => false,
                 'id' => - 1,
                 'msg' => $msg . ' - serialized issue:' . serialize($issueXmlObj)
-            );
+            ];
         }
         return $ret;
     }

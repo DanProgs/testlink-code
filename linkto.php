@@ -95,12 +95,12 @@ if (! isset($_GET['load'])) {
     // figure out what to display
     //
     // key: item, value: url to tree management page
-    $itemCode = array(
+    $itemCode = [
         'req' => 'lib/requirements/reqSpecListTree.php',
         'reqspec' => 'lib/requirements/reqSpecListTree.php',
         'testcase' => 'lib/testcases/listTestCases.php?feature=edit_tc',
         'testsuite' => 'lib/testcases/listTestCases.php?feature=edit_tc'
-    );
+    ];
 
     $op = [
         'status_ok' => true,
@@ -267,7 +267,7 @@ function buildLink(&$argsObj)
 function process_testcase(&$dbHandler, $externalID, $tprojectID, $tprojectPrefix,
     $version)
 {
-    $ret = array();
+    $ret = [];
     $ret['url'] = null;
     $ret['msg'] = sprintf(lang_get('testcase_not_found'), $externalID,
         $tprojectPrefix);
@@ -298,10 +298,10 @@ function process_testcase(&$dbHandler, $externalID, $tprojectID, $tprojectPrefix
  */
 function process_req(&$dbHandler, $docID, $tprojectID, $tprojectPrefix, $version)
 {
-    $ret = array(
+    $ret = [
         'url' => null,
         'msg' => null
-    );
+    ];
 
     // First step: get this requirement's database ID by its Doc-ID (only if this Doc-ID exists).
     $req_mgr = new requirement_mgr($dbHandler);
@@ -328,7 +328,7 @@ function process_req(&$dbHandler, $docID, $tprojectID, $tprojectPrefix, $version
                 urlencode($tprojectPrefix) . '&item=req&id=' . urlencode($docID);
             $ret['msg'] = sprintf(lang_get('req_version_not_found'), $version,
                 $docID, $tprojectPrefix);
-            $ret['msg'] .= sprintf(" <a href=\"$req_url\">%s</a>",
+            $ret['msg'] .= sprintf(" <a href=\"{$req_url}\">%s</a>",
                 lang_get('direct_link_on_wrong_version'));
             $req_id = null;
         }
@@ -336,11 +336,11 @@ function process_req(&$dbHandler, $docID, $tprojectID, $tprojectPrefix, $version
 
     // Third and last step: set cookie and build the link (only if the requested item really was found).
     if (! is_null($req_id)) {
-        $ret['url'] = "lib/requirements/reqView.php?item=requirement&requirement_id=$req_id";
+        $ret['url'] = "lib/requirements/reqView.php?item=requirement&requirement_id={$req_id}";
 
         // link to open in requirement frame must include version
         if (! is_null($version_id)) {
-            $ret['url'] .= "&req_version_id=$version_id";
+            $ret['url'] .= "&req_version_id={$version_id}";
         }
 
         $ckCfg = config_get('cookie');
@@ -362,7 +362,7 @@ function process_req(&$dbHandler, $docID, $tprojectID, $tprojectPrefix, $version
 function process_reqspec(&$dbHandler, $docID, $tprojectID, $tprojectPrefix,
     $version)
 {
-    $ret = array();
+    $ret = [];
     $ret['url'] = null;
     $ret['msg'] = sprintf(lang_get('req_spec_not_found'), $docID,
         $tprojectPrefix);
@@ -393,7 +393,7 @@ function buildCookie(&$dbHandler, $itemID, $tprojectID, $cookiePrefix)
 {
     $tree_mgr = new tree($dbHandler);
     $path = $tree_mgr->get_path($itemID);
-    $parents = array();
+    $parents = [];
     $parents[] = $tprojectID;
     foreach ($path as $node) {
         $parents[] = $node['id'];
@@ -411,7 +411,7 @@ function buildCookie(&$dbHandler, $itemID, $tprojectID, $cookiePrefix)
  */
 function process_testsuite(&$dbHandler, $tsuiteID, $tprojectID, $tprojectPrefix)
 {
-    $ret = array();
+    $ret = [];
     $ret['url'] = null;
     $ret['msg'] = sprintf(lang_get('testsuite_not_found'), $tsuiteID,
         $tprojectPrefix);

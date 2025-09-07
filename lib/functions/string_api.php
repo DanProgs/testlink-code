@@ -74,7 +74,7 @@ function string_nl2br($p_string, $p_wrap = 100)
     $p_string = nl2br($p_string);
 
     // fix up eols within <pre> tags
-    $pre2 = array();
+    $pre2 = [];
     preg_match_all("/<pre[^>]*?>(.|\n)*?<\/pre>/", $p_string, $pre1);
     for ($x = 0; $x < count($pre1[0]); $x ++) {
         $pre2[$x] = preg_replace("/<br[^>]*?>/", "", $pre1[0][$x]);
@@ -228,16 +228,16 @@ function string_sanitize_url($p_url)
 
     // explode and encode parameters
     if (strpos($t_url, '?') !== false) {
-        list ($t_path, $t_param) = explode('\?', $t_url, 2);
+        [$t_path, $t_param] = explode('\?', $t_url, 2);
         if ($t_param !== "") {
-            $t_vals = array();
+            $t_vals = [];
             parse_str($t_param, $t_vals);
             $t_param = '';
             foreach ($t_vals as $k => $v) {
                 if ($t_param != '') {
                     $t_param .= '&';
                 }
-                $t_param .= "$k=" . urlencode(strip_tags(urldecode($v)));
+                $t_param .= "{$k}=" . urlencode(strip_tags(urldecode($v)));
             }
             return $t_path . '?' . $t_param;
         } else {
@@ -434,10 +434,10 @@ function string_shorten($p_string)
  */
 function string_get_field_name($p_string)
 {
-    $t_map = array(
+    $t_map = [
         'last_updated' => 'last_update',
         'id' => 'email_bug'
-    );
+    ];
 
     $t_string = $p_string;
     if (isset($t_map[$p_string])) {

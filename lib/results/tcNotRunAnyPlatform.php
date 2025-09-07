@@ -23,14 +23,14 @@ $args = initArgs();
 $gui = new stdClass();
 $gui->title = lang_get('title_test_report_not_run_on_any_platform');
 $gui->printDate = '';
-$gui->matrixData = array();
+$gui->matrixData = [];
 
 $labels = init_labels(
-    array(
+    [
         'design' => null,
         'execution' => null,
         'execution_history' => null
-    ));
+    ]);
 $edit_img = TL_THEME_IMG_DIR . "edit_icon.png";
 $history_img = TL_THEME_IMG_DIR . "history_small.png";
 
@@ -46,9 +46,9 @@ $testCaseCfg = config_get('testcase_cfg');
 $testCasePrefix = $tproject_info['prefix'] . $testCaseCfg->glue_character;
 $mailCfg = buildMailCfg($gui);
 
-$getOpt = array(
+$getOpt = [
     'outputFormat' => 'map'
-);
+];
 $gui->platforms = $tplan_mgr->getPlatforms($args->tplan_id, $getOpt);
 $platforms_active = ! is_null($gui->platforms);
 
@@ -72,14 +72,14 @@ $gui->number_of_not_run_testcases = 0;
 $gui->warning_msg = '';
 $gui->status_msg = '';
 
-$gui->matrix = array();
-$gui->tableSet = array();
+$gui->matrix = [];
+$gui->tableSet = [];
 
-$cols = array_flip(array(
+$cols = array_flip([
     'tsuite',
     'link',
     'priority'
-));
+]);
 
 if ($lastResultMap != null && $platforms_active) {
     $versionTag = lang_get('tcversion_indicator');
@@ -120,9 +120,9 @@ if ($lastResultMap != null && $platforms_active) {
 
                     if ($_SESSION['testprojectOptions']->testPriorityEnabled) {
                         $dummy = $tplan_mgr->getPriority($args->tplan_id,
-                            array(
+                            [
                                 'tcversion_id' => $tcase['tcversion_id']
-                            ));
+                            ]);
                         $rowArray[$cols['priority']] = $dummy[$tcase['tcversion_id']]['priority_level'];
                     }
 
@@ -180,14 +180,14 @@ displayReport($templateCfg->template_dir . $templateCfg->default_template,
  */
 function initArgs()
 {
-    $iParams = array(
-        "format" => array(
+    $iParams = [
+        "format" => [
             tlInputParameter::INT_N
-        ),
-        "tplan_id" => array(
+        ],
+        "tplan_id" => [
             tlInputParameter::INT_N
-        )
-    );
+        ]
+    ];
 
     $args = new stdClass();
     R_PARAMS($iParams, $args);
@@ -217,23 +217,23 @@ function checkRights(&$db, &$user)
  */
 function buildMatrix($dataSet, $format)
 {
-    $columns = array(
-        array(
+    $columns = [
+        [
             'title_key' => 'title_test_suite_name',
             'width' => 100
-        ),
-        array(
+        ],
+        [
             'title_key' => 'title_test_case_title',
             'width' => 150
-        )
-    );
+        ]
+    ];
 
     if ($_SESSION['testprojectOptions']->testPriorityEnabled) {
-        $columns[] = array(
+        $columns[] = [
             'title_key' => 'priority',
             'type' => 'priority',
             'width' => 40
-        );
+        ];
     }
 
     if ($format == FORMAT_HTML) {
@@ -244,10 +244,10 @@ function buildMatrix($dataSet, $format)
 
         if ($_SESSION['testprojectOptions']->testPriorityEnabled) {
             $matrix->addCustomBehaviour('priority',
-                array(
+                [
                     'render' => 'priorityRenderer',
                     'filter' => 'Priority'
-                ));
+                ]);
             // sort by priority
             $matrix->setSortByColumnName(lang_get('priority'));
         } else {
@@ -272,10 +272,10 @@ function buildMatrix($dataSet, $format)
  */
 function buildMailCfg(&$guiObj)
 {
-    $labels = array(
+    $labels = [
         'testplan' => lang_get('testplan'),
         'testproject' => lang_get('testproject')
-    );
+    ];
     $cfg = new stdClass();
     $cfg->cc = '';
     $cfg->subject = $guiObj->title . ' : ' . $labels['testproject'] . ' : ' .

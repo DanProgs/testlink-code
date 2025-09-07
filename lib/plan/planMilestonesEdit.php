@@ -68,11 +68,11 @@ function initArgs(&$dbHandler, $dateFormat)
         }
     }
 
-    $key2loop = array(
+    $key2loop = [
         'low_priority_tcases',
         'medium_priority_tcases',
         'high_priority_tcases'
-    );
+    ];
     foreach ($key2loop as $key) {
         $args->$key = isset($_REQUEST[$key]) ? intval($_REQUEST[$key]) : 0;
     }
@@ -122,13 +122,13 @@ function renderGui(&$argsObj, $guiObj, $opObj, $templateCfg)
     //
     // used to set value of: $guiObj->operation
     //
-    $actionOperation = array(
+    $actionOperation = [
         'create' => 'doCreate',
         'edit' => 'doUpdate',
         'doDelete' => '',
         'doCreate' => 'doCreate',
         'doUpdate' => 'doUpdate'
-    );
+    ];
 
     $renderType = 'none';
     switch ($argsObj->doAction) {

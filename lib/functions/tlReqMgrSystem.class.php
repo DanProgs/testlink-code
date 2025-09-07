@@ -31,20 +31,20 @@ class tlReqMgrSystem extends tlObject
     // array index is used AS CODE that will be written to DB
     // if you need to add a new item start on 200, to avoid crash with standard ID
     //
-    private $systems = array(
-        1 => array(
+    private $systems = [
+        1 => [
             'type' => 'contour',
             'api' => 'soap',
             'enabled' => true,
             'order' => - 1
-        )
-    );
+        ]
+    ];
 
-    private $entitySpec = array(
+    private $entitySpec = [
         'name' => 'string',
         'cfg' => 'string',
         'type' => 'int'
-    );
+    ];
 
     /**
      * Class constructor
@@ -67,9 +67,9 @@ class tlReqMgrSystem extends tlObject
      */
     private function getSystems($opt = null)
     {
-        $my = array(
+        $my = [
             'options' => null
-        );
+        ];
         $my['options']['status'] = 'enabled'; // enabled,disabled,all
         $my['options'] = array_merge($my['options'], (array) $opt);
 
@@ -87,7 +87,7 @@ class tlReqMgrSystem extends tlObject
                 break;
         }
 
-        $ret = array();
+        $ret = [];
         foreach ($this->systems as $code => $elem) {
             if ($tval == null || $elem['enabled'] == $tval) {
                 $ret[$code] = $elem;
@@ -140,11 +140,11 @@ class tlReqMgrSystem extends tlObject
      */
     public function create($system)
     {
-        $ret = array(
+        $ret = [
             'status_ok' => 0,
             'id' => 0,
             'msg' => 'name already exists'
-        );
+        ];
         $safeobj = $this->sanitize($system);
 
         // empty name is not allowed
@@ -154,9 +154,9 @@ class tlReqMgrSystem extends tlObject
         }
 
         // need to check if name already exist
-        if (is_null($this->getByName($system->name, array(
+        if (is_null($this->getByName($system->name, [
             'output' => 'id'
-        )))) {
+        ]))) {
             $sql = "/* debugMsg */ INSERT  INTO {$this->tables['reqmgrsystems']} " .
                 " (name,cfg,type) " . " VALUES('" . $safeobj->name . "','" .
                 $safeobj->cfg . "',{$safeobj->type})";
@@ -164,17 +164,17 @@ class tlReqMgrSystem extends tlObject
             if ($this->db->exec_query($sql)) {
                 // at least for Postgres DBMS table name is needed.
                 $itemID = $this->db->insert_id($this->tables['reqmgrsystems']);
-                $ret = array(
+                $ret = [
                     'status_ok' => 1,
                     'id' => $itemID,
                     'msg' => 'ok'
-                );
+                ];
             } else {
-                $ret = array(
+                $ret = [
                     'status_ok' => 0,
                     'id' => 0,
                     'msg' => $this->db->error_msg()
-                );
+                ];
             }
         }
 
@@ -185,16 +185,16 @@ class tlReqMgrSystem extends tlObject
      */
     public function update($system)
     {
-        $msg = array();
+        $msg = [];
         $msg['duplicate_name'] = "Update can not be done - name %s already exists for id %s";
         $msg['ok'] = "operation OK for id %s";
 
         $safeobj = $this->sanitize($system);
-        $ret = array(
+        $ret = [
             'status_ok' => 1,
             'id' => $system->id,
             'msg' => ''
-        );
+        ];
 
         // check for duplicate name
         $info = $this->getByName($safeobj->name);
@@ -222,17 +222,17 @@ class tlReqMgrSystem extends tlObject
     {
         $debugMsg = 'Class:' . __CLASS__ . ' - Method: ' . __FUNCTION__ . ' - ';
 
-        $msg = array();
+        $msg = [];
         $msg['linked'] = "Failure - id %s is linked to: ";
         $msg['tproject_details'] = " testproject '%s' with id %s %s";
         $msg['syntax_error'] = "Syntax failure - id %s seems to be an invalid value";
         $msg['ok'] = "operation OK for id %s";
 
-        $ret = array(
+        $ret = [
             'status_ok' => 1,
             'id' => $id,
             'msg' => $debugMsg
-        );
+        ];
         if (is_null($id) || ($safeID = intval($id)) <= 0) {
             $ret['status_ok'] = 0;
             $ret['id'] = $id;
@@ -243,7 +243,7 @@ class tlReqMgrSystem extends tlObject
         // check if ID is linked
         $links = $this->getLinks($safeID);
         if (is_null($links)) {
-            $sql = " /* $debugMsg */ DELETE FROM {$this->tables['reqmgrsystems']}  " .
+            $sql = " /* {$debugMsg} */ DELETE FROM {$this->tables['reqmgrsystems']}  " .
                 " WHERE id = " . intval($safeID);
             $this->db->exec_query($sql);
             $ret['msg'] .= sprintf($msg['ok'], $safeID);
@@ -264,29 +264,29 @@ class tlReqMgrSystem extends tlObject
      */
     public function getByID($id, $options = null)
     {
-        return $this->getByAttr(array(
+        return $this->getByAttr([
             'key' => 'id',
             'value' => $id
-        ), $options);
+        ], $options);
     }
 
     /**
      */
     private function getByName($name, $options = null)
     {
-        return $this->getByAttr(array(
+        return $this->getByAttr([
             'key' => 'name',
             'value' => $name
-        ), $options);
+        ], $options);
     }
 
     /**
      */
     private function getByAttr($attr, $options = null)
     {
-        $my['options'] = array(
+        $my['options'] = [
             'output' => 'full'
-        );
+        ];
         $my['options'] = array_merge($my['options'], (array) $options);
 
         $sql = "/* debugMsg */ SELECT ";
@@ -346,9 +346,9 @@ class tlReqMgrSystem extends tlObject
         // "\r" - carriage return
         // and spaces
         // fortunatelly this is trim standard behaviour
-        $k2san = array(
+        $k2san = [
             'name'
-        );
+        ];
         foreach ($k2san as $key) {
             $value = trim($obj->$key);
             switch ($key) {
@@ -385,11 +385,11 @@ class tlReqMgrSystem extends tlObject
         $statusQuo = $this->getLinkedTo($tprojectID);
 
         if (is_null($statusQuo)) {
-            $sql = "/* $debugMsg */ INSERT INTO {$this->tables['testproject_reqmgrsystem']} " .
+            $sql = "/* {$debugMsg} */ INSERT INTO {$this->tables['testproject_reqmgrsystem']} " .
                 " (testproject_id,reqmgrsystem_id) " . " VALUES(" .
                 intval($tprojectID) . "," . intval($id) . ")";
         } else {
-            $sql = "/* $debugMsg */ UPDATE {$this->tables['testproject_reqmgrsystem']} " .
+            $sql = "/* {$debugMsg} */ UPDATE {$this->tables['testproject_reqmgrsystem']} " .
                 " SET reqmgrsystem_id = " . intval($id) .
                 " WHERE testproject_id = " . intval($tprojectID);
         }
@@ -407,7 +407,7 @@ class tlReqMgrSystem extends tlObject
         if (is_null($id)) {
             return;
         }
-        $sql = "/* $debugMsg */ DELETE FROM {$this->tables['testproject_reqmgrsystem']} " .
+        $sql = "/* {$debugMsg} */ DELETE FROM {$this->tables['testproject_reqmgrsystem']} " .
             " WHERE testproject_id = " . intval($tprojectID) .
             " AND reqmgrsystem_id = " . intval($id);
         $this->db->exec_query($sql);
@@ -421,18 +421,18 @@ class tlReqMgrSystem extends tlObject
     {
         $debugMsg = 'Class:' . __CLASS__ . ' - Method: ' . __FUNCTION__;
 
-        $my = array(
-            'opt' => array(
+        $my = [
+            'opt' => [
                 'getDeadLinks' => false
-            )
-        );
+            ]
+        ];
         $my['opt'] = array_merge($my['opt'], (array) $opt);
 
         if (is_null($id)) {
             return;
         }
 
-        $sql = "/* $debugMsg */ " .
+        $sql = "/* {$debugMsg} */ " .
             " SELECT TPMGR.testproject_id, NHTPR.name AS testproject_name " .
             " FROM {$this->tables['testproject_reqmgrsystem']} TPMGR" .
             " LEFT OUTER JOIN {$this->tables['nodes_hierarchy']} NHTPR " .
@@ -454,7 +454,7 @@ class tlReqMgrSystem extends tlObject
     {
         $debugMsg = 'Class:' . __CLASS__ . ' - Method: ' . __FUNCTION__;
 
-        $sql = "/* $debugMsg */ " .
+        $sql = "/* {$debugMsg} */ " .
             " SELECT TPIT.testproject_id, NHTPR.name AS testproject_name, TPIT.reqmgrsystem_id " .
             " FROM {$this->tables['testproject_reqmgrsystem']} TPIT" .
             " LEFT OUTER JOIN {$this->tables['nodes_hierarchy']} NHTPR " .
@@ -469,11 +469,11 @@ class tlReqMgrSystem extends tlObject
      */
     public function getAll($options = null)
     {
-        $my['options'] = array(
+        $my['options'] = [
             'output' => null,
             'orderByField' => 'name',
             'checkEnv' => false
-        );
+        ];
         $my['options'] = array_merge($my['options'], (array) $options);
 
         $add_fields = '';
@@ -535,7 +535,7 @@ class tlReqMgrSystem extends tlObject
         if (is_null($tprojectID)) {
             return;
         }
-        $sql = "/* $debugMsg */ " .
+        $sql = "/* {$debugMsg} */ " .
             " SELECT TPIT.testproject_id, NHTPR.name AS testproject_name, " .
             " TPIT.reqmgrsystem_id,ITRK.name AS reqmgrsystem_name, ITRK.type" .
             " FROM {$this->tables['testproject_reqmgrsystem']} TPIT" .

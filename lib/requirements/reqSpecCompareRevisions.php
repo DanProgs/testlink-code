@@ -23,7 +23,7 @@ testlinkInitPage($db);
 $smarty = new TLSmarty();
 
 $labels = init_labels(
-    array(
+    [
         "num_changes" => null,
         "no_changes" => null,
         "version_short" => null,
@@ -34,7 +34,7 @@ $labels = init_labels(
         "doc_id" => null,
         "revision_short" => null,
         "revision" => null
-    ));
+    ]);
 
 $itemMgr = new requirement_spec_mgr($db);
 $differ = new diff();
@@ -57,13 +57,13 @@ if ($args->doCompare) {
         $gui->cfieldsDiff = getCFDiff($cfields, $itemMgr);
     }
 
-    $gui->diff = array(
-        "scope" => array()
-    );
+    $gui->diff = [
+        "scope" => []
+    ];
     foreach ($gui->diff as $key => $val) {
         if ($args->useDaisyDiff) {
             $diff = new HTMLDiffer();
-            list ($differences, $diffcount) = $diff->htmlDiff(
+            [$differences, $diffcount] = $diff->htmlDiff(
                 $sbs['left_item'][$key], $sbs['right_item'][$key]);
             $gui->diff[$key]["diff"] = $differences;
             $gui->diff[$key]["count"] = $diffcount;
@@ -102,7 +102,7 @@ $smarty->display($templateCfg->template_dir . $templateCfg->default_template);
  */
 function getItemsToCompare($leftSideID, $rightSideID, &$itemSet)
 {
-    $ret = array();
+    $ret = [];
     foreach ($itemSet as $item) {
         if ($item['item_id'] == $leftSideID) {
             $ret['left_item'] = $item;
@@ -122,22 +122,22 @@ function getItemsToCompare($leftSideID, $rightSideID, &$itemSet)
  */
 function getCFToCompare($sides, $tprojectID, &$itemMgr)
 {
-    $cfields = array(
-        'left_side' => array(
+    $cfields = [
+        'left_side' => [
             'key' => 'left_item',
             'value' => null
-        ),
-        'right_side' => array(
+        ],
+        'right_side' => [
             'key' => 'right_item',
             'value' => null
-        )
-    );
+        ]
+    ];
 
-    $who = array(
+    $who = [
         'parent_id' => null,
         'item_id' => 0,
         'tproject_id' => $tprojectID
-    );
+    ];
     foreach ($cfields as $item_side => $dummy) {
         $target_id = $sides[$dummy['key']];
         $who['item_id'] = $target_id['item_id'];
@@ -164,16 +164,16 @@ function getCFDiff($cfields, &$itemMgr)
     $cfieldsRight = $cfields['right_side']['value'];
     if (! is_null($cfieldsLeft)) {
         $key2loop = array_keys($cfieldsLeft);
-        $cmp = array();
+        $cmp = [];
         $type_code = $itemMgr->cfield_mgr->get_available_types();
-        $key2convert = array(
+        $key2convert = [
             'lvalue',
             'rvalue'
-        );
+        ];
 
-        $formats = array(
+        $formats = [
             'date' => config_get('date_format')
-        );
+        ];
         $cfg = config_get('gui');
         $cfCfg = config_get('custom_fields');
         foreach ($key2loop as $cf_key) {
@@ -185,13 +185,13 @@ function getCFDiff($cfields, &$itemMgr)
                 ! is_null($cfieldsRight[$cf_key]['value'])) ||
                 (! is_null($cfieldsLeft) &&
                 ! is_null($cfieldsLeft[$cf_key]['value']))))) {
-                $cmp[$cf_key] = array(
+                $cmp[$cf_key] = [
                     'label' => htmlspecialchars($cfieldsLeft[$cf_key]['label']),
                     'lvalue' => $cfieldsLeft[$cf_key]['value'],
                     'rvalue' => ! is_null($cfieldsRight) ? $cfieldsRight[$cf_key]['value'] : null,
                     'changed' => $cfieldsLeft[$cf_key]['value'] !=
                     $cfieldsRight[$cf_key]['value']
-                );
+                ];
 
                 if ($type_code[$cfieldsLeft[$cf_key]['type']] == 'date' ||
                     $type_code[$cfieldsLeft[$cf_key]['type']] == 'datetime') {
@@ -253,10 +253,10 @@ function initializeGui(&$dbHandler, &$argsObj, $lbl, &$itemMgr)
     $reqSpecCfg = config_get('req_spec_cfg');
     $guiObj = new stdClass();
     $guiObj->items = $itemMgr->get_history($argsObj->req_spec_id,
-        array(
+        [
             'output' => 'array',
             'decode_user' => true
-        ));
+        ]);
 
     // Truncate log message
     if ($reqSpecCfg->log_message_len > 0) {
@@ -299,19 +299,19 @@ function getAttrDiff($leftSide, $rightSide, $labels)
 
     // attribute => label definition on TL configuration (just if NOT NULL)
     // order in this array will drive display order
-    $key2loop = array(
+    $key2loop = [
         'doc_id' => null,
         'name' => null,
         'type' => 'type_labels'
-    );
+    ];
     foreach ($key2loop as $fkey => $lkey) {
         // Need to decode
-        $cmp[$fkey] = array(
+        $cmp[$fkey] = [
             'label' => htmlspecialchars($labels[$fkey]),
             'lvalue' => $leftSide[$fkey],
             'rvalue' => $rightSide[$fkey],
             'changed' => $leftSide[$fkey] != $rightSide[$fkey]
-        );
+        ];
 
         if (! is_null($lkey)) {
             $decode = $req_spec_cfg->$lkey;

@@ -38,7 +38,7 @@ if (isset($TLS_htmltext[$pageKey])) {
     $gui->pageContent = $TLS_htmltext[$pageKey];
 } else {
     $gui->pageContent = "Please, ask administrator to update localization file" .
-        "(&lt;testlink_root&gt;/locale/$locale/texts.php)" . " - missing key: " .
+        "(&lt;testlink_root&gt;/locale/{$locale}/texts.php)" . " - missing key: " .
         $pageKey;
 }
 
@@ -53,14 +53,14 @@ $smarty->display('staticPage.tpl');
  */
 function initArgs()
 {
-    $iParams = array(
-        "key" => array(
+    $iParams = [
+        "key" => [
             tlInputParameter::STRING_N
-        ),
-        "refreshTree" => array(
+        ],
+        "refreshTree" => [
             tlInputParameter::INT_N
-        )
-    );
+        ]
+    ];
     $args = new stdClass();
     R_PARAMS($iParams, $args);
     return $args;

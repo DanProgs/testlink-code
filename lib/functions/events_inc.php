@@ -13,7 +13,7 @@
 
 // Declare supported plugin events.
 event_declare_many(
-    array(
+    [
         // Test Project related events
         'EVENT_TEST_PROJECT_CREATE' => EVENT_TYPE_CREATE,
         'EVENT_TEST_PROJECT_UPDATE' => EVENT_TYPE_UPDATE,
@@ -43,4 +43,4 @@ event_declare_many(
         'EVENT_RIGHTMENU_TOP' => EVENT_TYPE_OUTPUT,
         'EVENT_RIGHTMENU_BOTTOM' => EVENT_TYPE_OUTPUT,
         'EVENT_TESTRUN_DISPLAY' => EVENT_TYPE_OUTPUT
-    ));
+    ]);

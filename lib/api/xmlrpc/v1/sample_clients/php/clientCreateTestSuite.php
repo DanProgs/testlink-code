@@ -21,7 +21,7 @@ show_api_db_sample_msg();
 
 $method = 'createTestSuite';
 
-$unitTestDescription = "Test - $method";
+$unitTestDescription = "Test - {$method}";
 $test_num = 0;
 $tlDevKey = '985978c915f50e47a4b1a54a943d1b76';
 $tlDevKey = isset($_REQUEST['apiKey']) ? $_REQUEST['apiKey'] : $tlDevKey;
@@ -29,7 +29,7 @@ $tlDevKey = isset($_REQUEST['apiKey']) ? $_REQUEST['apiKey'] : $tlDevKey;
 // -------------------------------------------------------------
 $test_num ++;
 $additionalInfo = 'Using Test Project PREFIX';
-$args = array();
+$args = [];
 $args["devKey"] = $tlDevKey;
 
 $args["prefix"] = 'ZTZ';
@@ -50,7 +50,7 @@ runTest($client, $method, $args, $test_num);
 // -------------------------------------------------------------
 $test_num ++;
 $additionalInfo = 'Using Test Project ID';
-$args = array();
+$args = [];
 $args["devKey"] = $tlDevKey;
 
 $args["testprojectid"] = 1046;

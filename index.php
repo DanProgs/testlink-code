@@ -19,7 +19,10 @@ doSessionStart();
 // will be very interesting understand why we do this
 unset($_SESSION['basehref']);
 setPaths();
-list ($args, $gui) = initEnv();
+[
+    $args,
+    $gui
+] = initEnv();
 
 // verify the session during a work
 $redir2login = true;
@@ -75,13 +78,13 @@ $tplEngine->display('main.tpl');
  */
 function initEnv()
 {
-    $iParams = array(
-        "reqURI" => array(
+    $iParams = [
+        "reqURI" => [
             tlInputParameter::STRING_N,
             0,
             4000
-        )
-    );
+        ]
+    ];
     $pParams = G_PARAMS($iParams);
 
     $args = new stdClass();
@@ -123,8 +126,8 @@ function initEnv()
         "updateMainPage=1" . $sso;
     $gui->logout = 'logout.php?viewer=' . $sso;
 
-    return array(
+    return [
         $args,
         $gui
-    );
+    ];
 }

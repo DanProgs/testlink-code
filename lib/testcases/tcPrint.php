@@ -24,7 +24,7 @@ $node['tcversion_id'] = $args->tcversion_id;
 $gui = initializeGui($args, $node);
 
 // Struture defined in printDocument.php
-$printingOptions = array(
+$printingOptions = [
     'toc' => 0,
     'body' => 1,
     'summary' => 1,
@@ -41,28 +41,28 @@ $printingOptions = array(
     'docType' => SINGLE_TESTCASE,
     'importance' => 1,
     'platform' => 1
-);
+];
 
 $level = 0;
 $tplanID = 0;
 $prefix = null;
 $text2print = '';
 $text2print .= renderHTMLHeader($gui->page_title, $_SESSION['basehref'],
-    SINGLE_TESTCASE, array(
+    SINGLE_TESTCASE, [
         'gui/javascript/testlink_library.js'
-    ));
+    ]);
 
 $env = new stdClass();
 $env->base_href = $_SESSION['basehref'];
 $env->reportType = $printingOptions['docType'];
 
 $text2print .= renderTestCaseForPrinting($db, $node, $printingOptions, $env,
-    array(
+    [
         'level' => $level,
         'tplan_id' => $tplanID,
         'tproject_id' => $args->tproject_id,
         'prefix' => $prefix
-    ), $level);
+    ], $level);
 
 echo $text2print;
 
@@ -89,17 +89,17 @@ function initArgs()
     $args->tproject_name = $_SESSION['testprojectName'];
     $args->goback_url = isset($_REQUEST['goback_url']) ? $_REQUEST['goback_url'] : null;
 
-    $ofd = array(
+    $ofd = [
         'HTML' => lang_get('format_html'),
         'ODT' => lang_get('format_odt'),
         'MSWORD' => lang_get('format_msword')
-    );
+    ];
     $args->outputFormat = isset($_REQUEST['outputFormat']) ? $_REQUEST['outputFormat'] : null;
     $args->outputFormat = isset($ofd[$args->outputFormat]) ? $ofd[$args->outputFormat] : null;
 
-    $args->outputFormatDomain = array(
+    $args->outputFormatDomain = [
         'NONE' => ''
-    ) + $ofd;
+    ] + $ofd;
     return $args;
 }
 

@@ -51,7 +51,7 @@ if ($args->tprojectID) {
     $map = (array) $db->fetchRowsIntoMap($sql, 'id', database::CUMULATIVE);
 
     // dont show requirements from different testprojects than the selected one
-    if (count($map)) {
+    if ($map !== []) {
         $reqIDSet = array_keys($map);
         foreach ($reqIDSet as $item) {
             $pid = $tproject_mgr->tree_manager->getTreeRoot($item);
@@ -68,9 +68,9 @@ if ($gui->row_qty > 0) {
     $gui->resultSet = $map;
     if ($gui->row_qty <= $req_cfg->search->max_qty_for_display) {
         $req_set = array_keys($map);
-        $options = array(
+        $options = [
             'output_format' => 'path_as_string'
-        );
+        ];
         $gui->path_info = $tproject_mgr->tree_manager->get_full_path_verbose(
             $req_set, $options);
     } else {
@@ -97,14 +97,14 @@ $smarty->display($templateCfg->template_dir . $tpl);
 function buildExtTable($gui, $charset)
 {
     $table = null;
-    $lbl = array(
+    $lbl = [
         'edit' => 'requirement',
         'rev' => 'revision_short',
         'ver' => 'version_short',
         'req_spec' => 'req_spec',
         'requirement' => 'requirement',
         'version_revision_tag' => 'version_revision_tag'
-    );
+    ];
 
     $labels = init_labels($lbl);
     $edit_icon = TL_THEME_IMG_DIR . "edit_icon.png";
@@ -126,18 +126,18 @@ function buildExtTable($gui, $charset)
     //
     //
     if (count($gui->resultSet) > 0) {
-        $columns = array();
+        $columns = [];
 
-        $columns[] = array(
+        $columns[] = [
             'title_key' => 'req_spec'
-        );
-        $columns[] = array(
+        ];
+        $columns[] = [
             'title_key' => 'requirement',
             'type' => 'text'
-        );
+        ];
 
         // Extract the relevant data and build a matrix
-        $matrixData = array();
+        $matrixData = [];
 
         $key2loop = array_keys($gui->resultSet);
         $img = "<img title=\"{$labels['edit']}\" src=\"{$edit_icon}\" />";
@@ -149,7 +149,7 @@ function buildExtTable($gui, $charset)
             $labels['version_revision_tag'] . ' </a>';
 
         foreach ($key2loop as $req_id) {
-            $rowData = array();
+            $rowData = [];
             $itemSet = $gui->resultSet[$req_id];
             $rfx = &$itemSet[0];
 
@@ -189,9 +189,9 @@ function buildExtTable($gui, $charset)
         $table->toolbarShowAllColumnsButton = false;
         $table->storeTableState = false;
 
-        $table->addCustomBehaviour('text', array(
+        $table->addCustomBehaviour('text', [
             'render' => 'columnWrap'
-        ));
+        ]);
     }
     return $table;
 }
@@ -209,7 +209,7 @@ function initArgs($dateFormat)
     $args = new stdClass();
     $_REQUEST = strings_stripSlashes($_REQUEST);
 
-    $strnull = array(
+    $strnull = [
         'requirement_document_id',
         'name',
         'scope',
@@ -221,7 +221,7 @@ function initArgs($dateFormat)
         'log_message',
         'modification_date_from',
         'modification_date_to'
-    );
+    ];
 
     foreach ($strnull as $keyvar) {
         $args->$keyvar = isset($_REQUEST[$keyvar]) ? trim($_REQUEST[$keyvar]) : null;
@@ -229,31 +229,31 @@ function initArgs($dateFormat)
             $args->$keyvar) : null;
     }
 
-    $intcheck = array(
+    $intcheck = [
         'version',
         'tcid',
         'reqType',
         'relation_type'
-    );
+    ];
     foreach ($intcheck as $keyvar) {
         $args->$keyvar = isset($_REQUEST[$keyvar]) ? intval($_REQUEST[$keyvar]) : null;
     }
 
-    $int0 = array(
+    $int0 = [
         'custom_field_id',
         'coverage'
-    );
+    ];
     foreach ($int0 as $keyvar) {
         $args->$keyvar = isset($_REQUEST[$keyvar]) ? intval($_REQUEST[$keyvar]) : 0;
     }
 
     // convert "creation date from" to iso format for database usage
-    $dk = array(
+    $dk = [
         'creation_date_from' => ' 00:00:00',
         'creation_date_to' => ' 23:59:59',
         'modification_date_from' => ' 00:00:00',
         'modification_date_to' => ' 23:59:59'
-    );
+    ];
     foreach ($dk as $tdk => $hhmmss) {
         if (isset($args->$tdk) && trim($args->$tdk) != '') {
             $l10ndate = split_localized_date($args->$tdk, $dateFormat);
@@ -277,7 +277,7 @@ function initArgs($dateFormat)
 function build_search_sql(&$dbHandler, &$argsObj, &$guiObj)
 {
     $tables = tlObjectWithDB::getDBTables(
-        array(
+        [
             'cfield_design_values',
             'nodes_hierarchy',
             'req_specs',
@@ -287,7 +287,7 @@ function build_search_sql(&$dbHandler, &$argsObj, &$guiObj)
             'requirements',
             'req_coverage',
             'tcversions'
-        ));
+        ]);
 
     // ver => REQ Versions
     // rev => REQ Revisions
@@ -299,26 +299,26 @@ function build_search_sql(&$dbHandler, &$argsObj, &$guiObj)
     //
     // That's why to certain extent filter seems to work in OR mode.
     // May be this is a BUG, that was never reported.
-    $filter = array();
+    $filter = [];
     $filter['ver'] = null;
     $filter['rev'] = null;
 
     // date filters can be build using algorithm
     // Need to sanitize!!! 2019
-    $date_fields = array(
+    $date_fields = [
         'creation_ts' => 'ts',
         'modification_ts' => 'ts'
-    );
-    $date_keys = array(
+    ];
+    $date_keys = [
         'date_from' => '>=',
         'date_to' => '<='
-    );
+    ];
     foreach ($date_fields as $fx => $needle) {
         foreach ($date_keys as $fk => $op) {
             $fkey = str_replace($needle, $fk, $fx);
             if ($argsObj->$fkey) {
-                $filter['ver'][$fkey] = " AND REQV.$fx $op '{$argsObj->$fkey}' ";
-                $filter['rev'][$fkey] = " AND REQR.$fx $op '{$argsObj->$fkey}' ";
+                $filter['ver'][$fkey] = " AND REQV.{$fx} {$op} '{$argsObj->$fkey}' ";
+                $filter['rev'][$fkey] = " AND REQR.{$fx} {$op} '{$argsObj->$fkey}' ";
             }
         }
     }
@@ -329,32 +329,32 @@ function build_search_sql(&$dbHandler, &$argsObj, &$guiObj)
     // value: map
     // key: filter scope, will identify with part of SQL affects
     // value: table alias
-    $likeKeys = array(
-        'name' => array(
-            'name' => array(
+    $likeKeys = [
+        'name' => [
+            'name' => [
                 'ver' => "NH_REQ",
                 'rev' => "REQR"
-            )
-        ),
-        'requirement_document_id' => array(
-            'req_doc_id' => array(
+            ]
+        ],
+        'requirement_document_id' => [
+            'req_doc_id' => [
                 'ver' => 'REQ',
                 'rev' => 'REQR'
-            )
-        ),
-        'scope' => array(
-            'scope' => array(
+            ]
+        ],
+        'scope' => [
+            'scope' => [
                 'ver' => 'REQV',
                 'rev' => 'REQR'
-            )
-        ),
-        'log_message' => array(
-            'log_message' => array(
+            ]
+        ],
+        'log_message' => [
+            'log_message' => [
                 'ver' => 'REQV',
                 'rev' => 'REQR'
-            )
-        )
-    );
+            ]
+        ]
+    ];
 
     foreach ($likeKeys as $key => $fcfg) {
         if ($argsObj->$key) {
@@ -366,20 +366,20 @@ function build_search_sql(&$dbHandler, &$argsObj, &$guiObj)
         }
     }
 
-    $char_keys = array(
-        'reqType' => array(
-            'type' => array(
+    $char_keys = [
+        'reqType' => [
+            'type' => [
                 'ver' => "REQV",
                 'rev' => "REQR"
-            )
-        ),
-        'reqStatus' => array(
-            'status' => array(
+            ]
+        ],
+        'reqStatus' => [
+            'status' => [
                 'ver' => 'REQV',
                 'rev' => 'REQR'
-            )
-        )
-    );
+            ]
+        ]
+    ];
 
     foreach ($char_keys as $key => $fcfg) {
         if ($argsObj->$key) {
@@ -415,7 +415,7 @@ function build_search_sql(&$dbHandler, &$argsObj, &$guiObj)
         $side = isset($dummy[1]) ? " RR.{$dummy[1]}_id = NH_REQ.id " : " RR.source_id = NH_REQ.id OR RR.destination_id = NH_REQ.id ";
 
         $from['ver']['relation_type'] = " JOIN {$tables['req_relations']} RR " .
-            " ON ($side) AND RR.relation_type = {$rel_type} ";
+            " ON ({$side}) AND RR.relation_type = {$rel_type} ";
         $from['rev']['relation_type'] = $from['ver']['relation_type'];
     }
 
@@ -439,7 +439,7 @@ function build_search_sql(&$dbHandler, &$argsObj, &$guiObj)
         $tcid = $dbHandler->prepare_string($argsObj->tcid);
         $tcid = str_replace($guiObj->tcasePrefix, "", $tcid);
 
-        $filter['ver']['tcid'] = " AND TCV.tc_external_id = '$tcid' ";
+        $filter['ver']['tcid'] = " AND TCV.tc_external_id = '{$tcid}' ";
         $filter['rev']['tcid'] = $filter['ver']['tcid'];
 
         $from['ver']['tcid'] = " /* 1.9.18 Changed */ " .
@@ -473,10 +473,10 @@ function build_search_sql(&$dbHandler, &$argsObj, &$guiObj)
         " /* Go for REQ REV data */ " .
         " JOIN {$tables['req_versions']} REQV ON REQV.id=NH_REQV.id " . " /* */ ";
 
-    $map2use = array(
+    $map2use = [
         'from',
         'filter'
-    ); // ORDER IS CRITIC to build SQL statement
+    ]; // ORDER IS CRITIC to build SQL statement
     foreach ($map2use as $vv) {
         $ref = &$$vv;
         if (! is_null($ref['ver'])) {

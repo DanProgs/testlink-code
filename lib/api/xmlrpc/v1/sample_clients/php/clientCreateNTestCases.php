@@ -19,16 +19,16 @@ $tcaseQty = 1000;
 $tcCounter = 1;
 $method = 'createTestCase';
 
-$args = array();
+$args = [];
 $args["devKey"] = 'developer';
 $args["testprojectid"] = 1;
 $args["testsuiteid"] = 2;
 $args["preconditions"] = 'Test Link API Up & Running';
-$args["steps"][] = array(
+$args["steps"][] = [
     'step_number' => 1,
     'actions' => 'Start Server',
     'expected_results' => 'green light'
-);
+];
 $args["authorlogin"] = 'admin';
 
 $client = new IXR_Client($server_url);

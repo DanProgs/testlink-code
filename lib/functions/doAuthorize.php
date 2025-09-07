@@ -28,10 +28,10 @@ function doAuthorize(&$db, $login, $pwd, $options = null)
 {
     global $g_tlLogger;
 
-    $result = array(
+    $result = [
         'status' => tl::ERROR,
         'msg' => null
-    );
+    ];
     $_SESSION['locale'] = TL_DEFAULT_LOCALE;
 
     if (null == $options) {
@@ -90,10 +90,10 @@ function doAuthorize(&$db, $login, $pwd, $options = null)
         } else {
             $password_check = auth_does_password_match($db, $user, $pwd);
             if (! $password_check->status_ok) {
-                $result = array(
+                $result = [
                     'status' => tl::ERROR,
                     'msg' => null
-                );
+                ];
             }
             $doLogin = $password_check->status_ok && $user->isActive;
             if (! $doLogin) {
@@ -225,11 +225,11 @@ function doSSOClientCertificate(&$dbHandler, $apache_mod_ssl_env,
 {
     global $g_tlLogger;
 
-    $ret = array(
+    $ret = [
         'status' => tl::ERROR,
         'msg' => null,
         'checkedBy' => __FUNCTION_
-    );
+    ];
     if (! isset($apache_mod_ssl_env['SSL_PROTOCOL'])) {
         return $ret;
     }
@@ -340,11 +340,11 @@ function auth_does_password_match(&$db, &$userObj, $cleartext_password)
  */
 function getUserFieldsFromLDAP($login, $ldapCfg)
 {
-    $k2l = array(
+    $k2l = [
         'emailAddress' => 'email',
         'firstName' => 'firstname',
         'lastName' => 'surname'
-    );
+    ];
     $ret = new stdClass();
 
     foreach ($k2l as $p => $ldf) {
@@ -353,11 +353,11 @@ function getUserFieldsFromLDAP($login, $ldapCfg)
     }
 
     // Defaults
-    $k2l = array(
+    $k2l = [
         'firstName' => $login,
         'lastName' => $login,
         'emailAddress' => 'no_mail_configured@on_ldapserver.org'
-    );
+    ];
     foreach ($k2l as $prop => $val) {
         if (is_null($ret->$prop) || strlen($ret->$prop) == 0) {
             $ret->$prop = $val;
@@ -373,11 +373,11 @@ function doSSOWebServerVar(&$dbHandler, $authCfg = null)
 {
     $debugMsg = __FUNCTION__;
 
-    $ret = array(
+    $ret = [
         'status' => tl::ERROR,
         'msg' => null,
         'checkedBy' => __FUNCTION__
-    );
+    ];
     $authCfg = is_null($authCfg) ? config_get('authentication') : $authCfg;
 
     $userIdentity = null;
@@ -386,11 +386,11 @@ function doSSOWebServerVar(&$dbHandler, $authCfg = null)
     }
 
     if (! is_null($userIdentity) && $userIdentity != '') {
-        $tables = tlObject::getDBTables(array(
+        $tables = tlObject::getDBTables([
             'users'
-        ));
+        ]);
 
-        $sql = "/* $debugMsg */" .
+        $sql = "/* {$debugMsg} */" .
             "SELECT login,role_id,email,first,last,active " .
             "FROM {$tables['users']} " . "WHERE active = 1 AND " .
             " {$authCfg['SSO_user_target_dbfield']} = '" .

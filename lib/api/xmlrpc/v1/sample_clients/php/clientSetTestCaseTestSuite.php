@@ -17,7 +17,7 @@ $tcCounter = 0;
 $method = 'setTestCaseTestSuite';
 
 // Update Only Summary
-$args = array();
+$args = [];
 $args["devKey"] = 'rey-momo';
 $args["testcaseexternalid"] = 'PQQ-1';
 $args["testsuiteid"] = 3;

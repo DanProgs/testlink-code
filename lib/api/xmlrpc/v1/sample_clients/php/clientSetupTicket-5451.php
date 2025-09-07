@@ -29,7 +29,7 @@ $cfg->debug = false;
 $cfg->devKey = 'Spock (The Tholian Web)';
 $cfg->prefix = 'AXE';
 
-$args4call = array();
+$args4call = [];
 
 // $server_url is GLOBAL created on some previous include
 $op = createTestProject($server_url, $cfg, $args4call);
@@ -39,7 +39,7 @@ if (isset($op[0]['status']) && $op[0]['status']) {
     $op = createBuild($server_url, $cfg, $args4call, $tplan_id);
 }
 
-$platformSet = array();
+$platformSet = [];
 $dummy = new stdClass();
 $dummy->name = 'Ferrari';
 $dummy->notes = 'Italy';
@@ -66,13 +66,13 @@ foreach ($platformSet as &$item) {
 function createTestProject($server_url, $cfg, &$args4call)
 {
     $method = 'createTestProject';
-    $args4call[$method] = array(
+    $args4call[$method] = [
         "devKey" => $cfg->devKey,
         "testcaseprefix" => $cfg->prefix,
         "testprojectname" => "TICKET 5451",
         "notes" => "To test TICKET 5451: Test Plan WITH 2 or more PLATFORMS - " .
         "Test Cases Without Tester Assignment provide wrong result"
-    );
+    ];
 
     $client = new IXR_Client($server_url);
     $client->debug = $cfg->debug;
@@ -82,12 +82,12 @@ function createTestProject($server_url, $cfg, &$args4call)
 function createTestPlan($server_url, $cfg, &$args4call)
 {
     $method = 'createTestPlan';
-    $args4call[$method] = array(
+    $args4call[$method] = [
         "devKey" => $cfg->devKey,
         "testprojectname" => $args4call['createTestProject']["testprojectname"],
         "testplanname" => "TPLAN A - 3 Platforms",
         "notes" => "Test plan used to test report 'Test cases without tester assignment' "
-    );
+    ];
 
     $client = new IXR_Client($server_url);
     $client->debug = $cfg->debug;
@@ -97,12 +97,12 @@ function createTestPlan($server_url, $cfg, &$args4call)
 function createBuild($server_url, $cfg, &$args4call, $tplan_id)
 {
     $method = 'createBuild';
-    $args4call[$method] = array(
+    $args4call[$method] = [
         "devKey" => $cfg->devKey,
         "buildname" => '1.0',
         "testplanid" => $tplan_id,
         "buildnote" => "Build used to test issue 5451"
-    );
+    ];
 
     $client = new IXR_Client($server_url);
     $client->debug = $cfg->debug;
@@ -112,12 +112,12 @@ function createBuild($server_url, $cfg, &$args4call, $tplan_id)
 function createPlatform($server_url, $cfg, &$args4call, $item)
 {
     $method = 'createPlatform';
-    $args4call[$method] = array(
+    $args4call[$method] = [
         "devKey" => $cfg->devKey,
         "platformname" => $item->name,
         "notes" => $item->notes,
         "testprojectname" => $args4call['createTestProject']["testprojectname"]
-    );
+    ];
 
     $client = new IXR_Client($server_url);
     $client->debug = $cfg->debug;

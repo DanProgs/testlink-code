@@ -34,19 +34,19 @@ if ($arrDataKeys != null) {
     }
 }
 
-$namesOfKeywordsArray = array();
+$namesOfKeywordsArray = [];
 $namesOfKeywordsArray[0] = "";
 
-$passArray = array();
+$passArray = [];
 $passArray[0] = "pass";
 
-$failArray = array();
+$failArray = [];
 $failArray[0] = "fail";
 
-$blockedArray = array();
+$blockedArray = [];
 $blockedArray[0] = "blocked";
 
-$notRunArray = array();
+$notRunArray = [];
 $notRunArray[0] = "not run";
 
 for ($i = 0; $i < count($arrDataKeys); $i ++) {
@@ -58,19 +58,19 @@ for ($i = 0; $i < count($arrDataKeys); $i ++) {
     $notRunArray[$i + 1] = $keywordArr[5];
 }
 
-$chart['chart_data'] = array(
+$chart['chart_data'] = [
     $namesOfKeywordsArray,
     $passArray,
     $failArray,
     $blockedArray,
     $notRunArray
-);
+];
 
 /**
  * END NEW STUFF
  */
 
-$chart['axis_value'] = array(
+$chart['axis_value'] = [
     'font' => "arial",
     'bold' => true,
     'size' => 10,
@@ -82,29 +82,29 @@ $chart['axis_value'] = array(
     'decimals' => 0,
     'separator' => "",
     'show_min' => true
-);
+];
 
-$chart['chart_border'] = array(
+$chart['chart_border'] = [
     'color' => "000000",
     'top_thickness' => 0,
     'bottom_thickness' => 3,
     'left_thickness' => 0,
     'right_thickness' => 0
-);
+];
 
-$chart['chart_grid_h'] = array(
+$chart['chart_grid_h'] = [
     'alpha' => 20,
     'color' => "000000",
     'thickness' => 1,
     'type' => "solid"
-);
-$chart['chart_grid_v'] = array(
+];
+$chart['chart_grid_v'] = [
     'alpha' => 20,
     'color' => "000000",
     'thickness' => 1,
     'type' => "dashed"
-);
-$chart['chart_rect'] = array(
+];
+$chart['chart_rect'] = [
     'x' => 125,
     'y' => 65,
     'width' => 250,
@@ -113,17 +113,17 @@ $chart['chart_rect'] = array(
     'negative_color' => "000000",
     'positive_alpha' => 75,
     'negative_alpha' => 15
-);
-$chart['chart_transition'] = array(
+];
+$chart['chart_transition'] = [
     'type' => "drop",
     'delay' => 0,
     'duration' => 2,
     'order' => "series"
-);
+];
 $chart['chart_type'] = "stacked column";
 
-$chart['draw'] = array(
-    array(
+$chart['draw'] = [
+    [
         'transition' => "slide_up",
         'delay' => 1,
         'duration' => .5,
@@ -141,8 +141,8 @@ $chart['draw'] = array(
         'text' => "Keywords",
         'h_align' => "right",
         'v_align' => "middle"
-    ),
-    array(
+    ],
+    [
         'transition' => "slide_up",
         'delay' => 1,
         'duration' => .5,
@@ -160,18 +160,18 @@ $chart['draw'] = array(
         'text' => "report",
         'h_align' => "right",
         'v_align' => "middle"
-    )
-);
+    ]
+];
 
-$chart['legend_label'] = array(
+$chart['legend_label'] = [
     'layout' => "horizontal",
     'font' => "arial",
     'bold' => true,
     'size' => 13,
     'color' => "444466",
     'alpha' => 90
-);
-$chart['legend_rect'] = array(
+];
+$chart['legend_rect'] = [
     'x' => 125,
     'y' => 10,
     'width' => 250,
@@ -182,19 +182,19 @@ $chart['legend_rect'] = array(
     'line_color' => "000000",
     'line_alpha' => 0,
     'line_thickness' => 0
-);
-$chart['legend_transition'] = array(
+];
+$chart['legend_transition'] = [
     'type' => "slide_left",
     'delay' => 0,
     'duration' => 1
-);
+];
 
-$chart['series_color'] = array(
+$chart['series_color'] = [
     "00FF00",
     "FF0000",
     "0000FF",
     "000000"
-);
+];
 
 SendChartData($chart);
 ?>

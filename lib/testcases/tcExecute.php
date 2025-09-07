@@ -32,10 +32,10 @@ testlinkInitPage($db);
 
 $args = initArgs();
 
-$executionResults = array();
+$executionResults = [];
 $xmlResponse = null;
 
-$msg = array();
+$msg = [];
 $msg['check_server_setting'] = "<tr><td>" .
     lang_get("check_test_automation_server") . "</td></tr>";
 
@@ -65,7 +65,7 @@ function remoteExecTestcase(&$db, $tcase_id, $msg)
     $cfield_manager = new cfield_mgr($db);
     $tree_manager = new tree($db);
     $xmlResponse = null;
-    $executionResults = array();
+    $executionResults = [];
 
     $executionResults[$tcase_id] = executeTestCase($tcase_id, $tree_manager,
         $cfield_manager);
@@ -100,7 +100,7 @@ function remoteExecTestcaseSet(&$db, $parent_id, $msg)
     $cfield_manager = new cfield_mgr($db);
     $tree_manager = new tree($db);
     $xmlResponse = null;
-    $executionResults = array();
+    $executionResults = [];
     $node_type = $tree_manager->get_available_node_types();
     $subtree_list = $tree_manager->get_subtree($parent_id);
 
@@ -139,17 +139,17 @@ function remoteExecTestcaseSet(&$db, $parent_id, $msg)
  */
 function initArgs()
 {
-    $iParams = array(
-        "testcase_id" => array(
+    $iParams = [
+        "testcase_id" => [
             tlInputParameter::INT_N,
             0
-        ),
-        "level" => array(
+        ],
+        "level" => [
             tlInputParameter::STRING_N,
             0,
             50
-        )
-    );
+        ]
+    ];
     $args = new stdClass();
     R_PARAMS($iParams, $args);
     return $args;

@@ -114,7 +114,7 @@ class TestlinkXMLRPCServer extends IXR_Server
     /**
      * array where error codes and messages are stored
      */
-    protected $errors = array();
+    protected $errors = [];
 
     /**
      * The api key being used to make a request
@@ -357,7 +357,7 @@ class TestlinkXMLRPCServer extends IXR_Server
     /**
      * Constructor sets up the IXR_Server and db connection
      */
-    public function __construct($callbacks = array())
+    public function __construct($callbacks = [])
     {
         $this->dbObj = new database(DB_TYPE);
         $this->dbObj->db->SetFetchMode(ADODB_FETCH_ASSOC);
@@ -595,9 +595,9 @@ class TestlinkXMLRPCServer extends IXR_Server
 
         if ($tprojectid <= 0 && $tplanid > 0) {
             // get test project from test plan
-            $ox = array(
+            $ox = [
                 'output' => 'minimun'
-            );
+            ];
             $dummy = $this->tplanMgr->get_by_id($tplanid, $ox);
             $tprojectid = intval($dummy['tproject_id']);
         }
@@ -1579,12 +1579,12 @@ class TestlinkXMLRPCServer extends IXR_Server
         $tcase_id = $this->args[self::$testCaseIDParamName];
         $platform_id = ! is_null($platformInfo) ? key($platformInfo) : null;
 
-        $filters = array(
+        $filters = [
             'exec_status' => "ALL",
             'active_status' => "ALL",
             'tplan_id' => $tplan_id,
             'platform_id' => $platform_id
-        );
+        ];
         $info = $this->tcaseMgr->get_linked_versions($tcase_id, $filters);
         $status_ok = ! is_null($info);
 
@@ -1596,9 +1596,9 @@ class TestlinkXMLRPCServer extends IXR_Server
         } else {
             $tplan_info = $this->tplanMgr->get_by_id($tplan_id);
             $tcase_info = $this->tcaseMgr->get_by_id($tcase_id,
-                testcase::ALL_VERSIONS, null, array(
+                testcase::ALL_VERSIONS, null, [
                     'output' => 'essential'
-                ));
+                ]);
             if (is_null($platform_id)) {
                 $msg = sprintf(TCASEID_NOT_IN_TPLANID_STR,
                     $tcase_info[0]['name'], $tcase_id, $tplan_info['name'],
@@ -1626,10 +1626,10 @@ class TestlinkXMLRPCServer extends IXR_Server
      */
     protected function _checkCreateBuildRequest($messagePrefix = '')
     {
-        $checkFunctions = array(
+        $checkFunctions = [
             'authenticate',
             'checkTestPlanID'
-        );
+        ];
         $status_ok = $this->_runChecks($checkFunctions, $messagePrefix);
         if ($status_ok) {
             $status_ok = $this->_isParamPresent(self::$buildNameParamName,
@@ -1647,10 +1647,10 @@ class TestlinkXMLRPCServer extends IXR_Server
      */
     protected function _checkGetBuildRequest()
     {
-        $checkFunctions = array(
+        $checkFunctions = [
             'authenticate',
             'checkTestPlanID'
-        );
+        ];
         return $this->_runChecks($checkFunctions);
     }
 
@@ -1692,10 +1692,10 @@ class TestlinkXMLRPCServer extends IXR_Server
         $status_ok = true;
         $this->_setArgs($args);
 
-        $checkFunctions = array(
+        $checkFunctions = [
             'authenticate',
             'checkTestPlanID'
-        );
+        ];
         $status_ok = $this->_runChecks($checkFunctions, $msg_prefix);
 
         if ($status_ok) {
@@ -1734,7 +1734,7 @@ class TestlinkXMLRPCServer extends IXR_Server
                 $maxid = $build['id'];
             }
         }
-        $maxbuild = array();
+        $maxbuild = [];
         $maxbuild[] = $builds[$maxkey];
 
         return $maxbuild;
@@ -1799,28 +1799,28 @@ class TestlinkXMLRPCServer extends IXR_Server
         $msg_prefix = "({$operation}) - ";
 
         $this->_setArgs($args);
-        $resultInfo = array();
+        $resultInfo = [];
         $status_ok = true;
 
         $options = new stdClass();
         $options->getBugs = 0;
 
         // Checks are done in order
-        $checkFunctions = array(
+        $checkFunctions = [
             'authenticate',
             'checkTestPlanID',
             'checkTestCaseIdentity'
-        );
+        ];
 
         $status_ok = $this->_runChecks($checkFunctions, $msg_prefix) &&
             $this->_checkTCIDAndTPIDValid(null, $msg_prefix) &&
             $this->userHasRight("mgt_view_tc", self::CHECK_PUBLIC_PRIVATE_ATTR);
 
-        $execContext = array(
+        $execContext = [
             'tplan_id' => $this->args[self::$testPlanIDParamName],
             'platform_id' => null,
             'build_id' => null
-        );
+        ];
 
         if ($status_ok) {
             if ($this->_isParamPresent(self::$optionsParamName, $msg_prefix)) {
@@ -1872,9 +1872,9 @@ class TestlinkXMLRPCServer extends IXR_Server
             if (is_null($rs)) {
                 // has not been executed
                 // execution id = -1 => test case has not been runned.
-                $resultInfo[] = array(
+                $resultInfo[] = [
                     'id' => - 1
-                );
+                ];
             } else {
                 // OK Select * is not a good practice but ...(fman)
                 $targetID = intval(key($rs));
@@ -1883,7 +1883,7 @@ class TestlinkXMLRPCServer extends IXR_Server
                 $resultInfo[0] = $this->dbObj->fetchFirstRow($sql);
 
                 if ($options->getBugs) {
-                    $resultInfo[0]['bugs'] = array();
+                    $resultInfo[0]['bugs'] = [];
                     $sql = " SELECT DISTINCT bug_id FROM {$this->tables['execution_bugs']} " .
                         " WHERE execution_id = " . $targetID;
                     $resultInfo[0]['bugs'] = (array) $this->dbObj->get_recordset(
@@ -1948,28 +1948,28 @@ class TestlinkXMLRPCServer extends IXR_Server
         $msg_prefix = "({$operation}) - ";
 
         $this->_setArgs($args);
-        $resultInfo = array();
+        $resultInfo = [];
         $status_ok = true;
 
         $options = new stdClass();
         $options->getBugs = 0;
 
         // Checks are done in order
-        $checkFunctions = array(
+        $checkFunctions = [
             'authenticate',
             'checkTestPlanID',
             'checkTestCaseIdentity'
-        );
+        ];
 
         $status_ok = $this->_runChecks($checkFunctions, $msg_prefix) &&
             $this->_checkTCIDAndTPIDValid(null, $msg_prefix) &&
             $this->userHasRight("mgt_view_tc", self::CHECK_PUBLIC_PRIVATE_ATTR);
 
-        $execContext = array(
+        $execContext = [
             'tplan_id' => $this->args[self::$testPlanIDParamName],
             'platform_id' => null,
             'build_id' => null
-        );
+        ];
 
         if ($status_ok) {
             if ($this->_isParamPresent(self::$optionsParamName, $msg_prefix)) {
@@ -2021,16 +2021,16 @@ class TestlinkXMLRPCServer extends IXR_Server
             if (is_null($rs)) {
                 // has not been executed
                 // execution id = -1 => test case has not been runned.
-                $resultInfo[0] = array(
+                $resultInfo[0] = [
                     'id' => - 1
-                );
+                ];
             } else {
                 foreach ($rs as $tcExecId => $dummy) {
                     $sql = "SELECT * FROM {$this->tables['executions']} WHERE id=" .
                         $tcExecId;
                     $resultInfo[$tcExecId] = $this->dbObj->fetchFirstRow($sql);
                     if ($options->getBugs) {
-                        $resultInfo[$tcExecId]['bugs'] = array();
+                        $resultInfo[$tcExecId]['bugs'] = [];
                         $sql = " SELECT DISTINCT bug_id FROM
                        {$this->tables['execution_bugs']}
                        WHERE execution_id = " . $tcExecId;
@@ -2183,7 +2183,7 @@ class TestlinkXMLRPCServer extends IXR_Server
     {
         $operation = __FUNCTION__;
         $messagePrefix = "({$operation}) - ";
-        $resultInfo = array();
+        $resultInfo = [];
         $resultInfo[0]["status"] = true;
         $resultInfo[0]["operation"] = $operation;
         $insertID = '';
@@ -2217,12 +2217,12 @@ class TestlinkXMLRPCServer extends IXR_Server
                 // ($tplan_id,$name,$notes = '',$active=1,$open=1,$release_date='')
 
                 // key 2 check with default value is parameter is missing
-                $k2check = array(
+                $k2check = [
                     self::$activeParamName => 1,
                     self::$openParamName => 1,
                     self::$releaseDateParamName => null,
                     self::$copyTestersFromBuildParamName => 0
-                );
+                ];
                 foreach ($k2check as $key => $value) {
                     $opt[$key] = $this->_isParamPresent($key) ? $this->args[$key] : $value;
                 }
@@ -2282,9 +2282,9 @@ class TestlinkXMLRPCServer extends IXR_Server
         $this->_setArgs($args);
         if ($this->authenticate()) {
             return $this->tprojectMgr->get_accessible_for_user($this->userID,
-                array(
+                [
                     'output' => 'array_of_map'
-                ));
+                ]);
         } else {
             return $this->errors;
         }
@@ -2307,10 +2307,10 @@ class TestlinkXMLRPCServer extends IXR_Server
         $this->_setArgs($args);
         // check the tplanid
         // TODO: NEED associated RIGHT
-        $checkFunctions = array(
+        $checkFunctions = [
             'authenticate',
             'checkTestProjectID'
-        );
+        ];
         $status_ok = $this->_runChecks($checkFunctions, $messagePrefix);
 
         if ($status_ok) {
@@ -2346,10 +2346,10 @@ class TestlinkXMLRPCServer extends IXR_Server
 
         $builds = null;
         $status_ok = true;
-        $checkFunctions = array(
+        $checkFunctions = [
             'authenticate',
             'checkTestPlanID'
-        );
+        ];
         $status_ok = $this->_runChecks($checkFunctions, $msg_prefix);
 
         if ($status_ok) {
@@ -2377,10 +2377,10 @@ class TestlinkXMLRPCServer extends IXR_Server
         $msg_prefix = "({$operation}) - ";
         $this->_setArgs($args);
 
-        $checkFunctions = array(
+        $checkFunctions = [
             'authenticate',
             'checkTestPlanID'
-        );
+        ];
         $status_ok = $this->_runChecks($checkFunctions, $msg_prefix);
         if ($status_ok) {
             $testPlanID = $this->args[self::$testPlanIDParamName];
@@ -2445,13 +2445,13 @@ class TestlinkXMLRPCServer extends IXR_Server
 
             // other optional parameters(not of complex type)
             // key 2 check with default value is parameter is missing
-            $keys2check = array(
+            $keys2check = [
                 self::$activeParamName => 1,
                 self::$publicParamName => 1,
                 self::$noteParamName => '',
                 self::$itsEnabledParamName => 0,
                 self::$itsNameParamName => ''
-            );
+            ];
             foreach ($keys2check as $key => $value) {
                 $optional[$key] = $this->_isParamPresent($key) ? trim(
                     $this->args[$key]) : $value;
@@ -2494,14 +2494,14 @@ class TestlinkXMLRPCServer extends IXR_Server
                 }
             }
 
-            $ret = array();
-            $ret[] = array(
+            $ret = [];
+            $ret[] = [
                 "operation" => __FUNCTION__,
                 "additionalInfo" => null,
                 "status" => true,
                 "id" => $tproject_id,
                 "message" => GENERAL_SUCCESS_STR
-            );
+            ];
             return $ret;
         }
 
@@ -2589,10 +2589,10 @@ class TestlinkXMLRPCServer extends IXR_Server
 
         $this->_setArgs($args);
         $status_ok = $this->_runChecks(
-            array(
+            [
                 'authenticate',
                 'checkTestSuiteID'
-            ), $msg_prefix);
+            ], $msg_prefix);
 
         $details = 'simple';
         $key2search = self::$detailsParamName;
@@ -2619,9 +2619,9 @@ class TestlinkXMLRPCServer extends IXR_Server
             $opt = null;
             if (isset($this->args[self::$getKeywordsParamName]) &&
                 $this->args[self::$getKeywordsParamName]) {
-                $opt = array(
+                $opt = [
                     'getKeywords' => true
-                );
+                ];
             }
 
             return $tsuiteMgr->$pfn($testSuiteID, $details, $opt);
@@ -2658,20 +2658,20 @@ class TestlinkXMLRPCServer extends IXR_Server
         $this->_setArgs($args);
         $result = null;
 
-        $checkFunctions = array(
+        $checkFunctions = [
             'authenticate',
             'checkTestCaseName'
-        );
+        ];
         $status_ok = $this->_runChecks($checkFunctions, $msg_prefix);
 
         if ($status_ok) {
             $testCaseName = $this->args[self::$testCaseNameParamName];
             $testCaseMgr = new testcase($this->dbObj);
-            $keys2check = array(
+            $keys2check = [
                 self::$testSuiteNameParamName,
                 self::$testCasePathNameParamName,
                 self::$testProjectNameParamName
-            );
+            ];
             foreach ($keys2check as $key) {
                 $optional[$key] = $this->_isParamPresent($key) ? trim(
                     $this->args[$key]) : '';
@@ -2786,21 +2786,21 @@ class TestlinkXMLRPCServer extends IXR_Server
 
         $keywordSet = '';
         $this->_setArgs($args);
-        $checkFunctions = array(
+        $checkFunctions = [
             'authenticate',
             'checkTestProjectID',
             'checkTestSuiteID',
             'checkTestCaseName'
-        );
+        ];
         $status_ok = $this->_runChecks($checkFunctions, $msg_prefix) &&
             $this->userHasRight("mgt_modify_tc", self::CHECK_PUBLIC_PRIVATE_ATTR);
 
         if ($status_ok) {
-            $keys2check = array(
+            $keys2check = [
                 self::$authorLoginParamName,
                 self::$summaryParamName,
                 self::$stepsParamName
-            );
+            ];
             foreach ($keys2check as $key) {
                 if (! $this->_isParamPresent($key)) {
                     $status_ok = false;
@@ -2830,7 +2830,7 @@ class TestlinkXMLRPCServer extends IXR_Server
 
         if ($status_ok) {
             // Optional parameters
-            $opt = array(
+            $opt = [
                 self::$importanceParamName => 2,
                 self::$executionTypeParamName => TESTCASE_EXECUTION_TYPE_MANUAL,
                 self::$orderParamName => testcase::DEFAULT_ORDER,
@@ -2840,7 +2840,7 @@ class TestlinkXMLRPCServer extends IXR_Server
                 self::$preconditionsParamName => '',
                 self::$statusParamName => $wfStatusDomain['draft'],
                 self::$estimatedExecDurationParamName => null
-            );
+            ];
 
             foreach ($opt as $key => $value) {
                 if ($this->_isParamPresent($key)) {
@@ -2850,12 +2850,12 @@ class TestlinkXMLRPCServer extends IXR_Server
         }
 
         if ($status_ok) {
-            $options = array(
+            $options = [
                 'check_duplicate_name' => $opt[self::$checkDuplicatedNameParamName],
                 'action_on_duplicate_name' => $opt[self::$actionOnDuplicatedNameParamName],
                 'status' => $opt[self::$statusParamName],
                 'estimatedExecDuration' => $opt[self::$estimatedExecDurationParamName]
-            );
+            ];
 
             $op_result = $this->tcaseMgr->create(
                 $this->args[self::$testSuiteIDParamName],
@@ -2867,14 +2867,14 @@ class TestlinkXMLRPCServer extends IXR_Server
                 $opt[self::$executionTypeParamName],
                 $opt[self::$importanceParamName], $options);
 
-            $resultInfo = array();
-            $resultInfo[] = array(
+            $resultInfo = [];
+            $resultInfo[] = [
                 "operation" => $operation,
                 "status" => true,
                 "id" => $op_result['id'],
                 "additionalInfo" => $op_result,
                 "message" => GENERAL_SUCCESS_STR
-            );
+            ];
         }
         return $status_ok ? $resultInfo : $this->errors;
     }
@@ -2974,7 +2974,7 @@ class TestlinkXMLRPCServer extends IXR_Server
      */
     public function reportTCResult($args)
     {
-        $resultInfo = array();
+        $resultInfo = [];
         $operation = __FUNCTION__;
         $msg_prefix = "({$operation}) - ";
         $this->errors = null;
@@ -2982,13 +2982,13 @@ class TestlinkXMLRPCServer extends IXR_Server
         $this->_setArgs($args);
         $resultInfo[0]["status"] = true;
 
-        $checkFunctions = array(
+        $checkFunctions = [
             'authenticate',
             'checkTestCaseIdentity',
             'checkTestPlanID',
             'checkBuildID',
             'checkStatus'
-        );
+        ];
 
         $status_ok = $this->_runChecks($checkFunctions, $msg_prefix);
 
@@ -2996,9 +2996,9 @@ class TestlinkXMLRPCServer extends IXR_Server
             // This check is needed only if test plan has platforms
             $platformSet = (array) $this->tplanMgr->getPlatforms(
                 $this->args[self::$testPlanIDParamName],
-                array(
+                [
                     'outputFormat' => 'map'
-                ));
+                ]);
             $targetPlatform = null;
 
             if (! empty($platformSet)) {
@@ -3097,12 +3097,12 @@ class TestlinkXMLRPCServer extends IXR_Server
                     $nst[$sp['step_number']] = $sp;
                 }
 
-                $r2d2 = array(
+                $r2d2 = [
                     'fields2get' => 'TCSTEPS.step_number,TCSTEPS.id',
                     'accessKey' => 'step_number',
                     'renderGhostSteps' => false,
                     'renderImageInline' => false
-                );
+                ];
 
                 $steps = $this->tcaseMgr->getStepsSimple($this->tcVersionID, 0,
                     $r2d2);
@@ -3281,7 +3281,7 @@ class TestlinkXMLRPCServer extends IXR_Server
 
         // Optional parameters that are not mutual exclusive,
         // DEFAULT value to use if parameter was not provided
-        $opt = array(
+        $opt = [
             self::$testCaseIDParamName => null,
             self::$buildIDParamName => null,
             self::$keywordIDParamName => null,
@@ -3293,7 +3293,7 @@ class TestlinkXMLRPCServer extends IXR_Server
             self::$customFieldsParamName => false,
             self::$detailsParamName => 'full',
             self::$platformIDParamName => null
-        );
+        ];
 
         $this->_setArgs($args);
         if (! ($this->_checkGetTestCasesForTestPlanRequest($msg_prefix) &&
@@ -3320,13 +3320,13 @@ class TestlinkXMLRPCServer extends IXR_Server
             }
         }
 
-        $options = array(
+        $options = [
             'executed_only' => $opt[self::$executedParamName],
             'details' => $opt[self::$detailsParamName],
             'output' => 'mapOfMap'
-        );
+        ];
 
-        $filters = array(
+        $filters = [
             'tcase_id' => $opt[self::$testCaseIDParamName],
             'keyword_id' => $keywordSet,
             'assigned_to' => $opt[self::$assignedToParamName],
@@ -3334,7 +3334,7 @@ class TestlinkXMLRPCServer extends IXR_Server
             'build_id' => $opt[self::$buildIDParamName],
             'exec_type' => $opt[self::$executionTypeParamName],
             'platform_id' => $opt[self::$platformIDParamName]
-        );
+        ];
 
         $recordset = $this->tplanMgr->getLTCVNewGeneration($tplanid, $filters,
             $options);
@@ -3423,7 +3423,7 @@ class TestlinkXMLRPCServer extends IXR_Server
         $cf = $this->tcaseMgr->get_linked_cfields_at_design(
             $testcase['tcase_id'], $testcase['tcversion_id'], null, null,
             $project_id);
-        $filtered_cf = array();
+        $filtered_cf = [];
 
         $cfieds_selected = is_array($cf_options);
         foreach ($cf as $cfield) {
@@ -3431,12 +3431,12 @@ class TestlinkXMLRPCServer extends IXR_Server
                 continue;
             }
 
-            $filtered_cf[$cfield['name']] = array(
+            $filtered_cf[$cfield['name']] = [
                 'name' => $cfield['id']['name'],
                 'label' => $cfield['id']['label'],
                 'type' => $cfield['id']['type'],
                 'value' => $cfield['id']['value']
-            );
+            ];
         }
 
         return $filtered_cf;
@@ -3498,12 +3498,12 @@ class TestlinkXMLRPCServer extends IXR_Server
         $msg_prefix = "(" . __FUNCTION__ . ") - ";
         $this->_setArgs($args);
 
-        $checkFunctions = array(
+        $checkFunctions = [
             'authenticate',
             'checkTestProjectID',
             'checkTestCaseIdentity',
             'checkTestCaseVersionNumber'
-        );
+        ];
         $status_ok = $this->_runChecks($checkFunctions, $msg_prefix);
 
         if ($status_ok) {
@@ -3543,9 +3543,9 @@ class TestlinkXMLRPCServer extends IXR_Server
             $cfield_mgr = $this->tprojectMgr->cfield_mgr;
             $cfinfo = $cfield_mgr->get_by_name($cf_name);
             $cfield = current($cfinfo);
-            $filters = array(
+            $filters = [
                 'cfield_id' => $cfield['id']
-            );
+            ];
             $cfieldSpec = $this->tcaseMgr->get_linked_cfields_at_design(
                 $tcase_id, $this->tcVersionID, null, $filters, $tproject_id);
 
@@ -3555,12 +3555,12 @@ class TestlinkXMLRPCServer extends IXR_Server
                     break;
 
                 case 'simple':
-                    $retval = array(
+                    $retval = [
                         'name' => $cf_name,
                         'label' => $cfieldSpec[$cfield['id']]['label'],
                         'type' => $cfieldSpec[$cfield['id']]['type'],
                         'value' => $cfieldSpec[$cfield['id']]['value']
-                    );
+                    ];
                     break;
 
                 case 'value':
@@ -3715,7 +3715,7 @@ class TestlinkXMLRPCServer extends IXR_Server
     protected function getValidKeywordSet($tproject_id, $keywords, $byName,
         $op = null)
     {
-        $keywordSet = array();
+        $keywordSet = [];
 
         $sql = " SELECT keyword,id FROM {$this->tables['keywords']} " .
             " WHERE testproject_id = {$tproject_id} ";
@@ -3857,13 +3857,13 @@ class TestlinkXMLRPCServer extends IXR_Server
         $hasPlatforms = false;
         $hasPlatformIDArgs = false;
         $platform_id = 0;
-        $checkFunctions = array(
+        $checkFunctions = [
             'authenticate',
             'checkTestProjectID',
             'checkTestCaseVersionNumber',
             'checkTestCaseIdentity',
             'checkTestPlanID'
-        );
+        ];
 
         $status_ok = $this->_runChecks($checkFunctions, $messagePrefix);
 
@@ -3923,14 +3923,14 @@ class TestlinkXMLRPCServer extends IXR_Server
             // Optional parameters
             $additional_fields = null;
             $additional_values = null;
-            $opt_fields = array(
+            $opt_fields = [
                 self::$urgencyParamName => 'urgency',
                 self::$executionOrderParamName => 'node_order'
-            );
-            $opt_values = array(
+            ];
+            $opt_values = [
                 self::$urgencyParamName => null,
                 self::$executionOrderParamName => 1
-            );
+            ];
             foreach ($opt_fields as $key => $field_name) {
                 if ($this->_isParamPresent($key)) {
                     $additional_values[] = $this->args[$key];
@@ -3947,9 +3947,9 @@ class TestlinkXMLRPCServer extends IXR_Server
         if ($status_ok) {
             // 20100705 - work in progress - BUGID 3564
             // if test plan has platforms, platformid argument is MANDATORY
-            $opt = array(
+            $opt = [
                 'outputFormat' => 'mapAccessByID'
-            );
+            ];
             $platformSet = (array) $this->tplanMgr->getPlatforms($tplan_id, $opt);
             $hasPlatforms = (! empty($platformSet));
             $hasPlatformIDArgs = $this->_isParamPresent(
@@ -4130,10 +4130,10 @@ class TestlinkXMLRPCServer extends IXR_Server
         $status_ok = true;
         $this->_setArgs($args);
 
-        $checkFunctions = array(
+        $checkFunctions = [
             'authenticate',
             'checkTestProjectID'
-        );
+        ];
         $status_ok = $this->_runChecks($checkFunctions, $msg_prefix);
 
         if ($status_ok) {
@@ -4175,12 +4175,12 @@ class TestlinkXMLRPCServer extends IXR_Server
         $msg_prefix = "({$operation}) - ";
         $status_ok = true;
         $this->_setArgs($args);
-        $resultInfo = array();
-        $checkFunctions = array(
+        $resultInfo = [];
+        $checkFunctions = [
             'authenticate',
             'checkTestProjectID',
             'checkTestCaseIdentity'
-        );
+        ];
         $status_ok = $this->_runChecks($checkFunctions, $msg_prefix);
 
         if ($status_ok) {
@@ -4213,13 +4213,13 @@ class TestlinkXMLRPCServer extends IXR_Server
                         $tcase_id, $this->userID);
                 }
             }
-            $resultInfo[] = array(
+            $resultInfo[] = [
                 "operation" => $operation,
                 "status" => true,
                 "id" => - 1,
                 "additionalInfo" => '',
                 "message" => GENERAL_SUCCESS_STR
-            );
+            ];
         }
 
         return $status_ok ? $resultInfo : $this->errors;
@@ -4238,11 +4238,11 @@ class TestlinkXMLRPCServer extends IXR_Server
      */
     protected function checkTestCaseAncestry($messagePrefix = '')
     {
-        $ret = array(
+        $ret = [
             'status_ok' => true,
             'error_msg' => '',
             'error_code' => 0
-        );
+        ];
         $tproject_id = $this->args[self::$testProjectIDParamName];
         $tcase_id = $this->args[self::$testCaseIDParamName];
         $tcase_tproject_id = $this->tcaseMgr->get_testproject($tcase_id);
@@ -4257,11 +4257,11 @@ class TestlinkXMLRPCServer extends IXR_Server
                 sprintf(TCASE_TPROJECT_KO_STR, $tcase_external_id,
                     $tcase_info[0]['name'], $tproject_info['name'], $tproject_id);
 
-            $ret = array(
+            $ret = [
                 'status_ok' => false,
                 'error_msg' => $msg,
                 'error_code' => TCASE_TPROJECT_KO
-            );
+            ];
         }
         return $ret;
     }
@@ -4410,10 +4410,10 @@ class TestlinkXMLRPCServer extends IXR_Server
                 $reqDocID = $this->args[self::$requirementDocIDParamName];
                 $req = $this->reqMgr->getByDocID($reqDocID,
                     $this->args[self::$testProjectIDParamName], null,
-                    array(
+                    [
                         'access_key' => 'req_doc_id',
                         'output' => 'minimun'
-                    ));
+                    ]);
                 if (! is_null($req)) {
                     // set the requirement ID
                     $this->args[self::$requirementIDParamName] = (int) $req[$reqDocID]['id'];
@@ -4455,11 +4455,11 @@ class TestlinkXMLRPCServer extends IXR_Server
      */
     protected function checkReqSpecQuality()
     {
-        $ret = array(
+        $ret = [
             'status_ok' => true,
             'error_msg' => '',
             'error_code' => 0
-        );
+        ];
         $tproject_id = $this->args[self::$testProjectIDParamName];
         $nodes_types = $this->tprojectMgr->tree_manager->get_available_node_types();
 
@@ -4527,11 +4527,11 @@ class TestlinkXMLRPCServer extends IXR_Server
         }
 
         if (! $status_ok) {
-            $ret = array(
+            $ret = [
                 'status_ok' => false,
                 'error_msg' => $msg,
                 'error_code' => $error_code
-            );
+            ];
         }
         return $ret;
     }
@@ -4606,10 +4606,10 @@ class TestlinkXMLRPCServer extends IXR_Server
     {
         $this->_setArgs($args);
         $box = null;
-        $checkFunctions = array(
+        $checkFunctions = [
             'authenticate',
             'checkTestSuiteID'
-        );
+        ];
         $status_ok = $this->_runChecks($checkFunctions) &&
             $this->userHasRight("mgt_view_tc", self::CHECK_PUBLIC_PRIVATE_ATTR);
 
@@ -4663,10 +4663,10 @@ class TestlinkXMLRPCServer extends IXR_Server
     {
         $this->_setArgs($args);
         $box = null;
-        $checkFunctions = array(
+        $checkFunctions = [
             'authenticate',
             'checkTestCaseIdentity'
-        );
+        ];
         $status_ok = $this->_runChecks($checkFunctions) &&
             $this->userHasRight("mgt_view_tc", self::CHECK_PUBLIC_PRIVATE_ATTR);
 
@@ -4763,35 +4763,35 @@ class TestlinkXMLRPCServer extends IXR_Server
      */
     public function createTestSuite($args)
     {
-        $result = array();
+        $result = [];
         $this->_setArgs($args);
         $action = isset($this->args, self::$actionParamName) ? $this->args[self::$actionParamName] : 'create';
 
-        $checkFunctions = array(
+        $checkFunctions = [
             'authenticate',
             'checkTestProjectIdentity'
-        );
+        ];
 
         switch ($action) {
             case 'update':
                 $operation = 'updateTestSuite';
-                $opt = array(
+                $opt = [
                     self::$detailsParamName => null,
                     self::$testSuiteNameParamName => null,
                     self::$orderParamName => testsuite::DEFAULT_ORDER,
                     self::$checkDuplicatedNameParamName => testsuite::CHECK_DUPLICATE_NAME,
                     self::$actionOnDuplicatedNameParamName => 'block'
-                );
+                ];
                 break;
 
             case 'create':
             default:
                 $operation = __FUNCTION__;
-                $opt = array(
+                $opt = [
                     self::$orderParamName => testsuite::DEFAULT_ORDER,
                     self::$checkDuplicatedNameParamName => testsuite::CHECK_DUPLICATE_NAME,
                     self::$actionOnDuplicatedNameParamName => 'block'
-                );
+                ];
                 $checkFunctions[] = 'checkTestSuiteName';
                 break;
         }
@@ -4972,10 +4972,10 @@ class TestlinkXMLRPCServer extends IXR_Server
         $status_ok = true;
         $this->_setArgs($args);
         if ($this->authenticate()) {
-            $keys2check = array(
+            $keys2check = [
                 self::$testPlanNameParamName,
                 self::$testProjectNameParamName
-            );
+            ];
             foreach ($keys2check as $key) {
                 $names[$key] = $this->_isParamPresent($key, $msg_prefix,
                     self::SET_ERROR) ? trim($this->args[$key]) : '';
@@ -5041,10 +5041,10 @@ class TestlinkXMLRPCServer extends IXR_Server
         $status_ok = true;
         $this->_setArgs($args);
 
-        $checkFunctions = array(
+        $checkFunctions = [
             'authenticate',
             'checkTestCaseIdentity'
-        );
+        ];
         $status_ok = $this->_runChecks($checkFunctions, $msg_prefix);
         $version_id = testcase::LATEST_VERSION;
         $version_number = - 1;
@@ -5060,11 +5060,11 @@ class TestlinkXMLRPCServer extends IXR_Server
             $testCaseMgr = new testcase($this->dbObj);
             $id = $this->args[self::$testCaseIDParamName];
 
-            $filters = array(
+            $filters = [
                 'active_status' => 'ALL',
                 'open_status' => 'ALL',
                 'version_number' => $version_number
-            );
+            ];
 
             $result = $testCaseMgr->get_by_id($id, $version_id, $filters);
             if (empty($result)) {
@@ -5132,9 +5132,9 @@ class TestlinkXMLRPCServer extends IXR_Server
         $msg_prefix = "(" . __FUNCTION__ . ") - ";
 
         if ($this->authenticate()) {
-            $keys2check = array(
+            $keys2check = [
                 self::$testPlanNameParamName
-            );
+            ];
             $status_ok = true;
             foreach ($keys2check as $key) {
                 $dummy[$key] = $this->_isParamPresent($key, $msg_prefix,
@@ -5147,10 +5147,10 @@ class TestlinkXMLRPCServer extends IXR_Server
         }
 
         if ($status_ok) {
-            $keys2check = array(
+            $keys2check = [
                 self::$testProjectNameParamName,
                 self::$prefixParamName
-            );
+            ];
             $status_ok = true;
             foreach ($keys2check as $key) {
                 $target[$key] = $this->_isParamPresent($key, $msg_prefix) ? trim(
@@ -5239,11 +5239,11 @@ class TestlinkXMLRPCServer extends IXR_Server
         }
 
         if ($status_ok) {
-            $keys2check = array(
+            $keys2check = [
                 self::$activeParamName => 1,
                 self::$publicParamName => 1,
                 self::$noteParamName => ''
-            );
+            ];
             foreach ($keys2check as $key => $value) {
                 $optional[$key] = $this->_isParamPresent($key) ? trim(
                     $this->args[$key]) : $value;
@@ -5253,14 +5253,14 @@ class TestlinkXMLRPCServer extends IXR_Server
                 $tprojectInfo['id'], $optional[self::$activeParamName],
                 $optional[self::$publicParamName]);
 
-            $resultInfo = array();
-            $resultInfo[] = array(
+            $resultInfo = [];
+            $resultInfo[] = [
                 "operation" => __FUNCTION__,
                 "additionalInfo" => null,
                 "status" => true,
                 "id" => $retval,
                 "message" => GENERAL_SUCCESS_STR
-            );
+            ];
         }
 
         return $status_ok ? $resultInfo : $this->errors;
@@ -5288,9 +5288,9 @@ class TestlinkXMLRPCServer extends IXR_Server
         $this->_setArgs($args);
         $operation = __FUNCTION__;
         $msg_prefix = "({$operation}) - ";
-        $checkFunctions = array(
+        $checkFunctions = [
             'authenticate'
-        );
+        ];
         $status_ok = $this->_runChecks($checkFunctions, $msg_prefix) &&
             $this->_isParamPresent(self::$nodeIDParamName, $msg_prefix,
                 self::SET_ERROR);
@@ -5355,10 +5355,10 @@ class TestlinkXMLRPCServer extends IXR_Server
         if ($status_ok && ! is_null($cfieldsMap)) {
             foreach ($cfieldSet as $name => $value) {
                 if (isset($cfieldsMap[$name])) {
-                    $cfield4write[$cfieldsMap[$name]['id']] = array(
+                    $cfield4write[$cfieldsMap[$name]['id']] = [
                         "type_id" => $cfieldsMap[$name]['type'],
                         "cf_value" => $value
-                    );
+                    ];
                 }
             }
             if (! is_null($cfield4write)) {
@@ -5385,17 +5385,17 @@ class TestlinkXMLRPCServer extends IXR_Server
      */
     public function deleteExecution($args)
     {
-        $resultInfo = array();
+        $resultInfo = [];
         $operation = __FUNCTION__;
         $msg_prefix = "({$operation}) - ";
 
         $this->_setArgs($args);
         $resultInfo[0]["status"] = false;
 
-        $checkFunctions = array(
+        $checkFunctions = [
             'authenticate',
             'checkExecutionID'
-        );
+        ];
         $status_ok = $this->_runChecks($checkFunctions, $msg_prefix);
 
         // missing :
@@ -5493,9 +5493,9 @@ class TestlinkXMLRPCServer extends IXR_Server
             $tplanInfo = $this->tplanMgr->get_by_id($tplanID);
             if (is_null($platformInfo)) {
                 $platformInfo = $this->tplanMgr->getPlatforms($tplanID,
-                    array(
+                    [
                         'outputFormat' => 'map'
-                    ));
+                    ]);
             }
 
             if (is_null($platformInfo)) {
@@ -5570,22 +5570,22 @@ class TestlinkXMLRPCServer extends IXR_Server
 
         $tcase_id = $this->args[self::$testCaseIDParamName];
 
-        $execContext = array(
+        $execContext = [
             'tplan_id' => $this->args[self::$testPlanIDParamName],
             'platform_id' => $this->args[self::$platformIDParamName],
             'build_id' => $this->args[self::$buildIDParamName]
-        );
+        ];
 
         // Here steps and expected results are not needed => do not request => less data on network
         // $options = array('getSteps' => 0);
-        $opt = array(
+        $opt = [
             'output' => 'exec_id'
-        );
+        ];
         $exec_id = $this->tcaseMgr->getLatestExecSingleContext(
-            array(
+            [
                 'id' => $tcase_id,
                 'version_id' => null
-            ), $execContext, $opt);
+            ], $execContext, $opt);
         if (! is_null($exec_id)) {
             $execution_type = constant("TESTCASE_EXECUTION_TYPE_AUTO");
             $notes = '';
@@ -5634,10 +5634,10 @@ class TestlinkXMLRPCServer extends IXR_Server
 
         $this->_setArgs($args);
         $status_ok = $this->_runChecks(
-            array(
+            [
                 'authenticate',
                 'checkTestSuiteID'
-            ), $msg_prefix);
+            ], $msg_prefix);
 
         if ($status_ok &&
             $this->userHasRight("mgt_view_tc", self::CHECK_PUBLIC_PRIVATE_ATTR)) {
@@ -5667,10 +5667,10 @@ class TestlinkXMLRPCServer extends IXR_Server
 
         $this->_setArgs($args);
         $status_ok = $this->_runChecks(
-            array(
+            [
                 'authenticate',
                 'checkTestSuiteID'
-            ), $msg_prefix) &&
+            ], $msg_prefix) &&
             $this->userHasRight("mgt_view_tc", self::CHECK_PUBLIC_PRIVATE_ATTR);
         if ($status_ok) {
             $testSuiteID = $this->args[self::$testSuiteIDParamName];
@@ -5706,10 +5706,10 @@ class TestlinkXMLRPCServer extends IXR_Server
         if ($status_ok) {
             // Checks if the provided test plan id is valid
             $status_ok = $this->_runChecks(
-                array(
+                [
                     'authenticate',
                     'checkTestPlanID'
-                ), $msg_prefix);
+                ], $msg_prefix);
         }
         if ($status_ok) {
             $tplanID = $this->args[self::$testPlanIDParamName];
@@ -5756,10 +5756,10 @@ class TestlinkXMLRPCServer extends IXR_Server
         $status_ok = true;
 
         // Checks are done in order
-        $checkFunctions = array(
+        $checkFunctions = [
             'authenticate',
             'checkTestPlanID'
-        );
+        ];
         $status_ok = $this->_runChecks($checkFunctions, $msg_prefix) &&
             $this->userHasRight("mgt_view_tc", self::CHECK_PUBLIC_PRIVATE_ATTR);
 
@@ -5824,10 +5824,10 @@ class TestlinkXMLRPCServer extends IXR_Server
         $status_ok = true;
         $this->_setArgs($args);
 
-        $checkFunctions = array(
+        $checkFunctions = [
             'authenticate',
             'checkIsSystemWideAdmin'
-        );
+        ];
         $status_ok = $this->_runChecks($checkFunctions, $msg_prefix);
 
         $password = null;
@@ -5889,13 +5889,13 @@ class TestlinkXMLRPCServer extends IXR_Server
         $status_ok = true;
         $this->_setArgs($args);
 
-        $checkFunctions = array(
+        $checkFunctions = [
             'authenticate',
             'checkIsSystemWideAdmin',
             'checkTestProjectID',
             'checkUserID',
             'checkRoleIdentity'
-        );
+        ];
         $status_ok = $this->_runChecks($checkFunctions, $msg_prefix);
 
         if ($status_ok) {
@@ -5915,9 +5915,9 @@ class TestlinkXMLRPCServer extends IXR_Server
                     // user already has given role -> OK nothing to do
                     return true;
                 }
-                $this->tprojectMgr->deleteUserRoles($projectID, array(
+                $this->tprojectMgr->deleteUserRoles($projectID, [
                     $userID
-                ));
+                ]);
             }
 
             $res = $this->tprojectMgr->addUserRole($userID, $projectID, $roleID);
@@ -5947,9 +5947,9 @@ class TestlinkXMLRPCServer extends IXR_Server
         $operation = __FUNCTION__;
         $msg_prefix = "({$operation}) - ";
         $this->_setArgs($args);
-        $checkFunctions = array(
+        $checkFunctions = [
             'authenticate'
-        );
+        ];
         $status_ok = $this->_runChecks($checkFunctions, $msg_prefix);
         return $status_ok ? $status_ok : $this->errors;
     }
@@ -6058,10 +6058,10 @@ class TestlinkXMLRPCServer extends IXR_Server
         $args[self::$foreignKeyIdParamName] = $args[self::$testProjectIDParamName];
         $this->_setArgs($args);
 
-        $checkFunctions = array(
+        $checkFunctions = [
             'authenticate',
             'checkTestProjectID'
-        );
+        ];
         $statusOK = $this->_runChecks($checkFunctions) &&
             $this->userHasRight("mgt_view_tc", self::CHECK_PUBLIC_PRIVATE_ATTR);
         return $statusOK ? $this->uploadAttachment($args, $msg_prefix, false) : $this->errors;
@@ -6100,10 +6100,10 @@ class TestlinkXMLRPCServer extends IXR_Server
         $args[self::$foreignKeyIdParamName] = $args[self::$testSuiteIDParamName];
         $this->_setArgs($args);
 
-        $checkFunctions = array(
+        $checkFunctions = [
             'authenticate',
             'checkTestSuiteID'
-        );
+        ];
         $statusOK = $this->_runChecks($checkFunctions) &&
             $this->userHasRight("mgt_view_tc", self::CHECK_PUBLIC_PRIVATE_ATTR);
         return $statusOK ? $this->uploadAttachment($args, $msg_prefix, false) : $this->errors;
@@ -6148,11 +6148,11 @@ class TestlinkXMLRPCServer extends IXR_Server
         $statusOK = $this->_isParamPresent($prm, $msgPrefix, self::SET_ERROR);
 
         if ($statusOK) {
-            $checkFunctions = array(
+            $checkFunctions = [
                 'authenticate',
                 'checkTestCaseIdentity',
                 'checkTestCaseVersionNumberAncestry'
-            );
+            ];
         }
 
         if ($statusOK = $this->_runChecks($checkFunctions, $msg_prefix)) {
@@ -6249,13 +6249,13 @@ class TestlinkXMLRPCServer extends IXR_Server
      */
     public function uploadAttachment($args, $messagePrefix = '', $setArgs = true)
     {
-        $resultInfo = array();
+        $resultInfo = [];
         if ($setArgs) {
             $this->_setArgs($args);
         }
         $msg_prefix = ($messagePrefix == '') ? ("(" . __FUNCTION__ . ") - ") : $messagePrefix;
 
-        $checkFunctions = array();
+        $checkFunctions = [];
 
         // TODO: please, somebody review if this is valid.
         // I added this property
@@ -6428,7 +6428,7 @@ class TestlinkXMLRPCServer extends IXR_Server
      */
     protected function createAttachmentTempFile()
     {
-        $resultInfo = array();
+        $resultInfo = [];
         $filename = tempnam(sys_get_temp_dir(), 'tl-');
 
         $resultInfo["tmp_name"] = $filename;
@@ -6456,11 +6456,11 @@ class TestlinkXMLRPCServer extends IXR_Server
      */
     protected function checkTestCaseVersionNumberAncestry($messagePrefix = '')
     {
-        $ret = array(
+        $ret = [
             'status_ok' => true,
             'error_msg' => '',
             'error_code' => 0
-        );
+        ];
 
         $tcase_id = $this->args[self::$testCaseIDParamName];
         $version_number = $this->args[self::$versionNumberParamName];
@@ -6480,11 +6480,11 @@ class TestlinkXMLRPCServer extends IXR_Server
             $msg = sprintf(TCASE_VERSION_NUMBER_KO_STR, $version_number,
                 $this->args[self::$testCaseExternalIDParamName],
                 $tcase_info['name']);
-            $ret = array(
+            $ret = [
                 'status_ok' => false,
                 'error_msg' => $msg,
                 'error_code' => TCASE_VERSION_NUMBER_KO
-            );
+            ];
         }
         return $ret;
     }
@@ -6516,11 +6516,11 @@ class TestlinkXMLRPCServer extends IXR_Server
      */
     protected function checkCustomFieldScope($messagePrefix = '')
     {
-        $domain = array(
+        $domain = [
             'design' => true,
             'execution' => true,
             'testplan_design' => true
-        );
+        ];
         $scope = $this->args[self::$scopeParamName];
 
         return is_null($scope) ? false : isset($domain[$scope]);
@@ -6562,12 +6562,12 @@ class TestlinkXMLRPCServer extends IXR_Server
     {
         $this->_setArgs($args);
 
-        $checkFunctions = array(
+        $checkFunctions = [
             'authenticate',
             'checkTestProjectID',
             'checkCustomField',
             'checkCustomFieldScope'
-        );
+        ];
         $status_ok = $this->_runChecks($checkFunctions, $msg_prefix);
 
         $scope = $this->args[self::$scopeParamName];
@@ -6622,9 +6622,9 @@ class TestlinkXMLRPCServer extends IXR_Server
 
             switch ($scope) {
                 case 'design':
-                    $filters = array(
+                    $filters = [
                         'cfield_id' => $cfield['id']
-                    );
+                    ];
                     $cfieldSpec = $cfield_mgr->get_linked_cfields_at_design(
                         $tproject_id, $enabled, $filters, $nodetype, $nodeid);
                     break;
@@ -6680,10 +6680,10 @@ class TestlinkXMLRPCServer extends IXR_Server
         $this->_setArgs($args);
 
         $status_ok = true;
-        $p2c = array(
+        $p2c = [
             self::$executionIDParamName,
             self::$versionNumberParamName
-        );
+        ];
         foreach ($p2c as $prm) {
             $status_ok = $this->_isParamPresent($prm, $msgPrefix,
                 self::SET_ERROR);
@@ -6896,16 +6896,16 @@ class TestlinkXMLRPCServer extends IXR_Server
     {
         $operation = __FUNCTION__;
         $msg_prefix = "({$operation}) - ";
-        $resultInfo = array();
+        $resultInfo = [];
         $version = - 1;
         $item = null;
         $stepSet = null;
 
         $this->_setArgs($args);
-        $checkFunctions = array(
+        $checkFunctions = [
             'authenticate',
             'checkTestCaseIdentity'
-        );
+        ];
         $status_ok = $this->_runChecks($checkFunctions, $msg_prefix) &&
             $this->userHasRight("mgt_modify_tc", self::CHECK_PUBLIC_PRIVATE_ATTR);
 
@@ -6925,9 +6925,9 @@ class TestlinkXMLRPCServer extends IXR_Server
             $resultInfo['version'] = 'exists';
             if ($version > 0) {
                 $item = $this->tcaseMgr->get_basic_info($tcaseID,
-                    array(
+                    [
                         'number' => $version
-                    ));
+                    ]);
             } else {
                 $resultInfo['version'] = 'DOES NOT ' . $resultInfo['version'];
                 $item = $this->tcaseMgr->get_last_active_version($tcaseID);
@@ -6956,9 +6956,9 @@ class TestlinkXMLRPCServer extends IXR_Server
 
                 //
                 // id,step_number,actions,expected_results,active,execution_type
-                $opt = array(
+                $opt = [
                     'accessKey' => 'step_number'
-                );
+                ];
                 $stepSet = (array) $this->tcaseMgr->get_steps($tcversion_id, 0,
                     $opt);
                 $stepNumberIDSet = array_flip(array_keys($stepSet));
@@ -6975,10 +6975,10 @@ class TestlinkXMLRPCServer extends IXR_Server
                     if ($stepExists) {
                         // needed for update op.
                         $step_id = $stepSet[$si['step_number']]['id'];
-                        $resultInfo['stepID'][] = array(
+                        $resultInfo['stepID'][] = [
                             $step_id,
                             $si['step_number']
-                        );
+                        ];
                     }
 
                     switch ($action) {
@@ -6994,10 +6994,10 @@ class TestlinkXMLRPCServer extends IXR_Server
                             $op = $stepExists ? 'skip' : $action;
                             break;
                     }
-                    $resultInfo['feedback'][] = array(
+                    $resultInfo['feedback'][] = [
                         'operation' => $op,
                         'step_number' => $si['step_number']
-                    );
+                    ];
                     switch ($op) {
                         case 'update':
                             $this->tcaseMgr->update_step($step_id,
@@ -7057,16 +7057,16 @@ class TestlinkXMLRPCServer extends IXR_Server
     {
         $operation = __FUNCTION__;
         $msg_prefix = "({$operation}) - ";
-        $resultInfo = array();
+        $resultInfo = [];
         $version = - 1;
         $item = null;
         $stepSet = null;
 
         $this->_setArgs($args);
-        $checkFunctions = array(
+        $checkFunctions = [
             'authenticate',
             'checkTestCaseIdentity'
-        );
+        ];
         $status_ok = $this->_runChecks($checkFunctions, $msg_prefix) &&
             $this->userHasRight("mgt_modify_tc", self::CHECK_PUBLIC_PRIVATE_ATTR);
 
@@ -7086,9 +7086,9 @@ class TestlinkXMLRPCServer extends IXR_Server
             $resultInfo['version'] = 'exists';
             if ($version > 0) {
                 $item = $this->tcaseMgr->get_basic_info($tcaseID,
-                    array(
+                    [
                         'number' => $version
-                    ));
+                    ]);
             } else {
                 $resultInfo['version'] = 'DOES NOT ' . $resultInfo['version'];
                 $item = $this->tcaseMgr->get_last_active_version($tcaseID);
@@ -7105,9 +7105,9 @@ class TestlinkXMLRPCServer extends IXR_Server
                 $stepSet = null;
                 //
                 // id,step_number,actions,expected_results,active,execution_type
-                $opt = array(
+                $opt = [
                     'accessKey' => 'step_number'
-                );
+                ];
                 $stepSet = (array) $this->tcaseMgr->get_steps($tcversion_id, 0,
                     $opt);
                 $resultInfo['stepSet'] = $stepSet;
@@ -7158,12 +7158,12 @@ class TestlinkXMLRPCServer extends IXR_Server
         $msg_prefix = "(" . __FUNCTION__ . ") - ";
         $this->_setArgs($args);
 
-        $checkFunc = array(
+        $checkFunc = [
             'authenticate',
             'checkTestProjectID',
             'checkTestCaseIdentity',
             'checkTestCaseVersionNumber'
-        );
+        ];
         $status_ok = $this->_runChecks($checkFunc, $msg_prefix);
 
         if ($status_ok && ! $this->_isParamPresent(self::$customFieldsParamName)) {
@@ -7236,12 +7236,12 @@ class TestlinkXMLRPCServer extends IXR_Server
         $msg_prefix = "(" . __FUNCTION__ . ") - ";
         $this->_setArgs($args);
 
-        $checkFunctions = array(
+        $checkFunctions = [
             'authenticate',
             'checkTestProjectID',
             'checkTestCaseIdentity',
             'checkTestCaseVersionNumber'
-        );
+        ];
         $status_ok = $this->_runChecks($checkFunctions, $msg_prefix);
         if ($status_ok && ! $this->_isParamPresent(
             self::$executionTypeParamName)) {
@@ -7259,10 +7259,10 @@ class TestlinkXMLRPCServer extends IXR_Server
             $dbg = $this->tcaseMgr->setExecutionType(
                 $nodeInfo[0]['tcversion_id'],
                 $this->args[self::$executionTypeParamName]);
-            return array(
+            return [
                 $this->args,
                 $dbg
-            );
+            ];
         } else {
             return $this->errors;
         }
@@ -7279,10 +7279,10 @@ class TestlinkXMLRPCServer extends IXR_Server
         $status_ok = true;
 
         // Checks are done in order
-        $checkFunctions = array(
+        $checkFunctions = [
             'authenticate',
             'checkTestPlanID'
-        );
+        ];
         $status_ok = $this->_runChecks($checkFunctions, $msg_prefix);
 
         if ($status_ok) {
@@ -7292,9 +7292,9 @@ class TestlinkXMLRPCServer extends IXR_Server
 
         if (! is_null($metrics)) {
             // transform in somethin similar to a simple table
-            $out = array();
+            $out = [];
             foreach ($metrics['with_tester'] as $build_id => &$elem) {
-                $out[$build_id] = array();
+                $out[$build_id] = [];
                 $out[$build_id]['name'] = $metrics['active_builds'][$build_id]['name'];
                 $out[$build_id]['notes'] = $metrics['active_builds'][$build_id]['notes'];
                 $out[$build_id]['total'] = $metrics['total'][$build_id]['qty'];
@@ -7303,10 +7303,10 @@ class TestlinkXMLRPCServer extends IXR_Server
                     $out[$build_id][$status_code] = $data['exec_qty'];
                 }
             }
-            return array(
+            return [
                 'raw' => $metrics,
                 'table' => $out
-            );
+            ];
         } else {
             return $this->errors;
         }
@@ -7335,10 +7335,10 @@ class TestlinkXMLRPCServer extends IXR_Server
             $this->userHasRight("platform_management",
                 self::CHECK_PUBLIC_PRIVATE_ATTR)) {
             $status_ok = true;
-            $keys2check = array(
+            $keys2check = [
                 self::$platformNameParamName,
                 self::$testProjectNameParamName
-            );
+            ];
             foreach ($keys2check as $key) {
                 $names[$key] = $this->_isParamPresent($key, $msg_prefix,
                     self::SET_ERROR) ? trim($this->args[$key]) : '';
@@ -7363,10 +7363,10 @@ class TestlinkXMLRPCServer extends IXR_Server
             // lazy way
             $name = trim($this->args[self::$platformNameParamName]);
 
-            $opx = array(
+            $opx = [
                 'accessKey' => 'name',
                 'output' => 'allinfo'
-            );
+            ];
 
             $itemSet = $this->platformMgr->getAllAsMap($opx);
             if (isset($itemSet[$name])) {
@@ -7403,10 +7403,10 @@ class TestlinkXMLRPCServer extends IXR_Server
         $messagePrefix = "(" . __FUNCTION__ . ") - ";
 
         $this->_setArgs($args);
-        $checkFunctions = array(
+        $checkFunctions = [
             'authenticate',
             'checkTestProjectIdentity'
-        );
+        ];
         $status_ok = $this->_runChecks($checkFunctions, $messagePrefix);
 
         if ($status_ok) {
@@ -7415,13 +7415,13 @@ class TestlinkXMLRPCServer extends IXR_Server
                 $this->platformMgr = new tlPlatform($this->dbObj, $testProjectID);
             }
 
-            $optPlat = array(
+            $optPlat = [
                 'accessKey' => 'name',
                 'output' => 'allinfo',
                 'orderBy' => ' ORDER BY name ',
                 'enable_on_design' => null,
                 'enable_on_execution' => null
-            );
+            ];
 
             return $this->platformMgr->getAllAsMap($optPlat);
         } else {
@@ -7486,10 +7486,10 @@ class TestlinkXMLRPCServer extends IXR_Server
     {
         $messagePrefix = "(" . __FUNCTION__ . ") - ";
         $this->_setArgs($args);
-        $checkFunctions = array(
+        $checkFunctions = [
             'authenticate'
-        );
-        $ret = array();
+        ];
+        $ret = [];
 
         $status_ok = $this->_runChecks($checkFunctions, $messagePrefix);
         if ($status_ok) {
@@ -7541,10 +7541,10 @@ class TestlinkXMLRPCServer extends IXR_Server
     {
         $messagePrefix = "(" . __FUNCTION__ . ") - ";
         $this->_setArgs($args);
-        $checkFunctions = array(
+        $checkFunctions = [
             'authenticate'
-        );
-        $ret = array();
+        ];
+        $ret = [];
 
         $status_ok = $this->_runChecks($checkFunctions, $messagePrefix);
         if ($status_ok) {
@@ -7573,10 +7573,10 @@ class TestlinkXMLRPCServer extends IXR_Server
     private function platformLinkOp($args, $op, $messagePrefix)
     {
         $this->_setArgs($args);
-        $checkFunctions = array(
+        $checkFunctions = [
             'authenticate',
             'checkTestPlanID'
-        );
+        ];
         $status_ok = $this->_runChecks($checkFunctions, $messagePrefix) &&
             $this->_isParamPresent(self::$platformNameParamName, $messagePrefix,
                 self::SET_ERROR);
@@ -7608,11 +7608,11 @@ class TestlinkXMLRPCServer extends IXR_Server
         if ($status_ok) {
             $linkExists = $this->platformMgr->isLinkedToTestplan(
                 $platform['id'], $testPlanID);
-            $ret = array(
+            $ret = [
                 'operation' => $op,
                 'msg' => 'nothing to do',
                 'linkStatus' => $linkExists
-            );
+            ];
             switch ($op) {
                 case 'link':
                     if (! $linkExists) {
@@ -7697,23 +7697,23 @@ class TestlinkXMLRPCServer extends IXR_Server
         // Check that new test case name do not collide with existent one
         //
         // translate args key to column name
-        $updKeys = array(
+        $updKeys = [
             "summary" => null,
             "preconditions" => null,
             "importance" => null,
             "status" => null,
             "executiontype" => "execution_type",
             "estimatedexecduration" => "estimated_exec_duration"
-        );
+        ];
 
         $operation = __FUNCTION__;
         $msg_prefix = "({$operation}) - ";
 
         $this->_setArgs($args);
-        $checkFunctions = array(
+        $checkFunctions = [
             'authenticate',
             'checkTestCaseIdentity'
-        );
+        ];
         $status_ok = $this->_runChecks($checkFunctions, $msg_prefix);
 
         $tprojectID = 0;
@@ -7730,7 +7730,7 @@ class TestlinkXMLRPCServer extends IXR_Server
 
         if ($status_ok) {
             // we have got internal test case ID on checkTestCaseIdentity
-            list ($status_ok, $tcversion_id) = $this->updateTestCaseGetTCVID(
+            [$status_ok, $tcversion_id] = $this->updateTestCaseGetTCVID(
                 $tcaseID);
         }
 
@@ -7745,9 +7745,9 @@ class TestlinkXMLRPCServer extends IXR_Server
 
             $ck = self::CHECK_PUBLIC_PRIVATE_ATTR;
 
-            $r2c = array(
+            $r2c = [
                 'mgt_modify_tc'
-            );
+            ];
             foreach ($r2c as $right) {
                 $status_ok = $this->userHasRight($right, $ck, $ctx);
                 if (! $status_ok) {
@@ -7768,9 +7768,9 @@ class TestlinkXMLRPCServer extends IXR_Server
             }
 
             if ($checkRight) {
-                $r2c = array(
+                $r2c = [
                     'testproject_edit_executed_testcases'
-                );
+                ];
                 foreach ($r2c as $right) {
                     $status_ok = $this->userHasRight($right, $ck, $ctx);
                     if (! $status_ok) {
@@ -7814,11 +7814,11 @@ class TestlinkXMLRPCServer extends IXR_Server
         if ($status_ok) {
             // update updater and modification time stamp
             $this->tcaseMgr->updateChangeAuditTrial($tcversion_id, $updaterID);
-            return array(
+            return [
                 'status_ok' => true,
                 'msg' => 'ok',
                 'operation' => __FUNCTION__
-            );
+            ];
         }
 
         return $this->errors;
@@ -7863,9 +7863,9 @@ class TestlinkXMLRPCServer extends IXR_Server
             }
 
             if ($status_ok) {
-                $opt = array(
+                $opt = [
                     'number' => $this->args[self::$versionNumberParamName]
-                );
+                ];
                 $dummy = $this->tcaseMgr->get_basic_info($tcaseID, $opt);
                 $tcversion_id = $dummy[0]['tcversion_id'];
             }
@@ -7876,20 +7876,20 @@ class TestlinkXMLRPCServer extends IXR_Server
             $tcversion_id = $dummy['tcversion_id'];
         }
 
-        return array(
+        return [
             $status_ok,
             $tcversion_id
-        );
+        ];
     }
 
     /**
      */
     private function helperGetTestProjectByName($msgPrefix = '')
     {
-        $ret = array(
+        $ret = [
             'status_ok' => true,
             'info' => null
-        );
+        ];
 
         $name = trim($this->args[self::$testProjectNameParamName]);
         $check_op = $this->tprojectMgr->checkNameExistence($name);
@@ -7999,40 +7999,40 @@ class TestlinkXMLRPCServer extends IXR_Server
         $msg_prefix = "({$operation}) - ";
         $status_ok = true;
         $this->_setArgs($args);
-        $resultInfo = array();
+        $resultInfo = [];
 
         // Checks are done in order
-        $checkFunctions = array(
+        $checkFunctions = [
             'authenticate',
             'checkTestPlanID',
             'checkTestCaseIdentity',
             'checkBuildID'
-        );
+        ];
         $status_ok = $this->_runChecks($checkFunctions, $msg_prefix);
 
         // Check if requested test case is linke to test plan
         // if answer is yes, get link info, in order to be able to check if
         // we need also platform info
         if ($status_ok) {
-            $execContext = array(
+            $execContext = [
                 'tplan_id' => $this->args[self::$testPlanIDParamName],
                 'platform_id' => null,
                 'build_id' => $this->args[self::$buildIDParamName]
-            );
+            ];
 
             $tplan_id = $this->args[self::$testPlanIDParamName];
             $tcase_id = $this->args[self::$testCaseIDParamName];
-            $filters = array(
+            $filters = [
                 'exec_status' => "ALL",
                 'active_status' => "ALL",
                 'tplan_id' => $tplan_id,
                 'platform_id' => null
-            );
+            ];
 
             $info = $this->tcaseMgr->get_linked_versions($tcase_id, $filters,
-                array(
+                [
                     'output' => "feature_id"
-                ));
+                ]);
 
             // more than 1 item => we have platforms
             // access key => tcversion_id, tplan_id, platform_id
@@ -8056,17 +8056,17 @@ class TestlinkXMLRPCServer extends IXR_Server
                 // get platform_id and check it
                 if ($status_ok = $this->checkPlatformIdentity($tplan_id)) {
                     $platform_set = $this->tplanMgr->getPlatforms($tplan_id,
-                        array(
+                        [
                             'outputFormat' => 'mapAccessByID',
                             'outputDetails' => 'name'
-                        ));
+                        ]);
 
                     // Now check if link has all 3 components
                     // test plan, test case, platform
                     $platform_id = $this->args[self::$platformIDParamName];
-                    $platform_info = array(
+                    $platform_info = [
                         $platform_id => $platform_set[$platform_id]
-                    );
+                    ];
 
                     if ($status_ok = $this->_checkTCIDAndTPIDValid(
                         $platform_info, $msg_prefix)) {
@@ -8077,18 +8077,18 @@ class TestlinkXMLRPCServer extends IXR_Server
         }
 
         if ($status_ok) {
-            $getOpt = array(
+            $getOpt = [
                 'output' => 'assignment_info',
                 'build4assignment' => $execContext['build_id']
-            );
+            ];
             $dummy = $this->tplanMgr->getLinkInfo($tplan_id, $tcase_id,
                 $platform_id, $getOpt);
-            $resultInfo[0] = array(
+            $resultInfo[0] = [
                 'user_id' => $dummy[0]['user_id'],
                 'login' => $dummy[0]['login'],
                 'first' => $dummy[0]['first'],
                 'last' => $dummy[0]['last']
-            );
+            ];
         }
 
         return $status_ok ? $resultInfo : $this->errors;
@@ -8147,15 +8147,15 @@ class TestlinkXMLRPCServer extends IXR_Server
         $msg_prefix = "({$operation}) - ";
 
         $this->_setArgs($args);
-        $resultInfo = array();
+        $resultInfo = [];
         $status_ok = true;
 
-        $execContext = array(
+        $execContext = [
             'tplan_id' => $this->args[self::$testPlanIDParamName],
             'platform_id' => null,
             'build_id' => null,
             'execution_id' => null
-        );
+        ];
 
         // Now we can check for Optional parameters
         if ($this->_isBuildIDPresent() ||
@@ -8183,7 +8183,7 @@ class TestlinkXMLRPCServer extends IXR_Server
         }
 
         if ($status_ok) {
-            $targetIDs = array();
+            $targetIDs = [];
             if (is_null($execContext['execution_id'])) {
                 $sql = " SELECT id AS exec_id FROM {$this->tables['executions']} " .
                     " WHERE testplan_id = {$this->args[self::$testPlanIDParamName]} " .
@@ -8205,9 +8205,9 @@ class TestlinkXMLRPCServer extends IXR_Server
                 if (is_null($rs)) {
                     // has not been executed
                     // execution id = -1 => test case has not been runned.
-                    $resultInfo[] = array(
+                    $resultInfo[] = [
                         'id' => - 1
-                    );
+                    ];
                 } else {
                     foreach ($rs as $execrun) {
                         $targetIDs[] = $execrun['exec_id'];
@@ -8218,7 +8218,7 @@ class TestlinkXMLRPCServer extends IXR_Server
             }
 
             if (! empty($targetIDs)) {
-                $resultInfo[0]['bugs'] = array();
+                $resultInfo[0]['bugs'] = [];
                 $sql = " SELECT DISTINCT bug_id FROM {$this->tables['execution_bugs']} " .
                     " WHERE execution_id in(" . implode(',', $targetIDs) . ")";
                 $resultInfo[0]['bugs'] = (array) $this->dbObj->get_recordset(
@@ -8258,15 +8258,15 @@ class TestlinkXMLRPCServer extends IXR_Server
     {
         $status_ok = true;
         $this->_setArgs($args);
-        $resultInfo = array();
+        $resultInfo = [];
 
         // Checks are done in order
-        $checkFunctions = array(
+        $checkFunctions = [
             'authenticate',
             'checkTestPlanID',
             'checkTestCaseIdentity',
             'checkBuildID'
-        );
+        ];
         $status_ok = $this->_runChecks($checkFunctions, $msg_prefix);
 
         if ($status_ok) {
@@ -8296,25 +8296,25 @@ class TestlinkXMLRPCServer extends IXR_Server
         // if answer is yes, get link info, in order to be able to check if
         // we need also platform info
         if ($status_ok) {
-            $execContext = array(
+            $execContext = [
                 'tplan_id' => $this->args[self::$testPlanIDParamName],
                 'platform_id' => null,
                 'build_id' => $this->args[self::$buildIDParamName]
-            );
+            ];
 
             $tplan_id = $this->args[self::$testPlanIDParamName];
             $tcase_id = $this->args[self::$testCaseIDParamName];
-            $filters = array(
+            $filters = [
                 'exec_status' => "ALL",
                 'active_status' => "ALL",
                 'tplan_id' => $tplan_id,
                 'platform_id' => null
-            );
+            ];
 
             $info = $this->tcaseMgr->get_linked_versions($tcase_id, $filters,
-                array(
+                [
                     'output' => "feature_id"
-                ));
+                ]);
 
             // more than 1 item => we have platforms
             // access key => tcversion_id, tplan_id, platform_id
@@ -8339,17 +8339,17 @@ class TestlinkXMLRPCServer extends IXR_Server
                 // get platform_id and check it
                 if ($status_ok = $this->checkPlatformIdentity($tplan_id)) {
                     $platform_set = $this->tplanMgr->getPlatforms($tplan_id,
-                        array(
+                        [
                             'outputFormat' => 'mapAccessByID',
                             'outputDetails' => 'name'
-                        ));
+                        ]);
 
                     // Now check if link has all 3 components
                     // test plan, test case, platform
                     $platform_id = $this->args[self::$platformIDParamName];
-                    $platform_info = array(
+                    $platform_info = [
                         $platform_id => $platform_set[$platform_id]
-                    );
+                    ];
 
                     if ($status_ok = $this->_checkTCIDAndTPIDValid(
                         $platform_info, $msg_prefix)) {
@@ -8379,23 +8379,23 @@ class TestlinkXMLRPCServer extends IXR_Server
 
             switch ($args['action']) {
                 case 'unassignOne':
-                    $signature[] = array(
+                    $signature[] = [
                         'type' => $types['testcase_execution']['id'],
                         'user_id' => $tester_id,
                         'feature_id' => $link['feature_id'],
                         'build_id' => $execContext['build_id']
-                    );
+                    ];
                     $assignment_mgr->deleteBySignature($signature);
                     break;
 
                 case 'assignOne':
                     // Step 1 - remove if exists
-                    $signature[] = array(
+                    $signature[] = [
                         'type' => $types['testcase_execution']['id'],
                         'user_id' => $tester_id,
                         'feature_id' => $link['feature_id'],
                         'build_id' => $execContext['build_id']
-                    );
+                    ];
                     $assignment_mgr->deleteBySignature($signature);
 
                     // Step 2 - Now assign
@@ -8416,10 +8416,10 @@ class TestlinkXMLRPCServer extends IXR_Server
                     break;
             }
 
-            $resultInfo = array(
+            $resultInfo = [
                 "status" => true,
                 "args" => $this->args
-            );
+            ];
             unset($resultInfo['args']['devKey']);
         }
 
@@ -8433,10 +8433,10 @@ class TestlinkXMLRPCServer extends IXR_Server
         $messagePrefix = "(" . __FUNCTION__ . ") - ";
 
         $this->_setArgs($args);
-        $checkFunctions = array(
+        $checkFunctions = [
             'authenticate',
             'checkTestProjectID'
-        );
+        ];
         $status_ok = $this->_runChecks($checkFunctions, $messagePrefix);
 
         if ($status_ok) {
@@ -8469,10 +8469,10 @@ class TestlinkXMLRPCServer extends IXR_Server
         $this->_setArgs($args);
 
         // Prepare material for checkTestCaseSetIdentity()
-        $a2check = array(
+        $a2check = [
             self::$testCaseIDParamName,
             self::$testCaseExternalIDParamName
-        );
+        ];
 
         foreach ($a2check as $k2c) {
             if (isset($this->args[$k2c])) {
@@ -8482,10 +8482,10 @@ class TestlinkXMLRPCServer extends IXR_Server
             }
         }
 
-        $checkFunctions = array(
+        $checkFunctions = [
             'authenticate',
             'checkTestCaseSetIdentity'
-        );
+        ];
         $status_ok = $this->_runChecks($checkFunctions, $msgPrefix);
 
         if ($status_ok) {
@@ -8494,7 +8494,7 @@ class TestlinkXMLRPCServer extends IXR_Server
                 $versionSet = $this->args[self::$versionNumberParamName];
             }
 
-            $kwSet = array();
+            $kwSet = [];
             $itemSet = $this->args[self::$testCaseIDParamName];
             foreach ($itemSet as $idx => $tcaseID) {
 
@@ -8540,10 +8540,10 @@ class TestlinkXMLRPCServer extends IXR_Server
     {
         $msgPrefix = "(" . __FUNCTION__ . ") - ";
         $this->_setArgs($args);
-        $checkFunctions = array(
+        $checkFunctions = [
             'authenticate',
             'checkTestCaseVersionID'
-        );
+        ];
 
         $status_ok = $this->_runChecks($checkFunctions, $msgPrefix);
 
@@ -8579,17 +8579,17 @@ class TestlinkXMLRPCServer extends IXR_Server
      */
     public function deleteTestPlan($args)
     {
-        $resultInfo = array();
+        $resultInfo = [];
         $operation = __FUNCTION__;
         $msg_prefix = "({$operation}) - ";
 
         $this->_setArgs($args);
         $resultInfo[0]["status"] = false;
 
-        $checkFunctions = array(
+        $checkFunctions = [
             'authenticate',
             'checkTestPlanID'
-        );
+        ];
         $status_ok = $this->_runChecks($checkFunctions, $msg_prefix);
 
         if ($status_ok) {
@@ -8667,9 +8667,9 @@ class TestlinkXMLRPCServer extends IXR_Server
         $msg_prefix = "({$operation}) - ";
 
         $this->_setArgs($args);
-        $checkFunctions = array(
+        $checkFunctions = [
             'authenticate'
-        );
+        ];
 
         // Check on user rights can have some problems if test cases do not belong
         // to same test project
@@ -8692,9 +8692,9 @@ class TestlinkXMLRPCServer extends IXR_Server
                 // userHasRight() on failure set error to return to caller
                 $status_ok = $this->userHasRight("mgt_modify_tc",
                     self::CHECK_PUBLIC_PRIVATE_ATTR,
-                    array(
+                    [
                         self::$testProjectIDParamName => $tprojectSet[$items[$key]]
-                    ));
+                    ]);
                 if (! $status_ok) {
                     break;
                 }
@@ -8738,7 +8738,7 @@ class TestlinkXMLRPCServer extends IXR_Server
                 break;
         }
 
-        $kw = array();
+        $kw = [];
         $resultInfo['validKeywords'] = null;
         $resultInfo['status_ok'] = true;
 
@@ -8753,7 +8753,7 @@ class TestlinkXMLRPCServer extends IXR_Server
 
         if ($resultInfo['status_ok']) {
 
-            $cacheLTCV = array();
+            $cacheLTCV = [];
             foreach ($kw as $ak => $val) {
                 $tcaseID = $this->tcaseE2I[$ak];
                 if (! isset($cacheLTCV[$tcaseID])) {
@@ -8879,16 +8879,16 @@ class TestlinkXMLRPCServer extends IXR_Server
      */
     public function deleteTestProject($args)
     {
-        $resultInfo = array();
+        $resultInfo = [];
         $operation = __FUNCTION__;
         $msg_prefix = "({$operation}) - ";
 
         $this->_setArgs($args);
         $resultInfo[0]["status"] = false;
 
-        $checkFunctions = array(
+        $checkFunctions = [
             'authenticate'
-        );
+        ];
         $status_ok = $this->_runChecks($checkFunctions, $msg_prefix);
 
         if ($status_ok) {
@@ -8951,11 +8951,11 @@ class TestlinkXMLRPCServer extends IXR_Server
         $msg_prefix = "(" . __FUNCTION__ . ") - ";
         $this->_setArgs($args);
 
-        $checkFunctions = array(
+        $checkFunctions = [
             'authenticate',
             'checkTestProjectID',
             'checkTestSuiteID'
-        );
+        ];
         $status_ok = $this->_runChecks($checkFunctions, $msg_prefix);
 
         if ($status_ok && ! $this->_isParamPresent(self::$customFieldsParamName)) {
@@ -8999,15 +8999,15 @@ class TestlinkXMLRPCServer extends IXR_Server
                         $item['id'];
                     $hash[$accessKey] = $cfValue;
                     $cfieldMgr->design_values_to_db($hash, $itemID);
-                    $ret[] = array(
+                    $ret[] = [
                         'status' => 'ok',
                         'msg' => 'Custom Field:' . $cfName . ' processed '
-                    );
+                    ];
                 } else {
-                    $ret[] = array(
+                    $ret[] = [
                         'status' => 'ko',
                         'msg' => 'Custom Field:' . $cfName . ' skipped '
-                    );
+                    ];
                 }
 
                 return $ret;
@@ -9050,11 +9050,11 @@ class TestlinkXMLRPCServer extends IXR_Server
         $msg_prefix = "(" . __FUNCTION__ . ") - ";
         $this->_setArgs($args);
 
-        $checkFunctions = array(
+        $checkFunctions = [
             'authenticate',
             'checkTestProjectID',
             'checkBuildID'
-        );
+        ];
         $status_ok = $this->_runChecks($checkFunctions, $msg_prefix);
 
         if ($status_ok && ! $this->_isParamPresent(self::$customFieldsParamName)) {
@@ -9085,7 +9085,7 @@ class TestlinkXMLRPCServer extends IXR_Server
 
         if ($status_ok) {
             $cfSet = $args[self::$customFieldsParamName];
-            $ret = array();
+            $ret = [];
             foreach ($cfSet as $cfName => $cfValue) {
                 // $accessKey = "custom_field_" . $item['id'] . <field_type_id>_<cfield_id>
                 // design_values_to_db($hash,$node_id,$cf_map=null,$hash_type=null)
@@ -9100,16 +9100,16 @@ class TestlinkXMLRPCServer extends IXR_Server
                         $args[self::$buildIDParamName], null, null, 'build');
                     // Add the result for each custom field to the returned array
                     array_push($ret,
-                        array(
+                        [
                             'status' => 'ok',
                             'msg' => 'Custom Field:' . $cfName . ' processed '
-                        ));
+                        ]);
                 } else {
                     array_push($ret,
-                        array(
+                        [
                             'status' => 'ko',
                             'msg' => 'Custom Field:' . $cfName . ' skipped '
-                        ));
+                        ]);
                 }
             }
             // Return the result after all of the fields have been processed
@@ -9138,16 +9138,16 @@ class TestlinkXMLRPCServer extends IXR_Server
         $msg_prefix = "({$ope}) - ";
 
         $this->_setArgs($args);
-        $status_ok = $this->_runChecks(array(
+        $status_ok = $this->_runChecks([
             'authenticate'
-        ), $msg_prefix);
+        ], $msg_prefix);
 
         if ($status_ok) {
             // Check for mandatory parameters
-            $k2s = array(
+            $k2s = [
                 self::$testSuiteNameParamName,
                 self::$prefixParamName
-            );
+            ];
 
             foreach ($k2s as $target) {
                 $ok = $this->_isParamPresent($target, $msg_prefix,
@@ -9186,15 +9186,15 @@ class TestlinkXMLRPCServer extends IXR_Server
         if ($status_ok &&
             $this->userHasRight("mgt_view_tc", self::CHECK_PUBLIC_PRIVATE_ATTR,
                 $ctx)) {
-            $opt = array(
+            $opt = [
                 'recursive' => false,
                 'exclude_testcases' => true
-            );
+            ];
 
             $filters = null;
             $items = $tprojectMgr->get_subtree($tproj['id'], $filters, $opt);
 
-            $ni = array();
+            $ni = [];
             if (! empty($items)) {
                 $l2d = count($items);
                 $tg = $this->args[self::$testSuiteNameParamName];
@@ -9298,10 +9298,10 @@ class TestlinkXMLRPCServer extends IXR_Server
         $msg_prefix = "(" . __FUNCTION__ . ") - ";
         $this->_setArgs($args);
 
-        $checkFunctions = array(
+        $checkFunctions = [
             'authenticate',
             'checkTestProjectID'
-        );
+        ];
         $status_ok = $this->_runChecks($checkFunctions, $msg_prefix);
 
         if ($status_ok) {
@@ -9323,10 +9323,10 @@ class TestlinkXMLRPCServer extends IXR_Server
         }
 
         if ($status_ok) {
-            $context_for_rights = array(
+            $context_for_rights = [
                 self::$testProjectIDParamName => $this->args[self::$testProjectIDParamName],
                 self::$testPlanIDParamName => $this->args[self::$testPlanIDParamName]
-            );
+            ];
             $status_ok = $this->userHasRight('mgt_view_req',
                 self::CHECK_PUBLIC_PRIVATE_ATTR, $context_for_rights);
         }
@@ -9368,18 +9368,18 @@ class TestlinkXMLRPCServer extends IXR_Server
         $msg_prefix = "(" . __FUNCTION__ . ") - ";
         $this->_setArgs($args);
 
-        $checkFunctions = array(
+        $checkFunctions = [
             'authenticate',
             'checkTestProjectID',
             'checkReqIdentity'
-        );
+        ];
 
         $status = $this->_runChecks($checkFunctions, $msg_prefix);
 
         if ($status) {
-            $context = array(
+            $context = [
                 self::$testProjectIDParamName => $this->args[self::$testProjectIDParamName]
-            );
+            ];
             $status = $this->userHasRight('mgt_view_req',
                 self::CHECK_PUBLIC_PRIVATE_ATTR, $context);
         }
@@ -9443,18 +9443,18 @@ class TestlinkXMLRPCServer extends IXR_Server
         $msg_prefix = "(" . __FUNCTION__ . ") - ";
         $this->_setArgs($args);
 
-        $resultInfo = array();
-        $checkFunctions = array(
+        $resultInfo = [];
+        $checkFunctions = [
             'authenticate',
             'checkTestProjectID',
             'checkReqVersionID'
-        );
+        ];
         $status_ok = $this->_runChecks($checkFunctions, $msg_prefix);
 
         if ($status_ok) {
-            $context = array(
+            $context = [
                 self::$testProjectIDParamName => $this->args[self::$testProjectIDParamName]
-            );
+            ];
             $status_ok = $this->userHasRight('mgt_view_req',
                 self::CHECK_PUBLIC_PRIVATE_ATTR, $context);
         }
@@ -9480,21 +9480,21 @@ class TestlinkXMLRPCServer extends IXR_Server
         // Check test case identity
         // Check if user(devkey) has grants to do operation
         //
-        $ret[] = array(
+        $ret[] = [
             "operation" => __FUNCTION__,
             "status" => true,
             "message" => GENERAL_SUCCESS_STR
-        );
+        ];
 
         $operation = $ret['operation'];
         $msgPrefix = "({$operation}) - ";
 
         $this->_setArgs($args);
-        $checkFunctions = array(
+        $checkFunctions = [
             'authenticate',
             'checkTestCaseIdentity',
             'checkTestSuiteID'
-        );
+        ];
 
         $status_ok = $this->_runChecks($checkFunctions, $msg_prefix);
         if ($status_ok) {
@@ -9518,9 +9518,9 @@ class TestlinkXMLRPCServer extends IXR_Server
         if ($status_ok) {
             $ctx[self::$testProjectIDParamName] = $tcaseTProj;
             $ck = self::CHECK_PUBLIC_PRIVATE_ATTR;
-            $r2c = array(
+            $r2c = [
                 'mgt_modify_tc'
-            );
+            ];
             foreach ($r2c as $right) {
                 $status_ok = $this->userHasRight($right, $ck, $ctx);
                 if (! $status_ok) {
@@ -9590,18 +9590,18 @@ class TestlinkXMLRPCServer extends IXR_Server
         $msg_prefix = "({$operation}) - ";
 
         $this->_setArgs($args);
-        $resultInfo = array();
+        $resultInfo = [];
         $status_ok = true;
 
         $opt = new stdClass();
         $opt->getOrderDescending = 0;
 
         // Checks are done in order
-        $checkFunctions = array(
+        $checkFunctions = [
             'authenticate',
             'checkTestPlanID',
             'checkTestCaseIdentity'
-        );
+        ];
 
         $status_ok = $this->_runChecks($checkFunctions, $msg_prefix) &&
             $this->_checkTCIDAndTPIDValid(null, $msg_prefix) &&
@@ -9609,11 +9609,11 @@ class TestlinkXMLRPCServer extends IXR_Server
 
         $tplan_id = $this->args[self::$testPlanIDParamName];
         $tcase_id = $this->args[self::$testCaseIDParamName];
-        $execContext = array(
+        $execContext = [
             'tplan_id' => $tplan_id,
             'platform_id' => null,
             'build_id' => null
-        );
+        ];
 
         if ($status_ok) {
             if ($this->_isParamPresent(self::$optionsParamName, $msg_prefix)) {
@@ -9669,9 +9669,9 @@ class TestlinkXMLRPCServer extends IXR_Server
             if (is_null($rs)) {
                 // has not been executed
                 // execution id = -1 => test case has not been runned.
-                $resultInfo[] = array(
+                $resultInfo[] = [
                     'id' => - 1
-                );
+                ];
             } else {
                 $resultInfo = $rs;
             }
@@ -9696,7 +9696,7 @@ class TestlinkXMLRPCServer extends IXR_Server
         $operation = __FUNCTION__;
         $messagePrefix = "({$operation}) - ";
 
-        $resultInfo = array();
+        $resultInfo = [];
 
         $resultInfo[0]["id"] = 0;
         $resultInfo[0]["status"] = true;
@@ -9705,9 +9705,9 @@ class TestlinkXMLRPCServer extends IXR_Server
 
         $this->_setArgs($args);
 
-        $checkFunctions = array(
+        $checkFunctions = [
             'authenticate'
-        );
+        ];
         $status_ok = $this->_runChecks($checkFunctions, $messagePrefix);
 
         if ($status_ok) {
@@ -9728,10 +9728,10 @@ class TestlinkXMLRPCServer extends IXR_Server
             $bm = new build_mgr($this->dbObj);
 
             $buildID = intval($this->args[self::$buildIDParamName]);
-            $opx = array(
+            $opx = [
                 'output' => 'fields',
                 'fields' => 'id,testplan_id'
-            );
+            ];
             $buildInfo = $bm->get_by_id($buildID, $opx);
 
             if (! $buildInfo || empty($buildInfo)) {
@@ -9742,7 +9742,7 @@ class TestlinkXMLRPCServer extends IXR_Server
         }
 
         if ($status_ok) {
-            $context = array();
+            $context = [];
             $context[self::$testPlanIDParamName] = $buildInfo['testplan_id'];
 
             $status_ok = $this->userHasRight("testplan_create_build",
@@ -9773,19 +9773,19 @@ class TestlinkXMLRPCServer extends IXR_Server
         $exec_id = $execID;
 
         if (is_null($exec_id)) {
-            $execContext = array(
+            $execContext = [
                 'tplan_id' => $this->args[self::$testPlanIDParamName],
                 'platform_id' => $this->args[self::$platformIDParamName],
                 'build_id' => $this->args[self::$buildIDParamName]
-            );
+            ];
 
-            $opt = array(
+            $opt = [
                 'output' => 'exec_id'
-            );
-            $identity = array(
+            ];
+            $identity = [
                 'id' => $tcase_id,
                 'version_id' => $tcversion_id
-            );
+            ];
             $exec_id = $this->tcaseMgr->getLatestExecSingleContext($identity,
                 $execContext, $opt);
         }
@@ -9796,12 +9796,12 @@ class TestlinkXMLRPCServer extends IXR_Server
             $st = &$this->args[self::$stepsParamName];
 
             // needed to get tcstep_id from step number
-            $r2d2 = array(
+            $r2d2 = [
                 'fields2get' => 'TCSTEPS.step_number,TCSTEPS.id',
                 'accessKey' => 'step_number',
                 'renderGhostSteps' => false,
                 'renderImageInline' => false
-            );
+            ];
 
             $steps = $this->tcaseMgr->getStepsSimple($this->tcVersionID, 0,
                 $r2d2);
@@ -9835,11 +9835,11 @@ class TestlinkXMLRPCServer extends IXR_Server
                         " tcstep_id=" . intval($steps[$spnum]['id']);
 
                     // Manage Insert
-                    $sql = "SELECT id FROM $target $where";
+                    $sql = "SELECT id FROM {$target} {$where}";
                     $rs = $this->dbObj->get_recordset($sql);
 
                     if (is_null($rs) || count($rs) != 1) {
-                        $sql = " INSERT INTO $target(";
+                        $sql = " INSERT INTO {$target}(";
 
                         $dbField[] = 'tcstep_id';
                         $dbVal[] = intval($steps[$spnum]['id']);
@@ -9890,7 +9890,7 @@ class TestlinkXMLRPCServer extends IXR_Server
      */
     private function initMethodYellowPages()
     {
-        $this->methods = array(
+        $this->methods = [
             'tl.reportTCResult' => 'this:reportTCResult',
             'tl.setTestCaseExecutionResult' => 'this:reportTCResult',
             'tl.createBuild' => 'this:createBuild',
@@ -9980,6 +9980,6 @@ class TestlinkXMLRPCServer extends IXR_Server
             'tl.sayHello' => 'this:sayHello',
             'tl.repeat' => 'this:repeat',
             'tl.getAllExecutionsResults' => 'this:getAllExecutionsResults'
-        );
+        ];
     }
 }

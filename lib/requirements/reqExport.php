@@ -145,9 +145,9 @@ function doExport(&$argsObj, &$req_spec_mgr)
 
                 case 'branch':
                 case 'items':
-                    $reqSpecSet = array(
+                    $reqSpecSet = [
                         $argsObj->req_spec_id
-                    );
+                    ];
                     break;
             }
 

@@ -28,7 +28,7 @@ function initArgs()
     $args = new stdClass();
     $args->currentUser = $_SESSION['currentUser'];
 
-    list ($context,) = initContext();
+    [$context, ] = initContext();
     $args->tproject_id = $context->tproject_id;
     $args->tplan_id = $context->tplan_id;
 

@@ -72,7 +72,7 @@ class tlReports extends tlObjectWithDB
         $req_mgmt_enabled, $format)
     {
         $reportList = config_get('reports_list');
-        $items = array();
+        $items = [];
 
         $toggleMsg = lang_get('show_hide_direct_link');
         $canNotCreateDirectLink = lang_get('can_not_create_direct_link');
@@ -89,11 +89,11 @@ class tlReports extends tlObjectWithDB
                 strpos("," . $rptItem['format'], $format) > 0) {
                 $reportUrl = $rptItem['url'] .
                     (stristr($rptItem['url'], "?") ? '&' : '?');
-                $items[$xdx] = array(
+                $items[$xdx] = [
                     'name' => lang_get($rptItem['title']),
                     'href' => $reportUrl,
                     'directLink' => ''
-                );
+                ];
 
                 if (isset($rptItem['directLink']) &&
                     trim($rptItem['directLink']) != '') {

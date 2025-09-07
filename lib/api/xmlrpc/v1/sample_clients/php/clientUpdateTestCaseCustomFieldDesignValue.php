@@ -17,16 +17,16 @@ $tcaseQty = 100;
 $tcCounter = 1;
 $method = 'updateTestCaseCustomFieldDesignValue';
 
-$args = array();
+$args = [];
 $args["devKey"] = 'admin';
 $args["testprojectid"] = 280165;
 $args["testcaseexternalid"] = 'HA-1';
 $args["version"] = 1;
 
-$args["customfields"] = array(
+$args["customfields"] = [
     'L2D' => 'http://localhost/development/github/testlink-code/' .
     'linkto.php?tprojectPrefix=HA&item=testcase&id=HA-1 '
-);
+];
 
 $client = new IXR_Client($server_url);
 $client->debug = true;

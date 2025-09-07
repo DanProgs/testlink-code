@@ -181,11 +181,11 @@ switch ($args->do_action) {
 
                 // Operations Order is CRITIC
                 if ($args->copy) {
-                    $options = array(
+                    $options = [
                         'items2copy' => $args->copy_options,
                         'copy_assigned_to' => $args->copy_assigned_to,
                         'tcversion_type' => $args->tcversion_type
-                    );
+                    ];
                     $tplan_mgr->copy_as($args->source_tplanid, $new_tplan_id,
                         $args->testplan_name, $args->tproject_id, $args->user_id,
                         $options);
@@ -232,10 +232,10 @@ switch ($args->do_action) {
         $template = is_null($template) ? 'planView.tpl' : $template;
         $gui->tplans = $args->user->getAccessibleTestPlans($db,
             $args->tproject_id, null,
-            array(
+            [
                 'output' => 'mapfull',
                 'active' => null
-            ));
+            ]);
         $gui->drawPlatformQtyColumn = false;
 
         if (! is_null($gui->tplans)) {
@@ -247,17 +247,17 @@ switch ($args->do_action) {
 
             $tplanSet = array_keys($gui->tplans);
             $dummy = $tplan_mgr->count_testcases($tplanSet, null,
-                array(
+                [
                     'output' => 'groupByTestPlan'
-                ));
+                ]);
             $buildQty = $tplan_mgr->get_builds($tplanSet, null, null,
-                array(
+                [
                     'getCount' => true
-                ));
+                ]);
 
-            $rightSet = array(
+            $rightSet = [
                 'testplan_user_role_assignment'
-            );
+            ];
 
             $availableCF = (array) $tplan_mgr->get_linked_cfields_at_design(
                 current($tplanSet), $gui->tproject_id);
@@ -391,38 +391,38 @@ function initArgs($request_hash)
     $args = new stdClass();
     $request_hash = strings_stripSlashes($request_hash);
 
-    $nullable_keys = array(
+    $nullable_keys = [
         'testplan_name',
         'notes',
         'rights',
         'active',
         'do_action'
-    );
+    ];
     foreach ($nullable_keys as $value) {
         $args->$value = isset($request_hash[$value]) ? trim(
             $request_hash[$value]) : null;
     }
 
-    $checkboxes_keys = array(
+    $checkboxes_keys = [
         'is_public' => 0,
         'active' => 0
-    );
+    ];
     foreach ($checkboxes_keys as $key => $value) {
         $args->$key = isset($request_hash[$key]) ? 1 : 0;
     }
 
-    $intval_keys = array(
+    $intval_keys = [
         'copy_from_tplan_id' => 0,
         'tplan_id' => 0
-    );
+    ];
     foreach ($intval_keys as $key => $value) {
         $args->$key = isset($request_hash[$key]) ? intval($request_hash[$key]) : $value;
     }
     $args->source_tplanid = $args->copy_from_tplan_id;
     $args->copy = ($args->copy_from_tplan_id > 0) ? true : false;
 
-    $args->copy_options = array();
-    $boolean_keys = array(
+    $args->copy_options = [];
+    $boolean_keys = [
         'copyTcases' => 0,
         'copyPriorities' => 0,
         'copyMilestones' => 0,
@@ -430,7 +430,7 @@ function initArgs($request_hash)
         'copyBuilds' => 0,
         'copyPlatformsLinks' => 0,
         'copyAttachments' => 0
-    );
+    ];
 
     foreach ($boolean_keys as $key => $value) {
         $args->copy_options[$key] = isset($request_hash[$key]) ? 1 : 0;
@@ -444,16 +444,16 @@ function initArgs($request_hash)
     $args->user = $session_hash['currentUser'];
 
     // all has to be refactored this way
-    $iParams = array(
-        "file_id" => array(
+    $iParams = [
+        "file_id" => [
             tlInputParameter::INT_N
-        ),
-        "fileTitle" => array(
+        ],
+        "fileTitle" => [
             tlInputParameter::STRING_N,
             0,
             100
-        )
-    );
+        ]
+    ];
     R_PARAMS($iParams, $args);
 
     return $args;
@@ -489,10 +489,10 @@ function initializeGui(&$dbHandler, &$argsObj, &$editorCfg)
     $guiObj->editorType = $editorCfg['type'];
     $guiObj->tplans = $argsObj->user->getAccessibleTestPlans($dbHandler,
         $argsObj->tproject_id, null,
-        array(
+        [
             'output' => 'mapfull',
             'active' => null
-        ));
+        ]);
     $guiObj->tproject_name = $argsObj->tproject_name;
     $guiObj->main_descr = lang_get('testplan_title_tp_management') . " - " .
         lang_get('testproject') . ' ' . $argsObj->tproject_name;

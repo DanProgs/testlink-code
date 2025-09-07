@@ -41,8 +41,8 @@ class reqCommands
             $this->reqCfg->rel_type_description);
 
         $type_ec = $this->reqCfg->type_expected_coverage;
-        $this->attrCfg = array();
-        $this->attrCfg['expected_coverage'] = array();
+        $this->attrCfg = [];
+        $this->attrCfg['expected_coverage'] = [];
         foreach ($this->reqTypeDomain as $type_code => $dummy) {
             // Because it has to be used on Smarty Template, I choose to transform
             // TRUE -> 1, FALSE -> 0, because I've had problems using true/false
@@ -114,9 +114,9 @@ class reqCommands
             // we need to understand if this is latest version.
             $obj->canAddCoverage = true;
             if ($obj->version_option != requirement_mgr::ALL_VERSIONS) {
-                $nuOpt = array(
+                $nuOpt = [
                     'output' => 'id'
-                );
+                ];
                 $nu = $this->reqMgr->getLastVersionInfo($obj->req_id, $nuOpt);
                 $obj->canAddCoverage = ($nu['id'] == $obj->req_version_id);
             }
@@ -245,11 +245,11 @@ class reqCommands
 
         // manage new order
         $order = 0;
-        $nt2exclude = array(
+        $nt2exclude = [
             'testplan' => 'exclude_me',
             'testsuite' => 'exclude_me',
             'testcase' => 'exclude_me'
-        );
+        ];
         $siblings = $this->reqMgr->tree_mgr->get_children($argsObj->req_spec_id,
             $nt2exclude);
         if (! is_null($siblings)) {
@@ -282,7 +282,7 @@ class reqCommands
             $obj->req_spec_id = $argsObj->req_spec_id;
             $obj->req_version_id = $argsObj->req_version_id;
 
-            $obj->req = array();
+            $obj->req = [];
             $obj->req['expected_coverage'] = $argsObj->expected_coverage;
             $obj->req['title'] = $argsObj->title;
             $obj->req['status'] = $argsObj->reqStatus;
@@ -330,14 +330,14 @@ class reqCommands
 
             // Need Change several values with user input data, to match logic on
             // reqEdit.php - renderGui()
-            $map = array(
+            $map = [
                 'status' => 'reqStatus',
                 'type' => 'reqType',
                 'scope' => 'scope',
                 'expected_coverage' => 'expected_coverage',
                 'req_doc_id' => 'reqDocId',
                 'title' => 'title'
-            );
+            ];
 
             foreach ($map as $k => $w) {
                 $obj->req[$k] = $argsObj->$w;
@@ -400,9 +400,9 @@ class reqCommands
         $reqVersionSet = $this->reqMgr->get_by_id($argsObj->req_id);
         $req = current($reqVersionSet);
 
-        $this->reqMgr->setNotifyOn(array(
+        $this->reqMgr->setNotifyOn([
             'delete' => true
-        ));
+        ]);
         $this->reqMgr->delete($argsObj->req_id, requirement_mgr::ALL_VERSIONS,
             $argsObj->user_id);
 
@@ -539,9 +539,9 @@ class reqCommands
         $reqVersionSet = $this->reqMgr->get_by_id($argsObj->req_id);
         $req = current($reqVersionSet);
 
-        $obj->items = array(
+        $obj->items = [
             $req
-        );
+        ];
         $obj->main_descr = lang_get('req') . TITLE_SEP . $req['title'];
         $obj->action_descr = lang_get('copy_one_req');
         $obj->template = 'reqCopy.tpl';
@@ -551,27 +551,27 @@ class reqCommands
         $obj->doActionButton = 'doCopy';
         $obj->req_spec_id = $argsObj->req_spec_id;
 
-        $exclude_node_types = array(
+        $exclude_node_types = [
             'testplan' => 'exclude_me',
             'testsuite' => 'exclude_me',
             'testcase' => 'exclude_me',
             'requirement' => 'exclude_me',
             'requirement_spec_revision' => 'exclude_me'
-        );
+        ];
 
-        $my['filters'] = array(
+        $my['filters'] = [
             'exclude_node_types' => $exclude_node_types
-        );
+        ];
         $my['options']['order_cfg']['type'] = $my['options']['output'] = 'rspec';
         $subtree = $this->reqMgr->tree_mgr->get_subtree($argsObj->tproject_id,
             $my['filters'], $my['options']);
         if (count($subtree)) {
             $obj->containers = $this->reqMgr->tree_mgr->createHierarchyMap(
                 $subtree, 'dotted',
-                array(
+                [
                     'field' => 'doc_id',
                     'format' => '%s:'
-                ));
+                ]);
         }
         return $obj;
     }
@@ -589,11 +589,11 @@ class reqCommands
         $obj->req = null;
         $obj->req_spec_id = $argsObj->req_spec_id;
 
-        $copyOptions = array(
-            'copy_also' => array(
+        $copyOptions = [
+            'copy_also' => [
                 'testcase_assignment' => $argsObj->copy_testcase_assignment
-            )
-        );
+            ]
+        ];
 
         $ret = $this->reqMgr->copy_to($itemID, $argsObj->containerID,
             $argsObj->user_id, $argsObj->tproject_id, $copyOptions);
@@ -614,9 +614,9 @@ class reqCommands
                 $new_req['req_doc_id'], $new_req['title']);
             $obj->template = 'reqCopy.tpl';
             $obj->req_id = $ret['id'];
-            $obj->array_of_msg = array(
+            $obj->array_of_msg = [
                 $logMsg
-            );
+            ];
             $obj->refreshTree = $argsObj->refreshTree;
         }
         return $obj;
@@ -629,12 +629,12 @@ class reqCommands
     {
         $freezeSourceVersion = $this->reqCfg->freezeREQVersionOnNewREQVersion;
 
-        $opt = array(
+        $opt = [
             'reqVersionID' => $argsObj->req_version_id,
             'log_msg' => $argsObj->log_message,
             'notify' => true,
             'freezeSourceVersion' => $freezeSourceVersion
-        );
+        ];
 
         $ret = $this->reqMgr->create_new_version($argsObj->req_id,
             $argsObj->user_id, $opt);
@@ -657,9 +657,9 @@ class reqCommands
             $argsObj->req_version_id);
         $req_version = $req_version[0];
 
-        $this->reqMgr->setNotifyOn(array(
+        $this->reqMgr->setNotifyOn([
             'delete' => true
-        ));
+        ]);
 
         $this->reqMgr->delete($node['parent_id'], $argsObj->req_version_id,
             $argsObj->user_id);
@@ -693,10 +693,10 @@ class reqCommands
      */
     public function doAddRelation($argsObj)
     {
-        $op = array(
+        $op = [
             'ok' => true,
             'msg' => lang_get('new_rel_add_success')
-        );
+        ];
         $own_id = $argsObj->relation_source_req_id;
         $authorID = $argsObj->user_id;
         $tproject_id = $argsObj->tproject_id;
@@ -783,10 +783,10 @@ class reqCommands
     {
         $ok_msg = '<div class="info">' . lang_get('delete_rel_success') .
             '</div>';
-        $op = array(
+        $op = [
             'ok' => true,
             'msg' => $ok_msg
-        );
+        ];
 
         $relation_id = $argsObj->relation_id;
         $requirement_id = $argsObj->requirement_id;
@@ -803,7 +803,7 @@ class reqCommands
         }
 
         $obj = $this->initGuiBean();
-        $obj->template = "reqView.php?requirement_id=$requirement_id&relation_add_result_msg=" .
+        $obj->template = "reqView.php?requirement_id={$requirement_id}&relation_add_result_msg=" .
             $op['msg'];
 
         return $obj;
@@ -840,24 +840,24 @@ class reqCommands
      */
     private function simpleCompare($old, $new, $oldCF, $newCF)
     {
-        $suggest_revision = array(
+        $suggest_revision = [
             'scope' => 'scope'
-        );
+        ];
 
-        $force_revision = array(
+        $force_revision = [
             'status' => 'reqStatus',
             'type' => 'reqType',
             'expected_coverage' => 'expected_coverage',
             'req_doc_id' => 'reqDocId',
             'title' => 'title'
-        );
+        ];
 
-        $ret = array(
+        $ret = [
             'force' => false,
             'suggest' => false,
             'nochange' => false,
             'changeon' => null
-        );
+        ];
         foreach ($force_revision as $access_key => $access_prop) {
             if ($ret['force'] = ($old[$access_key] != $new->$access_prop)) {
                 $ret['changeon'] = 'attribute:' . $access_key;
@@ -961,9 +961,9 @@ class reqCommands
             // IMPORTANT NOTICE: audit info is managed on reqMgr method
             $alienMgr = new testcase($this->db);
             $tcase_id = $alienMgr->getInternalID($argsObj->tcaseIdentity,
-                array(
+                [
                     'tproject_id' => $argsObj->tproject_id
-                ));
+                ]);
 
             // Design Choice
             // 1. Only latest test case version will be added
@@ -1007,10 +1007,10 @@ class reqCommands
     {
         // IMPORTANT NOTICE: audit info is managed on reqMgr method
         $obj = $this->initGuiBean();
-        $bond = array(
+        $bond = [
             'req' => $argsObj->req_version_id,
             'tc' => $argsObj->tcaseIdentity
-        );
+        ];
 
         $this->reqMgr->delReqVersionTCVersionLink($bond, __METHOD__);
 

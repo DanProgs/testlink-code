@@ -21,10 +21,10 @@ $codeTrackerMgr = new tlCodeTracker($db);
 $gui = new stdClass();
 $args = initArgs();
 $gui->items = $codeTrackerMgr->getAll(
-    array(
+    [
         'output' => 'add_link_count',
         'checkEnv' => true
-    ));
+    ]);
 $gui->canManage = $args->currentUser->hasRight($db, "codetracker_management");
 $gui->user_feedback = $args->user_feedback;
 
@@ -53,10 +53,10 @@ function initArgs()
     }
     $args->currentUser = $_SESSION['currentUser'];
 
-    $args->user_feedback = array(
+    $args->user_feedback = [
         'type' => '',
         'message' => ''
-    );
+    ];
 
     // only way I've found in order to give feedback for delete
     // need to undertand if we really need/want to do all this mess

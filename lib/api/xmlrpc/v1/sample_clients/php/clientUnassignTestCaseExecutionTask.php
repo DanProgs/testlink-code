@@ -19,7 +19,7 @@ $devKey = isset($_REQUEST['apiKey']) ? $_REQUEST['apiKey'] : 'admin';
 $utc ++;
 $unitTestDescription = "Test #{$utc} - {$method} - All OK";
 
-$args = array();
+$args = [];
 $args["devKey"] = $devKey;
 $args["testplanid"] = 2808;
 $args["testcaseexternalid"] = 'DSM-1';
@@ -38,7 +38,7 @@ die();
 $utc ++;
 $unitTestDescription = "Test #{$utc} - {$method} - All OK";
 
-$args = array();
+$args = [];
 $args["devKey"] = $devKey;
 $args["testplanid"] = 278;
 $args["testcaseexternalid"] = 'APX-1';
@@ -56,7 +56,7 @@ $answer = runTest($client, $method, $args);
 $utc ++;
 $unitTestDescription = "Test #{$utc} - {$method} - Missing argument - Test Plan ID";
 
-$args = array();
+$args = [];
 $args["devKey"] = $devKey;
 $args["testcaseexternalid"] = 'GK-1';
 $args["platformname"] = 'P2';
@@ -71,7 +71,7 @@ $answer = runTest($client, $method, $args);
 $utc ++;
 $unitTestDescription = "Test #{$utc} - {$method} - Missing argument - Test Case ";
 
-$args = array();
+$args = [];
 $args["devKey"] = $devKey;
 $args["testplanid"] = 9;
 $args["platformname"] = 'P2';
@@ -86,7 +86,7 @@ $answer = runTest($client, $method, $args);
 $utc ++;
 $unitTestDescription = "Test #{$utc} - {$method} - Missing argument - Build Name ";
 
-$args = array();
+$args = [];
 $args["devKey"] = $devKey;
 
 $args["testplanid"] = 9;
@@ -103,7 +103,7 @@ $answer = runTest($client, $method, $args);
 $utc ++;
 $unitTestDescription = "Test #{$utc} - {$method} - Wrong argument - Test Plan ID ";
 
-$args = array();
+$args = [];
 $args["devKey"] = $devKey;
 
 $args["testplanid"] = 900000;
@@ -121,7 +121,7 @@ $answer = runTest($client, $method, $args);
 $utc ++;
 $unitTestDescription = "Test #{$utc} - {$method} - Wrong argument - Test Case External ID ";
 
-$args = array();
+$args = [];
 $args["devKey"] = $devKey;
 
 $args["testplanid"] = 9;
@@ -139,7 +139,7 @@ $answer = runTest($client, $method, $args);
 $utc ++;
 $unitTestDescription = "Test #{$utc} - {$method} - Wrong argument - Build Name ";
 
-$args = array();
+$args = [];
 $args["devKey"] = $devKey;
 
 $args["testplanid"] = 9;

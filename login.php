@@ -112,7 +112,7 @@ switch ($args->action) {
 }
 
 if ($doAuthPostProcess) {
-    list ($doRenderLoginScreen, $gui->note) = authorizePostProcessing($args, $op);
+    [$doRenderLoginScreen, $gui->note] = authorizePostProcessing($args, $op);
 }
 
 if ($doRenderLoginScreen) {
@@ -129,68 +129,68 @@ function initArgs()
     $pwdInputLen = config_get('loginPagePasswordMaxLenght');
 
     // 2010904 - eloff - Why is req and reqURI parameters to the login?
-    $iParams = array(
-        "note" => array(
+    $iParams = [
+        "note" => [
             tlInputParameter::STRING_N,
             0,
             255
-        ),
-        "tl_login" => array(
+        ],
+        "tl_login" => [
             tlInputParameter::STRING_N,
             0,
             100
-        ),
-        "tl_password" => array(
+        ],
+        "tl_password" => [
             tlInputParameter::STRING_N,
             0,
             $pwdInputLen
-        ),
-        "req" => array(
+        ],
+        "req" => [
             tlInputParameter::STRING_N,
             0,
             4000
-        ),
-        "reqURI" => array(
+        ],
+        "reqURI" => [
             tlInputParameter::STRING_N,
             0,
             4000
-        ),
-        "action" => array(
+        ],
+        "action" => [
             tlInputParameter::STRING_N,
             0,
             10
-        ),
-        "destination" => array(
+        ],
+        "destination" => [
             tlInputParameter::STRING_N,
             0,
             255
-        ),
-        "loginform_token" => array(
+        ],
+        "loginform_token" => [
             tlInputParameter::STRING_N,
             0,
             255
-        ),
-        "viewer" => array(
+        ],
+        "viewer" => [
             tlInputParameter::STRING_N,
             0,
             3
-        ),
-        "oauth" => array(
+        ],
+        "oauth" => [
             tlInputParameter::STRING_N,
             0,
             100
-        ),
-        "code" => array(
+        ],
+        "code" => [
             tlInputParameter::STRING_N,
             0,
             4000
-        ),
-        "state" => array(
+        ],
+        "state" => [
             tlInputParameter::STRING_N,
             0,
             100
-        )
-    );
+        ]
+    ];
     $pParams = R_PARAMS($iParams);
 
     $args = new stdClass();
@@ -206,10 +206,10 @@ function initArgs()
 
     $args->viewer = '';
 
-    $k2c = array(
+    $k2c = [
         'ajaxcheck' => 'do',
         'ajaxlogin' => 'do'
-    );
+    ];
     if (isset($k2c[$pParams['action']])) {
         $args->action = $pParams['action'];
     } elseif (! is_null($args->login)) {
@@ -289,7 +289,7 @@ function initGui(&$db, $args)
 
     // Oauth buttons
     $oau = config_get('OAuthServers');
-    $gui->oauth = array();
+    $gui->oauth = [];
     foreach ($oau as $oauth_prov) {
         if ($oauth_prov['oauth_enabled']) {
             $name = $oauth_prov['oauth_name'];
@@ -351,7 +351,7 @@ function initGui(&$db, $args)
     $gui->pwdInputMaxLenght = config_get('loginPagePasswordMaxLenght');
 
     // Random Background
-    $imgSet = array();
+    $imgSet = [];
     $imgSet[] = "wp-testing04.jpg";
     $imgSet[] = "Fedora-24-Default-Wallpaper-1.png";
     $imgSet[] = "fedora-76343.jpg";
@@ -445,9 +445,9 @@ function authorizePostProcessing($argsObj, $op)
             $_SESSION['currentUser']->dbID, "users");
 
         if ($argsObj->action == 'ajaxlogin') {
-            echo json_encode(array(
+            echo json_encode([
                 'success' => true
-            ));
+            ]);
         } else {
             // If destination param is set redirect to given page ...
             if (! empty($argsObj->destination)) {
@@ -515,19 +515,19 @@ function authorizePostProcessing($argsObj, $op)
         }
 
         if ($argsObj->action == 'ajaxlogin') {
-            echo json_encode(array(
+            echo json_encode([
                 'success' => false,
                 'reason' => $note
-            ));
+            ]);
         } else {
             $renderLoginScreen = true;
         }
     }
 
-    return array(
+    return [
         $renderLoginScreen,
         $note
-    );
+    ];
 }
 
 /**
@@ -540,13 +540,13 @@ function processAjaxCheck(&$dbHandler)
     // Send a json reply, include localized strings for use in js to display a login form.
     doSessionStart(true);
     echo json_encode(
-        array(
+        [
             'validSession' => checkSessionValid($dbHandler, false),
             'username_label' => lang_get('login_name'),
             'password_label' => lang_get('password'),
             'login_label' => lang_get('btn_login'),
             'timeout_info' => lang_get('timeout_info')
-        ));
+        ]);
 }
 
 /**
@@ -558,12 +558,12 @@ function processAjaxCheck(&$dbHandler)
  */
 function cleanInput($input)
 {
-    $search = array(
+    $search = [
         '@<script[^>]*?>.*?</script>@si', // Strip out javascript
         '@<[\/\!]*?[^<>]*?>@si', // Strip out HTML tags
         '@<style[^>]*?>.*?</style>@siU', // Strip style tags properly
         '@<![\s\S]*?--[ \t\n\r]*>@' // Strip multi-line comments
-    );
+    ];
 
     return preg_replace($search, '', $input);
 }

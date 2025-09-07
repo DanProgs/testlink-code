@@ -125,7 +125,7 @@ function initArgs($request_hash, $session_hash, $date_format, &$tplanMgr)
     $args = new stdClass();
     $request_hash = strings_stripSlashes($request_hash);
 
-    $nullable_keys = array(
+    $nullable_keys = [
         'notes',
         'do_action',
         'build_name',
@@ -133,25 +133,25 @@ function initArgs($request_hash, $session_hash, $date_format, &$tplanMgr)
         'tag',
         'branch',
         'release_candidate'
-    );
+    ];
     foreach ($nullable_keys as $value) {
         $args->$value = isset($request_hash[$value]) ? $request_hash[$value] : null;
     }
 
-    $intval_keys = array(
+    $intval_keys = [
         'build_id' => 0,
         'source_build_id' => 0
-    );
+    ];
     foreach ($intval_keys as $key => $value) {
         $args->$key = isset($request_hash[$key]) ? intval($request_hash[$key]) : $value;
     }
 
-    $bool_keys = array(
+    $bool_keys = [
         'is_active' => 0,
         'is_open' => 0,
         'copy_to_all_tplans' => 0,
         'copy_tester_assignments' => 0
-    );
+    ];
     foreach ($bool_keys as $key => $value) {
         $args->$key = isset($request_hash[$key]) ? 1 : $value;
     }
@@ -246,14 +246,14 @@ function edit(&$argsObj, &$buildMgr)
     $argsObj->build_name = $binfo['name'];
     $argsObj->is_active = $binfo['active'];
 
-    $k2l = array(
+    $k2l = [
         'is_open',
         'commit_id',
         'tag',
         'branch',
         'release_candidate',
         'release_date'
-    );
+    ];
     foreach ($k2l as $pp) {
         $argsObj->$pp = $binfo[$pp];
     }
@@ -441,7 +441,7 @@ function renderGui(&$smartyObj, &$argsObj, &$tplanMgr, &$buildMgr, $templateCfg,
         $guiObj->notes = $owebeditor->CreateHTML();
         $guiObj->source_build = initSourceBuildSelector($tplanMgr, $argsObj);
 
-        $k2c = array(
+        $k2c = [
             'tplan_name',
             'build_id',
             'build_name',
@@ -452,7 +452,7 @@ function renderGui(&$smartyObj, &$argsObj, &$tplanMgr, &$buildMgr, $templateCfg,
             'tag',
             'branch',
             'release_candidate'
-        );
+        ];
 
         foreach ($k2c as $pp) {
             $guiObj->$pp = $argsObj->$pp;
@@ -486,7 +486,7 @@ function doCreate(&$argsObj, &$buildMgr, &$tplanMgr, $dateFormat)
     if ($check->status_ok) {
         $oBuild = new stdClass();
         // 'creation_ts'
-        $prop = array(
+        $prop = [
             'tplan_id',
             'release_date',
             'notes',
@@ -496,7 +496,7 @@ function doCreate(&$argsObj, &$buildMgr, &$tplanMgr, $dateFormat)
             'release_candidate',
             'is_active',
             'is_open'
-        );
+        ];
 
         $oBuild->name = $argsObj->build_name;
         foreach ($prop as $pp) {
@@ -528,11 +528,11 @@ function doCreate(&$argsObj, &$buildMgr, &$tplanMgr, $dateFormat)
                         $execVerboseDomain['status_code']);
 
                     // remember that assignment is done at platform + build
-                    $getOpt = array(
+                    $getOpt = [
                         'outputFormat' => 'mapAccessByID',
                         'addIfNull' => true,
                         'outputDetails' => 'name'
-                    );
+                    ];
                     $platformSet = $tplanMgr->getPlatforms($argsObj->tplan_id,
                         $getOpt);
 
@@ -621,8 +621,8 @@ function doUpdate(&$argsObj, &$buildMgr, &$tplanMgr, $dateFormat)
 
     $check = crossChecks($argsObj, $tplanMgr, $dateFormat);
     if ($check->status_ok) {
-        $attr = array();
-        $k2c = array(
+        $attr = [];
+        $k2c = [
             'release_date',
             'release_candidate',
             'is_active',
@@ -631,7 +631,7 @@ function doUpdate(&$argsObj, &$buildMgr, &$tplanMgr, $dateFormat)
             'commit_id',
             'tag',
             'branch'
-        );
+        ];
         foreach ($k2c as $pp) {
             $attr[$pp] = $argsObj->$pp;
         }
@@ -745,9 +745,9 @@ function doCopyToTestPlans(&$argsObj, &$buildMgr, &$tplanMgr)
     $tprojectMgr = new testproject($tplanMgr->db);
 
     // exclude this testplan
-    $filters = array(
+    $filters = [
         'tplan2exclude' => $argsObj->tplan_id
-    );
+    ];
     $tplanset = $tprojectMgr->get_all_testplans($argsObj->testprojectID,
         $filters);
 
@@ -793,15 +793,15 @@ function checkRights(&$db, &$user, &$context)
  */
 function initSourceBuildSelector(&$testplan_mgr, &$argsObj)
 {
-    $htmlMenu = array(
+    $htmlMenu = [
         'items' => null,
         'selected' => null,
         'build_count' => 0
-    );
+    ];
     $htmlMenu['items'] = $testplan_mgr->get_builds_for_html_options(
-        $argsObj->tplan_id, null, null, array(
+        $argsObj->tplan_id, null, null, [
             'orderByDir' => 'id:DESC'
-        ));
+        ]);
 
     // get the number of existing execution assignments with each build
     if (! is_null($htmlMenu['items'])) {

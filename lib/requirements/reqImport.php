@@ -55,12 +55,12 @@ $smarty->display($templateCfg->template_dir . $templateCfg->default_template);
 function doExecuteImport($fileName, &$argsObj, &$reqSpecMgr, &$reqMgr)
 {
     $retval = new stdClass();
-    $retval->items = array();
+    $retval->items = [];
     $retval->msg = '';
-    $retval->file_check = array(
+    $retval->file_check = [
         'status_ok' => 1,
         'msg' => 'ok'
-    );
+    ];
     $retval->userFeedback = null;
 
     $context = new stdClass();
@@ -69,7 +69,7 @@ function doExecuteImport($fileName, &$argsObj, &$reqSpecMgr, &$reqMgr)
     $context->user_id = $argsObj->user_id;
     $context->importType = $argsObj->importType;
 
-    $opts = array();
+    $opts = [];
     $opts['skipFrozenReq'] = ($argsObj->skip_frozen_req ? true : false);
     $opts['hitCriteria'] = $argsObj->hitCriteria;
     $opts['actionOnHit'] = $argsObj->actionOnHit;
@@ -87,10 +87,10 @@ function doExecuteImport($fileName, &$argsObj, &$reqSpecMgr, &$reqMgr)
             }
         }
     } else {
-        $retval->file_check = array(
+        $retval->file_check = [
             'status_ok' => 0,
             'msg' => lang_get('please_choose_req_file')
-        );
+        ];
     }
 
     if ($retval->file_check['status_ok']) {
@@ -99,10 +99,10 @@ function doExecuteImport($fileName, &$argsObj, &$reqSpecMgr, &$reqMgr)
             // from context is null, we must raise an error, to avoid ghots requirements in DB
             $isReqSpec = property_exists($xml, 'req_spec');
             if (! $isReqSpec && $argsObj->req_spec_id <= 0) {
-                $retval->file_check = array(
+                $retval->file_check = [
                     'status_ok' => false,
                     'msg' => lang_get('please_create_req_spec_first')
-                );
+                ];
             } else {
                 $retval->items = doReqImportFromXML($reqSpecMgr, $reqMgr, $xml,
                     $context, $opts);
@@ -152,10 +152,10 @@ function initArgs()
     $args->skip_frozen_req = isset($request['skip_frozen_req']) ? 1 : 0;
 
     $args->doAction = 'askFileName';
-    $action_keys = array(
+    $action_keys = [
         'uploadFile',
         'executeImport'
-    );
+    ];
     foreach ($action_keys as $action) {
         if (isset($request[$action])) {
             $args->doAction = $action;
@@ -185,10 +185,10 @@ function initArgs()
 function initializeGui(&$dbHandler, &$argsObj, $session, &$reqSpecMgr, &$reqMgr)
 {
     $gui = new stdClass();
-    $gui->file_check = array(
+    $gui->file_check = [
         'status_ok' => 1,
         'msg' => 'ok'
-    );
+    ];
     $gui->items = null;
     $gui->try_upload = $argsObj->bUpload;
     $gui->importResult = null;
@@ -244,15 +244,15 @@ function initializeGui(&$dbHandler, &$argsObj, $session, &$reqSpecMgr, &$reqMgr)
         $gui->importFileGui->return_to_url .= "lib/requirements/reqSpecView.php?req_spec_id=$argsObj->req_spec_id";
     }
 
-    $gui->actionOptions = array(
+    $gui->actionOptions = [
         'update_last_version' => lang_get('update_last_requirement_version'),
         'create_new_version' => lang_get('create_new_requirement_version')
-    );
+    ];
 
-    $gui->hitOptions = array(
+    $gui->hitOptions = [
         'docid' => lang_get('same_docid'),
         'title' => lang_get('same_title')
-    );
+    ];
 
     $gui->duplicate_criteria_verbose = lang_get('duplicate_req_criteria');
 
@@ -276,7 +276,7 @@ function checkRights(&$db, &$user, &$context)
 function doReqImportFromXML(&$reqSpecMgr, &$reqMgr, &$simpleXMLObj,
     $importContext, $importOptions)
 {
-    $items = array();
+    $items = [];
     $isReqSpec = property_exists($simpleXMLObj, 'req_spec');
     if ($isReqSpec) {
         foreach ($simpleXMLObj->req_spec as $xkm) {
@@ -302,7 +302,7 @@ function doReqImportFromXML(&$reqSpecMgr, &$reqMgr, &$simpleXMLObj,
 function doReqImportOther(&$reqMgr, $fileName, $importContext, $importOptions)
 {
     $impSet = loadImportedReq($fileName, $importContext->importType);
-    $items = array();
+    $items = [];
 
     if (! is_null($impSet)) {
         $reqSet = $impSet['info'];
@@ -315,8 +315,8 @@ function doReqImportOther(&$reqMgr, $fileName, $importContext, $importOptions)
             }
         }
     }
-    return array(
+    return [
         'items' => $items,
         'userFeedback' => $impSet['userFeedback']
-    );
+    ];
 }

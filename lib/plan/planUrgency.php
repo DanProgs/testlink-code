@@ -42,11 +42,11 @@ $context->tproject_id = $args->tproject_id;
 $context->platform_id = $args->platform_id;
 
 $gui->listTestCases = $tplan_mgr->getSuiteUrgency($context,
-    array(
+    [
         'build4testers' => $args->build4testers
-    ), array(
+    ], [
         'testcases' => $args->testCaseSet
-    ));
+    ]);
 
 foreach ($gui->listTestCases as $tcversion_id => $tcaseSet) {
     foreach ($tcaseSet as $idx => $tcase) {

@@ -309,11 +309,11 @@ class tlRole extends tlDBObject
     protected function replaceUserRolesWith(&$db, $newRole)
     {
         $result = true;
-        $tables = array(
+        $tables = [
             'users',
             'user_testproject_roles',
             'user_testplan_roles'
-        );
+        ];
         foreach ($tables as $table) {
             $sql = "UPDATE {$this->tables[$table]} SET role_id = {$newRole} WHERE role_id = {$this->dbID}";
             $result = $result && ($db->exec_query($sql) ? true : false);
@@ -344,9 +344,9 @@ class tlRole extends tlDBObject
      */
     protected function getUserIDsWithGlobalRole(&$db, $opt = null)
     {
-        $my['opt'] = array(
+        $my['opt'] = [
             'active' => - 1
-        );
+        ];
         $my['opt'] = array_merge($my['opt'], (array) $opt);
 
         $sql = "SELECT id FROM {$this->tables['users']} " .

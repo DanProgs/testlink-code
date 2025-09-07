@@ -41,11 +41,11 @@ $smarty->display($templateCfg->template_dir . $templateCfg->default_template);
  */
 function initArgs()
 {
-    $iParams = array(
-        "id" => array(
+    $iParams = [
+        "id" => [
             tlInputParameter::INT_N
-        )
-    );
+        ]
+    ];
     $args = new stdClass();
     P_PARAMS($iParams, $args);
 

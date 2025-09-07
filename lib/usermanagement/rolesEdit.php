@@ -71,32 +71,32 @@ function initArgs()
 {
     $_REQUEST = strings_stripSlashes($_REQUEST);
 
-    $iParams = array(
-        "rolename" => array(
+    $iParams = [
+        "rolename" => [
             "POST",
             tlInputParameter::STRING_N,
             0,
             100
-        ),
-        "roleid" => array(
+        ],
+        "roleid" => [
             "REQUEST",
             tlInputParameter::INT_N
-        ),
-        "doAction" => array(
+        ],
+        "doAction" => [
             "REQUEST",
             tlInputParameter::STRING_N,
             0,
             100
-        ),
-        "notes" => array(
+        ],
+        "notes" => [
             "POST",
             tlInputParameter::STRING_N
-        ),
-        "grant" => array(
+        ],
+        "grant" => [
             "POST",
             tlInputParameter::ARRAY_STRING_N
-        )
-    );
+        ]
+    ];
 
     $args = new stdClass();
     I_PARAMS($iParams, $args);
@@ -269,21 +269,21 @@ function initializeOp()
  */
 function completeGui(&$dbHandler, &$guiObj, &$argsObj, &$roleObj, &$webEditorObj)
 {
-    $actionCfg['operation'] = array(
+    $actionCfg['operation'] = [
         'create' => 'doCreate',
         'edit' => 'doUpdate',
         'doCreate' => 'doCreate',
         'doUpdate' => 'doUpdate',
         'duplicate' => 'duplicate'
-    );
+    ];
 
-    $actionCfg['highlight'] = array(
+    $actionCfg['highlight'] = [
         'create' => 'create_role',
         'edit' => 'edit_role',
         'doCreate' => 'create_role',
         'doUpdate' => 'edit_role',
         'duplicate' => 'create_role'
-    );
+    ];
 
     $guiObj->highlight = new stdClass();
     $kp = $actionCfg['highlight'][$argsObj->doAction];
@@ -341,10 +341,10 @@ function generateUniqueName($s)
  */
 function initLabels()
 {
-    $tg = array(
+    $tg = [
         'action_create_role' => null,
         'action_edit_role' => null
-    );
+    ];
 
     return init_labels($tg);
 }

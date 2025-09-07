@@ -17,10 +17,10 @@ $reqMgr = new requirement_mgr($db);
 $item_id = isset($_REQUEST['item_id']) ? intval($_REQUEST['item_id']) : null;
 $info = '';
 if (! is_null($item_id)) {
-    $tables = tlObjectWithDB::getDBTables(array(
+    $tables = tlObjectWithDB::getDBTables([
         'req_versions',
         'req_revisions'
-    ));
+    ]);
 
     // get item type
     $node_types = $reqMgr->tree_mgr->get_available_node_types();

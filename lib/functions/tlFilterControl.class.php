@@ -115,7 +115,7 @@ abstract class tlFilterControl extends tlObjectWithDB
      *
      * @var array
      */
-    public $option_strings = array();
+    public $option_strings = [];
 
     /**
      * holds the configuration that will be read from config file
@@ -137,7 +137,7 @@ abstract class tlFilterControl extends tlObjectWithDB
      *
      * @var array
      */
-    public $filters = array();
+    public $filters = [];
 
     /**
      * This array holds only the user selected values of active filters.
@@ -146,14 +146,14 @@ abstract class tlFilterControl extends tlObjectWithDB
      *
      * @var array
      */
-    protected $active_filters = array();
+    protected $active_filters = [];
 
     /**
      * will hold the configuration about settings (which ones are to be shown) and their values
      *
      * @var array
      */
-    public $settings = array();
+    public $settings = [];
 
     /**
      * is advanced filter mode active?
@@ -332,15 +332,15 @@ abstract class tlFilterControl extends tlObjectWithDB
             isset($_SESSION['testprojectID']) ? $_SESSION['testprojectID'] : 0);
         $this->args->testproject_name = isset($_SESSION['testprojectName']) ? $_SESSION['testprojectName'] : 0;
 
-        $params = array();
-        $params['setting_refresh_tree_on_action'] = array(
+        $params = [];
+        $params['setting_refresh_tree_on_action'] = [
             "POST",
             tlInputParameter::CB_BOOL
-        );
-        $params['hidden_setting_refresh_tree_on_action'] = array(
+        ];
+        $params['hidden_setting_refresh_tree_on_action'] = [
             "POST",
             tlInputParameter::INT_N
-        );
+        ];
 
         I_PARAMS($params, $this->args);
 
@@ -383,18 +383,18 @@ abstract class tlFilterControl extends tlObjectWithDB
         $cf_prefix = $this->cfield_mgr->name_prefix;
 
         $cf_html_code = "";
-        $selection = array();
+        $selection = [];
 
         $this->filters[$key] = false;
         $this->active_filters[$key] = null;
 
         if (! is_null($cfields)) {
-            $cfInputOpt = array(
+            $cfInputOpt = [
                 'name_suffix' => '',
                 'field_size' => self::CF_INPUT_SIZE,
                 'show_on_filters' => true,
                 'remove_required' => true
-            );
+            ];
 
             foreach ($cfields as $cf) {
                 // has a value been selected?
@@ -476,11 +476,11 @@ abstract class tlFilterControl extends tlObjectWithDB
             }
 
             // show/hide CF
-            $this->filters[$key] = array(
+            $this->filters[$key] = [
                 'items' => $cf_html_code,
                 'btn_label' => $btn_label,
                 'collapsed' => $collapsed
-            );
+            ];
             $this->active_filters[$key] = count($selection) ? $selection : null;
         }
     }

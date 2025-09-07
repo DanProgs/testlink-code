@@ -18,11 +18,11 @@
 require_once '../../config.inc.php';
 require_once 'common.php';
 testlinkInitPage($db);
-$data = array();
+$data = [];
 
-$iParams = array(
-    "right" => array(tlInputParameter::STRING_N,0,100,'/^[a-z0-9_]+$/')
-);
+$iParams = [
+    "right" => [tlInputParameter::STRING_N,0,100,'/^[a-z0-9_]+$/']
+];
 $args = G_PARAMS($iParams);
 
 
@@ -31,7 +31,7 @@ if (has_rights($db,$args['right']))
 {
     $tlUser = new tlUser($_SESSION['userID']);
     $data['rows'] = $tlUser->getNamesForProjectRight($db,$args['right'],$_SESSION['testprojectID']);
-    $data['rows'][] = array('id'=>'0','login'=>' ','first'=>' ','last'=>' '); // option for no owner
+    $data['rows'][] = ['id'=>'0','login'=>' ','first'=>' ','last'=>' ']; // option for no owner
 }
 else
 {

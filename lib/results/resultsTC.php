@@ -19,11 +19,11 @@ $templateCfg = templateConfiguration();
 
 $smarty = new TLSmarty();
 
-list ($tplan_mgr, $args) = initArgsForReports($db);
+[$tplan_mgr, $args] = initArgsForReports($db);
 $metricsMgr = new tlTestPlanMetrics($db);
 $tplan_mgr = &$metricsMgr;
 
-list ($gui, $tproject_info, $labels, $cfg) = initializeGui($db, $args,
+[$gui, $tproject_info, $labels, $cfg] = initializeGui($db, $args,
     $smarty->getImages(), $tplan_mgr);
 $args->cfg = $cfg;
 
@@ -44,9 +44,9 @@ $renderHTML = true;
 //
 
 setUpBuilds($args, $gui);
-$buildSet = array(
+$buildSet = [
     'buildSet' => $args->builds->idSet
-);
+];
 
 if (($gui->activeBuildsQty <= $gui->matrixCfg->buildQtyLimit) ||
     ($args->doAction == 'result' &&
@@ -54,17 +54,17 @@ if (($gui->activeBuildsQty <= $gui->matrixCfg->buildQtyLimit) ||
 
     $tpl = $templateCfg->default_template;
 
-    $opt = array(
+    $opt = [
         'getExecutionNotes' => true
-    );
+    ];
     if ($args->format == FORMAT_XLS) {
-        $opt = array(
+        $opt = [
             'getExecutionNotes' => true,
             'getTester' => true,
             'getUserAssignment' => true,
             'getExecutionTimestamp' => true,
             'getExecutionDuration' => true
-        );
+        ];
     }
     $execStatus = $metricsMgr->getExecStatusMatrix($args->tplan_id, $buildSet,
         $opt);
@@ -281,10 +281,10 @@ function buildMatrix(&$guiObj, &$argsObj, $forceFormat = null)
  */
 function buildMailCfg(&$guiObj)
 {
-    $labels = array(
+    $labels = [
         'testplan' => lang_get('testplan'),
         'testproject' => lang_get('testproject')
-    );
+    ];
     $cfg = new stdClass();
     $cfg->cc = '';
     $cfg->subject = $guiObj->title . ' : ' . $labels['testproject'] . ' : ' .
@@ -304,11 +304,11 @@ function buildMailCfg(&$guiObj)
  */
 function initializeGui(&$dbHandler, &$argsObj, $imgSet, &$tplanMgr)
 {
-    $cfg = array(
+    $cfg = [
         'results' => config_get('results'),
         'urgency' => config_get('urgency'),
         'tcase' => config_get('testcase_cfg')
-    );
+    ];
 
     $guiObj = new stdClass();
     $guiObj->map_status_css = null;
@@ -317,10 +317,10 @@ function initializeGui(&$dbHandler, &$argsObj, $imgSet, &$tplanMgr)
     $guiObj->matrix = [];
 
     $guiObj->platforms = (array) $tplanMgr->getPlatforms($argsObj->tplan_id,
-        array(
+        [
             'outputFormat' => 'map'
-        ));
-    $guiObj->show_platforms = (count($guiObj->platforms) > 0);
+        ]);
+    $guiObj->show_platforms = ($guiObj->platforms !== []);
 
     $guiObj->img = new stdClass();
     $guiObj->img->exec = $imgSet['exec_icon'];
@@ -347,7 +347,7 @@ function initializeGui(&$dbHandler, &$argsObj, $imgSet, &$tplanMgr)
     $guiObj->tproject_name = $tproject_info['name'];
 
     $l18n = init_labels(
-        array(
+        [
             'design' => null,
             'execution' => null,
             'history' => 'execution_history',
@@ -356,16 +356,16 @@ function initializeGui(&$dbHandler, &$argsObj, $imgSet, &$tplanMgr)
             'too_much_builds' => null,
             'result_on_last_build' => null,
             'versionTag' => 'tcversion_indicator'
-        ));
+        ]);
 
     $l18n['not_run'] = lang_get($cfg['results']['status_label']['not_run']);
 
     $guiObj->matrixCfg = config_get('resultMatrixReport');
     $guiObj->buildInfoSet = $tplanMgr->get_builds($argsObj->tplan_id,
         testplan::ACTIVE_BUILDS, null,
-        array(
+        [
             'orderBy' => $guiObj->matrixCfg->buildOrderByClause
-        ));
+        ]);
     $guiObj->activeBuildsQty = count($guiObj->buildInfoSet);
 
     // hmm need to understand if this can be removed
@@ -389,12 +389,12 @@ function initializeGui(&$dbHandler, &$argsObj, $imgSet, &$tplanMgr)
 
     $guiObj->mailCfg = buildMailCfg($guiObj);
 
-    return array(
+    return [
         $guiObj,
         $tproject_info,
         $l18n,
         $cfg
-    );
+    ];
 }
 
 /**
@@ -522,14 +522,14 @@ function createSpreadsheet($gui, $args)
         $ema->message = $gui->mailCfg->subject;
 
         $dum = uniqid("resultsTC_") . '.xls';
-        $oops = array(
-            'attachment' => array(
+        $oops = [
+            'attachment' => [
                 'file' => $tmpfname,
                 'newname' => $dum
-            ),
+            ],
             'exit_on_error' => true,
             'htmlFormat' => true
-        );
+        ];
         $email_op = email_send_wrapper($ema, $oops);
         unlink($tmpfname);
         exit();
@@ -568,9 +568,9 @@ function setUpBuilds(&$args, &$gui)
 function buildDataSet(&$db, &$args, &$gui, &$exec, $labels, $forceFormat = null)
 {
     $userSet = getUsersForHtmlOptions($db, null, null, null, null,
-        array(
+        [
             'userDisplayFormat' => '%first% %last%'
-        ));
+        ]);
 
     // invariant pieces => avoid wasting time on loops
     // $dlink = '<a href="' . str_replace(" ", "%20", $args->basehref) .
@@ -663,14 +663,14 @@ function buildDataSet(&$db, &$args, &$gui, &$exec, $labels, $forceFormat = null)
                             $assignee = $userSet[$rf[$buildID]['user_id']];
                         }
 
-                        $bella = array(
+                        $bella = [
                             $r4build,
                             $assignee,
                             $rf[$buildID]['execution_ts'],
                             $tester,
                             $rf[$buildID]['execution_notes'],
                             $rf[$buildID]['execution_duration']
-                        );
+                        ];
                         $buildExecStatus = array_merge((array) $buildExecStatus,
                             $bella);
                     } else {
@@ -789,31 +789,31 @@ function initLblSpreadsheet()
  */
 function initStyleSpreadsheet()
 {
-    $style = array();
-    $style['ReportContext'] = array(
-        'font' => array(
+    $style = [];
+    $style['ReportContext'] = [
+        'font' => [
             'bold' => true
-        )
-    );
-    $style['DataHeader'] = array(
-        'font' => array(
+        ]
+    ];
+    $style['DataHeader'] = [
+        'font' => [
             'bold' => true
-        ),
-        'borders' => array(
-            'outline' => array(
+        ],
+        'borders' => [
+            'outline' => [
                 'style' => PHPExcel_Style_Border::BORDER_MEDIUM
-            ),
-            'vertical' => array(
+            ],
+            'vertical' => [
                 'style' => PHPExcel_Style_Border::BORDER_THIN
-            )
-        ),
-        'fill' => array(
+            ]
+        ],
+        'fill' => [
             'type' => PHPExcel_Style_Fill::FILL_SOLID,
-            'startcolor' => array(
+            'startcolor' => [
                 'argb' => 'FF9999FF'
-            )
-        )
-    );
+            ]
+        ]
+    ];
     return $style;
 }
 
@@ -836,20 +836,20 @@ function setCellRangeSpreadsheet()
 function xlsStepOne(&$oj, $style, &$lbl, &$gui)
 {
     $dummy = '';
-    $lines2write = array(
-        array(
+    $lines2write = [
+        [
             $lbl['testproject'],
             $gui->tproject_name
-        ),
-        array(
+        ],
+        [
             $lbl['testplan'],
             $gui->tplan_name
-        ),
-        array(
+        ],
+        [
             $lbl['generated_by_TestLink_on'],
             localize_dateOrTimeStamp(null, $dummy, 'timestamp_format', time())
-        )
-    );
+        ]
+    ];
 
     $cellArea = "A1:";
     foreach ($lines2write as $zdx => $fields) {
@@ -870,10 +870,10 @@ function xlsStepOne(&$oj, $style, &$lbl, &$gui)
  */
 function initCols($showPlat)
 {
-    $tcols = array(
+    $tcols = [
         'tsuite',
         'link'
-    );
+    ];
     if ($showPlat) {
         $tcols[] = 'platform';
     }

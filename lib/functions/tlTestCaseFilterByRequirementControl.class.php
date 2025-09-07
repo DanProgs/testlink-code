@@ -152,42 +152,42 @@ class tlTestCaseFilterByRequirementControl extends tlFilterControl
      * filter_tc_id: 0,30 arbitrary
      * filter_bugs: 240 = 60 x 4 (60 bug_id size on execution_bugs table)
      */
-    private $all_filters = array(
-        'filter_doc_id' => array(
+    private $all_filters = [
+        'filter_doc_id' => [
             "POST",
             tlInputParameter::STRING_N
-        ),
-        'filter_title' => array(
+        ],
+        'filter_title' => [
             "POST",
             tlInputParameter::STRING_N
-        ),
-        'filter_status' => array(
+        ],
+        'filter_status' => [
             "POST",
             tlInputParameter::ARRAY_STRING_N
-        ),
-        'filter_type' => array(
+        ],
+        'filter_type' => [
             "POST",
             tlInputParameter::ARRAY_INT
-        ),
-        'filter_spec_type' => array(
+        ],
+        'filter_spec_type' => [
             "POST",
             tlInputParameter::ARRAY_INT
-        ),
-        'filter_coverage' => array(
+        ],
+        'filter_coverage' => [
             "POST",
             tlInputParameter::INT_N
-        ),
-        'filter_relation' => array(
+        ],
+        'filter_relation' => [
             "POST",
             tlInputParameter::ARRAY_STRING_N
-        ),
-        'filter_tc_id' => array(
+        ],
+        'filter_tc_id' => [
             "POST",
             tlInputParameter::STRING_N
-        ),
+        ],
         'filter_custom_fields' => null,
         'filter_result' => false
-    );
+    ];
 
     /**
      * This array is used as an additional security measure.
@@ -202,8 +202,8 @@ class tlTestCaseFilterByRequirementControl extends tlFilterControl
      *
      * @var array
      */
-    private $mode_filter_mapping = array(
-        'plan_add_mode' => array(
+    private $mode_filter_mapping = [
+        'plan_add_mode' => [
             'filter_tc_id',
             'filter_testcase_name',
             'filter_toplevel_testsuite',
@@ -213,8 +213,8 @@ class tlTestCaseFilterByRequirementControl extends tlFilterControl
             'filter_execution_type',
             'filter_workflow_status',
             'filter_custom_fields'
-        )
-    );
+        ]
+    ];
 
     /**
      * This array contains all possible settings.
@@ -224,43 +224,43 @@ class tlTestCaseFilterByRequirementControl extends tlFilterControl
      *
      * @var array
      */
-    private $all_settings = array(
-        'setting_testplan' => array(
+    private $all_settings = [
+        'setting_testplan' => [
             "REQUEST",
             tlInputParameter::INT_N
-        ),
-        'setting_refresh_tree_on_action' => array(
+        ],
+        'setting_refresh_tree_on_action' => [
             "POST",
             tlInputParameter::CB_BOOL
-        ),
-        'setting_get_parent_child_relation' => array(
+        ],
+        'setting_get_parent_child_relation' => [
             "POST",
             tlInputParameter::CB_BOOL
-        ),
-        'hidden_setting_get_parent_child_relation' => array(
+        ],
+        'hidden_setting_get_parent_child_relation' => [
             "POST",
             tlInputParameter::INT_N
-        ),
-        'setting_testsgroupby' => array(
+        ],
+        'setting_testsgroupby' => [
             "REQUEST",
             tlInputParameter::INT_N
-        )
-    );
+        ]
+    ];
 
     /**
      * This array is used to map the modes to their available settings.
      *
      * @var array
      */
-    private $mode_setting_mapping = array(
-        'plan_add_mode' => array(
+    private $mode_setting_mapping = [
+        'plan_add_mode' => [
             'setting_testplan',
             'setting_refresh_tree_on_action',
             'setting_get_parent_child_relation',
             'hidden_setting_get_parent_child_relation',
             'setting_testsgroupby'
-        )
-    );
+        ]
+    ];
 
     /**
      * The mode used.
@@ -278,7 +278,7 @@ class tlTestCaseFilterByRequirementControl extends tlFilterControl
      *
      * @var array
      */
-    private $treeOpt = array();
+    private $treeOpt = [];
 
     /**
      * The token that will be used to identify the relationship between left frame
@@ -387,7 +387,7 @@ class tlTestCaseFilterByRequirementControl extends tlFilterControl
         parent::init_args();
 
         // add settings and filters to parameter info array for request parsers
-        $params = array();
+        $params = [];
 
         foreach ($this->all_settings as $name => $info) {
             if (is_array($info)) {
@@ -416,7 +416,7 @@ class tlTestCaseFilterByRequirementControl extends tlFilterControl
         $at_least_one_active = false;
 
         foreach ($this->all_settings as $name => $info) {
-            $init_method = "init_$name";
+            $init_method = "init_{$name}";
             if (in_array($name, $this->mode_setting_mapping[$this->mode]) &&
                 method_exists($this, $init_method)) {
                 // is valid, configured, exists and therefore can be used, so initialize this setting
@@ -456,7 +456,7 @@ class tlTestCaseFilterByRequirementControl extends tlFilterControl
         // iterate through all filters and activate the needed ones
         if ($this->configuration->show_filters == ENABLED) {
             foreach ($this->all_filters as $name => $info) {
-                $init_method = "init_$name";
+                $init_method = "init_{$name}";
                 if (method_exists($this, $init_method) &&
                     $this->configuration->{$name} == ENABLED) {
                     $this->$init_method();
@@ -536,7 +536,7 @@ class tlTestCaseFilterByRequirementControl extends tlFilterControl
     {
         if (! isset($_SESSION[$this->mode]) || is_null($_SESSION[$this->mode]) ||
             ! is_array($_SESSION[$this->mode])) {
-            $_SESSION[$this->mode] = array();
+            $_SESSION[$this->mode] = [];
         }
 
         $_SESSION[$this->mode][$this->form_token] = $this->active_filters;
@@ -624,10 +624,10 @@ class tlTestCaseFilterByRequirementControl extends tlFilterControl
             // important: the token with which the page in right frame can access data in session
             $string .= '&form_token=' . $this->form_token;
 
-            $key2loop = array(
+            $key2loop = [
                 'setting_build',
                 'setting_platform'
-            );
+            ];
             foreach ($key2loop as $kiwi) {
                 if ($this->settings[$kiwi]) {
                     $string .= "&{$kiwi}={$this->settings[$kiwi]['selected']}";
@@ -675,9 +675,9 @@ class tlTestCaseFilterByRequirementControl extends tlFilterControl
             if (! is_null($this->active_filters['filter_bugs'])) {
                 $string .= '&' .
                     http_build_query(
-                        array(
+                        [
                             'filter_bugs' => $this->active_filters['filter_bugs']
-                        ));
+                        ]);
             }
         }
 
@@ -732,10 +732,10 @@ class tlTestCaseFilterByRequirementControl extends tlFilterControl
                 if ($this->do_filtering) {
                     if ($mode == 'mode_req_coverage') {
 
-                        $options = array(
+                        $options = [
                             'for_printing' => NOT_FOR_PRINTING,
                             'exclude_branches' => null
-                        );
+                        ];
 
                         $tree_menu = generateTestReqCoverageTree($this->db,
                             $this->args->testproject_id,
@@ -758,7 +758,7 @@ class tlTestCaseFilterByRequirementControl extends tlFilterControl
                         $root_node->href = "javascript:EP({$this->args->testproject_id})";
                         $root_node->id = $this->args->testproject_id;
                         $root_node->name = $this->args->testproject_name .
-                            " ($req_qty)";
+                            " ({$req_qty})";
                         $root_node->testlink_node_type = 'testproject';
                     }
                 }
@@ -783,7 +783,7 @@ class tlTestCaseFilterByRequirementControl extends tlFilterControl
         $hidden_key = 'hidden_setting_refresh_tree_on_action';
         $selection = 0;
 
-        $this->settings[$key] = array();
+        $this->settings[$key] = [];
         $this->settings[$key][$hidden_key] = false;
 
         // look where we can find the setting - POST, SESSION, config?
@@ -811,7 +811,7 @@ class tlTestCaseFilterByRequirementControl extends tlFilterControl
         $hidden_key = 'hidden_setting_get_parent_child_relation';
         $selection = 0;
 
-        $this->settings[$key] = array();
+        $this->settings[$key] = [];
         $this->settings[$key][$hidden_key] = false;
 
         // look where we can find the setting - POST, SESSION
@@ -900,10 +900,10 @@ class tlTestCaseFilterByRequirementControl extends tlFilterControl
         $this->args->{$key} = $mode;
         $this->settings[$key]['selected'] = $mode;
 
-        $k2l = array(
+        $k2l = [
             'mode_test_suite',
             'mode_req_coverage'
-        );
+        ];
         foreach ($k2l as $ak) {
             $this->settings[$key]['items'][$ak] = lang_get($ak);
         }
@@ -933,9 +933,9 @@ class tlTestCaseFilterByRequirementControl extends tlFilterControl
             $this->do_filtering = true;
         }
 
-        $this->filters[$key] = array(
+        $this->filters[$key] = [
             'selected' => $selection ? $selection : $tc_prefix
-        );
+        ];
         $this->active_filters[$key] = $selection;
     }
 
@@ -952,9 +952,9 @@ class tlTestCaseFilterByRequirementControl extends tlFilterControl
             $this->do_filtering = true;
         }
 
-        $this->filters[$key] = array(
+        $this->filters[$key] = [
             'selected' => $selection
-        );
+        ];
         $this->active_filters[$key] = $selection;
     }
 
@@ -979,13 +979,13 @@ class tlTestCaseFilterByRequirementControl extends tlFilterControl
         // this filter should only be visible if there are any top level testsuites
         $this->filters[$key] = null;
         if ($first_level_suites) {
-            $this->filters[$key] = array(
-                'items' => array(
+            $this->filters[$key] = [
+                'items' => [
                     0 => ''
-                ),
+                ],
                 'selected' => $selection,
-                'exclude_branches' => array()
-            );
+                'exclude_branches' => []
+            ];
 
             foreach ($first_level_suites as $suite_id => $suite_name) {
                 $this->filters[$key]['items'][$suite_id] = $suite_name;
@@ -1015,11 +1015,11 @@ class tlTestCaseFilterByRequirementControl extends tlFilterControl
         $this->filters[$key] = false;
         $keywords = null;
         $l10n = init_labels(
-            array(
+            [
                 'logical_or' => null,
                 'logical_and' => null,
                 'not_linked' => null
-            ));
+            ]);
 
         switch ($this->mode) {
             case 'edit_mode':
@@ -1043,29 +1043,29 @@ class tlTestCaseFilterByRequirementControl extends tlFilterControl
                 break;
         }
 
-        $special = array(
-            'domain' => array(),
-            'filter_mode' => array()
-        );
+        $special = [
+            'domain' => [],
+            'filter_mode' => []
+        ];
         switch ($this->mode) {
             case 'edit_mode':
-                $special['domain'] = array(
+                $special['domain'] = [
                     - 1 => $this->option_strings['without_keywords'],
                     0 => $this->option_strings['any']
-                );
-                $special['filter_mode'] = array(
+                ];
+                $special['filter_mode'] = [
                     'NotLinked' => $l10n['not_linked']
-                );
+                ];
                 break;
 
             case 'execution_mode':
             case 'plan_add_mode':
             case 'plan_mode':
             default:
-                $special['domain'] = array(
+                $special['domain'] = [
                     0 => $this->option_strings['any']
-                );
-                $special['filter_mode'] = array();
+                ];
+                $special['filter_mode'] = [];
                 break;
         }
 
@@ -1074,7 +1074,7 @@ class tlTestCaseFilterByRequirementControl extends tlFilterControl
 
         // are there any keywords?
         if (! is_null($keywords) && count($keywords)) {
-            $this->filters[$key] = array();
+            $this->filters[$key] = [];
 
             if (! $selection || ! $type_selection || $this->args->reset_filters) {
                 // default values for filter reset
@@ -1092,11 +1092,11 @@ class tlTestCaseFilterByRequirementControl extends tlFilterControl
                 self::ADVANCED_FILTER_ITEM_QUANTITY);
 
             // additional data for the filter type (logical and/or)
-            $this->filters[$key][$type] = array();
-            $this->filters[$key][$type]['items'] = array(
+            $this->filters[$key][$type] = [];
+            $this->filters[$key][$type]['items'] = [
                 'Or' => $l10n['logical_or'],
                 'And' => $l10n['logical_and']
-            ) + $special['filter_mode'];
+            ] + $special['filter_mode'];
             $this->filters[$key][$type]['selected'] = $type_selection;
         }
 
@@ -1116,11 +1116,11 @@ class tlTestCaseFilterByRequirementControl extends tlFilterControl
     {
         $key = 'filter_active_inactive';
 
-        $items = array(
+        $items = [
             DO_NOT_FILTER_INACTIVE_TESTCASES => $this->option_strings['any'],
             IGNORE_INACTIVE_TESTCASES => lang_get('show_only_active_testcases'),
             IGNORE_ACTIVE_TESTCASES => lang_get('show_only_inactive_testcases')
-        );
+        ];
 
         $selection = $this->args->{$key};
 
@@ -1130,10 +1130,10 @@ class tlTestCaseFilterByRequirementControl extends tlFilterControl
             $this->do_filtering = true;
         }
 
-        $this->filters[$key] = array(
+        $this->filters[$key] = [
             'items' => $items,
             'selected' => $selection
-        );
+        ];
         $this->active_filters[$key] = $selection;
     }
 
@@ -1161,18 +1161,18 @@ class tlTestCaseFilterByRequirementControl extends tlFilterControl
                 $this->do_filtering = true;
             }
 
-            $this->filters[$key] = array(
+            $this->filters[$key] = [
                 'selected' => $selection
-            );
+            ];
 
             // Only drawback: no new user defined importance can be managed
             // may be is a good design choice
-            $this->filters[$key]['items'] = array(
+            $this->filters[$key]['items'] = [
                 0 => $this->option_strings['any'],
                 HIGH => lang_get('high_importance'),
                 MEDIUM => lang_get('medium_importance'),
                 LOW => lang_get('low_importance')
-            );
+            ];
 
             $this->filters[$key]['size'] = count($this->filters[$key]['items']);
             $this->active_filters[$key] = $selection;
@@ -1207,9 +1207,9 @@ class tlTestCaseFilterByRequirementControl extends tlFilterControl
                 $this->do_filtering = true;
             }
 
-            $this->filters[$key] = array(
+            $this->filters[$key] = [
                 'selected' => $selection
-            );
+            ];
             $this->active_filters[$key] = $selection;
         }
     }
@@ -1231,17 +1231,17 @@ class tlTestCaseFilterByRequirementControl extends tlFilterControl
             $this->do_filtering = true;
         }
 
-        $this->filters[$key] = array(
-            'items' => array(),
+        $this->filters[$key] = [
+            'items' => [],
             'selected' => $selection
-        );
+        ];
 
         // load available execution types
         // add "any" string to these types at index 0 as default selection
         $this->filters[$key]['items'] = $this->tc_mgr->get_execution_types();
-        $this->filters[$key]['items'] = array(
+        $this->filters[$key]['items'] = [
             0 => $this->option_strings['any']
-        ) + $this->filters[$key]['items'];
+        ] + $this->filters[$key]['items'];
 
         $this->active_filters[$key] = $selection;
     }
@@ -1271,11 +1271,11 @@ class tlTestCaseFilterByRequirementControl extends tlFilterControl
 
         $all_testers = getTestersForHtmlOptions($this->db, $tplan_id,
             $tproject_info, null,
-            array(
+            [
                 TL_USER_ANYBODY => $this->option_strings['any'],
                 TL_USER_NOBODY => $this->option_strings['none'],
                 TL_USER_SOMEBODY => $this->option_strings['somebody']
-            ), 'any');
+            ], 'any');
         $visible_testers = $all_testers;
 
         // in execution mode the rights of the user have to be regarded
@@ -1312,11 +1312,11 @@ class tlTestCaseFilterByRequirementControl extends tlFilterControl
             }
         }
 
-        $this->filters[$key] = array(
+        $this->filters[$key] = [
             'items' => $visible_testers,
             'selected' => $selection,
             $unassigned_key => $this->args->{$unassigned_key}
-        );
+        ];
 
         // which value shall be passed to tree generation class?
 
@@ -1402,21 +1402,21 @@ class tlTestCaseFilterByRequirementControl extends tlFilterControl
 
         // init array structure
         $key = 'filter_result';
-        $this->filters[$key] = array(
-            $result_key => array(
+        $this->filters[$key] = [
+            $result_key => [
                 'items' => null,
                 'selected' => $result_selection
-            ),
-            $method_key => array(
-                'items' => array(),
+            ],
+            $method_key => [
+                'items' => [],
                 'selected' => $method_selection,
                 'js_selection' => $js_key_to_select
-            ),
-            $build_key => array(
+            ],
+            $build_key => [
                 'items' => null,
                 'selected' => $build_selection
-            )
-        );
+            ]
+        ];
 
         // init menu for result selection by function from exec.inc.php
         $this->filters[$key][$result_key]['items'] = createResultsMenu();
@@ -1461,9 +1461,9 @@ class tlTestCaseFilterByRequirementControl extends tlFilterControl
             $this->do_filtering = true;
         }
 
-        $this->filters[$key] = array(
+        $this->filters[$key] = [
             'selected' => $selection
-        );
+        ];
         $this->active_filters[$key] = $selection;
     }
 
@@ -1496,16 +1496,16 @@ class tlTestCaseFilterByRequirementControl extends tlFilterControl
             $this->do_filtering = true;
         }
 
-        $this->filters[$key] = array(
-            'items' => array(),
+        $this->filters[$key] = [
+            'items' => [],
             'selected' => $selection
-        );
+        ];
 
         // load domain
         // add "any" string to these types at index 0 as default selection
-        $this->filters[$key]['items'] = array(
+        $this->filters[$key]['items'] = [
             0 => $this->option_strings['any']
-        ) + $this->tc_mgr->getWorkFlowStatusDomain();
+        ] + $this->tc_mgr->getWorkFlowStatusDomain();
 
         $this->filters[$key]['size'] = min(count($this->filters[$key]['items']),
             self::ADVANCED_FILTER_ITEM_QUANTITY);
@@ -1555,9 +1555,9 @@ class tlTestCaseFilterByRequirementControl extends tlFilterControl
             $this->do_filtering = true;
         }
 
-        $this->filters[$key] = array(
+        $this->filters[$key] = [
             'selected' => $selection
-        );
+        ];
         $this->active_filters[$key] = $selection;
     }
 
@@ -1574,9 +1574,9 @@ class tlTestCaseFilterByRequirementControl extends tlFilterControl
             $this->do_filtering = true;
         }
 
-        $this->filters[$key] = array(
+        $this->filters[$key] = [
             'selected' => $selection
-        );
+        ];
         $this->active_filters[$key] = $selection;
     }
 
@@ -1589,9 +1589,9 @@ class tlTestCaseFilterByRequirementControl extends tlFilterControl
         $selection = $this->args->{$key};
 
         // get configured statuses and add "any" string to menu
-        $items = array(
+        $items = [
             self::ANY => $this->option_strings['any']
-        ) + (array) init_labels($this->configuration->req_cfg->status_labels);
+        ] + (array) init_labels($this->configuration->req_cfg->status_labels);
 
         // BUGID 3852
         if (! $selection || $this->args->reset_filters ||
@@ -1601,10 +1601,10 @@ class tlTestCaseFilterByRequirementControl extends tlFilterControl
             $this->do_filtering = true;
         }
 
-        $this->filters[$key] = array(
+        $this->filters[$key] = [
             'selected' => $selection,
             'items' => $items
-        );
+        ];
         $this->active_filters[$key] = $selection;
     }
 
@@ -1616,9 +1616,9 @@ class tlTestCaseFilterByRequirementControl extends tlFilterControl
         $selection = $this->args->{$key};
 
         // get configured types and add "any" string to menu
-        $items = array(
+        $items = [
             self::ANY => $this->option_strings['any']
-        ) + (array) init_labels($this->configuration->req_cfg->type_labels);
+        ] + (array) init_labels($this->configuration->req_cfg->type_labels);
 
         if (! $selection || $this->args->reset_filters ||
             (is_array($selection) && in_array(self::ANY, $selection))) {
@@ -1627,10 +1627,10 @@ class tlTestCaseFilterByRequirementControl extends tlFilterControl
             $this->do_filtering = true;
         }
 
-        $this->filters[$key] = array(
+        $this->filters[$key] = [
             'selected' => $selection,
             'items' => $items
-        );
+        ];
         $this->active_filters[$key] = $selection;
     }
 
@@ -1642,9 +1642,9 @@ class tlTestCaseFilterByRequirementControl extends tlFilterControl
         $selection = $this->args->{$key};
 
         // get configured types and add "any" string to menu
-        $items = array(
+        $items = [
             self::ANY => $this->option_strings['any']
-        ) + (array) init_labels($this->configuration->req_spec_cfg->type_labels);
+        ] + (array) init_labels($this->configuration->req_spec_cfg->type_labels);
 
         if (! $selection || $this->args->reset_filters ||
             (is_array($selection) && in_array(self::ANY, $selection))) {
@@ -1653,10 +1653,10 @@ class tlTestCaseFilterByRequirementControl extends tlFilterControl
             $this->do_filtering = true;
         }
 
-        $this->filters[$key] = array(
+        $this->filters[$key] = [
             'selected' => $selection,
             'items' => $items
-        );
+        ];
         $this->active_filters[$key] = $selection;
     }
 
@@ -1679,9 +1679,9 @@ class tlTestCaseFilterByRequirementControl extends tlFilterControl
                 $this->do_filtering = true;
             }
 
-            $this->filters[$key] = array(
+            $this->filters[$key] = [
                 'selected' => $selection
-            );
+            ];
             $this->active_filters[$key] = $selection;
         }
     }
@@ -1712,9 +1712,9 @@ class tlTestCaseFilterByRequirementControl extends tlFilterControl
                 unset($req_relations['items'][$old_key]);
             }
 
-            $items = array(
+            $items = [
                 self::ANY => $this->option_strings['any']
-            ) + (array) $req_relations['items'];
+            ] + (array) $req_relations['items'];
 
             if (! $selection || $this->args->reset_filters ||
                 (is_array($selection) && in_array(self::ANY, $selection))) {
@@ -1723,10 +1723,10 @@ class tlTestCaseFilterByRequirementControl extends tlFilterControl
                 $this->do_filtering = true;
             }
 
-            $this->filters[$key] = array(
+            $this->filters[$key] = [
                 'selected' => $selection,
                 'items' => $items
-            );
+            ];
             $this->active_filters[$key] = $selection;
         } else {
             // not enabled, just nullify

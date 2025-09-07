@@ -13,7 +13,7 @@ $unitTestDescription = "";
 $prefix = is_null($tlTestCasePrefix) ? uniqid() : $tlTestCasePrefix;
 $devKey = isset($_REQUEST['apiKey']) ? $_REQUEST['apiKey'] : $tlDevKey;
 
-$args = array();
+$args = [];
 $args["devKey"] = $devKey;
 $args["testcaseprefix"] = $prefix;
 $args["testprojectname"] = "API Methods Test Project {$args['testcaseprefix']}";

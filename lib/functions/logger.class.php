@@ -90,11 +90,11 @@ class tlLogger extends tlObject
 
     protected $eventManager;
 
-    protected $loggerTypeClass = array(
+    protected $loggerTypeClass = [
         'db' => null,
         'file' => null,
         'mail' => null
-    );
+    ];
 
     protected $loggerTypeDomain;
 
@@ -167,7 +167,7 @@ class tlLogger extends tlObject
      */
     public function getLogLevelFilter($opt = 'raw')
     {
-        $ret = array();
+        $ret = [];
         if ($opt == 'raw') {
             foreach ($this->loggers as $type => $loggerObj) {
                 $ret[$type] = $loggerObj->logLevelFilter;
@@ -277,10 +277,7 @@ class tlLogger extends tlObject
      */
     public function getTransaction($name = "DEFAULT")
     {
-        if (isset($this->transactions[$name])) {
-            return $this->transactions[$name];
-        }
-        return null;
+        return $this->transactions[$name] ?? null;
     }
 
     /**
@@ -293,14 +290,14 @@ class tlLogger extends tlObject
     {
         if (! isset(self::$s_instance)) {
             // create the logging instance
-            self::$logLevels = array(
+            self::$logLevels = [
                 self::DEBUG => 'DEBUG',
                 self::INFO => 'INFO',
                 self::WARNING => 'WARNING',
                 self::ERROR => 'ERROR',
                 self::AUDIT => 'AUDIT',
                 self::L18N => 'L18N'
-            );
+            ];
 
             self::$logLevelsStringCode = array_flip(self::$logLevels);
 
@@ -514,7 +511,7 @@ class tlTransaction extends tlDBObject
                 $sessionID = "'" . $db->prepare_string($this->sessionID) . "'";
             }
 
-            $query = "/* $debugMsg */ INSERT INTO {$this->tables['transactions']} " .
+            $query = "/* {$debugMsg} */ INSERT INTO {$this->tables['transactions']} " .
                 "(entry_point,start_time,end_time,user_id,session_id) " .
                 "VALUES ('{$entryPoint}',{$startTime},{$endTime},{$userID},{$sessionID})";
             $result = $db->exec_query($query);
@@ -523,7 +520,7 @@ class tlTransaction extends tlDBObject
             }
         } else {
             $endTime = $db->prepare_int(time());
-            $query = " /* $debugMsg */ " .
+            $query = " /* {$debugMsg} */ " .
                 " UPDATE {$this->tables['transactions']} SET end_time = {$endTime} " .
                 " WHERE id = " . intval($this->dbID);
             $result = $db->exec_query($query);
@@ -714,8 +711,8 @@ class tlEventManager extends tlObjectWithDB
             }
 
             // 201501114 - help by TurboP
-            $query = "/* $debugMsg */ " .
-                " DELETE $alias4del FROM {$this->tables['transactions']} $alias4del " .
+            $query = "/* {$debugMsg} */ " .
+                " DELETE {$alias4del} FROM {$this->tables['transactions']} {$alias4del} " .
                 " WHERE NOT EXISTS " .
                 " (SELECT EV.id FROM {$this->tables['events']} EV " .
                 "  WHERE EV.transaction_id = {$alias4del}.id) ";
@@ -860,17 +857,17 @@ class tlEvent extends tlDBObject
             $local->objectID = ! is_null($this->objectID) ? $db->prepare_int(
                 $this->objectID) : 0;
 
-            $str2loop = array(
+            $str2loop = [
                 'source',
                 'objectType',
                 'activityCode'
-            );
+            ];
             foreach ($str2loop as $tg) {
                 $local->$tg = ! is_null($this->$tg) ? ("'" .
                     $db->prepare_string($this->$tg) . "'") : 'NULL';
             }
 
-            $query = "/* $debugMsg */ " .
+            $query = "/* {$debugMsg} */ " .
                 "INSERT INTO {$this->tables['events']} (transaction_id,log_level,description,source," .
                 "fired_at,object_id,object_type,activity) " .
                 "VALUES ({$transactionID},{$logLevel},'{$description}',{$local->source}," .
@@ -1088,7 +1085,7 @@ class tlFileLogger extends tlObject
         }
 
         // build the logfile entry
-        $subjects = array(
+        $subjects = [
             "%prefix",
             "%transactionID",
             "%name",
@@ -1096,11 +1093,11 @@ class tlFileLogger extends tlObject
             "%startTime",
             "%endTime",
             "%duration"
-        );
+        ];
 
         $bFinished = $t->endTime ? 1 : 0;
         $formatString = $bFinished ? self::$closedTransactionFormatString : self::$openTransactionFormatString;
-        $replacements = array(
+        $replacements = [
             $bFinished ? "<<" : ">>",
             $t->getObjectID(),
             $t->name,
@@ -1108,7 +1105,7 @@ class tlFileLogger extends tlObject
             gmdate(self::$gmdateMask, $t->startTime),
             $bFinished ? gmdate(self::$gmdateMask, $t->endTime) : null,
             $t->duration
-        );
+        ];
         $line = str_replace($subjects, $replacements, $formatString);
         return $this->writeEntry(self::getLogFileName(), $line);
     }
@@ -1130,20 +1127,20 @@ class tlFileLogger extends tlObject
         }
 
         // build the logfile entry
-        $subjects = array(
+        $subjects = [
             "%timestamp",
             "%errorlevel",
             "%source",
             "%description",
             "%sessionid"
-        );
-        $replacements = array(
+        ];
+        $replacements = [
             gmdate(self::$gmdateMask, $e->timestamp),
             tlLogger::$logLevels[$e->logLevel],
             $e->source,
             $description,
             $e->sessionID ? $e->sessionID : "<nosession>"
-        );
+        ];
         $line = str_replace($subjects, $replacements, self::$eventFormatString);
 
         $this->writeEntry(self::getLogFileName(), $line);
@@ -1249,15 +1246,15 @@ class tlMailLogger extends tlObjectWithDB
         $this->return_path_email = config_get('return_path_email');
 
         // now we need to check if we have all needed configuration
-        $key2check = array(
+        $key2check = [
             'sendto_email',
             'from_email',
             'return_path_email'
-        );
+        ];
         $regex2match = config_get('validation_cfg')->user_email_valid_regex_php;
         $this->configIsOK = true;
         foreach ($key2check as $emailKey) {
-            $matches = array();
+            $matches = [];
             $this->$emailKey = trim($this->$emailKey);
             if (isBlank($this->$emailKey) ||
                 ! preg_match($regex2match, $this->$emailKey, $matches)) {
@@ -1269,12 +1266,12 @@ class tlMailLogger extends tlObjectWithDB
 
     public function getMailCfg()
     {
-        $key2ret = array(
+        $key2ret = [
             'sendto_email',
             'from_email',
             'return_path_email'
-        );
-        $cfg = array();
+        ];
+        $cfg = [];
         foreach ($key2ret as $key) {
             $cfg[$key] = $this->$key;
         }
@@ -1309,22 +1306,22 @@ class tlMailLogger extends tlObjectWithDB
         $this->disableLogging();
 
         // build the logfile entry
-        $subjects = array(
+        $subjects = [
             "%timestamp",
             "%errorlevel",
             "%source",
             "%description",
             "%sessionid"
-        );
+        ];
 
         $verboseTimeStamp = gmdate(self::$gmdateMask, $event->timestamp);
-        $replacements = array(
+        $replacements = [
             $verboseTimeStamp,
             tlLogger::$logLevels[$event->logLevel],
             $event->source,
             $description,
             $event->sessionID ? $event->sessionID : "<nosession>"
-        );
+        ];
         $email_body = str_replace($subjects, $replacements,
             self::$eventFormatString);
 
@@ -1384,7 +1381,7 @@ class tlMailLogger extends tlObjectWithDB
  */
 function watchPHPErrors($errno, $errstr, $errfile, $errline)
 {
-    $errors = array(
+    $errors = [
         E_USER_NOTICE => "E_USER_NOTICE",
         E_USER_WARNING => "E_USER_WARNING",
         E_USER_NOTICE => "E_USER_NOTICE",
@@ -1392,7 +1389,7 @@ function watchPHPErrors($errno, $errstr, $errfile, $errline)
         E_WARNING => "E_WARNING",
         E_NOTICE => "E_NOTICE",
         E_STRICT => "E_STRICT"
-    );
+    ];
 
     /*
      * 1 E_ERROR, 2 E_WARNING, 4 E_PARSE, 8 E_NOTICE, 16 E_CORE_ERROR,

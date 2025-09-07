@@ -22,7 +22,7 @@ $smarty = new TLSmarty();
 
 $templateCfg = templateConfiguration();
 
-list ($args, $gui) = initEnv($db);
+[$args, $gui] = initEnv($db);
 
 $feedback = '';
 switch ($args->operation) {
@@ -59,21 +59,21 @@ function initEnv(&$dbHandler)
 {
     $_REQUEST = strings_stripSlashes($_REQUEST);
 
-    $iParams = array(
-        "operation" => array(
+    $iParams = [
+        "operation" => [
             tlInputParameter::STRING_N,
             0,
             50
-        ),
-        "pluginId" => array(
+        ],
+        "pluginId" => [
             tlInputParameter::INT_N
-        ),
-        "pluginName" => array(
+        ],
+        "pluginName" => [
             tlInputParameter::STRING_N,
             0,
             50
-        )
-    );
+        ]
+    ];
 
     $args = new stdClass();
     R_PARAMS($iParams, $args);
@@ -87,10 +87,10 @@ function initEnv(&$dbHandler)
     $gui->feedback = '';
     $gui->basehref = $args->basehref;
 
-    return array(
+    return [
         $args,
         $gui
-    );
+    ];
 }
 
 function checkRights(&$db, &$user)

@@ -23,18 +23,18 @@ class gforgesoapInterface extends issueTrackerInterface
 
     protected $authToken;
 
-    protected $statusDomain = array();
+    protected $statusDomain = [];
 
     protected $l18n;
 
-    protected $labels = array(
+    protected $labels = [
         'duedate' => 'its_duedate_with_separator'
-    );
+    ];
 
-    private $soapOpt = array(
+    private $soapOpt = [
         "connection_timeout" => 1,
         'exceptions' => 1
-    );
+    ];
 
     /**
      * Construct and connect to BTS.
@@ -135,8 +135,8 @@ class gforgesoapInterface extends issueTrackerInterface
 
             echo 'QTY extra_field_data:' . count($issue->extra_field_data) .
                 '<br>';
-            $target = array();
-            $dataID = array();
+            $target = [];
+            $dataID = [];
             foreach ($issue->extra_field_data as $efd) {
                 $target[] = $efd->tracker_extra_field_id;
                 $dataID[] = $efd->tracker_extra_field_data_id;
@@ -179,12 +179,13 @@ class gforgesoapInterface extends issueTrackerInterface
             $issue->IDHTMLString = "<b>{$issueID} : </b>";
             $issue->statusCode = $issue->status_id;
             $issue->statusVerbose = array_search($issue->statusCode,
-                $this->statusDomain);
+                $this->statusDomain,
+                true);
             $issue->statusHTMLString = $this->buildStatusHTMLString(
                 $issue->statusCode);
             $issue->summaryHTMLString = $this->buildSummaryHTMLString($issue);
         } catch (Exception $e) {
-            tLog("JIRA Ticket ID $issueID - " . $e->getMessage(), 'WARNING');
+            tLog("JIRA Ticket ID {$issueID} - " . $e->getMessage(), 'WARNING');
             $issue = null;
         }
 
@@ -227,9 +228,9 @@ class gforgesoapInterface extends issueTrackerInterface
     public function connect()
     {
         $this->interfaceViaDB = false;
-        $op = $this->getClient(array(
+        $op = $this->getClient([
             'log' => true
-        ));
+        ]);
         if ($this->connected = $op['connected']) {
             // OK, we have got WSDL => server is up and we can do SOAP calls, but now we need
             // to do a simple call with user/password only to understand if we are really connected
@@ -262,14 +263,14 @@ class gforgesoapInterface extends issueTrackerInterface
     private function getClient($opt = null)
     {
         // IMPORTANT NOTICE - 2012-01-06 - If you are using XDEBUG, Soap Fault will not work
-        $res = array(
+        $res = [
             'client' => null,
             'connected' => false,
             'msg' => 'generic ko'
-        );
-        $my['opt'] = array(
+        ];
+        $my['opt'] = [
             'log' => false
-        );
+        ];
         $my['opt'] = array_merge($my['opt'], (array) $opt);
 
         try {
@@ -334,7 +335,7 @@ class gforgesoapInterface extends issueTrackerInterface
      */
     private function buildStatusHTMLString($statusCode)
     {
-        $str = array_search($statusCode, $this->statusDomain);
+        $str = array_search($statusCode, $this->statusDomain, true);
         if (strcasecmp($str, 'closed') == 0 || strcasecmp($str, 'resolved') == 0) {
             $str = "<del>" . $str . "</del>";
         }
@@ -348,14 +349,14 @@ class gforgesoapInterface extends issueTrackerInterface
         $summary = $issue->summary;
         $strDueDate = $this->helperParseDate($issue->duedate);
         if (! is_null($strDueDate)) {
-            $summary .= "<b> [$strDueDate] </b> ";
+            $summary .= "<b> [{$strDueDate}] </b> ";
         }
         return $summary;
     }
 
     public static function checkEnv()
     {
-        $ret = array();
+        $ret = [];
         $ret['status'] = extension_loaded('soap');
         $ret['msg'] = $ret['status'] ? 'OK' : 'You need to enable SOAP extension';
         return $ret;

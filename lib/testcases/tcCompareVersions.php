@@ -41,10 +41,10 @@ if ($args->compare_selected_versions) {
 
         if ($args->use_daisydiff) {
             if ($gui->tcType == 'none') {
-                list ($gui->diff[$key]['diff'], $gui->diff[$key]['count']) = $diffEngine->htmlDiff(
+                [$gui->diff[$key]['diff'], $gui->diff[$key]['count']] = $diffEngine->htmlDiff(
                     nl2br($val['left']), nl2br($val['right']));
             } else {
-                list ($gui->diff[$key]['diff'], $gui->diff[$key]['count']) = $diffEngine->htmlDiff(
+                [$gui->diff[$key]['diff'], $gui->diff[$key]['count']] = $diffEngine->htmlDiff(
                     $val['left'], $val['right']);
             }
         } else {
@@ -80,11 +80,11 @@ function initArgs()
     $args->tcase_id = isset($_REQUEST['testcase_id']) ? $_REQUEST['testcase_id'] : 0;
     $args->tcase_id = intval($args->tcase_id);
 
-    $key2set = array(
+    $key2set = [
         'compare_selected_versions' => 0,
         'version_left' => '',
         'version_right' => ''
-    );
+    ];
     foreach ($key2set as $tk => $value) {
         $args->$tk = isset($_REQUEST[$tk]) ? $_REQUEST[$tk] : $value;
     }
@@ -113,12 +113,12 @@ function initializeGUI(&$dbHandler, $argsObj)
     $gui->tcaseName = $gui->tc_versions[0]['name'];
     unset($tcaseMgr);
 
-    $lblkeys = array(
+    $lblkeys = [
         'num_changes' => null,
         'no_changes' => null,
         'version_short' => null,
         'diff_subtitle_tc' => null
-    );
+    ];
     $gui->labels = init_labels($lblkeys);
     $gui->version_short = $gui->labels['version_short'];
 
@@ -135,20 +135,20 @@ function initializeGUI(&$dbHandler, $argsObj)
 
 function buildDiff($items, $argsObj)
 {
-    $panel = array(
+    $panel = [
         'left',
         'right'
-    );
+    ];
 
-    $attrKeys = array();
-    $attrKeys['simple'] = array(
+    $attrKeys = [];
+    $attrKeys['simple'] = [
         'summary',
         'preconditions'
-    );
-    $attrKeys['complex'] = array(
+    ];
+    $attrKeys['complex'] = [
         'steps' => 'actions',
         'expected_results' => 'expected_results'
-    );
+    ];
     $dummy = array_merge($attrKeys['simple'], array_keys($attrKeys['complex']));
     foreach ($dummy as $gx) {
         foreach ($panel as $side) {

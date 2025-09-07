@@ -31,18 +31,18 @@ class tuleaprestInterface extends issueTrackerInterface
     {
         $this->name = $name;
         $this->interfaceViaDB = false;
-        $this->defaultResolvedStatus = array();
+        $this->defaultResolvedStatus = [];
         $this->defaultResolvedStatus[] = 'Invalid';
         $this->defaultResolvedStatus[] = 'Wont Fix';
         $this->defaultResolvedStatus[] = 'Fixed';
         $this->defaultResolvedStatus[] = 'Works for me';
         $this->defaultResolvedStatus[] = 'Duplicate';
-        $this->methodOpt = array(
-            'buildViewBugLink' => array(
+        $this->methodOpt = [
+            'buildViewBugLink' => [
                 'addSummary' => true,
                 'colorByStatus' => false
-            )
-        );
+            ]
+        ];
         $this->connected = false;
 
         if (! $this->setCfg($config)) {
@@ -232,7 +232,7 @@ class tuleaprestInterface extends issueTrackerInterface
             return null;
         }
 
-        $ret = array();
+        $ret = [];
         foreach ($statusField->values as $value) {
             if (! in_array($value->id, $openValuesID)) {
                 $ret[] = $value->label;
@@ -280,15 +280,15 @@ class tuleaprestInterface extends issueTrackerInterface
 
         if ($processCatch) {
             $logDetails = '';
-            foreach (array(
+            foreach ([
                 'uribase',
                 'username'
-            ) as $v) {
-                $logDetails .= "$v={$this->cfg->$v} / ";
+            ] as $v) {
+                $logDetails .= "{$v}={$this->cfg->$v} / ";
             }
             $logDetails = trim($logDetails, '/ ');
             $this->connected = false;
-            tLog(__METHOD__ . " [$logDetails] " . $e->getMessage(), 'ERROR');
+            tLog(__METHOD__ . " [{$logDetails}] " . $e->getMessage(), 'ERROR');
         }
     }
 
@@ -456,21 +456,21 @@ class tuleaprestInterface extends issueTrackerInterface
                 throw new Exception(
                     "Something's wrong when creating an artefact");
             } else {
-                $ret = array(
+                $ret = [
                     'status_ok' => true,
                     'id' => (string) $op->id,
                     'msg' => sprintf(lang_get('tuleap_bug_created'), $summary,
                         (string) $op->tracker->project->id)
-                );
+                ];
             }
         } catch (Exception $e) {
             $msg = "Create artifact FAILURE => " . $e->getMessage();
             tLog($msg, 'WARNING');
-            $ret = array(
+            $ret = [
                 'status_ok' => false,
                 'id' => - 1,
                 'msg' => $msg
-            );
+            ];
         }
         return $ret;
     }
@@ -487,18 +487,18 @@ class tuleaprestInterface extends issueTrackerInterface
             $noteText = "Reporter: " . $opt->reporter . " <" .
                 $opt->reporter_email . ">\n" . $noteText;
             $this->APIClient->addTrackerArtifactMessage((int) $bugId, $noteText);
-            $ret = array(
+            $ret = [
                 'status_ok' => true,
                 'msg' => sprintf(lang_get('tuleap_bug_comment'), $noteText)
-            );
+            ];
         } catch (Exception $e) {
             $msg = "Add note FAILURE for bug " . $bugId . " => " .
                 $e->getMessage();
             tLog($msg, 'WARNING');
-            $ret = array(
+            $ret = [
                 'status_ok' => false,
                 'msg' => $msg
-            );
+            ];
         }
 
         return $ret;

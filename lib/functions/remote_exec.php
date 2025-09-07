@@ -54,25 +54,25 @@ function executeTestCase($tcaseInfo, $serverCfg, $context)
     // mm = two digits of minute (00 through 59)
     // ss = two digits of second (00 through 59)
     // TZD = time zone designator (Z or +hh:mm or -hh:mm)
-    $ret = array(
-        'system' => array(
+    $ret = [
+        'system' => [
             'status' => 'ok',
             'msg' => 'ok'
-        ),
-        'execution' => array(
+        ],
+        'execution' => [
             'scheduled' => '',
             'result' => '',
             'resultVerbose' => '',
             'notes' => '',
             'timestampISO' => ''
-        )
-    );
+        ]
+    ];
 
     $labels = init_labels(
-        array(
+        [
             'remoteExecServerConfigProblems' => null,
             'remoteExecServerConnectionFailure' => null
-        ));
+        ]);
 
     $do_it = (! is_null($serverCfg) && ! is_null($serverCfg["url"]));
     if (! $do_it) {
@@ -90,7 +90,7 @@ function executeTestCase($tcaseInfo, $serverCfg, $context)
     }
 
     if ($do_it) {
-        $args4call = array();
+        $args4call = [];
 
         // Execution Target
         $args4call['testCaseName'] = $tcaseInfo['name'];

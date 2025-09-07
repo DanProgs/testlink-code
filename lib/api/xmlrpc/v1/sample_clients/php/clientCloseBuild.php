@@ -24,7 +24,7 @@ $method='closeBuild';
 $test_num++;
 $unitTestDescription="Test {$test_num} - {$method}";
 
-$args=array();
+$args=[];
 $args["devKey"]=$devKey;
 $additionalInfo='NO BUILD ID';
 
@@ -42,7 +42,7 @@ runTest($client,$method,$args,$test_num);
 $test_num++;
 $unitTestDescription="Test {$test_num} - {$method}";
 
-$args=array();
+$args=[];
 $args["devKey"]=$devKey;
 $args["buildid"]='DDD';
 $additionalInfo='BUILD ID IS STRING';
@@ -60,7 +60,7 @@ runTest($client,$method,$args,$test_num);
 $test_num++;
 $unitTestDescription="Test {$test_num} - {$method}";
 
-$args=array();
+$args=[];
 $args["devKey"]=$devKey;
 $args["buildid"]=9999999999;
 $additionalInfo='BUILD ID DOES NOT EXIST';
@@ -78,7 +78,7 @@ runTest($client,$method,$args,$test_num);
 $test_num++;
 $unitTestDescription="Test {$test_num} - {$method}";
 
-$args=array();
+$args=[];
 $args["devKey"]=$devKey;
 $args["buildid"]=9;
 $additionalInfo='User HAS NO RIGHT on TEST PLAN';

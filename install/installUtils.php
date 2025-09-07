@@ -20,7 +20,7 @@
  */
 function getDirSqlFiles($dirPath, $add_dirpath = 0)
 {
-    $aFileSets = array();
+    $aFileSets = [];
     $my_dir_path = '';
 
     foreach ($dirPath as $the_dir) {
@@ -147,7 +147,7 @@ function getUserList(&$db, $db_type)
             break;
     }
 
-    $users = array();
+    $users = [];
 
     // MySQL NOTE:
     // if the user cannot select from the mysql.user table, then return an empty list
@@ -358,10 +358,10 @@ function check_pear_modules()
         $final_msg .= "<span class='ok'>OK!</span>";
     }
 
-    return array(
+    return [
         'errors' => $errors,
         'msg' => $final_msg
-    );
+    ];
 }
 
 /*
@@ -374,9 +374,9 @@ function check_pear_modules()
  */
 function check_db_loaded_extension($db_type)
 {
-    $dbType2PhpExtension = array(
+    $dbType2PhpExtension = [
         'postgres' => 'pgsql'
-    );
+    ];
 
     $isPHPGTE7 = version_compare(phpversion(), "7.0.0", ">=");
 
@@ -443,10 +443,10 @@ function check_db_loaded_extension($db_type)
         $final_msg .= $msg_ok;
     }
 
-    return array(
+    return [
         'errors' => $errors,
         'msg' => $final_msg
-    );
+    ];
 }
 
 /**
@@ -466,16 +466,16 @@ function _mysql_make_user($dbhandler, $db_host, $db_name, $login, $passwd)
     $safeDBHost = $dbhandler->prepare_string($db_host);
     $safeLogin = $dbhandler->prepare_string($login);
 
-    $stmt = " CREATE USER '$safeLogin' ";
+    $stmt = " CREATE USER '{$safeLogin}' ";
     if (strlen(trim($db_host)) != 0) {
-        $stmt .= "@" . "'$safeDBHost'";
+        $stmt .= "@" . "'{$safeDBHost}'";
     }
 
     // to guess if we are using MariaDB or MySQL
     // does not seems to be a reliable way to do this
     //
     $sql = "SHOW VARIABLES LIKE 'version%'";
-    $vg = array();
+    $vg = [];
     $rh = $dbhandler->exec_query($sql);
     if ($rh) {
         while ($row = $dbhandler->fetch_array($rh)) {
@@ -499,11 +499,11 @@ function _mysql_make_user($dbhandler, $db_host, $db_name, $login, $passwd)
     // To have compatibility with MySQL 5.x
     // IDENTIFIED WITH mysql_native_password
     if ($isMySQL) {
-        $stmt .= " IDENTIFIED WITH mysql_native_password BY '$passwd' ";
+        $stmt .= " IDENTIFIED WITH mysql_native_password BY '{$passwd}' ";
     }
 
     if ($isMariaDB) {
-        $stmt .= " IDENTIFIED  BY '$passwd' ";
+        $stmt .= " IDENTIFIED  BY '{$passwd}' ";
     }
 
     echo 'Running..' . $stmt;
@@ -537,7 +537,7 @@ function _mysql_assign_grants($dbhandler, $db_host, $db_name, $login, $passwd)
     $safeLogin = $dbhandler->prepare_string($login);
 
     $stmt = "GRANT SELECT, UPDATE, DELETE, INSERT ON
-           `$safeDBName`.* TO '$safeLogin'@'$safeDBHost'
+           `{$safeDBName}`.* TO '{$safeLogin}'@'{$safeDBHost}'
             WITH GRANT OPTION ";
 
     if (! @$dbhandler->exec_query($stmt)) {
@@ -557,7 +557,7 @@ function _mysql_assign_grants($dbhandler, $db_host, $db_name, $login, $passwd)
     //
     if (strcasecmp('localhost', $db_host) != 0) {
         $stmt = "GRANT SELECT, UPDATE, DELETE, INSERT ON
-            `$safeDBName`.* TO '$safeLogin'@'localhost'
+            `{$safeDBName}`.* TO '{$safeLogin}'@'localhost'
             WITH GRANT OPTION ";
 
         if (! @$dbhandler->exec_query($stmt)) {

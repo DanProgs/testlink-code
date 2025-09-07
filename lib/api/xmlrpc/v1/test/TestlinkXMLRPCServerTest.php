@@ -173,7 +173,7 @@ class TestlinkXMLRPCServerTest extends PHPUnit_Framework_TestCase
 
     private function testReportTCResultWithInvalidDevKey()
     {
-        $data = array();
+        $data = [];
         $data["devKey"] = "wrongKey";
 
         if (! $this->client->query('tl.reportTCResult', $data)) {
@@ -182,7 +182,7 @@ class TestlinkXMLRPCServerTest extends PHPUnit_Framework_TestCase
         }
 
         // build up an array contining the error that should come back
-        $expectedResult = array();
+        $expectedResult = [];
         $expectedResult[0]["code"] = constant("INVALID_AUTH");
         $expectedResult[0]["message"] = constant("INVALID_AUTH_STR");
 
@@ -191,7 +191,7 @@ class TestlinkXMLRPCServerTest extends PHPUnit_Framework_TestCase
 
     private function testReportTCResultWithInsufficientRights()
     {
-        $data = array();
+        $data = [];
         $data["devKey"] = TestlinkXMLRPCServerTestData::noRightsDevKey;
         $data["testcaseid"] = TestlinkXMLRPCServerTestData::testTCID;
         $data["testplanid"] = TestlinkXMLRPCServerTestData::testTPID;
@@ -203,7 +203,7 @@ class TestlinkXMLRPCServerTest extends PHPUnit_Framework_TestCase
             echo "\n" . $this->getName() . " >> something went really wrong - " .
                 $this->client->getErrorCode() . $this->client->getErrorMessage();
         }
-        $expectedResult = array();
+        $expectedResult = [];
         $expectedResult[0]["code"] = constant("INSUFFICIENT_RIGHTS");
         $expectedResult[0]["message"] = constant("INSUFFICIENT_RIGHTS_STR");
 
@@ -213,7 +213,7 @@ class TestlinkXMLRPCServerTest extends PHPUnit_Framework_TestCase
 
     private function testReportTCResultWithoutDevKey()
     {
-        $data = array();
+        $data = [];
 
         if (! $this->client->query('tl.reportTCResult', $data)) {
             echo "\n" . $this->getName() . " >> something went really wrong - " .
@@ -221,7 +221,7 @@ class TestlinkXMLRPCServerTest extends PHPUnit_Framework_TestCase
         }
 
         // build up an array contining the error that should come back
-        $expectedResult = array();
+        $expectedResult = [];
         $expectedResult[0]["code"] = constant("NO_DEV_KEY");
         $expectedResult[0]["message"] = constant("NO_DEV_KEY_STR");
 
@@ -230,7 +230,7 @@ class TestlinkXMLRPCServerTest extends PHPUnit_Framework_TestCase
 
     private function testReportTCResultWithEmptyDevKey()
     {
-        $data = array();
+        $data = [];
         $data["devKey"] = "";
 
         if (! $this->client->query('tl.reportTCResult', $data)) {
@@ -239,7 +239,7 @@ class TestlinkXMLRPCServerTest extends PHPUnit_Framework_TestCase
         }
 
         // build up an array contining the error that should come back
-        $expectedResult = array();
+        $expectedResult = [];
         $expectedResult[0]["code"] = constant("INVALID_AUTH");
         $expectedResult[0]["message"] = constant("INVALID_AUTH_STR");
 
@@ -248,7 +248,7 @@ class TestlinkXMLRPCServerTest extends PHPUnit_Framework_TestCase
 
     private function testReportTCResultWithoutTCID()
     {
-        $data = array();
+        $data = [];
         $data["devKey"] = TestlinkXMLRPCServerTestData::testDevKey;
 
         if (! $this->client->query('tl.reportTCResult', $data)) {
@@ -257,7 +257,7 @@ class TestlinkXMLRPCServerTest extends PHPUnit_Framework_TestCase
         }
 
         // build up an array contining the error that should come back
-        $expectedResult = array();
+        $expectedResult = [];
         $expectedResult[0]["code"] = constant("NO_TCASEID");
         $expectedResult[0]["message"] = constant("NO_TCASEID_STR");
 
@@ -270,7 +270,7 @@ class TestlinkXMLRPCServerTest extends PHPUnit_Framework_TestCase
 
     private function testReportTCResultWithInvalidTCID()
     {
-        $data = array();
+        $data = [];
         $data["devKey"] = TestlinkXMLRPCServerTestData::testDevKey;
         $data["testplanid"] = TestlinkXMLRPCServerTestData::testTPID;
         $data["status"] = "f";
@@ -282,7 +282,7 @@ class TestlinkXMLRPCServerTest extends PHPUnit_Framework_TestCase
         }
 
         // build up an array contining the error that should come back
-        $expectedResult = array();
+        $expectedResult = [];
         $expectedResult[0]["code"] = constant("INVALID_TCASEID");
         $expectedResult[0]["message"] = constant("INVALID_TCASEID_STR");
 
@@ -292,7 +292,7 @@ class TestlinkXMLRPCServerTest extends PHPUnit_Framework_TestCase
 
     private function testReportTCResultWithoutNonIntTCID()
     {
-        $data = array();
+        $data = [];
         $data["devKey"] = TestlinkXMLRPCServerTestData::testDevKey;
         $data["testcaseid"] = "notAnInt";
 
@@ -302,7 +302,7 @@ class TestlinkXMLRPCServerTest extends PHPUnit_Framework_TestCase
         }
 
         // build up an array containing the errors that should come back
-        $expectedResult = array();
+        $expectedResult = [];
         $expectedResult[0]["code"] = constant("TCASEID_NOT_INTEGER");
         $expectedResult[0]["message"] = constant("TCASEID_NOT_INTEGER_STR");
         $expectedResult[1]["code"] = constant("INVALID_TCASEID");
@@ -315,7 +315,7 @@ class TestlinkXMLRPCServerTest extends PHPUnit_Framework_TestCase
 
     private function testReportTCResultWithoutTPID()
     {
-        $data = array();
+        $data = [];
         $data["devKey"] = TestlinkXMLRPCServerTestData::testDevKey;
         // dependant on data in the sql file
         $data["testcaseid"] = TestlinkXMLRPCServerTestData::testTCID;
@@ -326,7 +326,7 @@ class TestlinkXMLRPCServerTest extends PHPUnit_Framework_TestCase
         }
 
         // build up an array contining the error that should come back
-        $expectedResult = array();
+        $expectedResult = [];
         $expectedResult[0]["code"] = constant("NO_TPLANID");
         $expectedResult[0]["message"] = constant("NO_TPLANID_STR");
 
@@ -336,7 +336,7 @@ class TestlinkXMLRPCServerTest extends PHPUnit_Framework_TestCase
 
     private function testReportTCResultRequestWithoutStatus()
     {
-        $data = array();
+        $data = [];
         $data["devKey"] = TestlinkXMLRPCServerTestData::testDevKey;
         $data["testcaseid"] = TestlinkXMLRPCServerTestData::testTCID;
         $data["testplanid"] = TestlinkXMLRPCServerTestData::testTPID;
@@ -348,7 +348,7 @@ class TestlinkXMLRPCServerTest extends PHPUnit_Framework_TestCase
         }
 
         // build up an array contining the error that should come back
-        $expectedResult = array();
+        $expectedResult = [];
         $expectedResult[0]["code"] = constant("NO_STATUS");
         $expectedResult[0]["message"] = constant("NO_STATUS_STR");
 
@@ -358,7 +358,7 @@ class TestlinkXMLRPCServerTest extends PHPUnit_Framework_TestCase
 
     private function testReportTCResultRequestWithInvalidStatus()
     {
-        $data = array();
+        $data = [];
         $data["devKey"] = TestlinkXMLRPCServerTestData::testDevKey;
         $data["testcaseid"] = TestlinkXMLRPCServerTestData::testTCID;
         $data["testplanid"] = TestlinkXMLRPCServerTestData::testTPID;
@@ -371,7 +371,7 @@ class TestlinkXMLRPCServerTest extends PHPUnit_Framework_TestCase
         }
 
         // build up an array contining the error that should come back
-        $expectedResult = array();
+        $expectedResult = [];
         $expectedResult[0]["code"] = constant("INVALID_STATUS");
         $expectedResult[0]["message"] = constant("INVALID_STATUS_STR");
 
@@ -381,7 +381,7 @@ class TestlinkXMLRPCServerTest extends PHPUnit_Framework_TestCase
 
     private function testReportTCResultRequestWithBlockedStatus()
     {
-        $data = array();
+        $data = [];
         $data["devKey"] = TestlinkXMLRPCServerTestData::testDevKey;
         $data["testcaseid"] = TestlinkXMLRPCServerTestData::testTCID;
         $data["testplanid"] = TestlinkXMLRPCServerTestData::testTPID;
@@ -402,7 +402,7 @@ class TestlinkXMLRPCServerTest extends PHPUnit_Framework_TestCase
 
     private function testReportTCResultRequestWithPassedStatus()
     {
-        $data = array();
+        $data = [];
         $data["devKey"] = TestlinkXMLRPCServerTestData::testDevKey;
         $data["testcaseid"] = TestlinkXMLRPCServerTestData::testTCID;
         $data["testplanid"] = TestlinkXMLRPCServerTestData::testTPID;
@@ -422,7 +422,7 @@ class TestlinkXMLRPCServerTest extends PHPUnit_Framework_TestCase
 
     private function testReportTCResultRequestWithFailedStatus()
     {
-        $data = array();
+        $data = [];
         $data["devKey"] = TestlinkXMLRPCServerTestData::testDevKey;
         $data["testcaseid"] = TestlinkXMLRPCServerTestData::testTCID;
         $data["testplanid"] = TestlinkXMLRPCServerTestData::testTPID;
@@ -442,14 +442,14 @@ class TestlinkXMLRPCServerTest extends PHPUnit_Framework_TestCase
 
     private function testReportTCResultWithNoParams()
     {
-        $data = array();
+        $data = [];
 
         if (! $this->client->query('tl.reportTCResult', $data)) {
             echo "\n" . $this->getName() . " >> something went really wrong - " .
                 $this->client->getErrorCode() . $this->client->getErrorMessage();
         }
 
-        $expectedResult = array();
+        $expectedResult = [];
         $expectedResult[0]["code"] = constant("NO_DEV_KEY");
         $expectedResult[0]["message"] = constant("NO_DEV_KEY_STR");
         $this->assertEquals($expectedResult, $this->client->getResponse());
@@ -465,7 +465,7 @@ class TestlinkXMLRPCServerTest extends PHPUnit_Framework_TestCase
 
     private function testReportTCResultValidRequest()
     {
-        $data = array();
+        $data = [];
         $data["devKey"] = TestlinkXMLRPCServerTestData::testDevKey;
         $data["testcaseid"] = TestlinkXMLRPCServerTestData::testTCID;
         $data["testplanid"] = TestlinkXMLRPCServerTestData::testTPID;
@@ -485,7 +485,7 @@ class TestlinkXMLRPCServerTest extends PHPUnit_Framework_TestCase
     private function testGetLastTestResult()
     {
         // Setup a Known Response by reporting a block
-        $data = array();
+        $data = [];
         $data["devKey"] = TestlinkXMLRPCServerTestData::testDevKey;
         $data["testcaseid"] = TestlinkXMLRPCServerTestData::testTCID;
         $data["testplanid"] = TestlinkXMLRPCServerTestData::testTPID;
@@ -498,7 +498,7 @@ class TestlinkXMLRPCServerTest extends PHPUnit_Framework_TestCase
         }
 
         // Now Building our get last test result
-        $data = array();
+        $data = [];
         $data["devKey"] = TestlinkXMLRPCServerTestData::testDevKey;
         $data["testcaseid"] = TestlinkXMLRPCServerTestData::testTCID;
         $data["testplanid"] = TestlinkXMLRPCServerTestData::testTPID;
@@ -515,7 +515,7 @@ class TestlinkXMLRPCServerTest extends PHPUnit_Framework_TestCase
 
     private function testReportTCResultRequestWithValidBuildID()
     {
-        $data = array();
+        $data = [];
         $data["devKey"] = TestlinkXMLRPCServerTestData::testDevKey;
         $data["testcaseid"] = TestlinkXMLRPCServerTestData::testTCID;
         $data["testplanid"] = TestlinkXMLRPCServerTestData::testTPID;
@@ -535,7 +535,7 @@ class TestlinkXMLRPCServerTest extends PHPUnit_Framework_TestCase
 
     private function testReportTCResultNotGuessingBuildID()
     {
-        $data = array();
+        $data = [];
         $data["devKey"] = TestlinkXMLRPCServerTestData::testDevKey;
 
         $data["testcaseid"] = TestlinkXMLRPCServerTestData::testTCID;
@@ -549,7 +549,7 @@ class TestlinkXMLRPCServerTest extends PHPUnit_Framework_TestCase
         }
 
         // build up an array contining the error that should come back
-        $expectedResult = array();
+        $expectedResult = [];
         $expectedResult[0]["code"] = constant("BUILDID_NOGUESS");
         $expectedResult[0]["message"] = constant("BUILDID_NOGUESS_STR");
         $expectedResult[1]["code"] = constant("NO_BUILDID");
@@ -567,7 +567,7 @@ class TestlinkXMLRPCServerTest extends PHPUnit_Framework_TestCase
 
     private function testReportTCResultWithNotes()
     {
-        $data = array();
+        $data = [];
         $data["devKey"] = TestlinkXMLRPCServerTestData::testDevKey;
         $data["testcaseid"] = TestlinkXMLRPCServerTestData::testTCID;
         $data["testplanid"] = TestlinkXMLRPCServerTestData::testTPID;
@@ -589,7 +589,7 @@ class TestlinkXMLRPCServerTest extends PHPUnit_Framework_TestCase
 
     private function testCreateBuildWithInsufficientRights()
     {
-        $data = array();
+        $data = [];
         $data["devKey"] = TestlinkXMLRPCServerTestData::noRightsDevKey;
         $data["buildname"] = "Another test build from " . @strftime("%c");
         $data["testplanid"] = TestlinkXMLRPCServerTestData::testTPID;
@@ -598,7 +598,7 @@ class TestlinkXMLRPCServerTest extends PHPUnit_Framework_TestCase
             echo "\n" . $this->getName() . " >> something went really wrong - " .
                 $this->client->getErrorCode() . $this->client->getErrorMessage();
         }
-        $expectedResult = array();
+        $expectedResult = [];
         $expectedResult[0]["code"] = constant("INSUFFICIENT_RIGHTS");
         $expectedResult[0]["message"] = constant("INSUFFICIENT_RIGHTS_STR");
 
@@ -608,7 +608,7 @@ class TestlinkXMLRPCServerTest extends PHPUnit_Framework_TestCase
 
     private function testCreateBuildWithoutNotes()
     {
-        $data = array();
+        $data = [];
         $data["devKey"] = TestlinkXMLRPCServerTestData::testDevKey;
         $data["buildname"] = "Another test build from " . @strftime("%c");
         $data["testplanid"] = TestlinkXMLRPCServerTestData::testTPID;
@@ -624,7 +624,7 @@ class TestlinkXMLRPCServerTest extends PHPUnit_Framework_TestCase
 
     private function testCreateBuildWithNotes()
     {
-        $data = array();
+        $data = [];
         $data["devKey"] = TestlinkXMLRPCServerTestData::testDevKey;
         $data["buildname"] = "Another notes test build from " . @strftime("%c");
         $data["testplanid"] = TestlinkXMLRPCServerTestData::testTPID;
@@ -641,7 +641,7 @@ class TestlinkXMLRPCServerTest extends PHPUnit_Framework_TestCase
 
     private function testCreateBuildWithInvalidTPID()
     {
-        $data = array();
+        $data = [];
         $data["devKey"] = TestlinkXMLRPCServerTestData::testDevKey;
         $data["buildname"] = "Another test build from " . @strftime("%c");
         $data["testplanid"] = - 1;
@@ -653,7 +653,7 @@ class TestlinkXMLRPCServerTest extends PHPUnit_Framework_TestCase
                 $this->client->getErrorCode() . $this->client->getErrorMessage();
         }
 
-        $expectedResult = array();
+        $expectedResult = [];
         $expectedResult[0]["code"] = constant("INVALID_TPLANID");
         $expectedResult[0]["message"] = sprintf(constant("INVALID_TPLANID_STR"),
             $data["testplanid"]);
@@ -665,7 +665,7 @@ class TestlinkXMLRPCServerTest extends PHPUnit_Framework_TestCase
 
     private function testValidDevKeyWorks()
     {
-        $data = array();
+        $data = [];
         $data["devKey"] = TestlinkXMLRPCServerTestData::testDevKey;
 
         if (! $this->client->query('tl.reportTCResult', $data)) {
@@ -676,12 +676,12 @@ class TestlinkXMLRPCServerTest extends PHPUnit_Framework_TestCase
         // The response should not have any errors related to the devKey
         $this->client->getResponse();
 
-        $expectedResult = array();
+        $expectedResult = [];
         $expectedResult[0]["code"] = constant("INVALID_AUTH");
         $expectedResult[0]["message"] = constant("INVALID_AUTH_STR");
         $this->assertNotEquals($expectedResult, $this->client->getResponse());
 
-        $expectedResult = array();
+        $expectedResult = [];
         $expectedResult[0]["code"] = constant("NO_DEV_KEY");
         $expectedResult[0]["message"] = constant("NO_DEV_KEY_STR");
         $this->assertNotEquals($expectedResult, $this->client->getResponse());
@@ -689,7 +689,7 @@ class TestlinkXMLRPCServerTest extends PHPUnit_Framework_TestCase
 
     private function testGetProjects()
     {
-        $data = array();
+        $data = [];
         $data["devKey"] = TestlinkXMLRPCServerTestData::testDevKey;
 
         if (! $this->client->query('tl.getProjects', $data)) {
@@ -697,7 +697,7 @@ class TestlinkXMLRPCServerTest extends PHPUnit_Framework_TestCase
                 $this->client->getErrorCode() . $this->client->getErrorMessage();
         }
 
-        $expectedResult = array();
+        $expectedResult = [];
 
         $expectedResult[0]["id"] = "1";
         $expectedResult[0]["notes"] = "<p>A project for testing</p>";
@@ -722,7 +722,7 @@ class TestlinkXMLRPCServerTest extends PHPUnit_Framework_TestCase
 
     private function testGetProjectsWithInsufficientRights()
     {
-        $data = array();
+        $data = [];
         $data["devKey"] = TestlinkXMLRPCServerTestData::noRightsDevKey;
 
         if (! $this->client->query('tl.getProjects', $data)) {
@@ -730,7 +730,7 @@ class TestlinkXMLRPCServerTest extends PHPUnit_Framework_TestCase
                 $this->client->getErrorCode() . $this->client->getErrorMessage();
         }
 
-        $expectedResult = array();
+        $expectedResult = [];
         $expectedResult[0]["code"] = constant("INSUFFICIENT_RIGHTS");
         $expectedResult[0]["message"] = constant("INSUFFICIENT_RIGHTS_STR");
 
@@ -754,7 +754,7 @@ class TestlinkXMLRPCServerTest extends PHPUnit_Framework_TestCase
 
     private function testGetProjectTestPlans()
     {
-        $data = array();
+        $data = [];
         $data["devKey"] = TestlinkXMLRPCServerTestData::testDevKey;
         $data["testprojectid"] = 1;
 
@@ -763,7 +763,7 @@ class TestlinkXMLRPCServerTest extends PHPUnit_Framework_TestCase
                 $this->client->getErrorCode() . $this->client->getErrorMessage();
         }
 
-        $expectedResult = array();
+        $expectedResult = [];
         $testplanID = 2;
         $expectedResult[$testplanID]["id"] = $testplanID;
         $expectedResult[$testplanID]["name"] = "A test plan for testing";
@@ -772,9 +772,9 @@ class TestlinkXMLRPCServerTest extends PHPUnit_Framework_TestCase
         $expectedResult[$testplanID]["active"] = "1";
         $expectedResult[$testplanID]["testproject_id"] = "1";
 
-        $expectedResult = array(
+        $expectedResult = [
             $expectedResult
-        );
+        ];
 
         $response = $this->client->getResponse();
 
@@ -797,7 +797,7 @@ class TestlinkXMLRPCServerTest extends PHPUnit_Framework_TestCase
 
     private function testGetTestCasesForTestSuite()
     {
-        $data = array();
+        $data = [];
         $data["devKey"] = TestlinkXMLRPCServerTestData::testDevKey;
         $data["testsuiteid"] = 3;
 
@@ -806,7 +806,7 @@ class TestlinkXMLRPCServerTest extends PHPUnit_Framework_TestCase
                 $this->client->getErrorCode() . $this->client->getErrorMessage();
         }
 
-        $expectedResult = array();
+        $expectedResult = [];
         $expectedResult[0]["id"] = 11;
         $expectedResult[0]["name"] = "test case in child suite";
         $expectedResult[0]["parent_id"] = 10;
@@ -830,7 +830,7 @@ class TestlinkXMLRPCServerTest extends PHPUnit_Framework_TestCase
 
     private function testGetTestCasesForTestSuiteWithInsufficientRights()
     {
-        $data = array();
+        $data = [];
         $data["devKey"] = TestlinkXMLRPCServerTestData::noRightsDevKey;
         $data["testsuiteid"] = 3;
 
@@ -838,7 +838,7 @@ class TestlinkXMLRPCServerTest extends PHPUnit_Framework_TestCase
             echo "\n" . $this->getName() . " >> something went really wrong - " .
                 $this->client->getErrorCode() . $this->client->getErrorMessage();
         }
-        $expectedResult = array();
+        $expectedResult = [];
         $expectedResult[0]["code"] = constant("INSUFFICIENT_RIGHTS");
         $expectedResult[0]["message"] = constant("INSUFFICIENT_RIGHTS_STR");
 
@@ -848,7 +848,7 @@ class TestlinkXMLRPCServerTest extends PHPUnit_Framework_TestCase
 
     private function testGetTestCasesForTestSuiteDeepFalse()
     {
-        $data = array();
+        $data = [];
         $data["devKey"] = TestlinkXMLRPCServerTestData::testDevKey;
         $data["testsuiteid"] = 3;
         $data["deep"] = false;
@@ -858,7 +858,7 @@ class TestlinkXMLRPCServerTest extends PHPUnit_Framework_TestCase
                 $this->client->getErrorCode() . $this->client->getErrorMessage();
         }
 
-        $expectedResult = array();
+        $expectedResult = [];
         $expectedResult[0]["id"] = 4;
         $expectedResult[0]["name"] = "First test case version 3";
         $expectedResult[0]["parent_id"] = 3;
@@ -876,7 +876,7 @@ class TestlinkXMLRPCServerTest extends PHPUnit_Framework_TestCase
 
     private function testGetTestCasesForTestSuiteWithoutSuiteID()
     {
-        $data = array();
+        $data = [];
         $data["devKey"] = TestlinkXMLRPCServerTestData::testDevKey;
         $data["testsuiteid"] = 3;
 
@@ -894,7 +894,7 @@ class TestlinkXMLRPCServerTest extends PHPUnit_Framework_TestCase
 
     private function testGetTestCasesForTestSuiteWithInvalidSuiteID()
     {
-        $data = array();
+        $data = [];
         $data["devKey"] = TestlinkXMLRPCServerTestData::testDevKey;
         $data["testsuiteid"] = 2000;
 
@@ -914,7 +914,7 @@ class TestlinkXMLRPCServerTest extends PHPUnit_Framework_TestCase
     {
         $tcName = "First test case version 3";
 
-        $data = array();
+        $data = [];
         $data["devKey"] = TestlinkXMLRPCServerTestData::testDevKey;
         $data["testcasename"] = $tcName;
 
@@ -923,7 +923,7 @@ class TestlinkXMLRPCServerTest extends PHPUnit_Framework_TestCase
                 $this->client->getErrorCode() . $this->client->getErrorMessage();
         }
 
-        $expectedResult = array();
+        $expectedResult = [];
         $expectedResult[0]["id"] = TestlinkXMLRPCServerTestData::testTCID;
         $expectedResult[0]["name"] = $tcName;
         $expectedResult[0]["parent_id"] = "1";
@@ -939,7 +939,7 @@ class TestlinkXMLRPCServerTest extends PHPUnit_Framework_TestCase
     {
         $tcName = "First test case version 3";
 
-        $data = array();
+        $data = [];
         $data["devKey"] = TestlinkXMLRPCServerTestData::noRightsDevKey;
         $data["testcasename"] = $tcName;
 
@@ -947,7 +947,7 @@ class TestlinkXMLRPCServerTest extends PHPUnit_Framework_TestCase
             echo "\n" . $this->getName() . " >> something went really wrong - " .
                 $this->client->getErrorCode() . $this->client->getErrorMessage();
         }
-        $expectedResult = array();
+        $expectedResult = [];
         $expectedResult[0]["code"] = constant("INSUFFICIENT_RIGHTS");
         $expectedResult[0]["message"] = constant("INSUFFICIENT_RIGHTS_STR");
 
@@ -959,7 +959,7 @@ class TestlinkXMLRPCServerTest extends PHPUnit_Framework_TestCase
     {
         $tcName = "A Test case that does not exist";
 
-        $data = array();
+        $data = [];
         $data["devKey"] = TestlinkXMLRPCServerTestData::testDevKey;
         $data["testcasename"] = $tcName;
 
@@ -968,7 +968,7 @@ class TestlinkXMLRPCServerTest extends PHPUnit_Framework_TestCase
                 $this->client->getErrorCode() . $this->client->getErrorMessage();
         }
 
-        $expectedResult = array();
+        $expectedResult = [];
         $expectedResult[0]["code"] = constant("NO_TESTCASE_BY_THIS_NAME");
         $expectedResult[0]["message"] = "(getTestCaseIDByName) - " .
             constant("NO_TESTCASE_BY_THIS_NAME_STR");
@@ -980,7 +980,7 @@ class TestlinkXMLRPCServerTest extends PHPUnit_Framework_TestCase
 
     private function testRepeat()
     {
-        $data = array();
+        $data = [];
         $data["str"] = "I like to talk to myself";
 
         if (! $this->client->query('tl.repeat', $data)) {

@@ -67,26 +67,26 @@ $smarty->display($templateCfg->template_dir . $templateCfg->default_template);
  */
 function initArgs()
 {
-    $iParams = array(
-        "roleid" => array(
+    $iParams = [
+        "roleid" => [
             tlInputParameter::INT_N
-        ),
-        "csrfid" => array(
+        ],
+        "csrfid" => [
             tlInputParameter::STRING_N,
             0,
             30
-        ),
-        "csrftoken" => array(
+        ],
+        "csrftoken" => [
             tlInputParameter::STRING_N,
             0,
             128
-        ),
-        "doAction" => array(
+        ],
+        "doAction" => [
             tlInputParameter::STRING_N,
             0,
             15
-        )
-    );
+        ]
+    ];
 
     $args = new stdClass();
     R_PARAMS($iParams, $args);

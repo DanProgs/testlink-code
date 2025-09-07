@@ -32,7 +32,7 @@ function exportDataToCSV($data, $sourceKeys, $destKeys, $bWithHeader = 0,
 
     if ($bWithHeader) {
         // try to localize
-        $labels = array();
+        $labels = [];
         foreach ($destKeys as $lblID) {
             $labels[] = lang_get($lblID, null, false);
         }
@@ -75,11 +75,11 @@ function exportDataToCSV($data, $sourceKeys, $destKeys, $bWithHeader = 0,
 function importCSVData($fileName, $fieldMappings, $options = null)
 {
     $debugMe = false;
-    $my['options'] = array(
+    $my['options'] = [
         'delimiter' => ';',
         'fieldQty' => 0,
         'processHeader' => false
-    );
+    ];
     $my['options'] = array_merge($my['options'], (array) $options);
 
     $handle = fopen($fileName, "r");
@@ -91,13 +91,13 @@ function importCSVData($fileName, $fieldMappings, $options = null)
     // check problems.
     // info: map with lines that can be processed by caller
     //
-    $retVal = array(
-        'userFeedback' => array(
+    $retVal = [
+        'userFeedback' => [
             'parsedCounter' => 0,
-            'syntaxError' => array()
-        ),
+            'syntaxError' => []
+        ],
         'info' => null
-    );
+    ];
 
     if ($handle) {
         $lineNumber = 0;
@@ -142,7 +142,7 @@ function importCSVData($fileName, $fieldMappings, $options = null)
                             $needle = $k;
                             $dest = $targetKey;
                         }
-                        $t = array_search($needle, $data);
+                        $t = array_search($needle, $data, true);
                         $keyMappings[$t] = $dest;
                     }
                 } else {

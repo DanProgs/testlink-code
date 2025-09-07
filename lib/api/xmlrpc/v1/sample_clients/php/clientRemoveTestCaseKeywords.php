@@ -16,16 +16,16 @@ $method = lcfirst(str_replace('client', '', basename(__FILE__, ".php")));
 $devKey = 'admin';
 $unitTestDescription = "Test - {$method}";
 
-$args = array();
+$args = [];
 $args["devKey"] = isset($_REQUEST['apiKey']) ? $_REQUEST['apiKey'] : $devKey;
-$args["keywords"] = array(
-    'MAB-1' => array(
+$args["keywords"] = [
+    'MAB-1' => [
         'Barbie'
-    ),
-    'MAB-2' => array(
+    ],
+    'MAB-2' => [
         'Barbie'
-    )
-);
+    ]
+];
 
 $debug = true;
 $client = new IXR_Client($server_url);

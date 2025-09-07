@@ -21,9 +21,9 @@ if ($args->exec_id && $args->bug_id != "" &&
     write_execution_bug($db, $args->exec_id, $args->bug_id, $args->tcstep_id,
         true)) {
     // get audit info
-    $ainfo = get_execution($db, $args->exec_id, array(
+    $ainfo = get_execution($db, $args->exec_id, [
         'output' => 'audit'
-    ));
+    ]);
     $ainfo = $ainfo[0];
 
     $msg = lang_get('bugdeleting_was_ok');
@@ -52,22 +52,22 @@ $smarty->display($templateCfg->template_dir . $templateCfg->default_template);
 function initArgs()
 {
     $args = new stdClass();
-    $iParams = array(
-        "exec_id" => array(
+    $iParams = [
+        "exec_id" => [
             "GET",
             tlInputParameter::INT_N
-        ),
-        "tcstep_id" => array(
+        ],
+        "tcstep_id" => [
             "GET",
             tlInputParameter::INT_N
-        ),
-        "bug_id" => array(
+        ],
+        "bug_id" => [
             "GET",
             tlInputParameter::STRING_N,
             0,
             config_get('field_size')->bug_id
-        )
-    );
+        ]
+    ];
 
     I_PARAMS($iParams, $args);
     $args->tproject_id = isset($_REQUEST['tproject_id']) ? $_REQUEST['tproject_id'] : $_SESSION['testprojectID'];

@@ -34,16 +34,16 @@ $smarty->display($args->help . ".html");
  */
 function initArgs()
 {
-    $iParams = array(
-        "help" => array(
+    $iParams = [
+        "help" => [
             tlInputParameter::STRING_N
-        ),
-        "locale" => array(
+        ],
+        "locale" => [
             tlInputParameter::STRING_N,
             0,
             10
-        )
-    );
+        ]
+    ];
     $args = new stdClass();
     R_PARAMS($iParams, $args);
 

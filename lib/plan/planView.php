@@ -19,10 +19,10 @@ $gui = initializeGui($db, $args);
 if ($args->tproject_id && checkRights($db, $args->user, $args->tproject_id)) {
     $tproject_mgr = new testproject($db);
     $gui->tplans = $args->user->getAccessibleTestPlans($db, $args->tproject_id,
-        null, array(
+        null, [
             'output' => 'mapfull',
             'active' => null
-        ));
+        ]);
     $gui->drawPlatformQtyColumn = false;
 
     if (! is_null($gui->tplans) && count($gui->tplans) > 0) {
@@ -35,16 +35,16 @@ if ($args->tproject_id && checkRights($db, $args->user, $args->tproject_id)) {
 
         $tplanSet = array_keys($gui->tplans);
         $dummy = $tplan_mgr->count_testcases($tplanSet, null,
-            array(
+            [
                 'output' => 'groupByTestPlan'
-            ));
+            ]);
         $buildQty = $tplan_mgr->get_builds($tplanSet, null, null,
-            array(
+            [
                 'getCount' => true
-            ));
-        $rightSet = array(
+            ]);
+        $rightSet = [
             'testplan_user_role_assignment'
-        );
+        ];
 
         // To create the CF columns we need to get the linked CF
         $availableCF = (array) $tplan_mgr->get_linked_cfields_at_design(

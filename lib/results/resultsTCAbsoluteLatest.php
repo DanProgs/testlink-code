@@ -26,7 +26,7 @@ $tplan_mgr = &$metricsMgr;
 
 $args = initArgs($db);
 
-list ($gui, $tproject_info, $labels, $cfg) = initializeGui($db, $args,
+[$gui, $tproject_info, $labels, $cfg] = initializeGui($db, $args,
     $smarty->getImages(), $tplan_mgr);
 $args->cfg = $cfg;
 
@@ -68,30 +68,30 @@ displayReport($templateCfg->template_dir . $tpl, $smarty, $args->format,
  */
 function initArgs(&$dbHandler)
 {
-    $iParams = array(
-        "apikey" => array(
+    $iParams = [
+        "apikey" => [
             tlInputParameter::STRING_N,
             32,
             64
-        ),
-        "tproject_id" => array(
+        ],
+        "tproject_id" => [
             tlInputParameter::INT_N
-        ),
-        "tplan_id" => array(
+        ],
+        "tplan_id" => [
             tlInputParameter::INT_N
-        ),
-        "platform_id" => array(
+        ],
+        "platform_id" => [
             tlInputParameter::INT_N
-        ),
-        "doAction" => array(
+        ],
+        "doAction" => [
             tlInputParameter::STRING_N,
             5,
             10
-        ),
-        "format" => array(
+        ],
+        "format" => [
             tlInputParameter::INT_N
-        )
-    );
+        ]
+    ];
 
     $args = new stdClass();
     R_PARAMS($iParams, $args);
@@ -180,59 +180,59 @@ function checkRights(&$db, &$user, $context = null)
  */
 function buildMatrix(&$guiObj, &$argsObj, $forceFormat = null)
 {
-    $columns = array(
-        array(
+    $columns = [
+        [
             'title_key' => 'title_test_suite_name',
             'width' => 100
-        ),
-        array(
+        ],
+        [
             'title_key' => 'title_test_case_title',
             'width' => 150
-        )
-    );
+        ]
+    ];
 
     $lbl = init_labels(
-        array(
+        [
             'title_test_suite_name' => null,
             'platform' => null,
             'priority' => null,
             'result_on_last_build' => null,
             'title_test_case_title' => null,
             'latest_exec_notes' => null
-        ));
+        ]);
 
     $group_name = $lbl['title_test_suite_name'];
 
     if (! is_null($guiObj->platforms)) {
-        $columns[] = array(
+        $columns[] = [
             'title_key' => 'platform',
             'width' => 60,
             'filter' => 'list',
             'filterOptions' => $guiObj->platforms
-        );
+        ];
         $group_name = $lbl['platform'];
     }
 
     if ($guiObj->options->testPriorityEnabled) {
-        $columns[] = array(
+        $columns[] = [
             'title_key' => 'priority',
             'type' => 'priority',
             'width' => 40
-        );
+        ];
     }
 
     // --------------------------------------------------------------------
-    $columns[] = array(
+    $columns[] = [
         'title_key' => 'latest_execution',
         'type' => 'status',
         'width' => 100
-    );
+    ];
 
-    $columns[] = array(
+    $columns[] = [
         'title_key' => 'latest_exec_notes',
         'type' => 'status',
         'width' => 100
-    );
+    ];
 
     $fo = ! is_null($forceFormat) ? $forceFormat : $argsObj->format;
     if ($fo == FORMAT_HTML) {
@@ -249,10 +249,10 @@ function buildMatrix(&$guiObj, &$argsObj, $forceFormat = null)
             // To understand 'filter' => 'Priority' =>
             // see exttable.class.php => buildColumns()
             $matrix->addCustomBehaviour('priority',
-                array(
+                [
                     'render' => 'priorityRenderer',
                     'filter' => 'Priority'
-                ));
+                ]);
             $matrix->setSortByColumnName($lbl['priority']);
         } else {
             $matrix->setSortByColumnName($lbl['title_test_case_title']);
@@ -278,10 +278,10 @@ function buildMatrix(&$guiObj, &$argsObj, $forceFormat = null)
  */
 function buildMailCfg(&$guiObj)
 {
-    $labels = array(
+    $labels = [
         'testplan' => lang_get('testplan'),
         'testproject' => lang_get('testproject')
-    );
+    ];
     $cfg = new stdClass();
     $cfg->cc = '';
     $cfg->subject = $guiObj->title . ' : ' . $labels['testproject'] . ' : ' .
@@ -301,11 +301,11 @@ function buildMailCfg(&$guiObj)
  */
 function initializeGui(&$dbHandler, &$argsObj, $imgSet, &$tplanMgr)
 {
-    $cfg = array(
+    $cfg = [
         'results' => config_get('results'),
         'urgency' => config_get('urgency'),
         'tcase' => config_get('testcase_cfg')
-    );
+    ];
 
     $guiObj = new stdClass();
     $guiObj->map_status_css = null;
@@ -313,13 +313,13 @@ function initializeGui(&$dbHandler, &$argsObj, $imgSet, &$tplanMgr)
     $guiObj->pageTitle = $guiObj->title;
 
     $guiObj->printDate = '';
-    $guiObj->matrix = array();
+    $guiObj->matrix = [];
     $guiObj->platform_id = $argsObj->platform_id;
 
     $guiObj->platforms = $tplanMgr->getPlatforms($argsObj->tplan_id,
-        array(
+        [
             'outputFormat' => 'map'
-        ));
+        ]);
     $guiObj->show_platforms = ! is_null($guiObj->platforms);
 
     $guiObj->img = new stdClass();
@@ -347,7 +347,7 @@ function initializeGui(&$dbHandler, &$argsObj, $imgSet, &$tplanMgr)
     $guiObj->tproject_name = $tproject_info['name'];
 
     $L10N = init_labels(
-        array(
+        [
             'design' => null,
             'execution' => null,
             'latest_execution' => null,
@@ -357,7 +357,7 @@ function initializeGui(&$dbHandler, &$argsObj, $imgSet, &$tplanMgr)
             'too_much_builds' => null,
             'result_on_last_build' => null,
             'versionTag' => 'tcversion_indicator'
-        ));
+        ]);
 
     $L10N['not_run'] = lang_get($cfg['results']['status_label']['not_run']);
 
@@ -366,9 +366,9 @@ function initializeGui(&$dbHandler, &$argsObj, $imgSet, &$tplanMgr)
     $guiObj->matrixCfg = config_get('resultMatrixReport');
     $guiObj->buildInfoSet = $tplanMgr->get_builds($argsObj->tplan_id,
         testplan::ACTIVE_BUILDS, null,
-        array(
+        [
             'orderBy' => $guiObj->matrixCfg->buildOrderByClause
-        ));
+        ]);
     $guiObj->activeBuildsQty = count($guiObj->buildInfoSet);
 
     foreach ($cfg['results']['code_status'] as $code => $verbose) {
@@ -387,12 +387,12 @@ function initializeGui(&$dbHandler, &$argsObj, $imgSet, &$tplanMgr)
     $guiObj->mailCfg = buildMailCfg($guiObj);
 
     $guiObj->labels = $L10N;
-    return array(
+    return [
         $guiObj,
         $tproject_info,
         $L10N,
         $cfg
-    );
+    ];
 }
 
 /**
@@ -422,10 +422,10 @@ function createSpreadsheet($gui, $args)
     // Latest Execution result (Hmm need to explain better)
     // Latest Execution notes
     //
-    $dataHeader = array(
+    $dataHeader = [
         $lbl['title_test_suite_name'],
         $lbl['title_test_case_title']
-    );
+    ];
 
     if (! is_null($gui->platforms)) {
         $dataHeader[] = $lbl['platform'];
@@ -479,14 +479,14 @@ function createSpreadsheet($gui, $args)
         $ema->message = $gui->mailCfg->subject;
 
         $dum = uniqid($fname) . '.xls';
-        $oops = array(
-            'attachment' => array(
+        $oops = [
+            'attachment' => [
                 'file' => $tmpfname,
                 'newname' => $dum
-            ),
+            ],
             'exit_on_error' => true,
             'htmlFormat' => true
-        );
+        ];
         $email_op = email_send_wrapper($ema, $oops);
         unlink($tmpfname);
         exit();
@@ -548,7 +548,7 @@ function buildDataSet(&$db, &$args, &$gui, &$metrics, $labels,
     $execVerboseCode = $execVerboseCode['status_code'];
 
     $itemSet = array_keys($metrics);
-    $tsuiteCache = array();
+    $tsuiteCache = [];
     $treeMgr = new tree($db);
 
     foreach ($itemSet as $iidx) {
@@ -617,11 +617,11 @@ function buildDataSet(&$db, &$args, &$gui, &$metrics, $labels,
                     sprintf($labels['versionTag'], $rf['version']);
 
                 if ($fo == FORMAT_HTML) {
-                    $execOut = array(
+                    $execOut = [
                         'text' => '',
                         'value' => '',
                         'cssClass' => ''
-                    );
+                    ];
                     $execOut['text'] = $statusVerbose;
                     $execOut['value'] = $rf['status'];
                     $execOut['cssClass'] = $gui->map_status_css[$rf['status']];
@@ -654,7 +654,7 @@ function buildDataSet(&$db, &$args, &$gui, &$metrics, $labels,
 function initLblSpreadsheet()
 {
     return init_labels(
-        array(
+        [
             'title_test_suite_name' => null,
             'platform' => null,
             'priority' => null,
@@ -671,7 +671,7 @@ function initLblSpreadsheet()
             'assigned_to' => null,
             'latest_exec_notes' => null,
             'important_notice' => null
-        ));
+        ]);
 }
 
 /**
@@ -680,31 +680,31 @@ function initLblSpreadsheet()
  */
 function initStyleSpreadsheet()
 {
-    $style = array();
-    $style['ReportContext'] = array(
-        'font' => array(
+    $style = [];
+    $style['ReportContext'] = [
+        'font' => [
             'bold' => true
-        )
-    );
-    $style['DataHeader'] = array(
-        'font' => array(
+        ]
+    ];
+    $style['DataHeader'] = [
+        'font' => [
             'bold' => true
-        ),
-        'borders' => array(
-            'outline' => array(
+        ],
+        'borders' => [
+            'outline' => [
                 'style' => PHPExcel_Style_Border::BORDER_MEDIUM
-            ),
-            'vertical' => array(
+            ],
+            'vertical' => [
                 'style' => PHPExcel_Style_Border::BORDER_THIN
-            )
-        ),
-        'fill' => array(
+            ]
+        ],
+        'fill' => [
             'type' => PHPExcel_Style_Fill::FILL_SOLID,
-            'startcolor' => array(
+            'startcolor' => [
                 'argb' => 'FF9999FF'
-            )
-        )
-    );
+            ]
+        ]
+    ];
     return $style;
 }
 
@@ -735,24 +735,24 @@ function setCellRangeSpreadsheet()
 function xlsStepOne(&$oj, $style, &$lbl, &$gui)
 {
     $dummy = '';
-    $lines2write = array(
-        array(
+    $lines2write = [
+        [
             $lbl['testproject'],
             $gui->tproject_name
-        ),
-        array(
+        ],
+        [
             $lbl['testplan'],
             $gui->tplan_name
-        ),
-        array(
+        ],
+        [
             $lbl['important_notice'],
             $gui->report_details
-        ),
-        array(
+        ],
+        [
             $lbl['generated_by_TestLink_on'],
             localize_dateOrTimeStamp(null, $dummy, 'timestamp_format', time())
-        )
-    );
+        ]
+    ];
 
     $cellArea = "A1:";
     foreach ($lines2write as $zdx => $fields) {
@@ -775,14 +775,14 @@ function xlsStepOne(&$oj, $style, &$lbl, &$gui)
  */
 function initCols()
 {
-    $tcols = array(
+    $tcols = [
         'tsuite',
         'link',
         'platform',
         'priority',
         'latest_exec',
         'latest_exec_notes'
-    );
+    ];
     return array_flip($tcols);
 }
 
@@ -795,16 +795,16 @@ function initCols()
  */
 function doProcess(&$dbH, &$args, &$gui, &$metricsMgr)
 {
-    $opt = array(
+    $opt = [
         'output' => 'array'
-    );
+    ];
     $neverRunOnPP = (array) $metricsMgr->getNeverRunOnSinglePlatform(
         $args->tplan_id, $args->platform_id);
 
     $execStatus = (array) $metricsMgr->getLatestExecOnSinglePlatformMatrix(
         $args->tplan_id, $args->platform_id, $opt);
 
-    $allExec = array();
+    $allExec = [];
     foreach ($neverRunOnPP as $elem) {
         $allExec[] = $elem;
     }

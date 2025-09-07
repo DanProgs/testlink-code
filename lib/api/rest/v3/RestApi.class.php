@@ -115,13 +115,13 @@ class RestApi
      */
     public function __construct()
     {
-        $tl = array(
+        $tl = [
             'API_MISSING_REQUIRED_PROP' => null,
             'API_TESTPLAN_ID_DOES_NOT_EXIST' => null,
             'API_TESTPLAN_APIKEY_DOES_NOT_EXIST' => null,
             'API_BUILDNAME_ALREADY_EXISTS' => null,
             'API_INVALID_BUILDID' => null
-        );
+        ];
 
         $this->l10n = init_labels($tl);
 
@@ -144,7 +144,7 @@ class RestApi
 
         $this->tables = $this->tcaseMgr->getDBTables();
 
-        $this->cfg = array();
+        $this->cfg = [];
         $conf = config_get('results');
         foreach ($conf['status_label_for_exec_ui'] as $key => $label) {
             $this->cfg['exec']['statusCode'][$key] = $conf['status_code'][$key];
@@ -235,9 +235,9 @@ class RestApi
     public function whoAmI(Response $response)
     {
         $msg = json_encode(
-            array(
+            [
                 'name' => __CLASS__ . ' : You have called Get Route /whoAmI'
-            ));
+            ]);
         $response->getBody()->write($msg);
         return $response;
     }
@@ -275,26 +275,26 @@ class RestApi
      */
     private function getProjects($idCard = null)
     {
-        $op = array(
+        $op = [
             'status' => 'ok',
             'message' => 'ok',
             'item' => null
-        );
+        ];
         if (empty($idCard)) {
-            $opOptions = array(
+            $opOptions = [
                 'output' => 'array_of_map',
                 'order_by' => " ORDER BY name ",
                 'add_issuetracker' => true,
                 'add_reqmgrsystem' => true
-            );
+            ];
             $op['item'] = $this->tprojectMgr->get_accessible_for_user(
                 $this->userID, $opOptions);
         } else {
-            $opOptions = array(
+            $opOptions = [
                 'output' => 'map',
                 'field_set' => 'prefix',
                 'format' => 'simple'
-            );
+            ];
             $zx = $this->tprojectMgr->get_accessible_for_user($this->userID,
                 $opOptions);
 
@@ -335,20 +335,20 @@ class RestApi
      */
     public function getProjectTestCases(Response $response, $idCard)
     {
-        $op = array(
+        $op = [
             'status' => 'ok',
             'message' => 'ok',
             'items' => null
-        );
+        ];
         $tproject = $this->getProjects($idCard);
 
         if (! is_null($tproject)) {
-            $tcaseIDSet = array();
+            $tcaseIDSet = [];
             $this->tprojectMgr->get_all_testcases_id($tproject['id'],
                 $tcaseIDSet);
 
             if (! empty($tcaseIDSet)) {
-                $op['items'] = array();
+                $op['items'] = [];
                 foreach ($tcaseIDSet as $tcaseID) {
                     $item = $this->tcaseMgr->getLastVersionInfo($tcaseID);
                     $item['keywords'] = $this->tcaseMgr->get_keywords_map(
@@ -383,26 +383,26 @@ class RestApi
      */
     public function createTestProject(Request $request, Response $response)
     {
-        $op = array(
+        $op = [
             'status' => 'ko',
             'message' => 'ko',
             'id' => - 1
-        );
+        ];
 
         try {
             // Check user grants for requested operation
             // This is a global right
             $rightToCheck = "mgt_modify_product";
             if ($this->userHasRight($rightToCheck)) {
-                $op = array(
+                $op = [
                     'status' => 'ok',
                     'message' => 'ok'
-                );
+                ];
                 $item = json_decode($request->getBody());
                 $op['id'] = $this->tprojectMgr->create($item,
-                    array(
+                    [
                         'doChecks' => true
-                    ));
+                    ]);
             } else {
                 $response = new Response();
                 $response->withStatus(403);
@@ -520,12 +520,12 @@ class RestApi
      */
     public function createBuild(Request $request, Response $response)
     {
-        $op = array(
+        $op = [
             'status' => 'ko',
             'message' => 'ko',
-            'details' => array(),
+            'details' => [],
             'id' => - 1
-        );
+        ];
 
         $rightToCheck = "testplan_create_build";
 
@@ -542,10 +542,10 @@ class RestApi
         $statusOK = true;
         $build = new stdClass();
 
-        $reqProps = array(
+        $reqProps = [
             'testplan',
             'name'
-        );
+        ];
         foreach ($reqProps as $prop) {
             if (! property_exists($item, $prop)) {
                 $op['details'][] = $this->l10n['API_MISSING_REQUIRED_PROP'] .
@@ -589,10 +589,10 @@ class RestApi
 
         if ($statusOK) {
             // Ready to check user permissions
-            $context = array(
+            $context = [
                 'tplan_id' => $tplan['id'],
                 'tproject_id' => $tplan['testproject_id']
-            );
+            ];
 
             if (! $this->userHasRight($rightToCheck, true, $context)) {
                 $statusOK = false;
@@ -627,7 +627,7 @@ class RestApi
         // Step 2 - Finally Create It!!
         if ($statusOK) {
             // key 2 check with default value is parameter is missing
-            $k2check = array(
+            $k2check = [
                 'is_open' => 1,
                 'release_candidate' => null,
                 'notes' => null,
@@ -640,11 +640,11 @@ class RestApi
                 'release_date' => null,
                 'copy_testers_from_build' => null,
                 'copytestersfrombuild' => null
-            );
+            ];
 
             $buildProp = $this->buildPropMapping();
 
-            $skipKey = array();
+            $skipKey = [];
             foreach ($k2check as $key => $value) {
                 $translate = $buildProp[$key];
                 if (! isset($skipKey[$translate])) {
@@ -658,12 +658,12 @@ class RestApi
 
             $itemID = $this->buildMgr->createFromObject($build);
             if ($itemID > 0) {
-                $op = array(
+                $op = [
                     'status' => 'ok',
                     'message' => 'ok',
-                    'details' => array(),
+                    'details' => [],
                     'id' => $itemID
-                );
+                ];
             }
         }
 
@@ -701,12 +701,12 @@ class RestApi
      */
     public function updateBuild(Request $request, Response $response, $args)
     {
-        $op = array(
+        $op = [
             'status' => 'ko',
             'message' => 'ko',
-            'details' => array(),
+            'details' => [],
             'id' => - 1
-        );
+        ];
 
         $id = intval($args['id']);
         $rightToCheck = "testplan_create_build";
@@ -744,10 +744,10 @@ class RestApi
             $tplan = $this->tplanMgr->get_by_id($build['testplan_id']);
 
             // Ready to check user permissions
-            $context = array(
+            $context = [
                 'tplan_id' => $tplan['id'],
                 'tproject_id' => $tplan['testproject_id']
-            );
+            ];
 
             if (! $this->userHasRight($rightToCheck, true, $context)) {
                 $statusOK = false;
@@ -774,7 +774,7 @@ class RestApi
 
         // Step 2 - Finally Update It!!
         if ($statusOK) {
-            $k2check = array(
+            $k2check = [
                 'is_open',
                 'name',
                 'release_candidate',
@@ -788,13 +788,13 @@ class RestApi
                 'release_date',
                 'copy_testers_from_build',
                 'copytestersfrombuild'
-            );
+            ];
 
             $buildProp = $this->buildPropMapping();
 
-            $skipKey = array();
+            $skipKey = [];
             $buildObj = new stdClass();
-            $attr = array();
+            $attr = [];
             foreach ($k2check as $key) {
                 $translate = $buildProp[$key];
                 if (! isset($skipKey[$translate])) {
@@ -823,12 +823,12 @@ class RestApi
                 $buildObj->notes, $attr);
 
             if ($ox) {
-                $op = array(
+                $op = [
                     'status' => 'ok',
                     'message' => 'ok',
-                    'details' => array(),
+                    'details' => [],
                     'id' => $id
-                );
+                ];
 
                 // Special processing Build Closing/Opening
                 // we need also to manage close on date.
@@ -864,14 +864,14 @@ class RestApi
         $op = $this->getStdIDKO();
         try {
             $item = json_decode($request->getBody());
-            $op = array(
+            $op = [
                 'status' => 'ok',
                 'message' => 'ok'
-            );
-            $opeOpt = array(
+            ];
+            $opeOpt = [
                 'setSessionProject' => false,
                 'doChecks' => true
-            );
+            ];
 
             if (property_exists($item, 'testProjectPrefix')) {
                 $pi = $this->tprojectMgr->get_by_prefix(
@@ -903,10 +903,10 @@ class RestApi
         $op = $this->getStdIDKO();
         $id = intval($args['id']);
         try {
-            $op = array(
+            $op = [
                 'status' => 'ok',
                 'message' => 'ok'
-            );
+            ];
             $item = json_decode($request->getBody());
             $item->id = $id;
             var_dump($item);
@@ -991,10 +991,10 @@ class RestApi
             foreach ($util as $prop => $value) {
                 $ex->$prop = $value;
             }
-            $op = array(
+            $op = [
                 'status' => 'ok',
                 'message' => 'ok'
-            );
+            ];
 
             // This writes ONLY a test case level, not steps
             $op['id'] = $this->tplanMgr->writeExecution($ex);
@@ -1021,14 +1021,14 @@ class RestApi
         $op = $this->getStdIDKO();
         try {
             $item = json_decode($request->getBody());
-            $op = array(
+            $op = [
                 'status' => 'ok',
                 'message' => 'ok'
-            );
+            ];
             $op['id'] = $this->tsuiteMgr->createFromObject($item,
-                array(
+                [
                     'doChecks' => true
-                ));
+                ]);
         } catch (Exception $e) {
             $response = new Response();
             $response->withStatus(500);
@@ -1057,10 +1057,10 @@ class RestApi
         try {
             $plat2link = json_decode($request->getBody());
 
-            $op = array(
+            $op = [
                 'status' => 'ok',
                 'message' => 'ok'
-            );
+            ];
             $statusOK = true;
             if (null == $plat2link || ! is_array($plat2link)) {
                 $statusOK = false;
@@ -1071,11 +1071,11 @@ class RestApi
             if ($statusOK) {
                 // Validate Test plan existence.
                 // Get Test Project ID before doing anything
-                $getOpt = array(
+                $getOpt = [
                     'output' => 'testPlanFields',
                     'active' => 1,
                     'testPlanFields' => 'id,testproject_id,is_public'
-                );
+                ];
 
                 $testPlan = $this->tplanMgr->get_by_id($tplan_id, $getOpt);
                 $statusOK = ! is_null($testPlan);
@@ -1139,9 +1139,9 @@ class RestApi
             if ($statusOK) {
                 $p2link = [];
                 // Finally link platforms, if not linked yet
-                $gOpt = array(
+                $gOpt = [
                     'outputFormat' => 'mapAccessByID'
-                );
+                ];
                 $linked = (array) $platMgr->getLinkedToTestplan($tplan_id, $gOpt);
                 foreach ($idToLink as $plat_id) {
                     if (! isset($linked[$plat_id])) {
@@ -1225,11 +1225,11 @@ class RestApi
             $this->checkRelatives($tcase);
 
             $ou = $this->tcaseMgr->createFromObject($tcase);
-            $op = array(
+            $op = [
                 'status' => 'ok',
                 'message' => 'ok',
                 'id' => - 1
-            );
+            ];
             if (($op['id'] = $ou['id']) <= 0) {
                 $op['status'] = 'ko';
                 $op['message'] = $ou['msg'];
@@ -1297,10 +1297,10 @@ class RestApi
                 $pid = $pid['id'];
                 $ou = $this->tprojectMgr->addKeyword($pid, $item->keyword,
                     $item->notes);
-                $op = array(
+                $op = [
                     'status' => 'ok',
                     'message' => 'ok'
-                );
+                ];
                 $op['id'] = $ou['id'];
                 if ($ou['status'] < 0) {
                     $op['status'] = 'ko';
@@ -1323,7 +1323,7 @@ class RestApi
     /* ************************************ */
     private function buildPropMapping()
     {
-        return array(
+        return [
             'name' => 'name',
             'tplan_id' => 'tplan_id',
             'release_date' => 'release_date',
@@ -1338,7 +1338,7 @@ class RestApi
             'is_open' => 'is_open',
             'copytestersfrombuild' => 'copytestersfrombuild',
             'copy_testers_from_build' => 'copytestersfrombuild'
-        );
+        ];
     }
 
     /**
@@ -1354,7 +1354,7 @@ class RestApi
         $tcase->steps = null;
         $tcase->testProjectID = - 1;
 
-        $accessKey = array();
+        $accessKey = [];
         $isOK = true;
 
         // Knowing author is critic, because rights are related to user.
@@ -1378,16 +1378,16 @@ class RestApi
         }
 
         // Mandatory attributes
-        $ma = array(
+        $ma = [
             'name' => null,
-            'testProject' => array(
+            'testProject' => [
                 'id',
                 'prefix'
-            ),
-            'testSuite' => array(
+            ],
+            'testSuite' => [
                 'id'
-            )
-        );
+            ]
+        ];
 
         foreach ($ma as $key => $dummy) {
             if (! ($isOK = $isOK && property_exists($obj, $key))) {
@@ -1417,32 +1417,32 @@ class RestApi
         $tcase->name = trim($obj->name);
         $tcase->testSuiteID = intval($obj->testSuite->id);
 
-        $gOpt = array(
+        $gOpt = [
             'output' => 'array_of_map',
             'field_set' => 'prefix',
             'add_issuetracker' => false,
             'add_reqmgrsystem' => false
-        );
+        ];
 
         $msg = "Test project with ";
         if ($accessKey['testProject']['id']) {
             $safeID = intval($obj->testProject->id);
-            $gFilters = array(
-                'id' => array(
+            $gFilters = [
+                'id' => [
                     'op' => '=',
                     'value' => $safeID
-                )
-            );
+                ]
+            ];
             $msg .= "id={$safeID} ";
         }
 
         if ($accessKey['testProject']['prefix']) {
-            $gFilters = array(
-                'prefix' => array(
+            $gFilters = [
+                'prefix' => [
                     'op' => '=',
                     'value' => trim($obj->testProject->prefix)
-                )
-            );
+                ]
+            ];
             $msg .= "prefix={$obj->testProject->prefix} ";
         }
 
@@ -1461,10 +1461,10 @@ class RestApi
         // - add <pre>
         // - concact the elements with "\n"
         // - add </pre>
-        $sk2d = array(
+        $sk2d = [
             'summary' => '',
             'preconditions' => ''
-        );
+        ];
         foreach ($sk2d as $key => $value) {
             if (is_array($tcase->$key)) {
                 $tcase->$key = "<pre>" . implode("\n", $tcase->$key) . "</pre>";
@@ -1473,11 +1473,11 @@ class RestApi
 
         // these are objects with name as property.
         $tcfg = $this->cfg['tcase'];
-        $ck2d = array(
+        $ck2d = [
             'executionType' => $tcfg['executionType']['manual'],
             'importance' => $tcfg['defaults']['importance'],
             'status' => $tcfg['status']['draft']
-        );
+        ];
 
         foreach ($ck2d as $prop => $defa) {
             $tcase->$prop = property_exists($obj, $prop) ? $tcfg[$prop][$obj->$prop->name] : $defa;
@@ -1485,10 +1485,10 @@ class RestApi
 
         if (property_exists($obj, 'steps')) {
             $tcase->steps = [];
-            $sk2d = array(
+            $sk2d = [
                 'actions' => '',
                 'expected_results' => ''
-            );
+            ];
             foreach ($obj->steps as $stepObj) {
                 foreach ($sk2d as $key => $value) {
                     if (is_array($stepObj->$key)) {
@@ -1513,11 +1513,11 @@ class RestApi
 
         // Test plan ID exists and is ACTIVE
         $msg = 'invalid Test plan ID';
-        $getOpt = array(
+        $getOpt = [
             'output' => 'testPlanFields',
             'active' => 1,
             'testPlanFields' => 'id,testproject_id,is_public'
-        );
+        ];
         $status_ok = ! is_null(
             $testPlan = $this->tplanMgr->get_by_id($ex->testPlanID, $getOpt));
 
@@ -1532,11 +1532,11 @@ class RestApi
         if ($status_ok) {
             // Check if couple (buildID,testPlanID) is valid
             $msg = '(buildID,testPlanID) couple is not valid';
-            $getOpt = array(
+            $getOpt = [
                 'fields' => 'id,active,is_open',
                 'buildID' => $ex->buildID,
                 'orderBy' => null
-            );
+            ];
             $status_ok = ! is_null(
                 $build = $this->tplanMgr->get_builds($ex->testPlanID, null, null,
                     $getOpt));
@@ -1553,10 +1553,10 @@ class RestApi
             // Get Test plan platforms
             $platform = $ex->platformID;
 
-            $getOpt = array(
+            $getOpt = [
                 'outputFormat' => 'mapAccessByID',
                 'addIfNull' => false
-            );
+            ];
             $platformSet = $this->tplanMgr->getPlatforms($ex->testPlanID,
                 $getOpt);
 
@@ -1591,14 +1591,14 @@ class RestApi
             if ($status_ok) {
                 // Does this test case is linked to test plan ?
                 $msg = 'Test case is not linked to (test plan,platform) => can not be executed';
-                $getFilters = array(
+                $getFilters = [
                     'testplan_id' => $ex->testPlanID,
                     'platform_id' => $platform
-                );
+                ];
 
-                $getOpt = array(
+                $getOpt = [
                     'output' => 'simple'
-                );
+                ];
                 $links = $this->tcaseMgr->get_linked_versions($tcaseID,
                     $getFilters, $getOpt);
                 $status_ok = ! is_null($links);
@@ -1700,9 +1700,9 @@ class RestApi
             if ($tproject_id <= 0 && ! is_null($tplan_id)) {
                 // get test project from test plan
                 $dummy = $this->tplanMgr->get_by_id($tplanid,
-                    array(
+                    [
                         'output' => 'minimun'
-                    ));
+                    ]);
                 $tproject_id = intval($dummy['tproject_id']);
             }
         }
@@ -1718,29 +1718,29 @@ class RestApi
      */
     private function getStdOp()
     {
-        return array(
+        return [
             'status' => 'ok',
             'message' => 'ok',
             'items' => null
-        );
+        ];
     }
 
     /**
      */
     private function getStdIDKO()
     {
-        return array(
+        return [
             'status' => 'ko',
             'message' => 'ko',
             'id' => - 1
-        );
+        ];
     }
 
     /**
      */
     private function byeHTTP500($msg = null)
     {
-        $op = array();
+        $op = [];
         if (null == $msg) {
             $msg = 'TestLink Fatal Error - Malformed Request Body - ' .
                 ' json_decode() issue';

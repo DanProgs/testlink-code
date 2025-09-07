@@ -46,18 +46,18 @@ function initializeGui(&$dbHandler, &$control)
     $lblkey = (config_get('testcase_reorder_by') == 'NAME') ? '_alpha' : '_externalid';
     $gui->btn_reorder_testcases = lang_get('btn_reorder_testcases' . $lblkey);
 
-    $feature_path = array(
+    $feature_path = [
         'edit_tc' => "lib/testcases/archiveData.php",
         'keywordsAssign' => "lib/keywords/keywordsAssign.php",
         'assignReqs' => "lib/requirements/reqTcAssign.php"
-    );
+    ];
 
-    $gui->tree_drag_and_drop_enabled = array(
+    $gui->tree_drag_and_drop_enabled = [
         'edit_tc' => ($_SESSION['currentUser']->hasRightOnProj($dbHandler,
             "mgt_modify_tc") == 'yes'),
         'keywordsAssign' => false,
         'assignReqs' => false
-    );
+    ];
 
     $gui->menuUrl = $feature_path[$gui->feature];
     return $gui;

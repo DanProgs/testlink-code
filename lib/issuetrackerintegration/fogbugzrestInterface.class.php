@@ -35,12 +35,12 @@ class fogbugzrestInterface extends issueTrackerInterface
     {
         $this->name = $name;
         $this->interfaceViaDB = false;
-        $this->methodOpt = array(
-            'buildViewBugLink' => array(
+        $this->methodOpt = [
+            'buildViewBugLink' => [
                 'addSummary' => true,
                 'colorByStatus' => true
-            )
-        );
+            ]
+        ];
 
         if (! $this->setCfg($config)) {
             return false;
@@ -109,16 +109,16 @@ class fogbugzrestInterface extends issueTrackerInterface
             $this->connected = true;
         } catch (Exception $e) {
             $logDetails = '';
-            foreach (array(
+            foreach ([
                 'uribase',
                 'username',
                 'password'
-            ) as $v) {
-                $logDetails .= "$v={$this->cfg->$v} / ";
+            ] as $v) {
+                $logDetails .= "{$v}={$this->cfg->$v} / ";
             }
             $logDetails = trim($logDetails, '/ ');
             $this->connected = false;
-            tLog(__METHOD__ . " [$logDetails] " . $e->getMessage(), 'ERROR');
+            tLog(__METHOD__ . " [{$logDetails}] " . $e->getMessage(), 'ERROR');
         }
     }
 
@@ -140,10 +140,10 @@ class fogbugzrestInterface extends issueTrackerInterface
         }
 
         try {
-            $target = array(
+            $target = [
                 'q' => intval($issueID),
                 'cols' => 'sTitle,sStatus'
-            );
+            ];
             $xml = $this->APIClient->search($target);
             if (! is_null($xml) && is_object($xml)) {
                 $issue = new stdClass();
@@ -221,28 +221,28 @@ class fogbugzrestInterface extends issueTrackerInterface
     {
         try {
             $projectName = (string) $this->cfg->project;
-            $issue = array(
+            $issue = [
                 'sProject' => htmlentities($projectName),
                 'sTitle' => htmlentities($summary),
                 'sEvent' => htmlentities($description)
-            );
+            ];
 
             // just for the record APIClient->NAME OF FogBugz command
             $op = $this->APIClient->new($issue);
-            $ret = array(
+            $ret = [
                 'status_ok' => true,
                 'id' => (string) $op->case['ixBug'],
                 'msg' => sprintf(lang_get('fogbugz_bug_created'), $summary,
                     $projectName)
-            );
+            ];
         } catch (Exception $e) {
             $msg = "Create FOGBUGZ Ticket FAILURE => " . $e->getMessage();
             tLog($msg, 'WARNING');
-            $ret = array(
+            $ret = [
                 'status_ok' => false,
                 'id' => - 1,
                 'msg' => $msg . ' - serialized issue:' . serialize($issue)
-            );
+            ];
         }
         return $ret;
     }

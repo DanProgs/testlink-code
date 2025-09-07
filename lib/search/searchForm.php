@@ -72,16 +72,16 @@ function initializeGui(&$dbHandler, &$argsObj)
     $reqSpecSet = $tproject_mgr->genComboReqSpec($argsObj->tprojectID);
     $gui->filter_by['requirement_doc_id'] = ! is_null($reqSpecSet);
 
-    $gui->option_importance = array(
+    $gui->option_importance = [
         0 => '',
         HIGH => lang_get('high_importance'),
         MEDIUM => lang_get('medium_importance'),
         LOW => lang_get('low_importance')
-    );
+    ];
 
     $dummy = getConfigAndLabels('testCaseStatus', 'code');
-    $gui->domainTCStatus = array(
+    $gui->domainTCStatus = [
         0 => ''
-    ) + $dummy['lbl'];
+    ] + $dummy['lbl'];
     return $gui;
 }

@@ -25,12 +25,12 @@ $args = initArgs();
 $gui = new stdClass();
 $gui->page_title = lang_get('import_cfields');
 $gui->goback_url = ! is_null($args->goback_url) ? $args->goback_url : '';
-$gui->file_check = array(
+$gui->file_check = [
     'show_results' => 0,
     'status_ok' => 1,
     'msg' => 'ok',
     'filename' => ''
-);
+];
 
 switch ($args->doAction) {
     case 'doImport':
@@ -42,9 +42,9 @@ switch ($args->doAction) {
 }
 
 $obj_mgr = new cfield_mgr($db);
-$gui->importTypes = array(
+$gui->importTypes = [
     'XML' => 'XML'
-);
+];
 $gui->importLimitKB = (config_get('import_file_max_size_bytes') / 1024);
 
 $smarty = new TLSmarty();
@@ -60,18 +60,18 @@ function initArgs()
     $args = new stdClass();
     $_REQUEST = strings_stripSlashes($_REQUEST);
 
-    $iParams = array(
-        "doAction" => array(
+    $iParams = [
+        "doAction" => [
             tlInputParameter::STRING_N,
             0,
             50
-        ),
-        "export_filename" => array(
+        ],
+        "export_filename" => [
             tlInputParameter::STRING_N,
             0,
             100
-        )
-    );
+        ]
+    ];
 
     R_PARAMS($iParams, $args);
     $args->userID = $_SESSION['userID'];
@@ -89,17 +89,17 @@ function initArgs()
  */
 function doImport(&$dbHandler)
 {
-    $import_msg = array(
-        'ok' => array(),
-        'ko' => array()
-    );
-    $file_check = array(
+    $import_msg = [
+        'ok' => [],
+        'ko' => []
+    ];
+    $file_check = [
         'show_results' => 0,
         'status_ok' => 0,
         'msg' => '',
         'filename' => '',
         'import_msg' => $import_msg
-    );
+    ];
 
     $key = 'targetFilename';
     $dest = TL_TEMP_PATH . session_id() . "-import_cfields.tmp";
@@ -129,11 +129,11 @@ function doImport(&$dbHandler)
             $file_check['msg'] = lang_get('problems_loading_xml_content');
         }
     } else {
-        $file_check = array(
+        $file_check = [
             'show_results' => 0,
             'status_ok' => 0,
             'msg' => lang_get('please_choose_file_to_import')
-        );
+        ];
     }
 
     $file_check['import_msg'] = $import_msg;

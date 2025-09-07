@@ -59,15 +59,15 @@ class exec_cfield_mgr extends cfield_mgr
     {
         $cf_smarty = '';
         $cfTypeIDSet = array_flip($this->custom_field_types);
-        $defaultSize = array(
+        $defaultSize = [
             $cfTypeIDSet['list'] => 3,
             $cfTypeIDSet['multiselection list'] => 3
-        );
+        ];
 
-        $inputOpt = array(
+        $inputOpt = [
             'name_suffix' => '',
             'field_size' => $htmlInputSize
-        );
+        ];
 
         if (! is_null($this->cf_map)) {
             foreach ($this->cf_map as $cf_info) {
@@ -103,9 +103,9 @@ class exec_cfield_mgr extends cfield_mgr
     public function get_linked_cfields($tproject_id)
     {
         $enabled = 1;
-        $filters = array(
+        $filters = [
             'show_on_execution' => 1
-        ); // BUGID 1650 (REQ)
+        ]; // BUGID 1650 (REQ)
 
         // this is calling the parent method
         $cf = $this->get_linked_cfields_at_design($tproject_id, $enabled,
@@ -161,7 +161,7 @@ class exec_cfield_mgr extends cfield_mgr
      */
     private function field_names()
     {
-        $input_name = array();
+        $input_name = [];
 
         if (! is_null($this->cf_map)) {
             foreach ($this->cf_map as $cf_info) {
@@ -169,12 +169,12 @@ class exec_cfield_mgr extends cfield_mgr
                 $t_type = $cf_info['type'];
                 $verbose_type = $this->custom_field_types[$t_type];
 
-                $input_name[$t_id] = array(
+                $input_name[$t_id] = [
                     'cf_name' => "{$this->name_prefix}{$t_type}_{$t_id}",
                     'verbose_type' => $verbose_type,
                     'type_id' => $t_type,
                     'id' => $t_id
-                );
+                ];
             }
         }
 

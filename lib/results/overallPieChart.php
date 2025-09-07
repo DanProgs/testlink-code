@@ -18,8 +18,8 @@ require_once '../../config.inc.php';
 require_once 'common.php';
 
 require_once __DIR__ . '/../../vendor/autoload.php'; // Autoload files using Composer autoload
-use pChart\pData;
 use pChart\pChart;
+use pChart\pData;
 
 $resultsCfg = config_get('results');
 $chart_cfg = $resultsCfg['charts']['dimensions']['overallPieChart'];
@@ -31,11 +31,11 @@ $metricsMgr = new tlTestPlanMetrics($db);
 $totals = $metricsMgr->getExecCountersByExecStatus($args->tplan_id);
 unset($totals['total']);
 
-$values = array();
-$labels = array();
+$values = [];
+$labels = [];
 foreach ($totals as $key => $value) {
     $values[] = $value;
-    $labels[] = lang_get($resultsCfg['status_label'][$key]) . " ($value)";
+    $labels[] = lang_get($resultsCfg['status_label'][$key]) . " ({$value})";
     if (isset($resultsCfg['charts']['status_colour'][$key])) {
         $series_color[] = $resultsCfg['charts']['status_colour'][$key];
     }
@@ -98,19 +98,19 @@ function checkRights(&$db, &$user)
  */
 function initArgs(&$dbHandler)
 {
-    $iParams = array(
-        "apikey" => array(
+    $iParams = [
+        "apikey" => [
             tlInputParameter::STRING_N,
             0,
             64
-        ),
-        "tproject_id" => array(
+        ],
+        "tproject_id" => [
             tlInputParameter::INT_N
-        ),
-        "tplan_id" => array(
+        ],
+        "tplan_id" => [
             tlInputParameter::INT_N
-        )
-    );
+        ]
+    ];
     $args = new stdClass();
     R_PARAMS($iParams, $args);
 

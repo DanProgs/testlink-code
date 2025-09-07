@@ -68,21 +68,21 @@ function initArgs(&$dbHandler)
 {
     $_REQUEST = strings_stripSlashes($_REQUEST);
 
-    $ipcfg = array(
-        "UploadFile" => array(
+    $ipcfg = [
+        "UploadFile" => [
             tlInputParameter::STRING_N,
             0,
             1
-        ),
-        "importType" => array(
+        ],
+        "importType" => [
             tlInputParameter::STRING_N,
             0,
             100
-        ),
-        "tproject_id" => array(
+        ],
+        "tproject_id" => [
             tlInputParameter::INT_N
-        )
-    );
+        ]
+    ];
 
     $args = new stdClass();
     R_PARAMS($ipcfg, $args);
@@ -98,16 +98,16 @@ function initArgs(&$dbHandler)
     $env['tplan_id'] = 0;
 
     $check = new stdClass();
-    $check->items = array(
+    $check->items = [
         'mgt_modify_key'
-    );
+    ];
     $check->mode = 'and';
     checkAccess($dbHandler, $user, $env, $check);
 
     $tproj_mgr = new testproject($dbHandler);
-    $dm = $tproj_mgr->get_by_id($args->tproject_id, array(
+    $dm = $tproj_mgr->get_by_id($args->tproject_id, [
         'output' => 'name'
-    ));
+    ]);
     $args->tproject_name = $dm['name'];
 
     $args->UploadFile = ($args->UploadFile != "") ? 1 : 0;

@@ -26,10 +26,10 @@ $tproject_mgr = new testproject($db);
 $glue = config_get('testcase_cfg')->glue_character;
 $args = initArgs();
 $gui = initializeGui($args);
-$getOpt = array(
+$getOpt = [
     'outputFormat' => 'map',
     'addIfNull' => true
-);
+];
 $gui->platformSet = $tplan_mgr->getPlatforms($args->tplan_id, $getOpt);
 
 $options['output'] = 'essential';
@@ -54,9 +54,9 @@ if (! is_null($tcase_all_info)) {
 $link_info = $tcaseMgr->get_linked_versions($args->tcase_id);
 if (! is_null(
     $tplanSet = $tproject_mgr->get_all_testplans($args->tproject_id,
-        array(
+        [
             'plan_status' => 1
-        )))) {
+        ]))) {
     $has_links = array_fill_keys(array_keys($tplanSet), false);
     $linked_tplans = null;
     if (! is_null($link_info)) {
@@ -73,12 +73,12 @@ if (! is_null(
     }
 
     // Initial situation, enable link of target test case version to all test plans
-    $getOpt = array(
+    $getOpt = [
         'outputFormat' => 'map',
         'addIfNull' => true
-    );
+    ];
     foreach ($tplanSet as $tplan_id => $value) {
-        $gui->tplans[$tplan_id] = array();
+        $gui->tplans[$tplan_id] = [];
         $platformSet = $tplan_mgr->getPlatforms($tplan_id, $getOpt);
 
         $target_version_number = $version;

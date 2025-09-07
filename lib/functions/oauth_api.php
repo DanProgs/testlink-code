@@ -13,7 +13,7 @@
 // Create correct link for oauth
 function oauthLink($oauthCfg)
 {
-    $oap = array();
+    $oap = [];
 
     $oap['redirect_uri'] = trim($oauthCfg['redirect_uri']);
     if (isset($_SERVER['HTTPS'])) {

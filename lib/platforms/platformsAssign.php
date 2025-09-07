@@ -111,7 +111,7 @@ function initOptionPanels(&$tplan_mgr, &$platform_mgr, &$opt_cfg, &$args)
         foreach ($map as $plat_id => &$plat_name) {
             $count = $tplan_mgr->count_testcases($args->tplan_id, $plat_id);
             $plat_name .= sprintf(lang_get('platform_linked_count'), $count);
-            $platform_count_js .= "platform_count_map['$plat_name'] = $count;\n";
+            $platform_count_js .= "platform_count_map['{$plat_name}'] = {$count};\n";
 
             // Removal of duplicates is NOT handled
             // automatically since we just have modified
@@ -131,27 +131,27 @@ function initArgs(&$opt_cfg)
     $added = $opt_cfg->js_ot_name . "_addedRight";
     $removed = $opt_cfg->js_ot_name . "_removedRight";
 
-    $iParams = array(
-        "tplan_id" => array(
+    $iParams = [
+        "tplan_id" => [
             tlInputParameter::INT_N
-        ),
-        "edit" => array(
+        ],
+        "edit" => [
             tlInputParameter::STRING_N,
             0,
             100
-        ),
-        "doAction" => array(
+        ],
+        "doAction" => [
             tlInputParameter::STRING_N,
             0,
             20
-        ),
-        $added => array(
+        ],
+        $added => [
             tlInputParameter::STRING_N
-        ),
-        $removed => array(
+        ],
+        $removed => [
             tlInputParameter::STRING_N
-        )
-    );
+        ]
+    ];
 
     $pParams = R_PARAMS($iParams);
 

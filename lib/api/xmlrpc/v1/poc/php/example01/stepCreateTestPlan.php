@@ -11,10 +11,10 @@ $method = 'createTestPlan';
 $tlIdx ++;
 if (! isset($tlTestCasePrefix) || is_null($tlTestCasePrefix)) {
     throw new Exception(
-        "This is intended to be used with $tlTestCasePrefix provided", 1);
+        "This is intended to be used with {$tlTestCasePrefix} provided", 1);
 }
 
-$args = array();
+$args = [];
 $args["devKey"] = isset($_REQUEST['apiKey']) ? $_REQUEST['apiKey'] : $tlDevKey;
 $args["prefix"] = $tlTestCasePrefix;
 $args["testplanname"] = "TPLAN BY API";

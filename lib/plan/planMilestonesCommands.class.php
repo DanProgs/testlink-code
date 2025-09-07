@@ -53,7 +53,7 @@ class planMilestonesCommands
         $guiObj->action_descr = lang_get('create_milestone');
         $guiObj->template = $this->defaultTemplate;
         $guiObj->submit_button_label = $this->submit_button_label;
-        $guiObj->milestone = array(
+        $guiObj->milestone = [
             'id' => 0,
             'name' => '',
             'target_date' => '',
@@ -63,7 +63,7 @@ class planMilestonesCommands
             'low_percentage' => '',
             'testplan_id' => $argsObj->tplan_id,
             'testplan_name' => $argsObj->tplan_name
-        );
+        ];
         return $guiObj;
     }
 
@@ -147,7 +147,7 @@ class planMilestonesCommands
 
         // check target date
         if ($op_ok) {
-            $timestamp = array();
+            $timestamp = [];
             $timestamp['target'] = strtotime(
                 $argsObj->target_date . " 23:59:59");
             $timestamp['now'] = strtotime("now");
@@ -241,7 +241,7 @@ class planMilestonesCommands
 
         // target date changed ?
         if ($op_ok) {
-            $timestamp = array();
+            $timestamp = [];
             $timestamp['target'] = strtotime(
                 $argsObj->target_date . " 23:59:59");
             $timestamp['original_target'] = strtotime(

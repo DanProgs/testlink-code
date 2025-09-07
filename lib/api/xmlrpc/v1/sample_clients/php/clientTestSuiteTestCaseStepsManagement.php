@@ -21,7 +21,7 @@ $client->debug = $debug;
 
 $tcCounter = 0;
 
-$commonArgs = array();
+$commonArgs = [];
 $commonArgs["devKey"] = DEV_KEY;
 $commonArgs["testcaseexternalid"] = $cfg->tcasePrefix . '-1';
 
@@ -36,11 +36,11 @@ for ($idx = 1; $idx < $qtySteps; $idx ++) {
         $expected_results = 'GREEN Lantern %s ON';
     }
     $expected_results = sprintf($expected_results, $idx);
-    $fakeSteps[] = array(
+    $fakeSteps[] = [
         'step_number' => $idx,
         'actions' => $action . $idx,
         'expected_results' => $expected_results
-    );
+    ];
 }
 
 // Get existent Test Case
@@ -96,11 +96,11 @@ if (isset($ret['code'])) {
 
 // Now Create a Fake Step to PUSH
 $alienStartPos = intval($qtySteps / 3);
-$aliens[] = array(
+$aliens[] = [
     'step_number' => $alienStartPos,
     'actions' => 'ALIEN ' . $action,
     'expected_results' => 'Ripley Will BE INFECTED'
-);
+];
 
 $args = $commonArgs;
 $args["version"] = $cfg->tcaseVersionNumber;
@@ -115,11 +115,11 @@ if (isset($ret['code'])) {
 
 // Now TRY TO Create EXISTENT STEP
 $alienStartPos = intval($qtySteps / 3);
-$aliens[] = array(
+$aliens[] = [
     'step_number' => $alienStartPos,
     'actions' => 'If you see this content => Houston we have a problem' . $action,
     'expected_results' => 'Ripley Will BE INFECTED'
-);
+];
 
 $args = $commonArgs;
 $args["version"] = $cfg->tcaseVersionNumber;
@@ -135,11 +135,11 @@ if (isset($ret['code'])) {
 // Now TRY TO UPDATE a NON EXISTENT STEP
 $hint = 'You have requested UPDATE of NON EXISTENT Step => we will CREATE it';
 $alienStartPos = 1000;
-$aliens[] = array(
+$aliens[] = [
     'step_number' => $alienStartPos,
     'actions' => $hint . $action,
     'expected_results' => 'Ripley Will BE INFECTED'
-);
+];
 
 $args = $commonArgs;
 $args["version"] = $cfg->tcaseVersionNumber;

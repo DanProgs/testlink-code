@@ -60,12 +60,12 @@ function initArgs(&$tcaseMgr)
         $_REQUEST['tcase_id']) : 0;
     $args->goback_url = isset($_REQUEST['goback_url']) ? $_REQUEST['goback_url'] : null;
 
-    $args->uchoice = array();
-    $k2s = array(
+    $args->uchoice = [];
+    $k2s = [
         'importance',
         'status',
         'execution_type'
-    );
+    ];
     foreach ($k2s as $tg) {
         $args->uchoice[$tg] = intval(
             isset($_REQUEST[$tg]) ? $_REQUEST[$tg] : - 1);
@@ -97,15 +97,15 @@ function initializeGui(&$argsObj)
     $guiObj->uchoice = $argsObj->uchoice;
     $guiObj->tcase_id = $argsObj->tcase_id;
 
-    $guiObj->domainTCStatus = array(
+    $guiObj->domainTCStatus = [
         - 1 => ''
-    ) + $argsObj->tcStatusCfg['code_label'];
-    $guiObj->domainTCExecType = array(
+    ] + $argsObj->tcStatusCfg['code_label'];
+    $guiObj->domainTCExecType = [
         - 1 => ''
-    ) + $argsObj->domainTCExecType;
-    $guiObj->domainTCImportance = array(
+    ] + $argsObj->domainTCExecType;
+    $guiObj->domainTCImportance = [
         - 1 => ''
-    ) + $argsObj->domainTCImportance;
+    ] + $argsObj->domainTCImportance;
 
     $guiObj->goback_url = ! is_null($argsObj->goback_url) ? $argsObj->goback_url : '';
 

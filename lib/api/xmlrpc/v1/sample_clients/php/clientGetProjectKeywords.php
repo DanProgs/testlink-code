@@ -15,7 +15,7 @@ $method = 'getProjectKeywords';
 $test_num = 1;
 $unitTestDescription = "Test {$test_num} - {$method}";
 
-$args = array();
+$args = [];
 $args["devKey"] = 'admin';
 $args["testprojectid"] = 2843;
 $additionalInfo = '';

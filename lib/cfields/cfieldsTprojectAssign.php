@@ -67,7 +67,7 @@ function initArgs(&$dbHandler)
     $_REQUEST = strings_stripSlashes($_REQUEST);
     $args = new stdClass();
 
-    $key2search = array(
+    $key2search = [
         'doAction',
         'checkedCF',
         'display_order',
@@ -78,14 +78,14 @@ function initArgs(&$dbHandler)
         'required_cfield',
         'hidden_monitorable_cfield',
         'monitorable_cfield'
-    );
+    ];
 
     foreach ($key2search as $key) {
         $args->$key = isset($_REQUEST[$key]) ? $_REQUEST[$key] : null;
     }
 
     if (is_null($args->checkedCF)) {
-        $args->checkedCF = array();
+        $args->checkedCF = [];
     }
 
     getTproj($dbHandler, $args);
@@ -112,9 +112,9 @@ function getTproj(&$dbH, &$args)
     if ($args->tproject_id > 0) {
         $mgr = new tree($dbH);
         $dummy = $mgr->get_node_hierarchy_info($args->tproject_id, null,
-            array(
+            [
                 'nodeType' => 'testproject'
-            ));
+            ]);
         if (is_null($dummy)) {
             throw new Exception("Unable to get Test Project ID");
         }
@@ -140,7 +140,7 @@ function initializeGui(&$args, &$cfield_mgr)
     $gui->other_cf = $cfield_mgr->get_all($cf2exclude);
 
     $gui->cf_available_types = $cfield_mgr->get_available_types();
-    $gui->cf_allowed_nodes = array();
+    $gui->cf_allowed_nodes = [];
     $allowed_nodes = $cfield_mgr->get_allowed_nodes();
 
     foreach ($allowed_nodes as $verbose_type => $type_id) {
@@ -185,7 +185,7 @@ function createLocationsMenu($locations)
  */
 function doRequiredMgmt(&$cfieldMgr, $argsObj)
 {
-    $cfg = array();
+    $cfg = [];
     $cfg['attrKey'] = 'required';
     $cfg['dbField'] = 'required';
     $cfg['attr'] = "{$cfg['attrKey']}_cfield";
@@ -202,7 +202,7 @@ function doRequiredMgmt(&$cfieldMgr, $argsObj)
  */
 function doActiveMgmt(&$cfieldMgr, $argsObj)
 {
-    $cfg = array();
+    $cfg = [];
     $cfg['attrKey'] = 'active';
     $cfg['dbField'] = 'active';
     $cfg['attr'] = "{$cfg['attrKey']}_cfield";
@@ -219,7 +219,7 @@ function doActiveMgmt(&$cfieldMgr, $argsObj)
  */
 function doMonitorableMgmt(&$cfieldMgr, $argsObj)
 {
-    $cfg = array();
+    $cfg = [];
     $cfg['attrKey'] = 'monitorable';
     $cfg['dbField'] = 'monitorable';
     $cfg['attr'] = "{$cfg['attrKey']}_cfield";

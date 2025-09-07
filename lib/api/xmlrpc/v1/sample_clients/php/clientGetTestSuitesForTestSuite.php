@@ -19,7 +19,7 @@ $method = 'getTestSuitesForTestSuite';
 $test_num = 1;
 $unitTestDescription = "Test {$test_num} - {$method}";
 
-$args = array();
+$args = [];
 $args["devKey"] = DEV_KEY;
 $args["testsuiteid"] = - 123;
 
@@ -38,7 +38,7 @@ $answer = runTest($client, $method, $args, $test_num);
 $test_num ++;
 $unitTestDescription = "Test {$test_num} - {$method}";
 
-$args = array();
+$args = [];
 $args["devKey"] = DEV_KEY;
 $args["testsuiteid"] = 689;
 
@@ -60,7 +60,7 @@ $answer = runTest($client, $method, $args, $test_num);
 $test_num ++;
 $unitTestDescription = "Test {$test_num} - {$method}";
 
-$args = array();
+$args = [];
 $args["devKey"] = DEV_KEY;
 $args["testsuiteid"] = 193;
 
@@ -82,7 +82,7 @@ $answer = runTest($client, $method, $args, $test_num);
 $test_num ++;
 $unitTestDescription = "Test {$test_num} - {$method}";
 
-$args = array();
+$args = [];
 $args["devKey"] = DEV_KEY;
 $args["testsuiteid"] = 228;
 

@@ -42,18 +42,18 @@ if ($its->isConnected()) {
 
     $summary = 'Will try to create via REST RAW';
     $description = 'I WAS ABLE to create via REST RAW!!!';
-    $issue = array(
-        'fields' => array(
-            'project' => array(
+    $issue = [
+        'fields' => [
+            'project' => [
                 'key' => (string) $projectkey
-            ),
+            ],
             'summary' => $summary,
             'description' => $description,
-            'issuetype' => array(
+            'issuetype' => [
                 'id' => 1
-            )
-        )
-    );
+            ]
+        ]
+    ];
 
     $zorro = $its->getAPIClient()->createIssue($issue);
     echo 'Test - Create an ISSUE VIA REST RAW<br>';

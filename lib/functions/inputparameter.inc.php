@@ -225,13 +225,13 @@ function GPR_PARAM_STRING_N($inputSource, $name, $minLen = null, $maxLen = null,
     $vInfo->trim = tlStringValidationInfo::TRIM_BOTH;
     $vInfo->doStripSlashes = true;
 
-    $parameters = array(
+    $parameters = [
         "minLen",
         "maxLen",
         "regExp",
         "pfnValidation",
         "pfnNormalization"
-    );
+    ];
     foreach ($parameters as $parameter) {
         if (! is_null($$parameter)) {
             $vInfo->$parameter = $$parameter;
@@ -270,11 +270,11 @@ function GPR_PARAM_INT($inputSource, $name, $minVal = null, $maxVal = null,
 {
     $vInfo = new tlIntegerValidationInfo();
 
-    $parameters = array(
+    $parameters = [
         "minVal",
         "maxVal",
         "pfnValidation"
-    );
+    ];
     foreach ($parameters as $parameter) {
         if (! is_null($$parameter)) {
             $vInfo->$parameter = $$parameter;

@@ -51,7 +51,7 @@ function initializeGui(&$dbHandler, &$args, $images)
     $gui->tableSet = null;
 
     $gui->l18n = init_labels(
-        array(
+        [
             'tcversion_indicator' => null,
             'goto_testspec' => null,
             'version' => null,
@@ -67,7 +67,7 @@ function initializeGui(&$dbHandler, &$args, $images)
             'low' => null,
             'medium' => null,
             'high' => null
-        ));
+        ]);
 
     $gui->pageTitle = sprintf($gui->l18n['testcases_created_per_user'],
         $gui->tproject_name);
@@ -100,26 +100,26 @@ function initializeGuiForResult(&$dbHandler, $argsObj, &$guiObj)
     $rcfg = config_get('results');
     $map_code_status = $rcfg['code_status'];
     $map_status_label = $rcfg['status_label'];
-    $map_statuscode_css = array();
+    $map_statuscode_css = [];
 
     foreach ($map_code_status as $code => $status) {
         if (isset($map_status_label[$status])) {
             $label = $map_status_label[$status];
-            $map_statuscode_css[$code] = array();
+            $map_statuscode_css[$code] = [];
             $map_statuscode_css[$code]['translation'] = lang_get($label);
             $map_statuscode_css[$code]['css_class'] = $map_code_status[$code] .
                 '_text';
         }
     }
 
-    $options = array();
+    $options = [];
 
     // convert starttime to iso format for database usage
     $dateFormat = config_get('date_format');
-    $k2l = array(
+    $k2l = [
         'selected_start_date' => 'startTime',
         'selected_end_date' => 'endTime'
-    );
+    ];
     foreach ($k2l as $in => $opt) {
         if (isset($argsObj->$in) && count($argsObj->$in) > 0) {
             $dd = split_localized_date(current($argsObj->$in), $dateFormat);
@@ -142,11 +142,11 @@ function initializeGuiForResult(&$dbHandler, $argsObj, &$guiObj)
 
     if (! is_null($guiObj->resultSet)) {
         // test case can exist multiple times, due to versions
-        $rows = array();
-        list ($columns, $sortByColumn) = getColumnsDefinition();
+        $rows = [];
+        [$columns, $sortByColumn] = getColumnsDefinition();
         foreach ($guiObj->resultSet as $itemInfo) {
             foreach ($itemInfo as $tcase) {
-                $cuRow = array();
+                $cuRow = [];
                 $tcase_id = $tcase['tcase_id'];
                 $tcversion_id = $tcase['tcversion_id'];
                 $cuRow[] = htmlspecialchars($tcase['login']);
@@ -191,10 +191,10 @@ function initializeGuiForResult(&$dbHandler, $argsObj, &$guiObj)
         // has to exists or rendering will fail
         //
         $matrix->addCustomBehaviour('importance',
-            array(
+            [
                 'render' => 'importanceRenderer',
                 'filter' => 'Importance'
-            ));
+            ]);
 
         // Default grouping by first column, which is user for overview, build otherwise
         $matrix->setGroupByColumnName(lang_get($columns[0]['title_key']));
@@ -229,14 +229,14 @@ function initGuiForCSVDownload(&$dbHandler, $argsObj, &$guiObj)
 
     $colHeaders = getCSVColumnsDefinition();
 
-    $options = array();
+    $options = [];
 
     // convert starttime to iso format for database usage
     $dateFormat = config_get('date_format');
-    $k2l = array(
+    $k2l = [
         'selected_start_date' => 'startTime',
         'selected_end_date' => 'endTime'
-    );
+    ];
     foreach ($k2l as $in => $opt) {
         if (isset($argsObj->$in) && count($argsObj->$in) > 0) {
             $dd = split_localized_date(current($argsObj->$in), $dateFormat);
@@ -259,10 +259,10 @@ function initGuiForCSVDownload(&$dbHandler, $argsObj, &$guiObj)
 
     if (! is_null($guiObj->resultSet)) {
         // test case can exist multiple times, due to versions
-        $rows = array();
+        $rows = [];
         foreach ($guiObj->resultSet as $itemInfo) {
             foreach ($itemInfo as $tcase) {
-                $cuRow = array();
+                $cuRow = [];
                 $cuRow[] = htmlspecialchars($tcase['login']);
                 $cuRow[] = htmlspecialchars($tcase['path']);
 
@@ -299,9 +299,9 @@ function initGuiForCSVDownload(&$dbHandler, $argsObj, &$guiObj)
         $fcont = file_get_contents($csvfile);
         unlink($csvfile);
         $f2d = __FILE__ . '.csv';
-        $cty = array(
+        $cty = [
             'Content-Type' => 'text/csv'
-        );
+        ];
         downloadContentsToFile($fcont, $f2d, $cty);
         exit();
     }
@@ -319,9 +319,9 @@ function initializeGuiForInput(&$dbHandler, $argsObj, &$guiObj)
 
     $guiObj->users = new stdClass();
     $guiObj->users->items = getUsersForHtmlOptions($dbHandler, ALL_USERS_FILTER,
-        array(
+        [
             TL_USER_ANYBODY => $guiObj->str_option_any
-        ));
+        ]);
 
     $guiObj->user_id = intval($argsObj->user_id);
 
@@ -364,36 +364,36 @@ function initArgs(&$dbHandler)
 {
     $args = new stdClass();
 
-    $iParams = array(
-        "apikey" => array(
+    $iParams = [
+        "apikey" => [
             tlInputParameter::STRING_N,
             32,
             32
-        ),
-        "do_action" => array(
+        ],
+        "do_action" => [
             tlInputParameter::STRING_N,
             3,
             6
-        ),
-        "tproject_id" => array(
+        ],
+        "tproject_id" => [
             tlInputParameter::INT_N
-        ),
-        "user_id" => array(
+        ],
+        "user_id" => [
             tlInputParameter::INT_N
-        ),
-        "selected_start_date" => array(
+        ],
+        "selected_start_date" => [
             tlInputParameter::ARRAY_STRING_N
-        ),
-        "selected_end_date" => array(
+        ],
+        "selected_end_date" => [
             tlInputParameter::ARRAY_STRING_N
-        ),
-        "start_Hour" => array(
+        ],
+        "start_Hour" => [
             tlInputParameter::INT_N
-        ),
-        "end_Hour" => array(
+        ],
+        "end_Hour" => [
             tlInputParameter::INT_N
-        )
-    );
+        ]
+    ];
 
     $_REQUEST = strings_stripSlashes($_REQUEST);
     R_PARAMS($iParams, $args);
@@ -438,10 +438,10 @@ function sanitizeDates(&$obj)
     // - nl
     $validFormat = '#^\d{1,2}[./-][[0-9]{1,2}[./-][[0-9]{4}$#';
 
-    $p2check = array(
+    $p2check = [
         'selected_end_date',
         'selected_start_date'
-    );
+    ];
     foreach ($p2check as $prop) {
         if (! is_null($obj->$prop)) {
             // lenght check
@@ -469,7 +469,7 @@ function getColumnsDefinition()
 {
     static $labels;
     if (is_null($labels)) {
-        $lbl2get = array(
+        $lbl2get = [
             'user' => null,
             'testsuite' => null,
             'testcase' => null,
@@ -480,45 +480,45 @@ function getColumnsDefinition()
             'low' => null,
             'medium' => null,
             'high' => null
-        );
+        ];
         $labels = init_labels($lbl2get);
     }
 
-    $colDef = array();
+    $colDef = [];
     $sortByCol = $labels['testsuite'];
-    $colDef[] = array(
+    $colDef[] = [
         'title_key' => '',
         'width' => 80
-    );
-    $colDef[] = array(
+    ];
+    $colDef[] = [
         'title_key' => 'testsuite',
         'width' => 130
-    );
-    $colDef[] = array(
+    ];
+    $colDef[] = [
         'title_key' => 'testcase',
         'width' => 130
-    );
+    ];
 
     // render and filter will be managed using customBehaviour (see $matrix->addCustomBehaviour())
-    $colDef[] = array(
+    $colDef[] = [
         'title_key' => 'importance',
         'width' => 50,
         'type' => 'importance'
-    );
+    ];
 
-    $colDef[] = array(
+    $colDef[] = [
         'title_key' => 'title_created',
         'width' => 75
-    );
-    $colDef[] = array(
+    ];
+    $colDef[] = [
         'title_key' => 'title_last_mod',
         'width' => 75
-    );
+    ];
 
-    return array(
+    return [
         $colDef,
         $sortByCol
-    );
+    ];
 }
 
 /**
@@ -528,7 +528,7 @@ function getColumnsDefinition()
  */
 function getCSVColumnsDefinition()
 {
-    $lbl2get = array(
+    $lbl2get = [
         'user' => null,
         'testsuite' => null,
         'testcase' => null,
@@ -542,11 +542,11 @@ function getCSVColumnsDefinition()
         'low' => null,
         'medium' => null,
         'high' => null
-    );
+    ];
     $lbl = init_labels($lbl2get);
 
     // this is the row layout
-    return array(
+    return [
         $lbl['user'],
         $lbl['testsuite'],
         $lbl['testcase'],
@@ -555,7 +555,7 @@ function getCSVColumnsDefinition()
         $lbl['title_last_mod'],
         $lbl['th_start_time'],
         $lbl['th_end_time']
-    );
+    ];
 }
 
 /**

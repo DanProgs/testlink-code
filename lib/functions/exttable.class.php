@@ -232,20 +232,20 @@ class tlExtTable extends tlTable
 
         if (is_null($l18n)) {
             $l18n = init_labels(
-                array(
+                [
                     'warning_disable_user' => null,
                     'disable' => null
-                ));
+                ]);
         }
 
         $s = '[';
         $n_columns = count($this->columns);
-        $options = array(
+        $options = [
             'width',
             'hidden',
             'groupable',
             'hideable'
-        );
+        ];
 
         for ($i = 0; $i < $n_columns; $i ++) {
             $column = $this->columns[$i];
@@ -294,7 +294,7 @@ class tlExtTable extends tlTable
 
             foreach ($options as $opt_str) {
                 if (isset($column[$opt_str])) {
-                    $s .= ",$opt_str: {$column[$opt_str]}";
+                    $s .= ",{$opt_str}: {$column[$opt_str]}";
                 }
             }
 
@@ -386,7 +386,7 @@ class tlExtTable extends tlTable
         $s = "status_code_label = new Array();\n";
         foreach ($cfg["status_label"] as $status => $label) {
             $code = $cfg['status_code'][$status];
-            $s .= "status_code_label.$code = '" . lang_get($label) . "';\n";
+            $s .= "status_code_label.{$code} = '" . lang_get($label) . "';\n";
         }
 
         // 20121223 - franciscom -
@@ -396,13 +396,13 @@ class tlExtTable extends tlTable
         $cfg = config_get('urgency');
         $s .= "prio_code_label = new Array();\n";
         foreach ($cfg['code_label'] as $code => $label) {
-            $s .= "prio_code_label[$code] = '" . lang_get($label) . "';\n";
+            $s .= "prio_code_label[{$code}] = '" . lang_get($label) . "';\n";
         }
 
         $cfg = config_get('importance');
         $s .= "importance_code_label = new Array();\n";
         foreach ($cfg['code_label'] as $code => $label) {
-            $s .= "importance_code_label[$code] = '" . lang_get($label) . "';\n";
+            $s .= "importance_code_label[{$code}] = '" . lang_get($label) . "';\n";
         }
 
         return $s;
@@ -452,7 +452,7 @@ class tlExtTable extends tlTable
     public function getGridSettings()
     {
         $s = '';
-        $settings = array(
+        $settings = [
             'title',
             'width',
             'height',
@@ -460,7 +460,7 @@ class tlExtTable extends tlTable
             'collapsible',
             'frame',
             'stripeRows'
-        );
+        ];
         foreach ($settings as $setting) {
             $value = $this->{$setting};
             if (! is_null($value)) {
@@ -498,7 +498,7 @@ class tlExtTable extends tlTable
             $resultsCfg["status_label_for_exec_ui"]);
         foreach ($verboseStatusOrder as $order => $status) {
             $code = $resultsCfg['status_code'][$status];
-            $jsCode .= "status_code_order.$code = " . $order . ";\n";
+            $jsCode .= "status_code_order.{$code} = " . $order . ";\n";
         }
         return $jsCode;
     }
@@ -549,13 +549,13 @@ class tlExtTable extends tlTable
     private function buildStatusFilterOptions()
     {
         $resultsCfg = config_get('results');
-        $statuses = array();
+        $statuses = [];
         foreach ($resultsCfg["status_label"] as $status => $label) {
             $code = $resultsCfg['status_code'][$status];
-            $statuses[] = array(
+            $statuses[] = [
                 $code,
                 lang_get($label)
-            );
+            ];
         }
         return "{type: 'Status', options: " . json_encode($statuses) . "}";
     }
@@ -566,12 +566,12 @@ class tlExtTable extends tlTable
     private function buildPriorityFilterOptions()
     {
         $cfg = config_get('urgency');
-        $items = array();
+        $items = [];
         foreach ($cfg['code_label'] as $code => $label) {
-            $items[] = array(
-                "$code",
+            $items[] = [
+                "{$code}",
                 lang_get($label)
-            );
+            ];
         }
         return "{type: 'Priority', options: " . json_encode($items) . "}";
     }
@@ -582,12 +582,12 @@ class tlExtTable extends tlTable
     private function buildImportanceFilterOptions()
     {
         $cfg = config_get('importance');
-        $items = array();
+        $items = [];
         foreach ($cfg['code_label'] as $code => $label) {
-            $items[] = array(
-                "$code",
+            $items[] = [
+                "{$code}",
                 lang_get($label)
-            );
+            ];
         }
         return "{type: 'Importance', options: " . json_encode($items) . "}";
     }
@@ -613,10 +613,10 @@ class tlExtTable extends tlTable
         static $l18n;
         if (is_null($l18n)) {
             $l18n = init_labels(
-                array(
+                [
                     'warning_disable_user' => null,
                     'disable' => null
-                ));
+                ]);
         }
 
         $js = "{xtype: 'actioncolumn',width: 50, hideable: false,sortable: false,groupable: false," .

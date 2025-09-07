@@ -35,15 +35,15 @@ abstract class reqMgrSystemInterface
     private $password = null;
 
     // Variables related to retrieving and caching the requirements
-    private $projects = array();
+    private $projects = [];
 
     private $lastproject = null;
 
-    private $baselines = array();
+    private $baselines = [];
 
     private $lastbaseline = null;
 
-    private $requirements = array();
+    private $requirements = [];
 
     private $type = null;
 
@@ -140,7 +140,7 @@ abstract class reqMgrSystemInterface
             return false;
         }
 
-        $this->projects = array();
+        $this->projects = [];
         $this->lastproject = null;
         $this->lastbaseline = null;
 
@@ -162,7 +162,7 @@ abstract class reqMgrSystemInterface
             $refresh) {
             // Retrieve baselines for the specified project.
             $this->lastproject = $project;
-            $this->baselines = array();
+            $this->baselines = [];
         } else {
             // Baselines are already available.
         }

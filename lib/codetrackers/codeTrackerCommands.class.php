@@ -40,7 +40,7 @@ class codeTrackerCommands
         $this->grants->canManage = false;
 
         $this->guiOpWhiteList = array_flip(
-            array(
+            [
                 'checkConnection',
                 'create',
                 'edit',
@@ -48,7 +48,7 @@ class codeTrackerCommands
                 'doCreate',
                 'doUpdate',
                 'doDelete'
-            ));
+            ]);
     }
 
     public function setTemplateCfg($cfg)
@@ -70,20 +70,20 @@ class codeTrackerCommands
         $obj->typeDomain = $this->codeTrackerMgr->getTypes();
         $obj->canManage = $argsObj->currentUser->hasRight($this->db,
             'codetracker_management');
-        $obj->user_feedback = array(
+        $obj->user_feedback = [
             'type' => '',
             'message' => ''
-        );
+        ];
 
         $obj->l18n = init_labels(
-            array(
+            [
                 'codetracker_management' => null,
                 'btn_save' => null,
                 'create' => null,
                 'edit' => null,
                 'checkConnection' => 'btn_check_connection',
                 'codetracker_deleted' => null
-            ));
+            ]);
 
         // we experiment on way to get Action Description for GUI using __FUNCTION__
         $obj->l18n['doUpdate'] = $obj->l18n['edit'];
@@ -118,9 +118,9 @@ class codeTrackerCommands
         $guiObj->canManage = $argsObj->currentUser->hasRight($this->db,
             'codetracker_management');
 
-        $guiObj->item = array(
+        $guiObj->item = [
             'id' => 0
-        );
+        ];
         foreach ($this->entitySpec as $property => $type) {
             $guiObj->item[$property] = ($type == 'int') ? 0 : '';
         }

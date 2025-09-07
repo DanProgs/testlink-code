@@ -155,10 +155,10 @@ if ($its->isConnected()) {
     // 'type' => 1, 'components' => array( array('id' => '10100'), array('id' => '10101')));
     // $zorro = $its->addIssueFromArray($issue);
     // var_dump($zorro);
-    $issue = array(
+    $issue = [
         'summary' => 'Issue Via API 2013-02-04',
         'description' => 'Do Androids Dream of Electric Sheep?'
-    );
+    ];
     // 'type' => 1, 'components' => array( array('id' => '10100'), array('id' => '10101')));
 
     $zorro = $its->addIssue($issue['summary'], $issue['description']);

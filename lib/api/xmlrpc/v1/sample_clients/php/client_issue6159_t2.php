@@ -15,7 +15,7 @@ $test_num = 1;
 $unitTestDescription = "Test {$test_num} - {$method}";
 
 $tplan_id = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 713;
-$args = array();
+$args = [];
 $args["devKey"] = '21232f297a57a5a743894a0e4a801fc3';
 $args["testplanid"] = $tplan_id;
 $args["testcase"] = 709;

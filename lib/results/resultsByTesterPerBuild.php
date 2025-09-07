@@ -19,7 +19,7 @@ require_once 'common.php';
 require_once 'exttable.class.php';
 $templateCfg = templateConfiguration();
 
-list ($args, $tproject_mgr, $tplan_mgr) = initArgs($db);
+[$args, $tproject_mgr, $tplan_mgr] = initArgs($db);
 $user = new tlUser($db);
 
 $gui = initGui($args);
@@ -44,9 +44,9 @@ if ($openBuildsQty <= 0 && ! $args->show_closed_builds) {
 $metricsMgr = new tlTestPlanMetrics($db);
 $statusCfg = $metricsMgr->getStatusConfig();
 $metrics = $metricsMgr->getStatusTotalsByBuildUAForRender($args->tplan_id,
-    array(
+    [
         'processClosedBuilds' => $args->show_closed_builds
-    ));
+    ]);
 $matrix = $metrics->info;
 
 // Here need to work, because all queries consider ONLY ACTIVE STATUS
@@ -56,7 +56,7 @@ $build_set = $metricsMgr->get_builds($args->tplan_id, testplan::GET_ACTIVE_BUILD
 $names = $user->getNames($db);
 
 // get the progress of the whole build based on executions of single users
-$build_statistics = array();
+$build_statistics = [];
 foreach ($matrix as $build_id => $build_execution_map) {
     $build_statistics[$build_id]['total'] = 0;
     $build_statistics[$build_id]['executed'] = 0;
@@ -84,12 +84,12 @@ foreach ($matrix as $build_id => $build_execution_map) {
 }
 
 // build the content of the table
-$rows = array();
+$rows = [];
 
-$lblx = array(
+$lblx = [
     'progress_absolute' => lang_get('progress_absolute'),
     'total_time_hhmmss' => lang_get('total_time_hhmmss')
-);
+];
 
 foreach ($matrix as $build_id => $build_execution_map) {
 
@@ -100,7 +100,7 @@ foreach ($matrix as $build_id => $build_execution_map) {
         " {$build_statistics[$build_id]['total_time']}";
 
     foreach ($build_execution_map as $user_id => $statistics) {
-        $current_row = array();
+        $current_row = [];
         $current_row[] = $first_row;
 
         // add username and link it to tcAssignedToUser.php
@@ -141,9 +141,9 @@ $smartTable->showToolbar = true;
 $smartTable->toolbarExpandCollapseGroupsButton = true;
 $smartTable->toolbarShowAllColumnsButton = true;
 
-$gui->tableSet = array(
+$gui->tableSet = [
     $smartTable
-);
+];
 
 // show warning message instead of table if table is empty
 $gui->warning_message = ! empty($rows > 0) ? '' : lang_get(
@@ -162,28 +162,28 @@ $smarty->display($templateCfg->template_dir . $templateCfg->default_template);
  */
 function initArgs(&$dbHandler)
 {
-    $iParams = array(
-        "apikey" => array(
+    $iParams = [
+        "apikey" => [
             tlInputParameter::STRING_N,
             32,
             64
-        ),
-        "tproject_id" => array(
+        ],
+        "tproject_id" => [
             tlInputParameter::INT_N
-        ),
-        "tplan_id" => array(
+        ],
+        "tplan_id" => [
             tlInputParameter::INT_N
-        ),
-        "format" => array(
+        ],
+        "format" => [
             tlInputParameter::INT_N
-        ),
-        "show_closed_builds" => array(
+        ],
+        "show_closed_builds" => [
             tlInputParameter::CB_BOOL
-        ),
-        "show_closed_builds_hidden" => array(
+        ],
+        "show_closed_builds_hidden" => [
             tlInputParameter::CB_BOOL
-        )
-    );
+        ]
+    ];
 
     $args = new stdClass();
     R_PARAMS($iParams, $args);
@@ -231,11 +231,11 @@ function initArgs(&$dbHandler)
     }
     $args->show_closed_builds = $_SESSION['reports_show_closed_builds'] = $selection;
 
-    return array(
+    return [
         $args,
         $tproject_mgr,
         $tplan_mgr
-    );
+    ];
 }
 
 /**
@@ -266,61 +266,61 @@ function getTableHeader($statusCfg)
 {
     $resultsCfg = config_get('results');
 
-    $colCfg = array();
-    $colCfg[] = array(
+    $colCfg = [];
+    $colCfg[] = [
         'title_key' => 'build',
         'width' => 50,
         'type' => 'text',
         'sortType' => 'asText',
         'filter' => 'string'
-    );
-    $colCfg[] = array(
+    ];
+    $colCfg[] = [
         'title_key' => 'user',
         'width' => 50,
         'type' => 'text',
         'sortType' => 'asText',
         'filter' => 'string'
-    );
-    $colCfg[] = array(
+    ];
+    $colCfg[] = [
         'title_key' => 'th_tc_assigned',
         'width' => 50,
         'sortType' => 'asFloat',
         'filter' => 'numeric'
-    );
+    ];
 
     foreach ($statusCfg as $status => $code) {
         $label = $resultsCfg['status_label'][$status];
-        $colCfg[] = array(
+        $colCfg[] = [
             'title_key' => $label,
             'width' => 20,
             'sortType' => 'asInt',
             'filter' => 'numeric'
-        );
-        $colCfg[] = array(
+        ];
+        $colCfg[] = [
             'title' => lang_get($label) . ' ' . lang_get('in_percent'),
             'col_id' => 'id_' . $label . '_percent',
             'width' => 30,
             'type' => 'float',
             'sortType' => 'asFloat',
             'filter' => 'numeric'
-        );
+        ];
     }
 
-    $colCfg[] = array(
+    $colCfg[] = [
         'title_key' => 'progress',
         'width' => 30,
         'type' => 'float',
         'sortType' => 'asFloat',
         'filter' => 'numeric'
-    );
+    ];
 
-    $colCfg[] = array(
+    $colCfg[] = [
         'title' => lang_get('total_time_hhmmss'),
         'width' => 30,
         'type' => 'text',
         'sortType' => 'asText',
         'filter' => 'string'
-    );
+    ];
 
     return $colCfg;
 }

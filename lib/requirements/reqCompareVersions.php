@@ -21,7 +21,7 @@ testlinkInitPage($db);
 $smarty = new TLSmarty();
 
 $labels = init_labels(
-    array(
+    [
         "num_changes" => null,
         "no_changes" => null,
         "diff_subtitle_req" => null,
@@ -32,7 +32,7 @@ $labels = init_labels(
         "expected_coverage" => null,
         "revision_short" => null,
         "version_revision" => null
-    ));
+    ]);
 
 $reqMgr = new requirement_mgr($db);
 $differ = new diff();
@@ -55,19 +55,19 @@ if ($args->compare_selected_versions) {
         $gui->cfieldsDiff = getCFDiff($cfields, $reqMgr);
     }
 
-    $gui->diff = array(
-        "scope" => array()
-    );
+    $gui->diff = [
+        "scope" => []
+    ];
     foreach ($gui->diff as $key => $val) {
         if ($args->use_daisydiff) {
             // using daisydiff as diffing engine
             $diff = new HTMLDiffer();
             if ($gui->reqType == 'none') {
-                list ($differences, $diffcount) = $diff->htmlDiff(
+                [$differences, $diffcount] = $diff->htmlDiff(
                     nl2br($sbs['left_item'][$key]),
                     nl2br($sbs['right_item'][$key]));
             } else {
-                list ($differences, $diffcount) = $diff->htmlDiff(
+                [$differences, $diffcount] = $diff->htmlDiff(
                     $sbs['left_item'][$key], $sbs['right_item'][$key]);
             }
             $gui->diff[$key]["diff"] = $differences;
@@ -108,11 +108,11 @@ function getBareBonesReq($dbHandler, $reqID)
 {
     $debugMsg = ' Function: ' . __FUNCTION__;
     $tables = tlObjectWithDB::getDBTables(
-        array(
+        [
             'requirements',
             'nodes_hierarchy'
-        ));
-    $sql = " /* $debugMsg */ SELECT REQ.req_doc_id, NH_REQ.name " .
+        ]);
+    $sql = " /* {$debugMsg} */ SELECT REQ.req_doc_id, NH_REQ.name " .
         " FROM {$tables['requirements']} REQ " .
         " JOIN {$tables['nodes_hierarchy']} NH_REQ  ON  NH_REQ.id = REQ.id " .
         " WHERE REQ.id = " . intval($reqID);
@@ -126,7 +126,7 @@ function getBareBonesReq($dbHandler, $reqID)
  */
 function getItemsToCompare($leftSideID, $rightSideID, &$itemSet)
 {
-    $ret = array();
+    $ret = [];
     foreach ($itemSet as $item) {
         if ($item['item_id'] == $leftSideID) {
             $ret['left_item'] = $item;
@@ -146,16 +146,16 @@ function getItemsToCompare($leftSideID, $rightSideID, &$itemSet)
  */
 function getCFToCompare($sides, $tprojectID, &$reqMgr)
 {
-    $cfields = array(
-        'left_side' => array(
+    $cfields = [
+        'left_side' => [
             'key' => 'left_item',
             'value' => null
-        ),
-        'right_side' => array(
+        ],
+        'right_side' => [
             'key' => 'right_item',
             'value' => null
-        )
-    );
+        ]
+    ];
 
     foreach ($cfields as $item_side => $dummy) {
         $target_id = $sides[$dummy['key']];
@@ -182,19 +182,19 @@ function getCFDiff($cfields, &$reqMgr)
 
     if (! is_null($cfieldsLeft)) {
         $key2loop = array_keys($cfieldsLeft);
-        $cmp = array();
+        $cmp = [];
         $type_code = $reqMgr->cfield_mgr->get_available_types();
-        $key2convert = array(
+        $key2convert = [
             'lvalue',
             'rvalue'
-        );
+        ];
 
         $cfg = config_get('gui');
         $cfCfg = config_get('custom_fields');
 
-        $formats = array(
+        $formats = [
             'date' => config_get('date_format')
-        );
+        ];
         $t_date_format = str_replace("%", "", $formats['date']); // must remove %
         $t_datetime_format = $t_date_format . ' ' .
             $cfg->custom_fields->time_format;
@@ -210,13 +210,13 @@ function getCFDiff($cfields, &$reqMgr)
                 ! is_null($cfieldsRight[$cf_key]['value'])) ||
                 (! is_null($cfieldsLeft) &&
                 ! is_null($cfieldsLeft[$cf_key]['value']))))) {
-                $cmp[$cf_key] = array(
+                $cmp[$cf_key] = [
                     'label' => htmlspecialchars($cfieldsLeft[$cf_key]['label']),
                     'lvalue' => $cfieldsLeft[$cf_key]['value'],
                     'rvalue' => ! is_null($cfieldsRight) ? $cfieldsRight[$cf_key]['value'] : null,
                     'changed' => $cfieldsLeft[$cf_key]['value'] !=
                     $cfieldsRight[$cf_key]['value']
-                );
+                ];
 
                 if ($type_code[$cfieldsLeft[$cf_key]['type']] == 'date' ||
                     $type_code[$cfieldsLeft[$cf_key]['type']] == 'datetime') {
@@ -278,10 +278,10 @@ function initializeGui(&$dbHandler, &$argsObj, $lbl, &$reqMgr)
     $reqCfg = config_get('req_cfg');
     $guiObj = new stdClass();
     $guiObj->items = $reqMgr->get_history($argsObj->req_id,
-        array(
+        [
             'output' => 'array',
             'decode_user' => true
-        ));
+        ]);
 
     // Truncate log message
     if ($reqCfg->log_message_len > 0) {
@@ -331,19 +331,19 @@ function prepareUserFeedback(&$dbHandler, &$guiObj, $reqID, $labels, $sbs)
 function getAttrDiff($leftSide, $rightSide, $labels)
 {
     $req_cfg = config_get('req_cfg');
-    $key2loop = array(
+    $key2loop = [
         'status' => 'status_labels',
         'type' => 'type_labels',
         'expected_coverage' => null
-    );
+    ];
     foreach ($key2loop as $fkey => $lkey) {
         // Need to decode
-        $cmp[$fkey] = array(
+        $cmp[$fkey] = [
             'label' => htmlspecialchars($labels[$fkey]),
             'lvalue' => $leftSide[$fkey],
             'rvalue' => $rightSide[$fkey],
             'changed' => $leftSide[$fkey] != $rightSide[$fkey]
-        );
+        ];
 
         if (! is_null($lkey)) {
             $decode = $req_cfg->$lkey;

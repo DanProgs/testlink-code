@@ -44,12 +44,12 @@ class youtrackrestInterface extends issueTrackerInterface
     {
         $this->name = $name;
         $this->interfaceViaDB = false;
-        $this->methodOpt = array(
-            'buildViewBugLink' => array(
+        $this->methodOpt = [
+            'buildViewBugLink' => [
                 'addSummary' => true,
                 'colorByStatus' => true
-            )
-        );
+            ]
+        ];
         $this->connected = false;
         if ($this->setCfg($config)) {
             $this->completeCfg();
@@ -151,7 +151,7 @@ class youtrackrestInterface extends issueTrackerInterface
         $str = "Ticket ID - " . $issueID . " - does not exist in BTS";
         $issue = $this->getBugStatus($issueID);
         if (! is_null($issue) && is_object($issue)) {
-            $str = array_search($issue->status, $this->statusDomain);
+            $str = array_search($issue->status, $this->statusDomain, true);
             if (strcasecmp($str, 'closed') == 0 ||
                 strcasecmp($str, 'resolved') == 0) {
                 $str = "<del>" . $str . "</del>";
@@ -197,8 +197,8 @@ class youtrackrestInterface extends issueTrackerInterface
             $this->cfg->uricreate = $base . 'dashboard#newissue=yes';
         }
 
-        $this->issueTemplate = array();
-        $this->issueDefaults = array(
+        $this->issueTemplate = [];
+        $this->issueDefaults = [
             'assignee' => '',
             'priority' => '',
             'type' => '',
@@ -207,7 +207,7 @@ class youtrackrestInterface extends issueTrackerInterface
             'affectsversion' => '',
             'fixedversion' => '',
             'fixedinbuild' => ''
-        );
+        ];
         foreach ($this->issueDefaults as $prop => $default) {
             $this->cfg->$prop = (string) (property_exists($this->cfg, $prop) ? $this->cfg->$prop : $default);
             $this->issueTemplate[$prop] = $this->cfg->$prop;
@@ -242,20 +242,20 @@ class youtrackrestInterface extends issueTrackerInterface
                 $issue['affectsversion'], $issue['fixedversion'],
                 $issue['fixedinbuild']);
 
-            $ret = array(
+            $ret = [
                 'status_ok' => true,
                 'id' => (string) $op->id,
                 'msg' => sprintf(lang_get('youtrack_bug_created'), $summary,
                     (string) $this->cfg->project)
-            );
+            ];
         } catch (Exception $e) {
             $msg = "Create YOUTRACK Ticket FAILURE => " . $e->getMessage();
             tLog($msg, 'WARNING');
-            $ret = array(
+            $ret = [
                 'status_ok' => false,
                 'id' => - 1,
                 'msg' => $msg . ' - serialized issue:' . serialize($issue)
-            );
+            ];
         }
         return $ret;
     }

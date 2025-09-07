@@ -51,7 +51,7 @@ abstract class codeTrackerInterface
     public $interfaceViaDB = false;
 
     // useful for connect/disconnect methods
-    public $guiCfg = array();
+    public $guiCfg = [];
 
     /**
      * Construct and connect to CTS.
@@ -63,9 +63,9 @@ abstract class codeTrackerInterface
     public function __construct($type, $config, $name)
     {
         $this->tlCharSet = config_get('charset');
-        $this->guiCfg = array(
+        $this->guiCfg = [
             'use_decoration' => true
-        ); // add [] on summary and statusHTMLString
+        ]; // add [] on summary and statusHTMLString
         $this->name = $name;
 
         if ($this->setCfg($config)) {
@@ -317,7 +317,7 @@ abstract class codeTrackerInterface
      */
     public static function checkEnv()
     {
-        $ret = array();
+        $ret = [];
         $ret['status'] = true;
         $ret['msg'] = 'OK';
         return $ret;

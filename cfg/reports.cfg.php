@@ -32,29 +32,29 @@ define('FORMAT_MAIL_HTML', 6);
 /**
  * supported document formats (value = localization ID)
  */
-$tlCfg->reports_formats = array(
+$tlCfg->reports_formats = [
     FORMAT_HTML => 'format_html',
     FORMAT_MSWORD => 'format_pseudo_msword',
     FORMAT_MAIL_HTML => 'format_mail_html'
-);
+];
 
 /**
  * Mime Content Type
  */
-$tlCfg->reports_applications = array(
+$tlCfg->reports_applications = [
     FORMAT_HTML => 'text/html',
     FORMAT_XLS => 'application/vnd.ms-excel',
     FORMAT_MSWORD => 'application/vnd.ms-word'
-);
+];
 
 /**
  * Report file extenssion
  */
-$tlCfg->reports_file_extension = array(
+$tlCfg->reports_file_extension = [
     FORMAT_HTML => 'html',
     FORMAT_XLS => 'xls',
     FORMAT_MSWORD => 'doc'
-);
+];
 
 /**
  *
@@ -66,69 +66,69 @@ $tlCfg->reports_file_extension = array(
  *      2. bts (if bug tracker is connected only),
  *      3. req (if project has available requirements only)
  */
-$tlCfg->reports_list['test_plan'] = array(
+$tlCfg->reports_list['test_plan'] = [
     'title' => 'link_report_test_plan',
     'url' => 'lib/results/printDocOptions.php?type=' . DOC_TEST_PLAN_DESIGN,
     'enabled' => 'all',
     'directLink' => '%slnl.php?apikey=%s&tproject_id=%s&tplan_id=%s&type=test_plan',
     'format' => 'format_html,format_pseudo_msword'
-);
-$tlCfg->reports_list['test_report'] = array(
+];
+$tlCfg->reports_list['test_report'] = [
     'title' => 'link_report_test_report',
     'url' => 'lib/results/printDocOptions.php?type=' . DOC_TEST_PLAN_EXECUTION,
     'enabled' => 'all',
     'directLink' => '%slnl.php?apikey=%s&tproject_id=%s&tplan_id=%s&type=test_report',
     'format' => 'format_html,format_pseudo_msword'
-);
+];
 
-$tlCfg->reports_list['test_report_on_build'] = array(
+$tlCfg->reports_list['test_report_on_build'] = [
     'title' => 'link_report_test_report_on_build',
     'url' => 'lib/results/printDocOptions.php?type=' .
     DOC_TEST_PLAN_EXECUTION_ON_BUILD,
     'enabled' => 'all',
     'format' => 'format_html,format_pseudo_msword'
-);
+];
 
-$tlCfg->reports_list['metrics_tp_general'] = array(
+$tlCfg->reports_list['metrics_tp_general'] = [
     'title' => 'link_report_general_tp_metrics',
     'url' => 'lib/results/resultsGeneral.php',
     'enabled' => 'all',
     'directLink' => '%slnl.php?apikey=%s&tproject_id=%s&tplan_id=%s&format=0&type=metrics_tp_general',
     'format' => 'format_html,format_pseudo_ods'
-);
+];
 
-$tlCfg->reports_list['report_by_tsuite'] = array(
+$tlCfg->reports_list['report_by_tsuite'] = [
     'title' => 'link_report_by_tsuite',
     'url' => 'lib/results/resultsByTSuite.php',
     'enabled' => 'all',
     'directLink' => '%slnl.php?apikey=%s&tproject_id=%s&tplan_id=%s&format=0&type=report_by_tsuite',
     'format' => 'format_html'
-);
+];
 
-$tlCfg->reports_list['baseline_l1l2'] = array(
+$tlCfg->reports_list['baseline_l1l2'] = [
     'title' => 'baseline_l1l2',
     'url' => 'lib/results/baselinel1l2.php',
     'enabled' => 'all',
     'directLink' => '%slnl.php?apikey=%s&tproject_id=%s&tplan_id=%s&format=0' .
     '&type=baseline_l1l2',
     'format' => 'format_html'
-);
+];
 
-$tlCfg->reports_list['results_by_tester_per_build'] = array(
+$tlCfg->reports_list['results_by_tester_per_build'] = [
     'title' => 'link_report_by_tester_per_build',
     'url' => 'lib/results/resultsByTesterPerBuild.php',
     'enabled' => 'all',
     'directLink' => '%slnl.php?apikey=%s&tproject_id=%s&tplan_id=%s&format=0&type=results_by_tester_per_build',
     'format' => 'format_html'
-);
+];
 
-$tlCfg->reports_list['assigned_tc_overview'] = array(
+$tlCfg->reports_list['assigned_tc_overview'] = [
     'title' => 'link_assigned_tc_overview',
     'url' => 'lib/testcases/tcAssignedToUser.php?show_all_users=1&show_inactive_and_closed=1',
     'enabled' => 'all',
     'directLink' => '',
     'format' => 'format_html'
-);
+];
 
 // will be released in future because refactoring is not completed
 // $tlCfg->reports_list['results_custom_query'] = array(
@@ -137,92 +137,92 @@ $tlCfg->reports_list['assigned_tc_overview'] = array(
 // 'enabled' => 'all', 'directLink' => '',
 // 'format' => 'format_html,format_ods,format_xls,format_mail_html'
 // );
-$tlCfg->reports_list['results_matrix'] = array(
+$tlCfg->reports_list['results_matrix'] = [
     'title' => 'link_report_test',
     'url' => 'lib/results/resultsTC.php',
     'enabled' => 'all',
     'directLink' => '%slnl.php?apikey=%s&tproject_id=%s&tplan_id=%s&type=results_matrix',
     'format' => 'format_html,format_pseudo_ods'
-);
+];
 
-$tlCfg->reports_list['results_flat'] = array(
+$tlCfg->reports_list['results_flat'] = [
     'title' => 'link_report_test_flat',
     'url' => 'lib/results/resultsTCFlat.php',
     'enabled' => 'all',
     'directLink' => '%slnl.php?apikey=%s&tproject_id=%s&tplan_id=%s&type=results_flat',
     'format' => 'format_html,format_mail_html'
-);
+];
 
 /* 20191210 */
-$tlCfg->reports_list['abslatest_results_matrix'] = array(
+$tlCfg->reports_list['abslatest_results_matrix'] = [
     'title' => 'link_report_test_absolute_latest_exec',
     'url' => 'lib/results/resultsTCAbsoluteLatest.php',
     'enabled' => 'all',
     'directLink' => '%slnl.php?apikey=%s&tproject_id=%s&tplan_id=%s&type=results_matrix',
     'format' => 'format_html,format_pseudo_ods'
-);
+];
 
-$tlCfg->reports_list['list_tc_failed'] = array(
+$tlCfg->reports_list['list_tc_failed'] = [
     'title' => 'link_report_failed',
     'url' => 'lib/results/resultsByStatus.php?type=' .
     $tlCfg->results['status_code']['failed'],
     'enabled' => 'all',
     'directLink' => '%slnl.php?apikey=%s&tproject_id=%s&tplan_id=%s&type=list_tc_failed',
     'format' => 'format_html,format_pseudo_ods'
-);
-$tlCfg->reports_list['list_tc_blocked'] = array(
+];
+$tlCfg->reports_list['list_tc_blocked'] = [
     'title' => 'link_report_blocked_tcs',
     'url' => 'lib/results/resultsByStatus.php?type=' .
     $tlCfg->results['status_code']['blocked'],
     'enabled' => 'all',
     'directLink' => '%slnl.php?apikey=%s&tproject_id=%s&tplan_id=%s&type=list_tc_blocked',
     'format' => 'format_html,format_pseudo_ods'
-);
+];
 
-$tlCfg->reports_list['list_tc_not_run'] = array(
+$tlCfg->reports_list['list_tc_not_run'] = [
     'title' => 'link_report_not_run',
     'url' => 'lib/results/resultsByStatus.php?type=' .
     $tlCfg->results['status_code']['not_run'],
     'enabled' => 'all',
     'directLink' => '%slnl.php?apikey=%s&tproject_id=%s&tplan_id=%s&type=list_tc_not_run',
     'format' => 'format_html,format_pseudo_ods',
-    'misc' => array(
+    'misc' => [
         'bugs_not_linked' => false
-    )
-);
+    ]
+];
 
-$tlCfg->reports_list['never_run'] = array(
+$tlCfg->reports_list['never_run'] = [
     'title' => 'link_report_never_run',
     'url' => 'lib/results/neverRunByPP.php',
     'enabled' => 'all',
     'directLink' => '%slnl.php?apikey=%s&tproject_id=%s&tplan_id=%s&type=never_run',
     'format' => 'format_html,format_pseudo_ods',
-    'misc' => array(
+    'misc' => [
         'bugs_not_linked' => false
-    )
-);
+    ]
+];
 
-$tlCfg->reports_list['tcases_without_tester'] = array(
+$tlCfg->reports_list['tcases_without_tester'] = [
     'title' => 'link_report_tcases_without_tester',
     'url' => 'lib/results/testCasesWithoutTester.php',
     'enabled' => 'all',
     'directLink' => '',
     'format' => 'format_html'
-);
-$tlCfg->reports_list['charts_basic'] = array(
+];
+$tlCfg->reports_list['charts_basic'] = [
     'title' => 'link_charts',
     'url' => 'lib/results/charts.php',
     'enabled' => 'all',
     'directLink' => '%slnl.php?apikey=%s&tproject_id=%s&tplan_id=%s&type=charts_basic',
     'format' => 'format_html'
-);
-$tlCfg->reports_list['results_requirements'] = array(
+];
+$tlCfg->reports_list['results_requirements'] = [
     'title' => 'link_report_reqs_coverage',
     'url' => 'lib/results/resultsReqs.php',
     'enabled' => 'req',
     'directLink' => '',
     'format' => 'format_html'
-);
+];
 
 // disabled TICKET 37006 - disabled uncovered_testcases report
 // $tlCfg->reports_list['uncovered_testcases'] = array(
@@ -232,54 +232,54 @@ $tlCfg->reports_list['results_requirements'] = array(
 // 'format' => 'format_html'
 // );
 
-$tlCfg->reports_list['list_problems'] = array(
+$tlCfg->reports_list['list_problems'] = [
     'title' => 'link_report_total_bugs',
     'url' => 'lib/results/resultsBugs.php?type=0',
     'enabled' => 'bts',
     'directLink' => '',
     'format' => 'format_html'
-);
+];
 
-$tlCfg->reports_list['issues_all_exec'] = array(
+$tlCfg->reports_list['issues_all_exec'] = [
     'title' => 'link_report_total_bugs_all_exec',
     'url' => 'lib/results/resultsBugs.php?type=1',
     'enabled' => 'bts',
     'directLink' => '',
     'format' => 'format_html'
-);
+];
 
-$tlCfg->reports_list['tcases_with_cf'] = array(
+$tlCfg->reports_list['tcases_with_cf'] = [
     'title' => 'link_report_tcases_with_cf',
     'url' => 'lib/results/testCasesWithCF.php',
     'enabled' => 'all',
     'directLink' => '',
     'format' => 'format_html'
-);
-$tlCfg->reports_list['tplan_with_cf'] = array(
+];
+$tlCfg->reports_list['tplan_with_cf'] = [
     'title' => 'link_report_tplans_with_cf',
     'url' => 'lib/results/testPlanWithCF.php',
     'enabled' => 'all',
     'directLink' => '',
     'format' => 'format_html'
-);
+];
 
-$tlCfg->reports_list['free_tcases'] = array(
+$tlCfg->reports_list['free_tcases'] = [
     'title' => 'link_report_free_testcases_on_testproject',
     'url' => 'lib/results/freeTestCases.php',
     'enabled' => 'all',
     'directLink' => '',
     'format' => 'format_html'
-);
+];
 
 $report = 'report_exec_timeline';
-$tlCfg->reports_list[$report] = array(
+$tlCfg->reports_list[$report] = [
     'title' => 'link_report_exec_timeline',
     'url' => 'lib/results/execTimelineStats.php',
     'enabled' => 'all',
     'directLink' => '%slnl.php?apikey=%s&tproject_id=%s&tplan_id=%s&format=0' .
     '&type=' . $report,
     'format' => 'format_html'
-);
+];
 
 // Add custom configuration
 clearstatcache();

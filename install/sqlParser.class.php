@@ -52,26 +52,26 @@ class SqlParser
         switch ($this->db_type) {
             case 'mysql':
                 $cfil = array_filter($contents,
-                    array(
+                    [
                         $this,
                         "only_good_mysql"
-                    ));
+                    ]);
                 break;
 
             case 'postgres':
                 $target['sequence'] = "SELECT setval('";
                 $do_additional_replace = true;
-                $cfil = array_filter($contents, array(
+                $cfil = array_filter($contents, [
                     $this,
                     "only_good_sql"
-                ));
+                ]);
                 break;
 
             case 'mssql':
-                $cfil = array_filter($contents, array(
+                $cfil = array_filter($contents, [
                     $this,
                     "only_good_sql"
-                ));
+                ]);
                 break;
         }
 
@@ -102,10 +102,10 @@ class SqlParser
                 $num += 1;
                 $status_ok = $this->db_conn->exec_query($sql_dodo);
                 if (! $status_ok) {
-                    $this->sql_errors[] = array(
+                    $this->sql_errors[] = [
                         "error" => $this->db_conn->error_msg(),
                         "sql" => $sql_dodo
-                    );
+                    ];
                     $this->install_failed = true;
                 }
             }

@@ -26,7 +26,7 @@
 # This is only a working example that is useful
 # for the TestLink Development Team
 #
-$tlCfg->OAuthServers['google'] = array();
+$tlCfg->OAuthServers['google'] = [];
 $tlCfg->OAuthServers['google']['redirect_uri'] = 'http://fman.hopto.org/login.php?oauth=google';
 
 $tlCfg->OAuthServers['google']['oauth_enabled'] = true;

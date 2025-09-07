@@ -19,7 +19,7 @@ $method = 'createTestPlan';
 $unitTestDescription = "Test - {$method}";
 $idx = 1;
 
-$args = array();
+$args = [];
 $args["devKey"] = isset($_REQUEST['apiKey']) ? $_REQUEST['apiKey'] : DEV_KEY;
 $args["testprojectname"] = 'API Methods Test Project 2';
 $args["testprojectname"] = 'API Methods Test Project AXECX1';
@@ -33,7 +33,7 @@ runTest($client, $method, $args, $idx);
 $idx ++;
 
 // --------------------------------------------------------------------------
-$args = array();
+$args = [];
 $args["devKey"] = isset($_REQUEST['apiKey']) ? $_REQUEST['apiKey'] : DEV_KEY;
 $args["testprojectname"] = 'TPROJECT1';
 $args["testplanname"] = "TPLAN BY API";
@@ -46,7 +46,7 @@ runTest($client, $method, $args, $idx);
 $idx ++;
 
 // --------------------------------------------------------------------------
-$args = array();
+$args = [];
 $args["devKey"] = isset($_REQUEST['apiKey']) ? $_REQUEST['apiKey'] : DEV_KEY;
 $args["testprojectname"] = 'TPROJECT1';
 $args["testplanname"] = "TPLAN BY API-2";

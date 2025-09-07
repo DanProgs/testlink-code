@@ -20,29 +20,29 @@
 require_once '../../config.inc.php';
 require_once 'common.php';
 testlinkInitPage($db);
-$data = array(
+$data = [
     'success' => true,
     'message' => ''
-);
+];
 
-$iParams = array(
-    "node_name" => array(
+$iParams = [
+    "node_name" => [
         tlInputParameter::STRING_N,
         0,
         100
-    ),
-    "node_id" => array(
+    ],
+    "node_id" => [
         tlInputParameter::INT
-    ),
-    "parent_id" => array(
+    ],
+    "parent_id" => [
         tlInputParameter::INT
-    ),
-    "node_type" => array(
+    ],
+    "node_type" => [
         tlInputParameter::STRING_N,
         0,
         20
-    )
-);
+    ]
+];
 $args = G_PARAMS($iParams);
 
 $tree_manager = new tree($db);

@@ -26,13 +26,13 @@ testlinkInitPage($db);
 $smarty = new TLSmarty();
 $smarty->tlTemplateCfg = $templateCfg = templateConfiguration();
 
-$cfg = array(
+$cfg = [
     'testcase' => config_get('testcase_cfg'),
     'testcase_reorder_by' => config_get('testcase_reorder_by'),
     'spec' => config_get('spec_cfg')
-);
+];
 
-list ($args, $gui, $grants) = initializeEnv($db);
+[$args, $gui, $grants] = initializeEnv($db);
 
 // User right at test project level has to be done
 // Because this script can be called requesting an item that CAN BELONG
@@ -53,9 +53,9 @@ switch ($args->feature) {
                 $_SESSION['basehref'], $args->id, $args->tproject_id);
             $gui->attachments = getAttachmentInfosFrom($item_mgr, $args->id);
             $item_mgr->show($smarty, $gui, $templateCfg->template_dir, $args->id,
-                array(
+                [
                     'show_mode' => $args->show_mode
-                ));
+                ]);
         }
         break;
 
@@ -85,61 +85,61 @@ function initArgs(&$dbHandler)
 {
     $_REQUEST = strings_stripSlashes($_REQUEST);
 
-    $iParams = array(
-        "edit" => array(
+    $iParams = [
+        "edit" => [
             tlInputParameter::STRING_N,
             0,
             50
-        ),
-        "id" => array(
+        ],
+        "id" => [
             tlInputParameter::INT_N
-        ),
-        "tcase_id" => array(
+        ],
+        "tcase_id" => [
             tlInputParameter::INT_N
-        ),
-        "tcversion_id" => array(
+        ],
+        "tcversion_id" => [
             tlInputParameter::INT_N
-        ),
-        "tplan_id" => array(
+        ],
+        "tplan_id" => [
             tlInputParameter::INT_N
-        ),
-        "targetTestCase" => array(
+        ],
+        "targetTestCase" => [
             tlInputParameter::STRING_N,
             0,
             24
-        ),
-        "show_path" => array(
+        ],
+        "show_path" => [
             tlInputParameter::INT_N
-        ),
-        "show_mode" => array(
+        ],
+        "show_mode" => [
             tlInputParameter::STRING_N,
             0,
             50
-        ),
-        "tcasePrefix" => array(
+        ],
+        "tcasePrefix" => [
             tlInputParameter::STRING_N,
             0,
             16
-        ),
-        "tcaseExternalID" => array(
+        ],
+        "tcaseExternalID" => [
             tlInputParameter::STRING_N,
             0,
             16
-        ),
-        "tcaseVersionNumber" => array(
+        ],
+        "tcaseVersionNumber" => [
             tlInputParameter::INT_N
-        ),
-        "add_relation_feedback_msg" => array(
+        ],
+        "add_relation_feedback_msg" => [
             tlInputParameter::STRING_N,
             0,
             255
-        ),
-        "caller" => array(
+        ],
+        "caller" => [
             tlInputParameter::STRING_N,
             0,
             10
-        )
-    );
+        ]
+    ];
 
     $args = new stdClass();
     R_PARAMS($iParams, $args);
@@ -153,11 +153,11 @@ function initArgs(&$dbHandler)
     $args->user = isset($_SESSION['currentUser']) ? $_SESSION['currentUser'] : null;
 
     // whitelist
-    $wl = array_flip(array(
+    $wl = array_flip([
         'testcase',
         'testproject',
         'testsuite'
-    ));
+    ]);
     $args->edit = trim($args->edit);
     if (! isset($wl[$args->edit])) {
         tLog('Argument "edit" has invalid value: ' . $args->edit, 'ERROR');
@@ -215,14 +215,14 @@ function initArgs(&$dbHandler)
             break;
 
         case 'testcase':
-            $args->viewerArgs = array(
+            $args->viewerArgs = [
                 'action' => '',
                 'msg_result' => '',
                 'user_feedback' => '',
                 'disable_edit' => 0,
                 'refreshTree' => 0,
                 'add_relation_feedback_msg' => $args->add_relation_feedback_msg
-            );
+            ];
 
             $args->id = is_null($args->id) ? 0 : $args->id;
             $args->tcase_id = $args->id;
@@ -268,7 +268,7 @@ function initializeEnv($dbHandler)
     $args = initArgs($dbHandler);
     $gui = new stdClass();
 
-    $grant2check = array(
+    $grant2check = [
         'mgt_modify_tc',
         'mgt_view_req',
         'testplan_planning',
@@ -281,7 +281,7 @@ function initializeEnv($dbHandler)
         'testproject_delete_executed_testcases',
         'testproject_add_remove_keywords_executed_tcversions',
         'delete_frozen_tcversion'
-    );
+    ];
 
     $grants = new stdClass();
     foreach ($grant2check as $right) {
@@ -318,11 +318,11 @@ function initializeEnv($dbHandler)
     $gui->bodyOnUnload = "storeWindowSize('TCEditPopup')";
     $gui->viewerArgs = $args->viewerArgs;
 
-    return array(
+    return [
         $args,
         $gui,
         $grants
-    );
+    ];
 }
 
 /**
@@ -355,9 +355,9 @@ function systemWideTestCaseSearch(&$dbHandler, &$argsObj, $glue)
         $tcaseMgr = new testcase($dbHandler);
         $argsObj->tcase_id = $tcaseMgr->getInternalID($argsObj->targetTestCase);
         $dummy = $tcaseMgr->get_basic_info($argsObj->tcase_id,
-            array(
+            [
                 'number' => $argsObj->tcaseVersionNumber
-            ));
+            ]);
         if (! is_null($dummy)) {
             $argsObj->tcversion_id = $dummy[0]['tcversion_id'];
         }
@@ -469,9 +469,9 @@ function processTestCase(&$dbHandler, $tplEngine, $args, &$gui, $grants, $cfg)
         if ($latestTCVersionID == 0) {
             $tcvSet = $item_mgr->getAllVersionsID($args->id);
         } else {
-            $tcvSet = array(
+            $tcvSet = [
                 $latestTCVersionID
-            );
+            ];
         }
 
         foreach ($tcvSet as $tcvx) {

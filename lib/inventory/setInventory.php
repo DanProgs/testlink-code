@@ -40,39 +40,39 @@ echo json_encode($data);
 function initArgs()
 {
     $_REQUEST = strings_stripSlashes($_REQUEST);
-    $iParams = array(
-        "machineID" => array(
+    $iParams = [
+        "machineID" => [
             tlInputParameter::INT_N
-        ),
-        "machineOwner" => array(
+        ],
+        "machineOwner" => [
             tlInputParameter::INT_N
-        ),
-        "machineName" => array(
+        ],
+        "machineName" => [
             tlInputParameter::STRING_N,
             0,
             255
-        ),
-        "machineIp" => array(
+        ],
+        "machineIp" => [
             tlInputParameter::STRING_N,
             0,
             50
-        ),
-        "machineNotes" => array(
+        ],
+        "machineNotes" => [
             tlInputParameter::STRING_N,
             0,
             2000
-        ),
-        "machinePurpose" => array(
+        ],
+        "machinePurpose" => [
             tlInputParameter::STRING_N,
             0,
             2000
-        ),
-        "machineHw" => array(
+        ],
+        "machineHw" => [
             tlInputParameter::STRING_N,
             0,
             2000
-        )
-    );
+        ]
+    ];
 
     $args = new stdClass();
     R_PARAMS($iParams, $args);

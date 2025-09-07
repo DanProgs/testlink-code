@@ -16,13 +16,13 @@ $method = 'updateTestSuiteCustomFieldDesignValue';
 
 echo '<h2>Testing Method: ' . $method . '</h2>';
 
-$args = array();
+$args = [];
 $args["devKey"] = 'admin';
 $args["testprojectid"] = 279340;
 $args["testsuiteid"] = 279341;
-$args["customfields"] = array(
+$args["customfields"] = [
     'TCSTRING' => 'From DUCATI to YAMAHA'
-);
+];
 
 $client = new IXR_Client($server_url);
 $client->debug = true;
@@ -30,13 +30,13 @@ $client->debug = true;
 runTest($client, $method, $args);
 
 //
-$args = array();
+$args = [];
 $args["devKey"] = 'admin';
 $args["testprojectid"] = 279340;
 $args["testsuiteid"] = 279341;
-$args["customfields"] = array(
+$args["customfields"] = [
     'CF_MOTO' => 'From DUCATI to YAMAHA'
-);
+];
 
 $client = new IXR_Client($server_url);
 $client->debug = true;
@@ -44,13 +44,13 @@ $client->debug = true;
 runTest($client, $method, $args);
 
 //
-$args = array();
+$args = [];
 $args["devKey"] = 'admin';
 $args["testprojectid"] = 279340;
 $args["testsuiteid"] = 279341;
-$args["customfields"] = array(
+$args["customfields"] = [
     'CF_MOTO' => 'From DUCATI to YAMAHA'
-);
+];
 
 $client = new IXR_Client($server_url);
 $client->debug = true;

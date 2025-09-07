@@ -77,12 +77,12 @@ if (($args->tproject_id > 0) && $args->doAction == 'doSearch') {
     $tables = $cmdMgr->getTables();
     $views = $cmdMgr->getViews();
 
-    $from = array(
+    $from = [
         'by_keyword_id' => ' ',
         'by_custom_field' => ' ',
         'by_requirement_doc_id' => '',
         'users' => ''
-    );
+    ];
     $tcaseID = null;
 
     $emptyTestProject = true;
@@ -122,9 +122,9 @@ if ($hasTestCases) {
 if (! is_null($mapTC)) {
     $tcaseMgr = new testcase($db);
     $tcase_set = array_keys($mapTC);
-    $options = array(
+    $options = [
         'output_format' => 'path_as_string'
-    );
+    ];
     $gui->path_info = $treeMgr->get_full_path_verbose($tcase_set, $options);
     $gui->resultSet = $mapTC;
 } elseif ($emptyTestProject) {
@@ -167,9 +167,9 @@ $table = null;
 if (! is_null($mapRQ)) {
     $gui->resultReq = $mapRQ;
     $req_set = array_keys($mapRQ);
-    $options = array(
+    $options = [
         'output_format' => 'path_as_string'
-    );
+    ];
     $gui->path_info = $treeMgr->get_full_path_verbose($req_set, $options);
 
     $table = buildRQExtTable($gui, $charset);
@@ -191,32 +191,32 @@ function buildTCExtTable($gui, $charset, $edit_icon, $history_icon)
     $designCfg = getWebEditorCfg('design');
     $designType = $designCfg['type'];
 
-    if (count((array) $gui->resultSet) > 0) {
-        $labels = array(
+    if ((array) $gui->resultSet !== []) {
+        $labels = [
             'test_suite' => lang_get('test_suite'),
             'test_case' => lang_get('test_case')
-        );
-        $columns = array();
+        ];
+        $columns = [];
 
-        $columns[] = array(
+        $columns[] = [
             'title_key' => 'test_suite'
-        );
-        $columns[] = array(
+        ];
+        $columns[] = [
             'title_key' => 'test_case',
             'type' => 'text'
-        );
+        ];
 
-        $columns[] = array(
+        $columns[] = [
             'title_key' => 'summary'
-        );
+        ];
 
         // Extract the relevant data and build a matrix
-        $matrixData = array();
+        $matrixData = [];
 
         $titleSeparator = config_get('gui_title_separator_1');
 
         foreach ($gui->resultSet as $result) {
-            $rowData = array();
+            $rowData = [];
             $rowData[] = htmlentities($gui->path_info[$result['testcase_id']],
                 ENT_QUOTES, $charset);
 
@@ -250,9 +250,9 @@ function buildTCExtTable($gui, $charset, $edit_icon, $history_icon)
         $table->toolbarRefreshButton = false;
         $table->toolbarShowAllColumnsButton = false;
 
-        $table->addCustomBehaviour('text', array(
+        $table->addCustomBehaviour('text', [
             'render' => 'columnWrap'
-        ));
+        ]);
         $table->storeTableState = false;
     }
     return $table;
@@ -267,29 +267,29 @@ function buildTSExtTable($gui, $charset, $edit_icon)
     $designType = $designCfg['type'];
 
     if (! empty($gui->resultTestSuite)) {
-        $labels = array(
+        $labels = [
             'test_suite' => lang_get('test_suite'),
             'details' => lang_get('details')
-        );
-        $columns = array();
+        ];
+        $columns = [];
 
-        $columns[] = array(
+        $columns[] = [
             'title_key' => 'test_suite',
             'type' => 'text'
-        );
-        $columns[] = array(
+        ];
+        $columns[] = [
             'title_key' => 'details'
-        );
+        ];
 
         // Extract the relevant data and build a matrix
-        $matrixData = array();
+        $matrixData = [];
 
         foreach ($gui->resultTestSuite as $result) {
             $edit_link = "<a href=\"javascript:openTSEditWindow({$result['id']});\">" .
                 "<img title=\"" . lang_get('design') .
                 "\" src=\"{$edit_icon}\" /></a> ";
 
-            $rowData = array();
+            $rowData = [];
 
             $rowData[] = $edit_link .
                 htmlentities($result['name'], ENT_QUOTES, $charset);
@@ -310,9 +310,9 @@ function buildTSExtTable($gui, $charset, $edit_icon)
         $table->toolbarRefreshButton = false;
         $table->toolbarShowAllColumnsButton = false;
 
-        $table->addCustomBehaviour('text', array(
+        $table->addCustomBehaviour('text', [
             'render' => 'columnWrap'
-        ));
+        ]);
         $table->storeTableState = false;
     }
     return $table;
@@ -327,29 +327,29 @@ function buildRSExtTable($gui, $charset, $edit_icon)
     $designType = $designCfg['type'];
 
     if (! empty($gui->resultReqSpec)) {
-        $labels = array(
+        $labels = [
             'req_spec' => lang_get('req_spec'),
             'scope' => lang_get('scope')
-        );
-        $columns = array();
+        ];
+        $columns = [];
 
-        $columns[] = array(
+        $columns[] = [
             'title_key' => 'req_spec',
             'type' => 'text'
-        );
-        $columns[] = array(
+        ];
+        $columns[] = [
             'title_key' => 'scope'
-        );
+        ];
 
         // Extract the relevant data and build a matrix
-        $matrixData = array();
+        $matrixData = [];
 
         foreach ($gui->resultReqSpec as $result) {
             $edit_link = "<a href=\"javascript:openLinkedReqSpecWindow({$result['req_spec_id']});\">" .
                 "<img title=\"" . lang_get('design') .
                 "\" src=\"{$edit_icon}\" /></a> ";
 
-            $rowData = array();
+            $rowData = [];
 
             $rowData[] = $edit_link .
                 htmlentities($result['name'] . "[r{$result['revision']}]",
@@ -371,9 +371,9 @@ function buildRSExtTable($gui, $charset, $edit_icon)
         $table->toolbarRefreshButton = false;
         $table->toolbarShowAllColumnsButton = false;
 
-        $table->addCustomBehaviour('text', array(
+        $table->addCustomBehaviour('text', [
             'render' => 'columnWrap'
-        ));
+        ]);
         $table->storeTableState = false;
     }
     return $table;
@@ -387,40 +387,40 @@ function buildRQExtTable($gui, $charset)
     $designCfg = getWebEditorCfg('design');
     $designType = $designCfg['type'];
 
-    $lbl = array(
+    $lbl = [
         'edit' => 'requirement',
         'req_spec' => 'req_spec',
         'requirement' => 'requirement',
         'scope' => 'scope',
         'version_revision_tag' => 'version_revision_tag'
-    );
+    ];
 
     $labels = init_labels($lbl);
     $edit_icon = TL_THEME_IMG_DIR . "edit_icon.png";
 
     if (! empty($gui->resultReq)) {
-        $columns = array();
+        $columns = [];
 
-        $columns[] = array(
+        $columns[] = [
             'title_key' => 'req_spec'
-        );
-        $columns[] = array(
+        ];
+        $columns[] = [
             'title_key' => 'requirement',
             'type' => 'text'
-        );
+        ];
 
-        $columns[] = array(
+        $columns[] = [
             'title_key' => 'scope'
-        );
+        ];
 
         // Extract the relevant data and build a matrix
-        $matrixData = array();
+        $matrixData = [];
 
         $key2loop = array_keys($gui->resultReq);
         $img = "<img title=\"{$labels['edit']}\" src=\"{$edit_icon}\" />";
 
         foreach ($key2loop as $req_id) {
-            $rowData = array();
+            $rowData = [];
             $itemSet = $gui->resultReq[$req_id];
             $rfx = $itemSet;
 
@@ -451,9 +451,9 @@ function buildRQExtTable($gui, $charset)
         $table->toolbarShowAllColumnsButton = false;
         $table->storeTableState = false;
 
-        $table->addCustomBehaviour('text', array(
+        $table->addCustomBehaviour('text', [
             'render' => 'columnWrap'
-        ));
+        ]);
     }
     return $table;
 }
@@ -464,7 +464,7 @@ function cleanUpTarget(&$dbHandler, $target)
 {
     $s = preg_replace("/ {2,}/", " ", $target);
     $theSet = explode(' ', $s);
-    $targetSet = array();
+    $targetSet = [];
     foreach ($theSet as $val) {
         if (trim($val) != '') {
             $targetSet[] = $dbHandler->prepare_string($val);

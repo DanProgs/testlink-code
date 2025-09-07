@@ -36,7 +36,7 @@ $gui->req_version_id = $args->req_version_id;
 $gui->req_revision = $args->req_revision;
 
 // Struture defined in printDocument.php
-$options = array(
+$options = [
     'toc' => 0,
     'req_linked_tcs' => 1,
     'req_cf' => 1,
@@ -50,7 +50,7 @@ $options = array(
     'displayDates' => 1,
     'displayLastEdit' => 1,
     'docType' => SINGLE_REQ
-);
+];
 
 $text2print = '';
 $text2print .= renderHTMLHeader($gui->page_title, $_SESSION['basehref'],

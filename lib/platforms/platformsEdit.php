@@ -25,7 +25,7 @@ $editorCfg = getWebEditorCfg('build');
 require_once require_web_editor($editorCfg['type']);
 
 // Security checks are done, if failed => exit()
-list ($args, $gui, $platform_mgr) = initEnv($db);
+[$args, $gui, $platform_mgr] = initEnv($db);
 
 $templateCfg = templateConfiguration();
 $smarty = new TLSmarty();
@@ -99,11 +99,11 @@ function initEnv(&$dbHandler)
 
     $guiObj = initGui($dbHandler, $argsObj, $platMgr);
 
-    return array(
+    return [
         $argsObj,
         $guiObj,
         $platMgr
-    );
+    ];
 }
 
 /**
@@ -155,10 +155,10 @@ function initArgs(&$dbH)
         $args->platform_id = $args->id;
     }
 
-    $tables = tlDBObject::getDBTables(array(
+    $tables = tlDBObject::getDBTables([
         'nodes_hierarchy',
         'platforms'
-    ));
+    ]);
 
     if (0 != $args->platform_id) {
         $sql = "SELECT testproject_id FROM {$tables['platforms']}
@@ -408,7 +408,7 @@ function checkPageAccess(&$db, &$argsObj)
     $env['tproject_id'] = isset($argsObj->tproject_id) ? $argsObj->tproject_id : 0;
     $env['tplan_id'] = isset($argsObj->tplan_id) ? $argsObj->tplan_id : 0;
     $argsObj->currentUser->checkGUISecurityClearance($db, $env,
-        array(
+        [
             'platform_management'
-        ), 'and');
+        ], 'and');
 }

@@ -19,7 +19,7 @@ $method = 'getTestPlanByName';
 $test_num = 1;
 $unitTestDescription = "Test {$test_num} - {$method}";
 
-$args = array();
+$args = [];
 $args["devKey"] = DEV_KEY;
 $args["testprojectname"] = "API TEST";
 $args["testplanname"] = "PLAN 1 - API TEST";

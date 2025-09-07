@@ -32,11 +32,11 @@ $req_cfg = config_get('req_cfg');
 // more info here
 // array(0) => left pane
 // array(1) => right pane
-$aa_tfp = array(
-    'editTc' => array(
+$aa_tfp = [
+    'editTc' => [
         'lib/testcases/listTestCases.php?feature=edit_tc',
         'lib/testcases/archiveData.php?edit=testproject&id='
-    ),
+    ],
 
     'assignReqs' => 'lib/testcases/listTestCases.php?feature=assignReqs',
     'searchTc' => 'lib/testcases/tcSearchForm.php',
@@ -47,30 +47,30 @@ $aa_tfp = array(
     'printTestSpec' => 'lib/results/printDocOptions.php?type=testspec',
     'printReqSpec' => 'lib/results/printDocOptions.php?type=reqspec',
     'keywordsAssign' => 'lib/testcases/listTestCases.php?feature=keywordsAssign',
-    'planAddTC' => array(
+    'planAddTC' => [
         'lib/plan/planAddTCNavigator.php?loadRightPaneAddTC=0',
         'lib/plan/planAddTC.php?activity=addTC'
-    ),
+    ],
     'planRemoveTC' => 'lib/plan/planTCNavigator.php?feature=removeTC&help_topic=planRemoveTC',
     'planUpdateTC' => 'lib/plan/planTCNavigator.php?feature=planUpdateTC',
     'show_ve' => 'lib/plan/planTCNavigator.php?feature=show_ve',
     'newest_tcversions' => '../../lib/plan/newest_tcversions.php',
     'test_urgency' => 'lib/plan/planTCNavigator.php?feature=test_urgency',
     'tc_exec_assignment' => 'lib/plan/planTCNavigator.php?feature=tc_exec_assignment',
-    'executeTest' => array(
+    'executeTest' => [
         'lib/execute/execNavigator.php?setting_testplan=',
         'lib/execute/execDashboard.php?id='
-    ),
+    ],
     'showMetrics' => 'lib/results/resultsNavigator.php',
-    'reqSpecMgmt' => array(
+    'reqSpecMgmt' => [
         'lib/requirements/reqSpecListTree.php',
         'lib/project/project_req_spec_mgmt.php?id='
-    )
-);
+    ]
+];
 
-$full_screen = array(
+$full_screen = [
     'newest_tcversions' => 1
-);
+];
 
 // cleanup session var
 $_SESSION['currentSrsId'] = null;
@@ -87,11 +87,11 @@ if (isset($aa_tfp[$showFeature]) === false) {
 
 // features that need to run the validate build function
 if (in_array($showFeature,
-    array(
+    [
         'executeTest',
         'showMetrics',
         'tc_exec_assignment'
-    ))) {
+    ])) {
     // Check if for test project selected at least a test plan exist
     if (isset($_SESSION['testplanID']) || ! is_null($args->tplan_id)) {
         // Filter on build attributes: ACTIVE,OPEN
@@ -220,7 +220,7 @@ function validateBuildAvailability(&$db, &$tplanMgr, $context, $attrFilter)
         if (has_rights($db, "testplan_create_build") == 'yes') {
             // final url will be composed adding to $basehref
             // (one TL variable available on smarty templates) to $link_to_op
-            $link_to_op = "lib/plan/buildEdit.php?do_action=create&tplan_id=$tpID";
+            $link_to_op = "lib/plan/buildEdit.php?do_action=create&tplan_id={$tpID}";
             $hint_text = lang_get('create_a_build');
         } else {
             $message .= '</p><p>' . lang_get('no_build_warning_part2') . '</p>';
@@ -242,17 +242,17 @@ function initArgs()
 {
     $_REQUEST = strings_stripSlashes($_REQUEST);
     $args = new stdClass();
-    $iParams = array(
-        "feature" => array(
+    $iParams = [
+        "feature" => [
             tlInputParameter::STRING_N
-        ),
-        "tproject_id" => array(
+        ],
+        "tproject_id" => [
             tlInputParameter::INT_N
-        ),
-        "tplan_id" => array(
+        ],
+        "tplan_id" => [
             tlInputParameter::INT_N
-        )
-    );
+        ]
+    ];
     R_PARAMS($iParams, $args);
 
     return $args;

@@ -17,7 +17,7 @@ show_api_db_sample_msg();
 $method='getUserByID';
 $unitTestDescription="Test - {$method}";
 
-$args=array();
+$args=[];
 $args["devKey"]='21232f297a57a5a743894a0e4a801fc3';
 $args["userid"]=6;
 
@@ -27,7 +27,7 @@ $client = new IXR_Client($server_url);
 $client->debug=$debug;
 runTest($client,$method,$args);
 
-$args=array();
+$args=[];
 $args["devKey"]='21232f297a57a5a743894a0e4a801fc3';
 $args["userid"]=66;
 

@@ -20,7 +20,7 @@ $unitTestDescription = "Test {$test_num} - {$method}";
 
 $prefix = $_REQUEST['prefix'] ? $_REQUEST['prefix'] : 'VICTIM';
 
-$args = array();
+$args = [];
 $args["devKey"] = '985978c915f50e47a4b1a54a943d1b76';
 $args["prefix"] = $prefix;
 $additionalInfo = '';

@@ -110,14 +110,14 @@ class testPlanUrgency extends testplan
         $moreFields = '';
         $moreJoins = '';
 
-        $my['options'] = array(
+        $my['options'] = [
             'build4testers' => 0
-        );
+        ];
         $my['options'] = array_merge($my['options'], (array) $options);
 
-        $my['filters'] = array(
+        $my['filters'] = [
             'testcases' => null
-        );
+        ];
         $my['filters'] = array_merge($my['filters'], (array) $filters);
 
         if ($my['options']['build4testers'] != 0) {
@@ -202,15 +202,15 @@ class testPlanUrgency extends testplan
     {
         $debugMsg = 'Class:' . __CLASS__ . ' - Method: ' . __FUNCTION__;
         $rs = null;
-        $my = array(
-            'filters' => array(
+        $my = [
+            'filters' => [
                 'platform_id' => null,
                 'tcversion_id' => null
-            ),
-            'options' => array(
+            ],
+            'options' => [
                 'details' => 'tcversion'
-            )
-        );
+            ]
+        ];
         $my['filters'] = array_merge($my['filters'], (array) $filters);
         $my['options'] = array_merge($my['options'], (array) $options);
 
@@ -224,7 +224,7 @@ class testPlanUrgency extends testplan
             $sqlFilter .= " AND TPTCV.tcversion_id IN ({$dummy}) ";
         }
 
-        $sql = "/* $debugMsg */ ";
+        $sql = "/* {$debugMsg} */ ";
         $sql .= " SELECT (urgency * importance) AS priority,  " .
             " urgency,importance, " . LOW .
             " AS priority_level, TPTCV.tcversion_id %CLAUSE%" .

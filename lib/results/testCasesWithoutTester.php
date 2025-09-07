@@ -32,10 +32,10 @@ if ($tplan_mgr->count_testcases($args->tplan_id) > 0) {
 
     $metricsMgr = new tlTestPlanMetrics($db);
     $metrics = $metricsMgr->getNotRunWoTesterAssigned($args->tplan_id, null,
-        null, array(
+        null, [
             'output' => 'array',
             'ignoreBuild' => true
-        ));
+        ]);
 
     if (($gui->row_qty = count($metrics)) > 0) {
         $msg_key = '';
@@ -45,13 +45,13 @@ if ($tplan_mgr->count_testcases($args->tplan_id) > 0) {
 
         if ($args->show_platforms) {
             $platformCache = $tplan_mgr->getPlatforms($args->tplan_id,
-                array(
+                [
                     'outputFormat' => 'mapAccessByID'
-                ));
+                ]);
         }
 
         // Collect all tcases id and get all test suite paths
-        $targetSet = array();
+        $targetSet = [];
 
         foreach ($metrics as &$item) {
             $targetSet[] = $item['tcase_id'];
@@ -61,9 +61,9 @@ if ($tplan_mgr->count_testcases($args->tplan_id) > 0) {
         unset($tree_mgr);
         unset($targetSet);
 
-        $data = array();
+        $data = [];
         foreach ($metrics as &$item) {
-            $row = array();
+            $row = [];
             $row[] = implode(" / ", $path_info[$item['tcase_id']]);
 
             $row[] = "<!-- " . sprintf("%010d", $item['external_id']) . " -->" .
@@ -104,61 +104,61 @@ $smarty->display($templateCfg->template_dir . $templateCfg->default_template);
  */
 function buildTable($data, $tproject_id, $show_platforms, $priorityMgmtEnabled)
 {
-    $key2search = array(
+    $key2search = [
         'testsuite',
         'testcase',
         'platform',
         'priority',
         'summary'
-    );
+    ];
     foreach ($key2search as $key) {
         $labels[$key] = lang_get($key);
     }
-    $columns[] = array(
+    $columns[] = [
         'title_key' => 'testsuite',
         'width' => 20
-    );
+    ];
 
-    $columns[] = array(
+    $columns[] = [
         'title_key' => 'testcase',
         'width' => 25
-    );
+    ];
 
     if ($show_platforms) {
-        $columns[] = array(
+        $columns[] = [
             'title_key' => 'platform',
             'width' => 10
-        );
+        ];
     }
 
     if ($priorityMgmtEnabled) {
-        $columns[] = array(
+        $columns[] = [
             'title_key' => 'priority',
             'type' => 'priority',
             'width' => 5
-        );
+        ];
     }
 
-    $columns[] = array(
+    $columns[] = [
         'title_key' => 'summary',
         'type' => 'text',
         'width' => 40
-    );
+    ];
 
     $matrix = new tlExtTable($columns, $data, 'tl_table_tc_without_tester');
 
     $matrix->setGroupByColumnName($labels['testsuite']);
     $matrix->setSortByColumnName($labels['testcase']);
-    $matrix->addCustomBehaviour('text', array(
+    $matrix->addCustomBehaviour('text', [
         'render' => 'columnWrap'
-    ));
+    ]);
 
     if ($priorityMgmtEnabled) {
         $matrix->addCustomBehaviour('priority',
-            array(
+            [
                 'render' => 'priorityRenderer',
                 'filter' => 'Priority'
-            ));
+            ]);
         $matrix->setSortByColumnName($labels['priority']);
     }
     return $matrix;
@@ -171,14 +171,14 @@ function buildTable($data, $tproject_id, $show_platforms, $priorityMgmtEnabled)
  */
 function initArgs(&$tplan_mgr)
 {
-    $iParams = array(
-        "format" => array(
+    $iParams = [
+        "format" => [
             tlInputParameter::INT_N
-        ),
-        "tplan_id" => array(
+        ],
+        "tplan_id" => [
             tlInputParameter::INT_N
-        )
-    );
+        ]
+    ];
 
     $args = new stdClass();
     R_PARAMS($iParams, $args);
@@ -210,7 +210,7 @@ function initArgs(&$tplan_mgr)
  */
 function featureLinks($lbl, $img)
 {
-    $links = array();
+    $links = [];
 
     // %s => test case id
     $links['exec_history'] = '<a href="javascript:openExecHistoryWindow(%s);" >' .
@@ -247,12 +247,12 @@ function initializeGui(&$dbHandler, &$argsObj)
     $gui->options = new stdClass();
     $gui->options->testPriorityEnabled = $dummy['opt']->testPriorityEnabled;
     $gui->labels = init_labels(
-        array(
+        [
             'design' => null,
             'execution' => null,
             'execution_history' => null,
             'match_count' => null
-        ));
+        ]);
 
     $gui->tableSet = null;
     return $gui;

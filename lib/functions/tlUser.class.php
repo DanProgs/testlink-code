@@ -519,7 +519,7 @@ class tlUser extends tlDBObject
     public function deleteFromDB(&$db)
     {
         $safeUserID = intval($this->dbID);
-        $sqlSet = array();
+        $sqlSet = [];
         $sqlSet[] = "DELETE FROM {$this->table['user_assignments']} WHERE user_id = {$safeUserID}";
         $sqlSet[] = "DELETE FROM {$this->table['users']}  WHERE id = {$safeUserID}";
 
@@ -560,18 +560,18 @@ class tlUser extends tlDBObject
      */
     public function getDisplayName($format = null)
     {
-        $keys = array(
+        $keys = [
             '%first%',
             '%last%',
             '%login%',
             '%email%'
-        );
-        $values = array(
+        ];
+        $values = [
             $this->firstName,
             $this->lastName,
             $this->login,
             $this->emailAddress
-        );
+        ];
 
         $fmt = is_null($format) ? $this->usernameFormat : $format;
         return trim(str_replace($keys, $values, $fmt));
@@ -769,14 +769,14 @@ class tlUser extends tlDBObject
         }
 
         // get users for default roles
-        $sql = "/* $debugMsg */ SELECT DISTINCT u.id,u.login,u.first,u.last FROM {$this->tables['users']} u" .
+        $sql = "/* {$debugMsg} */ SELECT DISTINCT u.id,u.login,u.first,u.last FROM {$this->tables['users']} u" .
             " JOIN {$this->tables['role_rights']} a ON a.role_id=u.role_id" .
             " JOIN {$this->tables['rights']} b ON a.right_id = b.id " .
             " WHERE b.description='" . $db->prepare_string($rightNick) . "'";
         $defaultRoles = $db->fetchRowsIntoMap($sql, 'id');
 
         // get users for project roles
-        $sql = "/* $debugMsg */ SELECT DISTINCT u.id,u.login,u.first,u.last FROM {$this->tables['users']} u" .
+        $sql = "/* {$debugMsg} */ SELECT DISTINCT u.id,u.login,u.first,u.last FROM {$this->tables['users']} u" .
             " JOIN {$this->tables['user_testproject_roles']} p ON p.user_id=u.id" .
             " AND p.testproject_id=" . intval($testprojectID) .
             " JOIN {$this->tables['role_rights']} a ON a.role_id=p.role_id" .
@@ -865,7 +865,7 @@ class tlUser extends tlDBObject
 
         $userGlobalRights = (array) $this->globalRole->rights;
 
-        $globalRights = array();
+        $globalRights = [];
         foreach ($userGlobalRights as $right) {
             $globalRights[] = $right->name;
         }
@@ -885,7 +885,7 @@ class tlUser extends tlDBObject
 
             $allRights = null;
             if ($doMoreAnalysis) {
-                $testProjectRights = array();
+                $testProjectRights = [];
                 foreach ($userTestProjectRights as $right) {
                     $testProjectRights[] = $right->name;
                 }
@@ -908,7 +908,7 @@ class tlUser extends tlDBObject
         if ($testPlanID > 0) {
             if (isset($userTestPlanRoles[$testPlanID])) {
                 $userTestPlanRights = (array) $userTestPlanRoles[$testPlanID]->rights;
-                $testPlanRights = array();
+                $testPlanRights = [];
                 foreach ($userTestPlanRights as $right) {
                     $testPlanRights[] = $right->name;
                 }
@@ -962,10 +962,10 @@ class tlUser extends tlDBObject
     {
         $debugTag = 'Class:' . __CLASS__ . '- Method:' . __FUNCTION__ . '-';
 
-        $my['options'] = array(
+        $my['options'] = [
             'output' => null,
             'active' => ACTIVE
-        );
+        ];
         $my['options'] = array_merge($my['options'], (array) $options);
 
         $fields2get = ' NH.id, NH.name, TPLAN.is_public, ' .
@@ -976,7 +976,7 @@ class tlUser extends tlDBObject
             $fields2get .= ' ,TPLAN.notes, TPLAN.testproject_id ';
         }
 
-        $sql = " /* $debugTag */  SELECT {$fields2get} " .
+        $sql = " /* {$debugTag} */  SELECT {$fields2get} " .
             " FROM {$this->tables['nodes_hierarchy']} NH" .
             " JOIN {$this->tables['testplans']} TPLAN ON NH.id=TPLAN.id  " .
             " LEFT OUTER JOIN {$this->tables['user_testplan_roles']} USER_TPLAN_ROLES" .
@@ -1097,7 +1097,7 @@ class tlUser extends tlDBObject
         }
 
         if ($my['options']['output'] == 'combo') {
-            $dummy = array();
+            $dummy = [];
             foreach ($testPlanSet as $idx => $item) {
                 $dummy[$idx] = $item['name'];
             }
@@ -1119,7 +1119,7 @@ class tlUser extends tlDBObject
     {
         $result = isBlank($email) ? self::E_EMAILLENGTH : tl::OK;
         if ($result == tl::OK) {
-            $matches = array();
+            $matches = [];
             $email_regex = config_get('validation_cfg')->user_email_valid_regex_php;
             if (! preg_match($email_regex, $email, $matches)) {
                 $result = self::E_EMAILFORMAT;
@@ -1430,10 +1430,10 @@ class tlUser extends tlDBObject
     {
         $doExit = false;
         $action = 'any';
-        $myContext = array(
+        $myContext = [
             'tproject_id' => 0,
             'tplan_id' => 0
-        );
+        ];
         $myContext = array_merge($myContext, $context);
 
         if ($doExit = (is_null($myContext) || $myContext['tproject_id'] == 0)) {
@@ -1468,10 +1468,10 @@ class tlUser extends tlDBObject
      */
     public static function checkPasswordQuality($password)
     {
-        $ret = array(
+        $ret = [
             'status_ok' => tl::OK,
             'msg' => 'ok'
-        );
+        ];
         $cfg = config_get('passwordChecks');
         if (is_null($cfg)) {
             return $ret; // >>---> Bye!
@@ -1523,9 +1523,9 @@ class tlUser extends tlDBObject
      */
     public static function setExpirationDate(&$dbHandler, $userID, $isoDate)
     {
-        $sch = tlObject::getDBTables(array(
+        $sch = tlObject::getDBTables([
             'users'
-        ));
+        ]);
 
         $setClause = " SET expiration_date = ";
         if (is_null($isoDate) || trim($isoDate) == '') {
@@ -1551,11 +1551,11 @@ class tlUser extends tlDBObject
      */
     private function hasRightWrap(&$db, $roleQuestion, $context = null)
     {
-        $cx = array(
+        $cx = [
             'tproject_id' => null,
             'tplan_id' => null,
             'checkPublicPrivateAttr' => false
-        );
+        ];
         $cx = array_merge($cx, (array) $context);
         return $this->hasRight($db, $roleQuestion, $cx['tproject_id'],
             $cx['tplan_id'], $cx['checkPublicPrivateAttr']);

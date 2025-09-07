@@ -20,7 +20,7 @@ $test_num = 0;
 $test_num ++;
 $unitTestDescription = "Test {$test_num} - {$method}";
 
-$args = array();
+$args = [];
 $args["devKey"] = 'admin';
 $args["testprojectid"] = 279311;
 $args["testplanid"] = 279324;
@@ -43,7 +43,7 @@ runTest($client, $method, $args, $test_num);
 $test_num ++;
 $unitTestDescription = "Test {$test_num} - {$method}";
 
-$args = array();
+$args = [];
 $args["devKey"] = 'admin';
 $args["devKey"] = 'admin';
 $args["testprojectid"] = 279311;
@@ -67,7 +67,7 @@ runTest($client, $method, $args, $test_num);
 $test_num ++;
 $unitTestDescription = "Test {$test_num} - {$method}";
 
-$args = array();
+$args = [];
 $args["devKey"] = 'admin';
 $args["testprojectid"] = 279311;
 $args["testplanid"] = 173854;
@@ -89,7 +89,7 @@ runTest($client, $method, $args, $test_num);
 $test_num ++;
 $unitTestDescription = "Test {$test_num} - {$method}";
 
-$args = array();
+$args = [];
 $args["devKey"] = 'admin';
 $args["testprojectid"] = 279311;
 $args["testplanid"] = 279324;

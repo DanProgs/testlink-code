@@ -15,7 +15,7 @@ $method = 'getAllExecutionsResults';
 
 $unitTestDescription = "Test - {$method} - NO BUILD NO PLATFORM Filters";
 
-$args = array();
+$args = [];
 $args["devKey"] = 'developer';
 $args["testplanid"] = 133683;
 // $args["testcaseexternalid"]='EW-1'; //121690
@@ -32,7 +32,7 @@ $client->debug = $debug;
 runTest($client, $method, $args);
 die();
 
-$args = array();
+$args = [];
 $args["devKey"] = 'DEV_KEY';
 $args["testplanid"] = 3;
 $args["testcaseexternalid"] = 'PJH-1';
@@ -46,7 +46,7 @@ $client = new IXR_Client($server_url);
 $client->debug = $debug;
 runTest($client, $method, $args);
 
-$args = array();
+$args = [];
 $args["devKey"] = 'DEV_KEY';
 $args["testplanid"] = 10;
 $args["testcaseexternalid"] = 'PJH-1';

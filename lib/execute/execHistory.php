@@ -38,9 +38,9 @@ $gui->tproject_id = isset($_SESSION['testprojectID']) ? $_SESSION['testprojectID
 
 // Need to get all test plans user is able to access.
 $testPlanSet = (array) $args->user->getAccessibleTestPlans($db,
-    $gui->tproject_id, null, array(
+    $gui->tproject_id, null, [
         'active' => $args->onlyActiveTestPlans
-    ));
+    ]);
 
 $gui->grants = new stdClass();
 $gui->grants->exec_edit_notes = null;
@@ -91,14 +91,14 @@ function initArgs()
 {
     $_REQUEST = strings_stripSlashes($_REQUEST);
 
-    $iParams = array(
-        "tcase_id" => array(
+    $iParams = [
+        "tcase_id" => [
             tlInputParameter::INT_N
-        ),
-        'onlyActiveTestPlans' => array(
+        ],
+        'onlyActiveTestPlans' => [
             tlInputParameter::INT_N
-        )
-    );
+        ]
+    ];
     $pParams = R_PARAMS($iParams);
 
     $args = new stdClass();
@@ -130,7 +130,7 @@ function getIssues(&$dbHandler, &$execSet, $tprojectID)
     unset($it_mgr);
 
     // we will see in future if we can use a better algorithm
-    $issues = array();
+    $issues = [];
     $tcv2loop = array_keys($execSet);
     foreach ($tcv2loop as $tcvid) {
         $execQty = count($execSet[$tcvid]);
@@ -153,7 +153,7 @@ function getIssues(&$dbHandler, &$execSet, $tprojectID)
  */
 function getCustomFields(&$tcaseMgr, &$execSet)
 {
-    $cf = array();
+    $cf = [];
     $tcv2loop = array_keys($execSet);
     foreach ($tcv2loop as $tcvid) {
         $execQty = count($execSet[$tcvid]);

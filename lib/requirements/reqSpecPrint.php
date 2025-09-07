@@ -41,7 +41,7 @@ $gui->tproject_id = $args->tproject_id;
 $gui->reqspec_id = $args->reqspec_id;
 
 // Struture defined in printDocument.php
-$options = array(
+$options = [
     'toc' => 0,
     'req_spec_scope' => 1,
     'req_spec_author' => 1,
@@ -50,7 +50,7 @@ $options = array(
     'req_spec_overwritten_count_reqs' => 1,
     'headerNumbering' => 0,
     'docType' => SINGLE_REQSPEC
-);
+];
 
 $text2print = '';
 $text2print .= renderHTMLHeader($gui->page_title, $_SESSION['basehref'],
@@ -64,7 +64,7 @@ if (! is_null($childrenReq) && $req_cfg->show_child_reqs_on_reqspec_print_view) 
     // 'docType' => 'SINGLE_REQ' among other things remove the indent on req table
     // that is present by default.
     // That's why we need to pass any other value.
-    $reqPrintOpts = array(
+    $reqPrintOpts = [
         'toc' => 0,
         'req_linked_tcs' => 1,
         'req_cf' => 1,
@@ -78,7 +78,7 @@ if (! is_null($childrenReq) && $req_cfg->show_child_reqs_on_reqspec_print_view) 
         'displayDates' => 1,
         'displayLastEdit' => 1,
         'docType' => SINGLE_REQ
-    );
+    ];
 
     $text2print .= '<div><h2>' . lang_get('reqs') . '</h2></div>';
     $loop2do = count($childrenReq);

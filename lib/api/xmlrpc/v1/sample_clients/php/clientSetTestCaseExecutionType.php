@@ -15,7 +15,7 @@ show_api_db_sample_msg();
 
 $method = 'setTestCaseExecutionType';
 
-$args = array();
+$args = [];
 $args["devKey"] = DEV_KEY;
 $args["testprojectid"] = 32989;
 $args["testcaseexternalid"] = 'APF-1';

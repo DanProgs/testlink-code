@@ -13,13 +13,13 @@
 class jiraCommons
 {
 
-    protected $statusDomain = array();
+    protected $statusDomain = [];
 
     protected $l18n;
 
-    protected $labels = array(
+    protected $labels = [
         'duedate' => 'its_duedate_with_separator'
-    );
+    ];
 
     public $defaultResolvedStatus;
 
@@ -75,7 +75,7 @@ class jiraCommons
         if (property_exists($issue, 'duedate')) {
             $strDueDate = $this->helperParseDate($issue->duedate);
             if (! is_null($strDueDate)) {
-                $summary .= "<b> [$strDueDate] </b> ";
+                $summary .= "<b> [{$strDueDate}] </b> ";
             }
         }
         return $summary;
@@ -85,16 +85,16 @@ class jiraCommons
      */
     public function initDefaultResolvedStatus($statusDomain)
     {
-        $domain = array();
-        $itemSet = array(
+        $domain = [];
+        $itemSet = [
             'Resolved',
             'Closed'
-        ); // Unfortunately case is important
+        ]; // Unfortunately case is important
         foreach ($itemSet as $st) {
-            $domain[] = array(
+            $domain[] = [
                 'code' => $statusDomain[$st],
                 'verbose' => $st
-            );
+            ];
         }
         return $domain;
     }

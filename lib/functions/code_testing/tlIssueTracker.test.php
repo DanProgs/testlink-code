@@ -10,11 +10,11 @@ new dBug($it);
 
 $issueTrackerDomain = array_flip($it->getTypes());
 
-$tprojectSet = array(
+$tprojectSet = [
     32674,
     2,
     27
-);
+];
 
 $str = "<?xml version='1.0'?>";
 $str = '';

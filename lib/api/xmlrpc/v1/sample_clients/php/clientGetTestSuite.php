@@ -17,7 +17,7 @@ $UTDescr = "{$method} - Test - Call without parameters";
 echo $UTDescr;
 
 $debug = false;
-$args = array();
+$args = [];
 $args["devKey"] = 'devkey';
 
 $client = new IXR_Client($server_url);
@@ -30,7 +30,7 @@ $UTDescr = "{$method} - Test - Call with just test suite name";
 echo $UTDescr;
 
 $debug = false;
-$args = array();
+$args = [];
 $args["devKey"] = 'devkey';
 $args["testsuitename"] = 'QAZ-TS';
 
@@ -45,7 +45,7 @@ $UTDescr = "{$method} - Test - Call with just test project prefix";
 
 $debug = false;
 echo $UTDescr;
-$args = array();
+$args = [];
 $args["devKey"] = 'devkey';
 $args["prefix"] = 'QUANTAS';
 $args["details"] = 'simple';
@@ -60,7 +60,7 @@ $UTDescr = "{$method} -  Test ";
 
 $debug = false;
 echo $UTDescr;
-$args = array();
+$args = [];
 $args["devKey"] = 'devkey';
 $args["testsuitename"] = 'CANNES';
 $args["prefix"] = 'SRM';

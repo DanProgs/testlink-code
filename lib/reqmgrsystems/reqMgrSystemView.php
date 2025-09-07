@@ -22,10 +22,10 @@ $mgr = new tlReqMgrSystem($db);
 $gui = new stdClass();
 $args = initArgs();
 $gui->items = $mgr->getAll(
-    array(
+    [
         'output' => 'add_link_count',
         'checkEnv' => true
-    ));
+    ]);
 $gui->canManage = $args->currentUser->hasRight($db, "reqmgrsystem_management");
 $gui->user_feedback = $args->user_feedback;
 
@@ -63,10 +63,10 @@ function initArgs()
     }
     $args->currentUser = $_SESSION['currentUser'];
 
-    $args->user_feedback = array(
+    $args->user_feedback = [
         'type' => '',
         'message' => ''
-    );
+    ];
     $args->id = isset($_REQUEST['id']) ? intval($_REQUEST['id']) : 0;
     return $args;
 }

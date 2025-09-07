@@ -20,7 +20,7 @@ $method = 'createBuild';
 $test_num ++;
 $unitTestDescription = "Test {$test_num} - {$method}";
 
-$args = array();
+$args = [];
 $args["devKey"] = $devKey;
 $args["testplanid"] = 61;
 $args["buildname"] = 'Abril 230';
@@ -40,7 +40,7 @@ $method = 'createBuild';
 $test_num ++;
 $unitTestDescription = "Test {$test_num} - {$method}";
 
-$args = array();
+$args = [];
 $args["devKey"] = $devKey;
 $args["testplanid"] = 72;
 $args["buildname"] = 'AAASECOND TEST API BUILD';

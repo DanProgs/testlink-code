@@ -133,7 +133,7 @@ switch ($args->light) {
                     $conf = $awl[$args->type];
                     $param = "";
                     foreach ($args->use as $prop => $useIt) {
-                        $param .= "&$prop={$args->$prop}";
+                        $param .= "&{$prop}={$args->$prop}";
                     }
                     $what2launch = $conf['url'] . "&apikey=$args->apikey{$param}";
                 }
@@ -169,45 +169,45 @@ function init_args(&$dbHandler)
         $userAPIkeyLen = 32;
         $objectAPIkeyLen = 64;
 
-        $iParams = array(
-            "apikey" => array(
+        $iParams = [
+            "apikey" => [
                 tlInputParameter::STRING_N,
                 $userAPIkeyLen,
                 $objectAPIkeyLen
-            ),
-            "tproject_id" => array(
+            ],
+            "tproject_id" => [
                 tlInputParameter::INT_N
-            ),
-            "tplan_id" => array(
+            ],
+            "tplan_id" => [
                 tlInputParameter::INT_N
-            ),
-            "build_id" => array(
+            ],
+            "build_id" => [
                 tlInputParameter::INT_N
-            ),
-            "level" => array(
+            ],
+            "level" => [
                 tlInputParameter::STRING_N,
                 0,
                 16
-            ),
-            "type" => array(
+            ],
+            "type" => [
                 tlInputParameter::STRING_N,
                 0,
                 $typeSize
-            ),
-            'id' => array(
+            ],
+            'id' => [
                 tlInputParameter::INT_N
-            ),
-            'format' => array(
+            ],
+            'format' => [
                 tlInputParameter::STRING_N,
                 0,
                 1
-            ),
-            'entities' => array(
+            ],
+            'entities' => [
                 tlInputParameter::STRING_N,
                 0,
                 3
-            )
-        );
+            ]
+        ];
     } catch (Exception $e) {
         echo $e->getMessage();
         exit();
@@ -220,17 +220,17 @@ function init_args(&$dbHandler)
 
     $args->envCheckMode = $args->type == 'file' ? 'hippie' : 'paranoic';
     $args->light = 'red';
-    $opt = array(
+    $opt = [
         'setPaths' => true,
         'clearSession' => true
-    );
+    ];
 
     // what to use when is custom
-    $masks = array(
+    $masks = [
         'tproject_id' => 1,
         'tplan_id' => 2,
         'build_id' => 4
-    );
+    ];
     $args->use = $masks;
     foreach ($masks as $kx => $mm) {
         $args->use[$kx] = (($args->entities & $mm) > 0);
@@ -262,7 +262,7 @@ function init_args(&$dbHandler)
 
         if ($args->type == 'exec') {
             $tex = DB_TABLE_PREFIX . 'executions';
-            $sql = "SELECT testplan_id FROM $tex WHERE id=" . intval($args->id);
+            $sql = "SELECT testplan_id FROM {$tex} WHERE id=" . intval($args->id);
             $rs = $dbHandler->get_recordset($sql);
 
             if (is_null($rs)) {
@@ -271,7 +271,7 @@ function init_args(&$dbHandler)
 
             $rs = $rs[0];
             $tpl = DB_TABLE_PREFIX . 'testplans';
-            $sql = "SELECT api_key FROM $tpl WHERE id=" .
+            $sql = "SELECT api_key FROM {$tpl} WHERE id=" .
                 intval($rs['testplan_id']);
             $rs = $dbHandler->get_recordset($sql);
             if (is_null($rs)) {

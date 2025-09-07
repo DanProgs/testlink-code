@@ -21,7 +21,7 @@ $unitTestDescription = "Test - {$method}";
 $idx = 1;
 
 // --------------------------------------------------------------------------
-$args = array();
+$args = [];
 $args["devKey"] = DEV_KEY;
 $args["nodeid"] = 3312;
 $debug = true;
@@ -32,13 +32,13 @@ $idx ++;
 // --------------------------------------------------------------------------
 
 // --------------------------------------------------------------------------
-$args = array();
+$args = [];
 $args["devKey"] = DEV_KEY;
-$args["nodeid"] = array(
+$args["nodeid"] = [
     3312,
     3314,
     3316
-);
+];
 $debug = true;
 $client = new IXR_Client($server_url);
 $client->debug = $debug;
@@ -48,13 +48,13 @@ $idx ++;
 // --------------------------------------------------------------------------
 
 // --------------------------------------------------------------------------
-$args = array();
+$args = [];
 $args["devKey"] = DEV_KEY;
-$args["nodeid"] = array(
+$args["nodeid"] = [
     3333312,
     3314,
     3316
-);
+];
 $debug = true;
 $client = new IXR_Client($server_url);
 $client->debug = $debug;
@@ -63,7 +63,7 @@ $idx ++;
 // --------------------------------------------------------------------------
 
 // --------------------------------------------------------------------------
-$args = array();
+$args = [];
 $args["devKey"] = DEV_KEY;
 $args["nodeid"] = 'A';
 $debug = true;
@@ -73,7 +73,7 @@ runTest($client, $method, $args, $idx);
 $idx ++;
 
 // --------------------------------------------------------------------------
-$args = array();
+$args = [];
 $args["devKey"] = DEV_KEY;
 $debug = true;
 $client = new IXR_Client($server_url);
@@ -82,7 +82,7 @@ runTest($client, $method, $args, $idx);
 $idx ++;
 
 // --------------------------------------------------------------------------
-$args = array();
+$args = [];
 $args["devKey"] = DEV_KEY;
 $args["nodeid"] = - 1;
 
@@ -93,7 +93,7 @@ runTest($client, $method, $args, $idx);
 $idx ++;
 
 // --------------------------------------------------------------------------
-$args = array();
+$args = [];
 $args["devKey"] = DEV_KEY;
 $args["nodeid"] = 1;
 
@@ -104,7 +104,7 @@ runTest($client, $method, $args, $idx);
 $idx ++;
 
 // --------------------------------------------------------------------------
-$args = array();
+$args = [];
 $args["devKey"] = DEV_KEY;
 $args["nodeid"] = 419;
 

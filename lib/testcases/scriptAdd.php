@@ -13,15 +13,15 @@ require_once '../functions/common.php';
 testlinkInitPage($db, false, false, "checkRights");
 
 $templateCfg = templateConfiguration();
-list ($args, $gui, $cts, $codeT) = initEnv($db);
+[$args, $gui, $cts, $codeT] = initEnv($db);
 
-$gui->codeTrackerMetaData = array(
+$gui->codeTrackerMetaData = [
     'projects' => null,
     'repos' => null,
     'files' => null,
     'branches' => null,
     'commits' => null
-);
+];
 if (! is_null($args->projectKey)) {
     $gui->codeTrackerMetaData['projects'] = $args->projectKey;
 } else {
@@ -105,9 +105,9 @@ if ($args->user_action == 'expand') {
 if ($args->user_action == 'create') {
     if (! is_null($codeT) && $args->project_key != "" &&
         $args->repository_name != "" && $args->code_path != "") {
-        $l18n = init_labels(array(
+        $l18n = init_labels([
             "error_code_does_not_exist_on_cts" => null
-        ));
+        ]);
 
         $gui->msg = "";
 
@@ -207,8 +207,8 @@ $smarty->display($templateCfg->template_dir . $templateCfg->default_template);
  */
 function initEnv(&$dbHandler)
 {
-    $uaWhiteList = array();
-    $uaWhiteList['elements'] = array(
+    $uaWhiteList = [];
+    $uaWhiteList['elements'] = [
         'link',
         'create',
         'projectSelected',
@@ -216,86 +216,86 @@ function initEnv(&$dbHandler)
         'branchSelected',
         'expand',
         'collapse'
-    );
-    $uaWhiteList['length'] = array();
+    ];
+    $uaWhiteList['length'] = [];
     foreach ($uaWhiteList['elements'] as $xmen) {
         $uaWhiteList['length'][] = strlen($xmen);
     }
     $user_action['maxLength'] = max($uaWhiteList['length']);
     $user_action['minLength'] = min($uaWhiteList['length']);
 
-    $iParams = array(
-        "script_id" => array(
+    $iParams = [
+        "script_id" => [
             "REQUEST",
             tlInputParameter::STRING_N
-        ),
-        "tproject_id" => array(
-            "REQUEST",
-            tlInputParameter::INT_N
-        ),
-        "tplan_id" => array(
+        ],
+        "tproject_id" => [
             "REQUEST",
             tlInputParameter::INT_N
-        ),
-        "tcversion_id" => array(
+        ],
+        "tplan_id" => [
             "REQUEST",
             tlInputParameter::INT_N
-        ),
-        "project_key" => array(
+        ],
+        "tcversion_id" => [
+            "REQUEST",
+            tlInputParameter::INT_N
+        ],
+        "project_key" => [
             "POST",
             tlInputParameter::STRING_N
-        ),
-        "repository_name" => array(
+        ],
+        "repository_name" => [
             "POST",
             tlInputParameter::STRING_N
-        ),
-        "code_path" => array(
+        ],
+        "code_path" => [
             "POST",
             tlInputParameter::STRING_N
-        ),
-        "branch_name" => array(
+        ],
+        "branch_name" => [
             "POST",
             tlInputParameter::STRING_N
-        ),
-        "commit_id" => array(
+        ],
+        "commit_id" => [
             "POST",
             tlInputParameter::STRING_N
-        ),
-        "projectKey" => array(
+        ],
+        "projectKey" => [
             "POST",
             tlInputParameter::ARRAY_STRING_N
-        ),
-        "repositoryName" => array(
+        ],
+        "repositoryName" => [
             "POST",
             tlInputParameter::ARRAY_STRING_N
-        ),
-        "branchName" => array(
+        ],
+        "branchName" => [
             "POST",
             tlInputParameter::ARRAY_STRING_N
-        ),
-        "commits" => array(
+        ],
+        "commits" => [
             "POST",
             tlInputParameter::ARRAY_STRING_N
-        ),
-        "files" => array(
+        ],
+        "files" => [
             "POST",
             tlInputParameter::ARRAY_STRING_N
-        ),
-        "expand_item" => array(
+        ],
+        "expand_item" => [
             "POST",
             tlInputParameter::STRING_N
-        ),
-        "collapse_item" => array(
+        ],
+        "collapse_item" => [
             "POST",
             tlInputParameter::STRING_N
-        ),
-        "user_action" => array(
+        ],
+        "user_action" => [
             "REQUEST",
             tlInputParameter::STRING_N,
             $user_action['minLength'],
             $user_action['maxLength']
-        )
-    );
+        ]
+    ];
 
     $args = new stdClass();
     I_PARAMS($iParams, $args);
@@ -319,16 +319,16 @@ function initEnv(&$dbHandler)
 
     // -----------------------------------------------------------------------
     // Special processing
-    list ($ctObj, $ctCfg) = getCodeTracker($dbHandler, $args, $gui);
+    [$ctObj, $ctCfg] = getCodeTracker($dbHandler, $args, $gui);
 
     $args->script_id = trim($args->script_id);
 
-    return array(
+    return [
         $args,
         $gui,
         $ctObj,
         $ctCfg
-    );
+    ];
 }
 
 /**
@@ -356,10 +356,10 @@ function getCodeTracker(&$dbHandler, $argsObj, &$guiObj)
             $guiObj->codeTrackerCfg->createCodeURL = $cts->getEnterCodeURL();
         }
     }
-    return array(
+    return [
         $cts,
         $codeTrackerCfg
-    );
+    ];
 }
 
 /**
@@ -375,9 +375,9 @@ function writeTestcaseScript(&$dbHandler, &$cts, $tcversion_id, $project_key,
         return false;
     }
 
-    $tbk = array(
+    $tbk = [
         'testcase_script_links'
-    );
+    ];
     $tbl = tlObjectWithDB::getDBTables($tbk);
 
     // check if entry already exists in DB
@@ -415,11 +415,11 @@ function writeTestcaseScript(&$dbHandler, &$cts, $tcversion_id, $project_key,
 
 function writeCfieldTestscript(&$dbHandler, &$user, $field_id, $node_id, $value)
 {
-    $tbk = array(
+    $tbk = [
         'cfield_design_values',
         'tcversions',
         'executions'
-    );
+    ];
     $tbl = tlObjectWithDB::getDBTables($tbk);
 
     $result = false;

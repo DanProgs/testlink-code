@@ -54,7 +54,7 @@ function init_global_rights_maps()
     global $g_propRights_product;
 
     // @since 1.9.7
-    $l18nCfg = array(
+    $l18nCfg = [
         'desc_testplan_execute' => null,
         'desc_testplan_create_build' => null,
         'desc_testplan_metrics' => null,
@@ -107,18 +107,18 @@ function init_global_rights_maps()
         'right_exec_ro_access' => null,
         'right_testproject_add_remove_keywords_executed_tcversions' => null,
         'right_delete_frozen_tcversion' => null
-    );
+    ];
 
     $l18n = init_labels($l18nCfg);
 
-    $g_rights_executions = array(
+    $g_rights_executions = [
         'exec_edit_notes' => $l18n['right_exec_edit_notes'],
         'exec_delete' => $l18n['right_exec_delete'],
         'exec_ro_access' => $l18n['right_exec_ro_access']
-    );
+    ];
 
     // order is important ?
-    $g_rights_tp = array(
+    $g_rights_tp = [
         "mgt_testplan_create" => $l18n['mgt_testplan_create'],
         "testplan_create_build" => $l18n['desc_testplan_create_build'],
         "testplan_planning" => $l18n['desc_testplan_planning'],
@@ -133,9 +133,9 @@ function init_global_rights_maps()
         'testplan_update_linked_testcase_versions' => $l18n['right_testplan_update_linked_testcase_versions'],
         'testplan_set_urgent_testcases' => $l18n['right_testplan_set_urgent_testcases'],
         'testplan_show_testcases_newest_versions' => $l18n['right_testplan_show_testcases_newest_versions']
-    );
+    ];
 
-    $g_rights_mgttc = array(
+    $g_rights_mgttc = [
         "mgt_view_tc" => $l18n['desc_mgt_view_tc'],
         "mgt_modify_tc" => $l18n['desc_mgt_modify_tc'],
         "testproject_delete_executed_testcases" => null,
@@ -143,7 +143,7 @@ function init_global_rights_maps()
         "testproject_add_remove_keywords_executed_tcversions" => null,
         "testcase_freeze" => null,
         "delete_frozen_tcversion" => null
-    );
+    ];
 
     foreach ($g_rights_mgttc as $tr => $lbl) {
         if (null == $lbl) {
@@ -151,62 +151,62 @@ function init_global_rights_maps()
         }
     }
 
-    $g_rights_kw = array(
+    $g_rights_kw = [
         "mgt_view_key" => $l18n['desc_mgt_view_key'],
         "keyword_assignment" => $l18n['desc_keyword_assignment'],
         "mgt_modify_key" => $l18n['desc_mgt_modify_key']
-    );
+    ];
 
-    $g_rights_req = array(
+    $g_rights_req = [
         "mgt_view_req" => $l18n['desc_mgt_view_req'],
         "monitor_requirement" => $l18n['desc_monitor_requirement'],
         "mgt_modify_req" => $l18n['desc_mgt_modify_req'],
         "mgt_unfreeze_req" => $l18n['desc_mgt_unfreeze_req'],
         "req_tcase_link_management" => $l18n['desc_req_tcase_link_management']
-    );
+    ];
 
-    $g_rights_product = array(
+    $g_rights_product = [
         "mgt_modify_product" => $l18n['desc_mgt_modify_product'],
         "cfield_assignment" => $l18n['desc_cfield_assignment'],
         "project_inventory_management" => $l18n['desc_project_inventory_management'],
         "project_inventory_view" => $l18n['desc_project_inventory_view']
-    );
+    ];
 
-    $g_rights_cf = array(
+    $g_rights_cf = [
         "cfield_view" => $l18n['desc_cfield_view'],
         "cfield_management" => $l18n['desc_cfield_management']
-    );
+    ];
 
-    $g_rights_platforms = array(
+    $g_rights_platforms = [
         "platform_view" => $l18n['desc_platforms_view'],
         "platform_management" => $l18n['desc_platforms_management']
-    );
+    ];
 
-    $g_rights_issuetrackers = array(
+    $g_rights_issuetrackers = [
         "issuetracker_view" => $l18n['desc_issuetrackers_view'],
         "issuetracker_management" => $l18n['desc_issuetrackers_management']
-    );
+    ];
 
-    $g_rights_codetrackers = array(
+    $g_rights_codetrackers = [
         "codetracker_view" => $l18n['desc_codetrackers_view'],
         "codetracker_management" => $l18n['desc_codetrackers_management']
-    );
+    ];
 
     // Global means test project independent.
-    $g_rights_users_global = array(
+    $g_rights_users_global = [
         "mgt_users" => $l18n['desc_mgt_modify_users'],
         "role_management" => $l18n['desc_role_management'],
         "user_role_assignment" => $l18n['desc_testproject_user_role_assignment'],
         "testplan_user_role_assignment" => $l18n['desc_testplan_user_role_assignment']
-    );
+    ];
 
     $g_rights_users = $g_rights_users_global;
 
-    $g_rights_system = array(
+    $g_rights_system = [
         "mgt_view_events" => $l18n['desc_mgt_view_events'],
         "events_mgt" => $l18n['desc_events_mgt'],
         "mgt_plugins" => $l18n['desc_mgt_plugins']
-    );
+    ];
 
     $g_propRights_global = array_merge($g_rights_users_global, $g_rights_system,
         $g_rights_product);
@@ -276,7 +276,7 @@ function checkForRights($rights, $roleQuestion, $bAND = 1)
             }
         } else {
             // for OR one of all must be present
-            if (count($r)) {
+            if ($r !== []) {
                 $ret = 'yes';
             }
         }
@@ -311,7 +311,7 @@ function checkForRights($rights, $roleQuestion, $bAND = 1)
 function get_tproject_effective_role(&$db, $tproject, $user_id = null,
     $users = null)
 {
-    $effective_role = array();
+    $effective_role = [];
     $tproject_id = $tproject['id'];
     if (! is_null($user_id)) {
         $users = tlUser::getByIDs($db, (array) $user_id);
@@ -338,7 +338,7 @@ function get_tproject_effective_role(&$db, $tproject, $user_id = null,
                 $effectiveRole = $user->tprojectRoles[$tproject_id];
             }
 
-            $effective_role[$id] = array(
+            $effective_role[$id] = [
                 'login' => $user->login,
                 'user' => $user,
                 'user_role_id' => $user->globalRoleID,
@@ -347,7 +347,7 @@ function get_tproject_effective_role(&$db, $tproject, $user_id = null,
                 'effective_role_id' => $effectiveRoleID,
                 'effective_role' => $effectiveRole,
                 'is_inherited' => $isInherited
-            );
+            ];
         }
     }
     return $effective_role;

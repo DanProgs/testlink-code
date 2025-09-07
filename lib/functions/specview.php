@@ -135,28 +135,28 @@ function gen_spec_view(&$db, $specViewType, $tobj_id, $id, $name, &$linked_items
     $map_node_tccount, $filters = null, $options = null, $tproject_id = null)
 {
     $spec_view_type = is_null($specViewType) ? 'testproject' : $specViewType;
-    $out = array();
-    $result = array(
-        'spec_view' => array(),
+    $out = [];
+    $result = [
+        'spec_view' => [],
         'num_tc' => 0,
         'has_linked_items' => 0
-    );
+    ];
 
-    $my = array();
-    $my['options'] = array(
+    $my = [];
+    $my['options'] = [
         'write_button_only_if_linked' => 0,
         'prune_unlinked_tcversions' => 0,
         'add_custom_fields' => 0
-    ) + (array) $options;
+    ] + (array) $options;
 
-    $my['filters'] = array(
+    $my['filters'] = [
         'keywords' => 0,
         'testcases' => null,
         'exec_type' => null,
         'importance' => null,
         'cfields' => null,
         'platforms' => null
-    );
+    ];
 
     foreach ($my as $key => $settings) {
         if (! is_null($$key) && is_array($$key)) {
@@ -178,7 +178,7 @@ function gen_spec_view(&$db, $specViewType, $tobj_id, $id, $name, &$linked_items
     $hash_descr_id = $tcaseMgr->tree_manager->get_available_node_types();
     $hash_id_descr = array_flip($hash_descr_id);
 
-    $key2map = array(
+    $key2map = [
         'keyword_id' => 'keywords',
         'tcase_id' => 'testcases',
         'execution_type' => 'exec_type',
@@ -187,20 +187,20 @@ function gen_spec_view(&$db, $specViewType, $tobj_id, $id, $name, &$linked_items
         'tcase_name' => 'tcase_name',
         'status' => 'workflow_status',
         'platform_id' => 'platforms'
-    );
+    ];
 
-    $pfFilters = array(
+    $pfFilters = [
         'tcase_node_type_id' => $hash_descr_id['testcase']
-    );
+    ];
     foreach ($key2map as $tk => $fk) {
         $pfFilters[$tk] = isset($my['filters'][$fk]) ? $my['filters'][$fk] : null;
     }
 
     // transform in array to be gentle with getTestSpecFromNode()
-    $t2a = array(
+    $t2a = [
         'importance',
         'status'
-    );
+    ];
     foreach ($t2a as $tortuga) {
         if (! is_null($pfFilters[$tortuga])) {
             $pfFilters[$tortuga] = (array) $pfFilters[$tortuga];
@@ -211,20 +211,20 @@ function gen_spec_view(&$db, $specViewType, $tobj_id, $id, $name, &$linked_items
         $id, $spec_view_type, $pfFilters);
 
     $platforms = getPlatforms($db, $tproject_id, $testplan_id);
-    $a_tcid = array();
-    $a_tsuite_idx = array();
+    $a_tcid = [];
+    $a_tsuite_idx = [];
     if (count($test_spec)) {
-        $cfg = array(
+        $cfg = [
             'node_types' => $hash_id_descr,
             'write_status' => $write_status,
             'is_uncovered_view_type' => $is_uncovered_view_type
-        );
+        ];
 
         // $a_tsuite_idx
         // key: test case version id
         // value: index inside $out, where parent test suite of test case version id is located.
         //
-        list ($a_tcid, $a_tsuite_idx, $tsuite_tcqty, $out) = buildSkeleton($id,
+        [$a_tcid, $a_tsuite_idx, $tsuite_tcqty, $out] = buildSkeleton($id,
             $name, $cfg, $test_spec, $platforms);
     }
 
@@ -249,10 +249,10 @@ function gen_spec_view(&$db, $specViewType, $tobj_id, $id, $name, &$linked_items
 
     // Collect information related to linked testcase versions
     if (! empty($out) && ! is_null($out[0]) && count($a_tcid)) {
-        $optGBI = array(
+        $optGBI = [
             'output' => 'full_without_users',
             'order_by' => " ORDER BY NHTC.node_order, NHTC.name, TCV.version DESC "
-        );
+        ];
 
         $tcaseVersionSet = $tcaseMgr->get_by_id($a_tcid, testcase::ALL_VERSIONS,
             null, $optGBI);
@@ -323,27 +323,27 @@ function gen_coverage_view(&$db, $specViewType, $tobj_id, $id, $name,
 {
     $spec_view_type = is_null($specViewType) ? 'testproject' : $specViewType;
 
-    $out = array();
-    $result = array(
-        'spec_view' => array(),
+    $out = [];
+    $result = [
+        'spec_view' => [],
         'num_tc' => 0,
         'has_linked_items' => 0
-    );
+    ];
 
-    $my = array();
-    $my['options'] = array(
+    $my = [];
+    $my['options'] = [
         'write_button_only_if_linked' => 0,
         'prune_unlinked_tcversions' => 0,
         'add_custom_fields' => 0
-    ) + (array) $options;
+    ] + (array) $options;
 
-    $my['filters'] = array(
+    $my['filters'] = [
         'keywords' => 0,
         'testcases' => null,
         'exec_type' => null,
         'importance' => null,
         'cfields' => null
-    );
+    ];
     foreach ($my as $key => $settings) {
         if (! is_null($$key) && is_array($$key)) {
             $my[$key] = array_merge($my[$key], $$key);
@@ -364,18 +364,18 @@ function gen_coverage_view(&$db, $specViewType, $tobj_id, $id, $name,
     $hash_descr_id = $tcaseMgr->tree_manager->get_available_node_types();
     $hash_id_descr = array_flip($hash_descr_id);
 
-    $key2map = array(
+    $key2map = [
         'keyword_id' => 'keywords',
         'tcase_id' => 'testcases',
         'execution_type' => 'exec_type',
         'importance' => 'importance',
         'cfields' => 'cfields',
         'tcase_name' => 'tcase_name'
-    );
+    ];
 
-    $pfFilters = array(
+    $pfFilters = [
         'tcase_node_type_id' => $hash_descr_id['testcase']
-    );
+    ];
     foreach ($key2map as $tk => $fk) {
         $pfFilters[$tk] = isset($my['filters'][$fk]) ? $my['filters'][$fk] : null;
     }
@@ -384,20 +384,20 @@ function gen_coverage_view(&$db, $specViewType, $tobj_id, $id, $name,
         $id, $spec_view_type, $pfFilters, 'req_order');
 
     $platforms = getPlatforms($db, $tproject_id, $testplan_id);
-    $a_tcid = array();
-    $a_tsuite_idx = array();
+    $a_tcid = [];
+    $a_tsuite_idx = [];
     if (count($test_spec)) {
-        $cfg = array(
+        $cfg = [
             'node_types' => $hash_id_descr,
             'write_status' => $write_status,
             'is_uncovered_view_type' => $is_uncovered_view_type
-        );
+        ];
 
         // $a_tsuite_idx
         // key: test case version id
         // value: index inside $out, where parent test suite of test case version id is located.
         //
-        list ($a_tcid, $a_tsuite_idx, , $out) = buildSkeleton($id, $name, $cfg,
+        [$a_tcid, $a_tsuite_idx, , $out] = buildSkeleton($id, $name, $cfg,
             $test_spec, $platforms);
     }
 
@@ -421,10 +421,10 @@ function gen_coverage_view(&$db, $specViewType, $tobj_id, $id, $name,
 
     // Collect information related to linked testcase versions
     if (! empty($out) && ! is_null($out[0]) && count($a_tcid)) {
-        $optGBI = array(
+        $optGBI = [
             'output' => 'full_without_users',
             'order_by' => " ORDER BY NHTC.node_order, NHTC.name, TCV.version DESC "
-        );
+        ];
 
         $tcaseVersionSet = $tcaseMgr->get_by_id($a_tcid, testcase::ALL_VERSIONS,
             null, $optGBI);
@@ -508,10 +508,10 @@ function getFilteredLinkedVersions(&$dbHandler, &$argsObj, &$tplanMgr,
     // Multiple step algoritm to apply keyword filter on type=AND
     // get_*_tcversions filters by keyword ALWAYS in OR mode.
     //
-    $filters = array(
+    $filters = [
         'keyword_id' => $argsObj->keyword_id,
         'platform_id' => null
-    );
+    ];
     if (property_exists($argsObj, 'control_panel') &&
         isset($argsObj->control_panel['setting_platform']) &&
         intval($argsObj->control_panel['setting_platform']) > 0) {
@@ -539,11 +539,11 @@ function getFilteredLinkedVersions(&$dbHandler, &$argsObj, &$tplanMgr,
     }
 
     $opx = array_merge(
-        array(
+        [
             'addExecInfo' => true,
             'specViewFields' => true,
             'tlFeature' => 'none'
-        ), (array) $options);
+        ], (array) $options);
 
     switch ($opx['tlFeature']) {
         case 'testCaseExecTaskAssignment':
@@ -572,9 +572,9 @@ function getFilteredLinkedVersions(&$dbHandler, &$argsObj, &$tplanMgr,
         $filteredSet = $tcaseMgr->filterByKeyword(array_keys($tplan_tcases),
             $argsObj->keyword_id, $argsObj->keywordsFilterType);
 
-        $filters = array(
+        $filters = [
             'tcase_id' => array_keys($filteredSet)
-        );
+        ];
 
         // HERE WE CAN HAVE AN ISSUE
         $tplan_tcases = $tplanMgr->getLTCVNewGeneration($argsObj->tplan_id,
@@ -610,19 +610,19 @@ function getFilteredSpecView(&$dbHandler, &$argsObj, &$tplanMgr, &$tcaseMgr,
     $tsuite_data = $tcaseMgr->tree_manager->get_node_hierarchy_info(
         $argsObj->id);
 
-    $my = array(); // some sort of local scope
-    $my['filters'] = array(
+    $my = []; // some sort of local scope
+    $my['filters'] = [
         'keywordsFilter' => null,
         'testcaseFilter' => null,
         'assignedToFilter' => null,
         'executionTypeFilter' => null
-    );
+    ];
     $my['filters'] = array_merge($my['filters'], (array) $filters);
 
-    $my['options'] = array(
+    $my['options'] = [
         'write_button_only_if_linked' => 1,
         'prune_unlinked_tcversions' => 1
-    );
+    ];
     $my['options'] = array_merge($my['options'], (array) $options);
 
     // This does filter on keywords ALWAYS in OR mode.
@@ -665,12 +665,12 @@ function getFilteredSpecView(&$dbHandler, &$argsObj, &$tplanMgr, &$tcaseMgr,
         return null;
     }
 
-    $genSpecFilters = array(
+    $genSpecFilters = [
         'keywords' => $argsObj->keyword_id,
         'testcases' => $testCaseSet,
         'exec_type' => $my['filters']['executionTypeFilter'],
         'cfields' => null
-    );
+    ];
 
     if (isset($my['filters']['cfieldsFilter'])) {
         $genSpecFilters['cfields'] = $my['filters']['cfieldsFilter'];
@@ -729,36 +729,36 @@ function getTestSpecFromNode(&$dbHandler, &$tcaseMgr, &$linkedItems,
     $tck_map = null;
     $tobj_mgr = new testproject($dbHandler);
 
-    $opt = array(
-        'order_cfg' => array(
+    $opt = [
+        'order_cfg' => [
             "type" => $type
-        )
-    );
+        ]
+    ];
     if ($specViewType == 'testplan') {
-        $opt['order_cfg'] = array(
+        $opt['order_cfg'] = [
             "type" => 'exec_order',
             'tplan_id' => $masterContainerId
-        );
+        ];
     }
     $test_spec = $tobj_mgr->get_subtree($nodeId, null, $opt);
 
     $key2loop = null;
 
-    $nullCheckFilter = array(
+    $nullCheckFilter = [
         'tcase_id' => false,
         'importance' => false,
         'tcase_name' => false,
         'cfields' => false,
         'status' => false
-    );
+    ];
 
-    $zeroNullCheckFilter = array(
+    $zeroNullCheckFilter = [
         'execution_type' => false
-    );
-    $useFilter = array(
+    ];
+    $useFilter = [
         'keyword_id' => false,
         'platform_id' => false
-    ) + $nullCheckFilter + $zeroNullCheckFilter;
+    ] + $nullCheckFilter + $zeroNullCheckFilter;
 
     $applyFilters = false;
 
@@ -788,15 +788,15 @@ function getTestSpecFromNode(&$dbHandler, &$tcaseMgr, &$linkedItems,
     }
 
     if ($useFilter['tcase_id']) {
-        $testCaseSet = is_array($filters['tcase_id']) ? $filters['tcase_id'] : array(
+        $testCaseSet = is_array($filters['tcase_id']) ? $filters['tcase_id'] : [
             $filters['tcase_id']
-        );
+        ];
     }
 
     if (! is_array($filters['keyword_id'])) {
-        $filters['keyword_id'] = array(
+        $filters['keyword_id'] = [
             $filters['keyword_id']
-        );
+        ];
     }
 
     if (! empty($filters['keyword_id'][0])) {
@@ -868,18 +868,18 @@ function getTestSpecFromNode(&$dbHandler, &$tcaseMgr, &$linkedItems,
             $useFilter['cfields'] || $useFilter['status'])) {
             // This logic can have some Potential Performance ISSUE - 20120619 - fman
             $targetSet = array_keys($itemSet);
-            $options = ($specViewType == 'testPlanLinking') ? array(
+            $options = ($specViewType == 'testPlanLinking') ? [
                 'access_key' => 'testcase_id'
-            ) : null;
+            ] : null;
 
-            $getFilters = $useFilter['cfields'] ? array(
+            $getFilters = $useFilter['cfields'] ? [
                 'cfields' => $filters['cfields']
-            ) : null;
+            ] : null;
             $s2h = config_get('tplanDesign')->hideTestCaseWithStatusIn;
             if (! is_null($s2h)) {
-                $getFilters['status'] = array(
+                $getFilters['status'] = [
                     'not_in' => array_keys($s2h)
-                );
+                ];
             }
 
             $tcversionSet = $tcaseMgr->get_last_active_version($targetSet,
@@ -1133,23 +1133,23 @@ function buildSkeleton($id, $name, $config, &$test_spec, &$platforms)
 {
     $parent_idx = - 1;
     $pivot_tsuite = $test_spec[0];
-    $level = array();
+    $level = [];
     $tcase_memory = null;
 
     $node_types = $config['node_types'];
     $write_status = $config['write_status'];
     $is_uncovered_view_type = $config['is_uncovered_view_type'];
 
-    $out = array();
+    $out = [];
     $idx = 0;
-    $a_tcid = array();
-    $a_tsuite_idx = array();
+    $a_tcid = [];
+    $a_tsuite_idx = [];
     $hash_id_pos[$id] = $idx;
-    $out[$idx]['testsuite'] = array(
+    $out[$idx]['testsuite'] = [
         'id' => $id,
         'name' => $name
-    );
-    $out[$idx]['testcases'] = array();
+    ];
+    $out[$idx]['testcases'] = [];
     $out[$idx]['write_buttons'] = 'no';
     $out[$idx]['testcase_qty'] = 0;
     $out[$idx]['level'] = 1;
@@ -1159,9 +1159,9 @@ function buildSkeleton($id, $name, $config, &$test_spec, &$platforms)
     $out[$idx]['priority'] = 0;
 
     $idx ++;
-    $tsuite_tcqty = array(
+    $tsuite_tcqty = [
         $id => 0
-    );
+    ];
 
     foreach ($test_spec as $current) {
         if (is_null($current)) {
@@ -1173,10 +1173,10 @@ function buildSkeleton($id, $name, $config, &$test_spec, &$platforms)
             $tc_id = $current['id'];
             $parent_idx = $hash_id_pos[$current['parent_id']];
             $a_tsuite_idx[$tc_id] = $parent_idx;
-            $out[$parent_idx]['testcases'][$tc_id] = array(
+            $out[$parent_idx]['testcases'][$tc_id] = [
                 'id' => $tc_id,
                 'name' => $current['name']
-            );
+            ];
 
             // Reference to make code reading more human friendly
             $outRef = &$out[$parent_idx]['testcases'][$tc_id];
@@ -1188,9 +1188,9 @@ function buildSkeleton($id, $name, $config, &$test_spec, &$platforms)
                 $out[$parent_idx]['write_buttons'] = $write_status;
                 $out[$parent_idx]['linked_testcase_qty'] = 0;
 
-                $outRef['tcversions'] = array();
-                $outRef['tcversions_active_status'] = array();
-                $outRef['tcversions_execution_type'] = array();
+                $outRef['tcversions'] = [];
+                $outRef['tcversions_active_status'] = [];
+                $outRef['tcversions_execution_type'] = [];
                 $outRef['tcversions_qty'] = 0;
                 $outRef['linked_version_id'] = 0;
                 $outRef['executed'] = null;
@@ -1201,7 +1201,7 @@ function buildSkeleton($id, $name, $config, &$test_spec, &$platforms)
                 $outRef['linked_by'] = null;
                 $outRef['linked_ts'] = null;
                 $outRef['priority'] = 0;
-                $outRef['user_id'] = array();
+                $outRef['user_id'] = [];
             }
             $out[$parent_idx]['testcase_qty'] ++;
             $a_tcid[] = $current['id'];
@@ -1246,11 +1246,11 @@ function buildSkeleton($id, $name, $config, &$test_spec, &$platforms)
                     }
                 }
             }
-            $out[$idx]['testsuite'] = array(
+            $out[$idx]['testsuite'] = [
                 'id' => $current['id'],
                 'name' => $current['name']
-            );
-            $out[$idx]['testcases'] = array();
+            ];
+            $out[$idx]['testcases'] = [];
             $out[$idx]['testcase_qty'] = 0;
             $out[$idx]['linked_testcase_qty'] = 0;
             $out[$idx]['level'] = $the_level;
@@ -1272,12 +1272,12 @@ function buildSkeleton($id, $name, $config, &$test_spec, &$platforms)
 
     unset($tcase_memory);
     $tsuite_tcqty[$id] = $out[$hash_id_pos[$id]]['testcase_qty'];
-    return array(
+    return [
         $a_tcid,
         $a_tsuite_idx,
         $tsuite_tcqty,
         $out
-    );
+    ];
 }
 
 /**
@@ -1293,25 +1293,25 @@ function buildSkeleton($id, $name, $config, &$test_spec, &$platforms)
 function addLinkedVersionsInfo($testCaseVersionSet, $a_tsuite_idx, &$out,
     &$linked_items, $opt = null)
 {
-    $my['opt'] = array(
+    $my['opt'] = [
         'useOptionalArrayFields' => false
-    );
+    ];
     $my['opt'] = array_merge($my['opt'], (array) $opt);
 
     $tcStatus2exclude = config_get('tplanDesign')->hideTestCaseWithStatusIn;
-    $optionalIntegerFields = array(
+    $optionalIntegerFields = [
         'feature_id',
         'linked_by'
-    );
-    $optionalArrayFields = array(
+    ];
+    $optionalArrayFields = [
         'user_id'
-    );
+    ];
 
-    $result = array(
-        'spec_view' => array(),
+    $result = [
+        'spec_view' => [],
         'num_tc' => 0,
         'has_linked_items' => 0
-    );
+    ];
     $pivot_id = - 1;
     $firstElemIDX = key($out);
 
@@ -1438,10 +1438,10 @@ function getPlatforms($db, $tproject_id, $testplan_id)
     $platform_mgr = new tlPlatform($db, $tproject_id);
 
     if (is_null($testplan_id)) {
-        $opx = array(
+        $opx = [
             'enable_on_design' => null,
             'enable_on_execution' => true
-        );
+        ];
         $platforms = $platform_mgr->getAll($opx);
     } else {
         $platforms = $platform_mgr->getLinkedToTestplan($testplan_id);
@@ -1451,10 +1451,10 @@ function getPlatforms($db, $tproject_id, $testplan_id)
         // need to create fake data for platform 0 in order
         // to have only simple logic
         // $platforms= array( 'id' => 0, 'name' => '');
-        $platforms[0] = array(
+        $platforms[0] = [
             'id' => 0,
             'name' => ''
-        );
+        ];
     }
     return $platforms;
 }
@@ -1468,20 +1468,20 @@ function getFilteredSpecViewFlat(&$dbHandler, &$argsObj, &$tplanMgr, &$tcaseMgr,
     $tsuite_data = $tcaseMgr->tree_manager->get_node_hierarchy_info(
         $argsObj->id);
 
-    $my = array(); // some sort of local scope
-    $my['filters'] = array(
+    $my = []; // some sort of local scope
+    $my['filters'] = [
         'keywordsFilter' => null,
         'testcaseFilter' => null,
         'assignedToFilter' => null,
         'executionTypeFilter' => null,
         'platformsFilter' => null
-    );
+    ];
     $my['filters'] = array_merge($my['filters'], (array) $filters);
 
-    $my['options'] = array(
+    $my['options'] = [
         'write_button_only_if_linked' => 1,
         'prune_unlinked_tcversions' => 1
-    );
+    ];
     $my['options'] = array_merge($my['options'], (array) $options);
 
     // This does filter on keywords ALWAYS in OR mode.
@@ -1523,13 +1523,13 @@ function getFilteredSpecViewFlat(&$dbHandler, &$argsObj, &$tplanMgr, &$tcaseMgr,
         return null;
     }
 
-    $genSpecFilters = array(
+    $genSpecFilters = [
         'keywords' => $argsObj->keyword_id,
         'testcases' => $testCaseSet,
         'exec_type' => $my['filters']['executionTypeFilter'],
         'cfields' => null,
         'platforms' => $argsObj->platform_id
-    );
+    ];
 
     if (isset($my['filters']['cfieldsFilter'])) {
         $genSpecFilters['cfields'] = $my['filters']['cfieldsFilter'];
@@ -1548,27 +1548,27 @@ function genSpecViewFlat(&$db, $specViewType, $tobj_id, $id, $name,
 {
     $spec_view_type = is_null($specViewType) ? 'testproject' : $specViewType;
 
-    $out = array();
-    $result = array(
-        'spec_view' => array(),
+    $out = [];
+    $result = [
+        'spec_view' => [],
         'num_tc' => 0,
         'has_linked_items' => 0
-    );
+    ];
 
-    $my = array();
-    $my['options'] = array(
+    $my = [];
+    $my['options'] = [
         'write_button_only_if_linked' => 0,
         'prune_unlinked_tcversions' => 0,
         'add_custom_fields' => 0
-    ) + (array) $options;
+    ] + (array) $options;
 
-    $my['filters'] = array(
+    $my['filters'] = [
         'keywords' => 0,
         'testcases' => null,
         'exec_type' => null,
         'importance' => null,
         'cfields' => null
-    );
+    ];
 
     foreach ($my as $key => $settings) {
         if (! is_null($$key) && is_array($$key)) {
@@ -1590,7 +1590,7 @@ function genSpecViewFlat(&$db, $specViewType, $tobj_id, $id, $name,
     $hash_descr_id = $tcaseMgr->tree_manager->get_available_node_types();
     $hash_id_descr = array_flip($hash_descr_id);
 
-    $key2map = array(
+    $key2map = [
         'keyword_id' => 'keywords',
         'tcase_id' => 'testcases',
         'execution_type' => 'exec_type',
@@ -1598,11 +1598,11 @@ function genSpecViewFlat(&$db, $specViewType, $tobj_id, $id, $name,
         'cfields' => 'cfields',
         'tcase_name' => 'tcase_name',
         'status' => 'workflow_status'
-    );
+    ];
 
-    $pfFilters = array(
+    $pfFilters = [
         'tcase_node_type_id' => $hash_descr_id['testcase']
-    );
+    ];
     foreach ($key2map as $tk => $fk) {
         $pfFilters[$tk] = isset($my['filters'][$fk]) ? $my['filters'][$fk] : null;
     }
@@ -1611,20 +1611,20 @@ function genSpecViewFlat(&$db, $specViewType, $tobj_id, $id, $name,
         $id, $spec_view_type, $pfFilters);
 
     $platforms = getPlatforms($db, $tproject_id, $testplan_id);
-    $a_tcid = array();
-    $a_tsuite_idx = array();
+    $a_tcid = [];
+    $a_tsuite_idx = [];
     if (count($test_spec)) {
-        $cfg = array(
+        $cfg = [
             'node_types' => $hash_id_descr,
             'write_status' => $write_status,
             'is_uncovered_view_type' => $is_uncovered_view_type
-        );
+        ];
 
         // $a_tsuite_idx
         // key: test case version id
         // value: index inside $out, where parent test suite of test case version id is located.
         //
-        list ($a_tcid, $a_tsuite_idx, , $out) = buildSkeletonFlat($id, $name,
+        [$a_tcid, $a_tsuite_idx, , $out] = buildSkeletonFlat($id, $name,
             $cfg, $test_spec, $platforms);
     }
 
@@ -1632,10 +1632,10 @@ function genSpecViewFlat(&$db, $specViewType, $tobj_id, $id, $name,
     // DAMMED 0!!!!
     $firtsElemIDX = key($out);
     if (! empty($out) && ! is_null($out[$firtsElemIDX]) && count($a_tcid)) {
-        $optGBI = array(
+        $optGBI = [
             'output' => 'full_without_users',
             'order_by' => " ORDER BY NHTC.node_order, NHTC.name, TCV.version DESC "
-        );
+        ];
 
         if (isset($options['onlyLatestTCV']) && $options['onlyLatestTCV']) {
             $tcaseVersionSet = $tcaseMgr->getLTCVInfo($a_tcid);
@@ -1666,24 +1666,24 @@ function buildSkeletonFlat($branchRootID, $name, $config, &$test_spec,
 {
     $parent_idx = - 1;
     $pivot_tsuite = $test_spec[0];
-    $levelSet = array();
+    $levelSet = [];
     $tcase_memory = null;
 
     $node_types = $config['node_types'];
     $write_status = $config['write_status'];
     $is_uncovered_view_type = $config['is_uncovered_view_type'];
 
-    $out = array();
-    $a_tcid = array();
-    $a_tsuite_idx = array();
+    $out = [];
+    $a_tcid = [];
+    $a_tsuite_idx = [];
 
     $rootIDX = 0;
     $hash_id_pos[$branchRootID] = $rootIDX;
-    $out[$rootIDX]['testsuite'] = array(
+    $out[$rootIDX]['testsuite'] = [
         'id' => $branchRootID,
         'name' => $name
-    );
-    $out[$rootIDX]['testcases'] = array();
+    ];
+    $out[$rootIDX]['testcases'] = [];
     $out[$rootIDX]['write_buttons'] = 'no';
     $out[$rootIDX]['testcase_qty'] = 0;
     $out[$rootIDX]['level'] = 1;
@@ -1697,9 +1697,9 @@ function buildSkeletonFlat($branchRootID, $name, $config, &$test_spec,
     $level = $out[0]['level'] + 1;
     $idx = 0;
     $idx ++;
-    $tsuite_tcqty = array(
+    $tsuite_tcqty = [
         $branchRootID => 0
-    );
+    ];
 
     foreach ($test_spec as $current) {
         // it will be interesting to understand if this can happen due to filtering
@@ -1734,11 +1734,11 @@ function buildSkeletonFlat($branchRootID, $name, $config, &$test_spec,
                     $whoiam .= $nameAtLevel[$ldx] . '/';
                 }
 
-                $out[$idx]['testsuite'] = array(
+                $out[$idx]['testsuite'] = [
                     'id' => $current['id'],
                     'name' => $whoiam
-                );
-                $out[$idx]['testcases'] = array();
+                ];
+                $out[$idx]['testcases'] = [];
                 $out[$idx]['testcase_qty'] = 0;
                 $out[$idx]['linked_testcase_qty'] = 0;
                 $out[$idx]['level'] = $level;
@@ -1761,10 +1761,10 @@ function buildSkeletonFlat($branchRootID, $name, $config, &$test_spec,
             $tc_id = $current['id'];
             $parent_idx = $hash_id_pos[$current['parent_id']];
             $a_tsuite_idx[$tc_id] = $parent_idx;
-            $out[$parent_idx]['testcases'][$tc_id] = array(
+            $out[$parent_idx]['testcases'][$tc_id] = [
                 'id' => $tc_id,
                 'name' => $current['name']
-            );
+            ];
 
             // Reference to make code reading more human friendly
             $outRef = &$out[$parent_idx]['testcases'][$tc_id];
@@ -1776,9 +1776,9 @@ function buildSkeletonFlat($branchRootID, $name, $config, &$test_spec,
                 $out[$parent_idx]['write_buttons'] = $write_status;
                 $out[$parent_idx]['linked_testcase_qty'] = 0;
 
-                $outRef['tcversions'] = array();
-                $outRef['tcversions_active_status'] = array();
-                $outRef['tcversions_execution_type'] = array();
+                $outRef['tcversions'] = [];
+                $outRef['tcversions_active_status'] = [];
+                $outRef['tcversions_execution_type'] = [];
                 $outRef['tcversions_qty'] = 0;
                 $outRef['linked_version_id'] = 0;
                 $outRef['executed'] = null;
@@ -1789,7 +1789,7 @@ function buildSkeletonFlat($branchRootID, $name, $config, &$test_spec,
                 $outRef['linked_by'] = null;
                 $outRef['linked_ts'] = null;
                 $outRef['priority'] = 0;
-                $outRef['user_id'] = array();
+                $outRef['user_id'] = [];
             }
             $out[$parent_idx]['testcase_qty'] ++;
             $a_tcid[] = $current['id'];
@@ -1842,10 +1842,10 @@ function buildSkeletonFlat($branchRootID, $name, $config, &$test_spec,
             unset($out[$kill]);
         }
     }
-    return array(
+    return [
         $a_tcid,
         $a_tsuite_idx,
         $tsuite_tcqty,
         $out
-    );
+    ];
 }

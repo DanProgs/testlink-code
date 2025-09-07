@@ -14,11 +14,11 @@ testlinkInitPage($db);
 $item_id = isset($_REQUEST['item_id']) ? intval($_REQUEST['item_id']): null;
 
 $ou = new stdClass();
-$ou->data = array();
+$ou->data = [];
 if( !is_null($item_id) )
 {
   $req_mgr = new requirement_mgr($db);
-  $opt = array('output' => 'array');
+  $opt = ['output' => 'array'];
   $mon = $req_mgr->getReqMonitors($item_id,$opt);
   
   $ou = new stdClass();

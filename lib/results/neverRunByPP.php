@@ -26,7 +26,7 @@ require_once 'exec.inc.php'; // used for bug string lookup
 
 $tplCfg = templateConfiguration();
 
-list ($tplan_mgr, $args) = initArgsForReports($db);
+[$tplan_mgr, $args] = initArgsForReports($db);
 if (null == $tplan_mgr) {
     $tplan_mgr = new testplan($db);
 }
@@ -56,11 +56,11 @@ if ($args->doAction == 'result' && ! empty($metrics)) {
 
     $tpl = $tplCfg->default_template;
 
-    $urlSafeString = array();
+    $urlSafeString = [];
     $urlSafeString['tprojectPrefix'] = urlencode($gui->tproject_info['prefix']);
     $urlSafeString['basehref'] = str_replace(" ", "%20", $args->basehref);
 
-    $out = array();
+    $out = [];
     $pathCache = $topCache = $levelCache = null;
     $nameCache = initNameCache($gui);
 
@@ -68,9 +68,9 @@ if ($args->doAction == 'result' && ! empty($metrics)) {
     foreach ($metrics as &$elem) {
         // do some decode work, using caches
         if (! isset($pathCache[$elem['tcase_id']])) {
-            $du = $tcaseMgr->getPathLayered(array(
+            $du = $tcaseMgr->getPathLayered([
                 $elem['tcase_id']
-            ));
+            ]);
             $pathCache[$elem['tcase_id']] = $du[$elem['tsuite_id']]['value'];
             $levelCache[$elem['tcase_id']] = $du[$elem['tsuite_id']]['level'];
             $ky = current(array_keys($du));
@@ -132,10 +132,10 @@ if ($doIt) {
             break;
 
         default:
-            $tableOpt = array(
+            $tableOpt = [
                 'format' => $args->format,
                 'show_platforms' => $gui->show_platforms
-            );
+            ];
 
             $gui->tableSet[] = buildMatrix($gui->dataSet, $args,
                 $gui->platformSet, $tableOpt);
@@ -163,35 +163,35 @@ displayReport($tplCfg->template_dir . $tpl, $smarty, $args->format,
  */
 function initArgs(&$dbHandler)
 {
-    $iP = array(
-        "apikey" => array(
+    $iP = [
+        "apikey" => [
             tlInputParameter::STRING_N,
             32,
             64
-        ),
-        "tproject_id" => array(
+        ],
+        "tproject_id" => [
             tlInputParameter::INT_N
-        ),
-        "tplan_id" => array(
+        ],
+        "tplan_id" => [
             tlInputParameter::INT_N
-        ),
-        "format" => array(
+        ],
+        "format" => [
             tlInputParameter::INT_N
-        ),
-        "type" => array(
+        ],
+        "type" => [
             tlInputParameter::STRING_N,
             0,
             1
-        ),
-        "platSet" => array(
+        ],
+        "platSet" => [
             tlInputParameter::ARRAY_INT
-        ),
-        "doAction" => array(
+        ],
+        "doAction" => [
             tlInputParameter::STRING_N,
             5,
             10
-        )
-    );
+        ]
+    ];
 
     $args = new stdClass();
     R_PARAMS($iP, $args);
@@ -247,7 +247,7 @@ function initializeGui(&$dbh, &$argsObj, &$tplanMgr)
     $guiObj = new stdClass();
 
     $guiObj->labels = init_labels(
-        array(
+        [
             'deleted_user' => null,
             'design' => null,
             'execution' => null,
@@ -255,7 +255,7 @@ function initializeGui(&$dbh, &$argsObj, &$tplanMgr)
             'execution_history' => null,
             'info_notrun_tc_report' => null,
             'title' => 'neverRunByPP_title'
-        ));
+        ]);
 
     $guiObj->title = $guiObj->labels['title'];
     $guiObj->pageTitle = $guiObj->title;
@@ -277,10 +277,10 @@ function initializeGui(&$dbh, &$argsObj, &$tplanMgr)
     $guiObj->warning_msg = '';
 
     // needed to decode
-    $getOpt = array(
+    $getOpt = [
         'outputFormat' => 'map',
         'addIfNull' => true
-    );
+    ];
     $guiObj->platformSet = $tplanMgr->getPlatforms($argsObj->tplan_id, $getOpt);
 
     $guiObj->show_platforms = true;
@@ -290,7 +290,7 @@ function initializeGui(&$dbh, &$argsObj, &$tplanMgr)
     }
 
     // will be used when sending mail o creating spreadsheet
-    $guiObj->platSet = array();
+    $guiObj->platSet = [];
     if (! empty($argsObj->platSet)) {
         $pp = (array) array_flip($argsObj->platSet);
     }
@@ -331,10 +331,10 @@ function checkRights(&$db, &$user, $context = null)
  */
 function buildMailCfg(&$guiObj)
 {
-    $labels = array(
+    $labels = [
         'testplan' => lang_get('testplan'),
         'testproject' => lang_get('testproject')
-    );
+    ];
     $cfg = new stdClass();
     $cfg->cc = '';
     $cfg->subject = $guiObj->title . ' : ' . $labels['testproject'] . ' : ' .
@@ -355,31 +355,31 @@ function buildMailCfg(&$guiObj)
  * @param array $customFieldColumns
  * @return tlExtTable|tlHTMLTable
  */
-function buildMatrix($dataSet, &$args, $platforms, $options = array())
+function buildMatrix($dataSet, &$args, $platforms, $options = [])
 {
-    $default_options = array(
+    $default_options = [
         'show_platforms' => false,
         'format' => FORMAT_HTML
-    );
+    ];
     $options = array_merge($default_options, $options);
 
-    $l18n = init_labels(array(
+    $l18n = init_labels([
         'platform' => null
-    ));
-    $columns = array();
-    $columns[] = array(
+    ]);
+    $columns = [];
+    $columns[] = [
         'title_key' => 'title_test_case_title',
         'width' => 80,
         'type' => 'text'
-    );
+    ];
 
     if ($options['show_platforms']) {
-        $columns[] = array(
+        $columns[] = [
             'title_key' => 'platform',
             'width' => 60,
             'filter' => 'list',
             'filterOptions' => $platforms
-        );
+        ];
     }
 
     if ($options['format'] == FORMAT_HTML) {
@@ -397,9 +397,9 @@ function buildMatrix($dataSet, &$args, $platforms, $options = array())
         $sort_name = $options['show_platforms'] ? $l18n['platform'] : '';
 
         $matrix->setSortByColumnName($sort_name);
-        $matrix->addCustomBehaviour('text', array(
+        $matrix->addCustomBehaviour('text', [
             'render' => 'columnWrap'
-        ));
+        ]);
 
         // define table toolbar
         $matrix->showToolbar = true;
@@ -419,9 +419,9 @@ function buildMatrix($dataSet, &$args, $platforms, $options = array())
  */
 function initNameCache($guiObj)
 {
-    $safeItems = array(
+    $safeItems = [
         'platform' => null
-    );
+    ];
 
     if ($guiObj->show_platforms) {
         foreach ($guiObj->platformSet as $id => $name) {
@@ -458,9 +458,9 @@ function createSpreadsheet($gui, $args, $media)
     // testTitle PTRJ-76:Create issue tracker - no conflict
     // [platformName]
     //
-    $dataHeader = array(
+    $dataHeader = [
         $lbl['title_test_case_title']
-    );
+    ];
     if (property_exists($gui, 'platformSet') && ! is_null($gui->platformSet) &&
         ! isset($gui->platformSet[0])) {
         $dataHeader[] = $lbl['platform'];
@@ -500,7 +500,7 @@ function createSpreadsheet($gui, $args, $media)
     $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $xlsType);
 
     $codex = 'neverRunByPP';
-    $tmpfname = tempnam(config_get('temp_dir'), "$codex.tmp");
+    $tmpfname = tempnam(config_get('temp_dir'), "{$codex}.tmp");
     $objWriter->save($tmpfname);
 
     if ($args->getSpreadsheetBy == 'email') {
@@ -512,20 +512,20 @@ function createSpreadsheet($gui, $args, $media)
         $ema->subject = $gui->mailCfg->subject;
         $ema->message = $gui->mailCfg->subject;
 
-        $dum = uniqid("$codex_") . '.xls';
-        $oops = array(
-            'attachment' => array(
+        $dum = uniqid("{$codex_}") . '.xls';
+        $oops = [
+            'attachment' => [
                 'file' => $tmpfname,
                 'newname' => $dum
-            ),
+            ],
             'exit_on_error' => true,
             'htmlFormat' => true
-        );
+        ];
         $email_op = email_send_wrapper($ema, $oops);
         unlink($tmpfname);
         exit();
     } else {
-        downloadXls($tmpfname, $xlsType, $gui, "$codex_");
+        downloadXls($tmpfname, $xlsType, $gui, "{$codex_}");
     }
 }
 
@@ -555,7 +555,7 @@ function getMetrics(&$dbh, &$args, &$gui)
 function initLblSpreadsheet()
 {
     return init_labels(
-        array(
+        [
             'title_test_suite_name' => null,
             'platform' => null,
             'build' => null,
@@ -570,7 +570,7 @@ function initLblSpreadsheet()
             'th_run_by' => null,
             'assigned_to' => null,
             'summary' => null
-        ));
+        ]);
 }
 
 /**
@@ -579,31 +579,31 @@ function initLblSpreadsheet()
  */
 function initStyleSpreadsheet()
 {
-    $sty = array();
-    $sty['ReportContext'] = array(
-        'font' => array(
+    $sty = [];
+    $sty['ReportContext'] = [
+        'font' => [
             'bold' => true
-        )
-    );
-    $sty['DataHeader'] = array(
-        'font' => array(
+        ]
+    ];
+    $sty['DataHeader'] = [
+        'font' => [
             'bold' => true
-        ),
-        'borders' => array(
-            'outline' => array(
+        ],
+        'borders' => [
+            'outline' => [
                 'style' => PHPExcel_Style_Border::BORDER_MEDIUM
-            ),
-            'vertical' => array(
+            ],
+            'vertical' => [
                 'style' => PHPExcel_Style_Border::BORDER_THIN
-            )
-        ),
-        'fill' => array(
+            ]
+        ],
+        'fill' => [
             'type' => PHPExcel_Style_Fill::FILL_SOLID,
-            'startcolor' => array(
+            'startcolor' => [
                 'argb' => 'FF9999FF'
-            )
-        )
-    );
+            ]
+        ]
+    ];
 
     return $sty;
 }
@@ -619,28 +619,28 @@ function initStyleSpreadsheet()
 function xlsStepOne($oj, $style, $lbl, $gui)
 {
     $dummy = '';
-    $lines2write = array(
-        array(
+    $lines2write = [
+        [
             $gui->title,
             ''
-        ),
-        array(
+        ],
+        [
             $lbl['testproject'],
             $gui->tproject_name
-        ),
-        array(
+        ],
+        [
             $lbl['testplan'],
             $gui->tplan_name
-        ),
-        array(
+        ],
+        [
             $lbl['generated_by_TestLink_on'],
             localize_dateOrTimeStamp(null, $dummy, 'timestamp_format', time())
-        ),
-        array(
+        ],
+        [
             $gui->report_context,
             ''
-        )
-    );
+        ]
+    ];
 
     $cellArea = "A1:";
     foreach ($lines2write as $zdx => $fields) {

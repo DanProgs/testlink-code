@@ -49,7 +49,7 @@ $unitTestDescription = "Test - getTestCasesForTestPlan";
  *            - optional
  * @return mixed $resultInfo
  */
-$args = array();
+$args = [];
 $args["devKey"] = DEV_KEY;
 $args["testplanid"] = 61579;
 
@@ -84,7 +84,7 @@ echo "<br>";
 
 // 20080518 - franciscom
 $unitTestDescription = "Test - createTestProject";
-$args = array();
+$args = [];
 $args["devKey"] = DEV_KEY;
 $args["testprojectname"] = 'API TestProject';
 
@@ -110,9 +110,9 @@ echo "<br>";
 // ----------------------------------------------------------------------
 $method = 'getTestCaseCustomFieldDesignValue';
 $client_query = 'tl.' . $method;
-$unitTestDescription = "Test - $method";
+$unitTestDescription = "Test - {$method}";
 
-$args = array();
+$args = [];
 $args["devKey"] = DEV_KEY;
 $args["testcaseexternalid"] = 'ESP-1';
 $args["customfieldname"] = 'SSCRIPT_CF1';
@@ -139,7 +139,7 @@ echo "<br>";
 
 // -------------------------------------------------------------------------------------
 $unitTestDescription = "Test - getTestSuitesForTestPlan";
-$args = array();
+$args = [];
 $args["devKey"] = DEV_KEY;
 $args["testplanid"] = 61579;
 

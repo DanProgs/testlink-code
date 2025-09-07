@@ -32,19 +32,19 @@ $smarty->display($tplCfg->template_dir . $tplCfg->default_template);
  */
 function initArgs()
 {
-    $iParams = array(
-        "req_spec_id" => array(
+    $iParams = [
+        "req_spec_id" => [
             tlInputParameter::INT_N
-        ),
-        "refreshTree" => array(
+        ],
+        "refreshTree" => [
             tlInputParameter::INT_N
-        ),
-        "uploadOPStatusCode" => array(
+        ],
+        "uploadOPStatusCode" => [
             tlInputParameter::STRING_N,
             0,
             30
-        )
-    );
+        ]
+    ];
     $args = new stdClass();
     R_PARAMS($iParams, $args);
     $args->refreshTree = intval($args->refreshTree);

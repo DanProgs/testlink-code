@@ -42,7 +42,7 @@ class reqMgrSystemCommands
         $this->grants->canManage = false;
 
         $this->guiOpWhiteList = array_flip(
-            array(
+            [
                 'checkConnection',
                 'create',
                 'edit',
@@ -50,7 +50,7 @@ class reqMgrSystemCommands
                 'doCreate',
                 'doUpdate',
                 'doDelete'
-            ));
+            ]);
     }
 
     public function setTemplateCfg($cfg)
@@ -72,19 +72,19 @@ class reqMgrSystemCommands
         $obj->typeDomain = $this->mgr->getTypes();
         $obj->canManage = $argsObj->currentUser->hasRight($this->db,
             'reqmgrsystem_management');
-        $obj->user_feedback = array(
+        $obj->user_feedback = [
             'type' => '',
             'message' => ''
-        );
+        ];
 
         $obj->l18n = init_labels(
-            array(
+            [
                 'reqmgrsystem_management' => null,
                 'btn_save' => null,
                 'create' => null,
                 'edit' => null,
                 'reqmgrsystem_deleted' => null
-            ));
+            ]);
 
         // we experiment on way to get Action Description for GUI using __FUNCTION__
         $obj->l18n['doUpdate'] = $obj->l18n['edit'];
@@ -118,9 +118,9 @@ class reqMgrSystemCommands
         $guiObj->canManage = $argsObj->currentUser->hasRight($this->db,
             'reqmgrsystem_management');
 
-        $guiObj->item = array(
+        $guiObj->item = [
             'id' => 0
-        );
+        ];
         foreach ($this->entitySpec as $property => $type) {
             $guiObj->item[$property] = ($type == 'int') ? 0 : '';
         }

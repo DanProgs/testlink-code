@@ -17,7 +17,7 @@ class mantisrestInterface extends issueTrackerInterface
     private $options = [];
 
     // Copied from mantis configuration
-    private $status_color = array(
+    private $status_color = [
         'new' => '#ffa0a0', # red,
         'feedback' => '#ff50a8', # purple
         'acknowledged' => '#ffd850', # orange
@@ -25,7 +25,7 @@ class mantisrestInterface extends issueTrackerInterface
         'assigned' => '#c8c8ff', # blue
         'resolved' => '#cceedd', # buish-green
         'closed' => '#e8e8e8'
-    );
+    ];
 
     # light gray
     public $defaultResolvedStatus;
@@ -160,11 +160,11 @@ class mantisrestInterface extends issueTrackerInterface
             foreach ([
                 'uribase'
             ] as $v) {
-                $logDetails .= "$v={$this->cfg->$v} / ";
+                $logDetails .= "{$v}={$this->cfg->$v} / ";
             }
             $logDetails = trim($logDetails, '/ ');
             $this->connected = false;
-            tLog(__METHOD__ . " [$logDetails] " . $e->getMessage(), 'ERROR');
+            tLog(__METHOD__ . " [{$logDetails}] " . $e->getMessage(), 'ERROR');
         }
     }
 

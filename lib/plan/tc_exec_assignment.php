@@ -43,7 +43,7 @@ if (is_array($args->keyword_id)) {
     $keywordsFilter->items = $args->keyword_id;
     $keywordsFilter->type = $gui->keywordsFilterType;
 }
-$arrData = array();
+$arrData = [];
 
 $status_map = $assignment_mgr->get_available_status();
 $types_map = $assignment_mgr->get_available_types();
@@ -55,21 +55,21 @@ switch ($args->doAction) {
         if (! is_null($args->achecked_tc)) {
             $open = $status_map['open']['id'];
             $db_now = $db->db_now();
-            $features2 = array(
-                'upd' => array(),
-                'ins' => array(),
-                'del' => array()
-            );
-            $method2call = array(
+            $features2 = [
+                'upd' => [],
+                'ins' => [],
+                'del' => []
+            ];
+            $method2call = [
                 'upd' => 'update',
                 'ins' => 'assign',
                 'del' => 'delete_by_feature_id_and_build_id'
-            );
-            $called = array(
+            ];
+            $called = [
                 'upd' => false,
                 'ins' => false,
                 'del' => false
-            );
+            ];
 
             foreach ($args->achecked_tc as $key_tc => $platform_tcversion) {
                 foreach ($platform_tcversion as $platform_id => $tcversion_id) {
@@ -88,7 +88,7 @@ switch ($args->doAction) {
             }
 
             foreach ($features2 as $key => $featByPlatform) {
-                if (count($features2[$key]) > 0) {
+                if ($features2[$key] !== []) {
                     foreach ($featByPlatform as $values) {
                         $assignment_mgr->assign($values);
                     }
@@ -114,12 +114,12 @@ switch ($args->doAction) {
         break;
 
     case 'doRemove':
-        $signature[] = array(
+        $signature[] = [
             'type' => $task_test_execution,
             'user_id' => $args->targetUser,
             'feature_id' => $args->targetFeature,
             'build_id' => $args->build_id
-        );
+        ];
         $assignment_mgr->deleteBySignature($signature);
 
         if ($args->send_mail) {
@@ -127,11 +127,11 @@ switch ($args->doAction) {
             // and build, and we need to use feature_id to get this info
             $feature = current($tplan_mgr->getFeatureByID($args->targetFeature));
 
-            $items = array();
-            $lnk[$args->targetFeature] = array();
-            $lnk[$args->targetFeature]['previous_user_id'] = array(
+            $items = [];
+            $lnk[$args->targetFeature] = [];
+            $lnk[$args->targetFeature]['previous_user_id'] = [
                 $args->targetUser
-            );
+            ];
             $lnk[$args->targetFeature]['tcase_id'] = intval(
                 $feature['tcase_id']);
             $lnk[$args->targetFeature]['tcversion_id'] = intval(
@@ -143,10 +143,10 @@ switch ($args->doAction) {
         break;
 
     case 'linkByMail':
-        $context = array(
+        $context = [
             'tplan_id' => $args->tplan_id,
             'build_id' => $args->build_id
-        );
+        ];
         $assignment_mgr->emailLinkToExecPlanning($context, $args->userSet);
         break;
 
@@ -160,31 +160,31 @@ switch ($args->doAction) {
 switch ($args->level) {
     case 'testcase':
         // build the data need to call gen_spec_view
-        $xx = $tcaseMgr->getPathLayered(array(
+        $xx = $tcaseMgr->getPathLayered([
             $args->id
-        ));
+        ]);
         $yy = array_keys($xx); // done to silence warning on end()
         $tsuite_data['id'] = end($yy);
         $tsuite_data['name'] = $xx[$tsuite_data['id']]['value'];
 
         $xx = $tplan_mgr->getLinkInfo($args->tplan_id, $args->id,
             $args->control_panel['setting_platform'],
-            array(
+            [
                 'output' => 'assignment_info',
                 'build4assignment' => $args->build_id
-            ));
+            ]);
 
         $linked_items[$args->id] = $xx;
-        $opt = array(
+        $opt = [
             'write_button_only_if_linked' => 1,
             'user_assignments_per_build' => $args->build_id,
             'useOptionalArrayFields' => true
-        );
+        ];
 
-        $filters = array(
+        $filters = [
             'keywords' => $keywordsFilter->items,
             'testcases' => $args->id
-        );
+        ];
 
         $my_out = gen_spec_view($db, 'testplan', $args->tplan_id,
             $tsuite_data['id'], $tsuite_data['name'], $linked_items, null,
@@ -192,13 +192,13 @@ switch ($args->level) {
 
         // index 0 contains data for the parent test suite of this test case,
         // other elements are not needed.
-        $out = array();
+        $out = [];
         $out['spec_view'][0] = $my_out['spec_view'][0];
         $out['num_tc'] = 1;
         break;
 
     case 'testsuite':
-        $filters = array();
+        $filters = [];
         $filters['keywordsFilter'] = $keywordsFilter;
         $filters['testcaseFilter'] = (isset($args->testcases_to_show)) ? $args->testcases_to_show : null;
         $filters['assignedToFilter'] = property_exists($args,
@@ -207,11 +207,11 @@ switch ($args->level) {
         $filters['cfieldsFilter'] = $args->control_panel['filter_custom_fields'];
 
         // ORDER IS CRITIC - Attention in refactoring
-        $opt = array(
+        $opt = [
             'assigned_on_build' => $args->build_id,
             'addPriority' => true,
             'addExecInfo' => false
-        );
+        ];
         $filters += $opt;
         $opt['accessKeyType'] = 'tcase+platform+stackOnUser';
         $opt['useOptionalArrayFields'] = true;
@@ -266,7 +266,7 @@ function initArgs()
     $args->tproject_id = intval($_SESSION['testprojectID']);
     $args->tproject_name = $_SESSION['testprojectName'];
 
-    $key2loop = array(
+    $key2loop = [
         'doActionButton' => null,
         'doAction' => null,
         'level' => null,
@@ -277,7 +277,7 @@ function initArgs()
         'tester_for_tcid' => null,
         'feature_id' => null,
         'id' => 0
-    );
+    ];
 
     foreach ($key2loop as $key => $value) {
         $args->$key = isset($_REQUEST[$key]) ? $_REQUEST[$key] : $value;
@@ -302,16 +302,16 @@ function initArgs()
 
     $args->control_panel = $session_data;
 
-    $key2loop = array(
-        'refreshTree' => array(
+    $key2loop = [
+        'refreshTree' => [
             'key' => 'setting_refresh_tree_on_action',
             'value' => 0
-        ),
-        'filter_assigned_to' => array(
+        ],
+        'filter_assigned_to' => [
             'key' => 'filter_assigned_user',
             'value' => null
-        )
-    );
+        ]
+    ];
 
     foreach ($key2loop as $key => $info) {
         $args->$key = isset($session_data[$info['key']]) ? $session_data[$info['key']] : $info['value'];
@@ -440,12 +440,12 @@ function sendMailToTesters(&$dbHandler, &$tcaseMgr, &$guiObj, &$argsObj,
 {
     $testers['new'] = null;
     $testers['old'] = null;
-    $lb = array(
+    $lb = [
         'platform' => null,
         'testplan' => null,
         'testproject' => null,
         'build' => null
-    );
+    ];
     $lbl = init_labels($lb);
 
     $mail_details['new'] = lang_get('mail_testcase_assigned') . "<br /><br />";
@@ -462,7 +462,7 @@ function sendMailToTesters(&$dbHandler, &$tcaseMgr, &$guiObj, &$argsObj,
     $assigner = $guiObj->all_users[$argsObj->user_id]->firstName . ' ' .
         $guiObj->all_users[$argsObj->user_id]->lastName;
 
-    $email = array();
+    $email = [];
     $email['from_address'] = config_get('from_email');
     $email['attachment'] = null;
     $email['cc'] = null;
@@ -573,7 +573,7 @@ function sendMailToTesters(&$dbHandler, &$tcaseMgr, &$guiObj, &$argsObj,
 function doRemoveAll(&$dbH, &$argsObj, &$guiObj, $cfg, $oMgr)
 {
     $op = 'del';
-    $features2[$op] = array();
+    $features2[$op] = [];
 
     foreach ($argsObj->achecked_tc as $key_tc => $ptc) {
         foreach ($ptc as $platform_id => $tcversion_id) {
@@ -590,7 +590,7 @@ function doRemoveAll(&$dbH, &$argsObj, &$guiObj, $cfg, $oMgr)
         $testers = $oMgr['assign']->getUsersByFeatureBuild($fSet,
             $argsObj->build_id, $cfg['task_test_execution']);
 
-        $f4mail = array();
+        $f4mail = [];
         foreach ($items as $fid => $value) {
             $pid = $value['platform_id'];
             $f4mail[$pid][$fid]['previous_user_id'] = array_keys($testers[$fid]);
@@ -600,7 +600,7 @@ function doRemoveAll(&$dbH, &$argsObj, &$guiObj, $cfg, $oMgr)
     }
 
     foreach ($features2 as $key => $values) {
-        if (count($features2[$key]) > 0) {
+        if ($features2[$key] !== []) {
             $oMgr['assign']->delete_by_feature_id_and_build_id($values);
         }
     }
@@ -636,7 +636,7 @@ function doBulkUserRemove(&$dbH, &$argsObj, &$guiObj, $cfg, $oMgr)
             $testers = $oMgr['assign']->getUsersByFeatureBuild($fSet,
                 $argsObj->build_id, $cfg['task_test_execution']);
 
-            $f4mail = array();
+            $f4mail = [];
             foreach ($items as $fid => $value) {
                 $pid = $value['platform_id'];
                 $f4mail[$pid][$fid]['previous_user_id'] = array_keys(

@@ -39,16 +39,16 @@ if (! empty($gui->reqIDSet)) {
     // get type and status labels
     $lbl = getLabels($cfg->req);
     $reqSet = $req_mgr->getByIDBulkLatestVersionRevision($gui->reqIDSet,
-        array(
+        [
             'outputFormat' => 'mapOfArray'
-        ));
+        ]);
     $onClick = buildOnClick($args, $lbl['mixed'], $imgSet);
 
     if ($args->req_id > 0) {
-        $vk = array_flip(array(
+        $vk = array_flip([
             'on',
             'off'
-        ));
+        ]);
         if (isset($vk[$args->action])) {
             $m2c = 'monitor' . ucfirst($args->action);
             $req_mgr->$m2c($args->req_id, $args->userID, $args->tproject_id);
@@ -56,7 +56,7 @@ if (! empty($gui->reqIDSet)) {
     }
 
     // array to gather table data row per row
-    $rows = array();
+    $rows = [];
 
     $monitoredSet = $req_mgr->getMonitoredByUser($args->userID,
         $args->tproject_id);
@@ -80,7 +80,7 @@ if (! empty($gui->reqIDSet)) {
         }
 
         // get content for each row to display
-        $result = array();
+        $result = [];
         $result[] = $pathCache[$req['srs_id']];
 
         $edit_link = '<a href="javascript:openLinkedReqVersionWindow(' . $id .
@@ -123,23 +123,23 @@ if (! empty($gui->reqIDSet)) {
          * should be:
          * 1. path, 2. title, 3. created_on, 4. monitor
          */
-        $columns = array();
-        $columns[] = array(
+        $columns = [];
+        $columns[] = [
             'title_key' => 'req_spec_short',
             'width' => 150
-        );
-        $columns[] = array(
+        ];
+        $columns[] = [
             'title_key' => 'title',
             'width' => 150
-        );
-        $columns[] = array(
+        ];
+        $columns[] = [
             'title_key' => 'created_on',
             'width' => 100
-        );
-        $columns[] = array(
+        ];
+        $columns[] = [
             'title_key' => 'monitor',
             'width' => 100
-        );
+        ];
 
         // create table object, fill it with columns and row data and give it a title
         $matrix = new tlExtTable($columns, $rows, 'tl_table_req_overview');
@@ -161,12 +161,12 @@ if (! empty($gui->reqIDSet)) {
         $matrix->showGroupItemsCount = true;
 
         // show custom field content in multiple lines
-        $matrix->addCustomBehaviour('text', array(
+        $matrix->addCustomBehaviour('text', [
             'render' => 'columnWrap'
-        ));
-        $gui->tableSet = array(
+        ]);
+        $gui->tableSet = [
             $matrix
-        );
+        ];
     }
 }
 
@@ -182,19 +182,19 @@ $smarty->display($templateCfg->template_dir . $templateCfg->default_template);
  */
 function initArgs(&$tproject_mgr)
 {
-    $i2get = array(
-        "tproject_id" => array(
+    $i2get = [
+        "tproject_id" => [
             tlInputParameter::INT_N
-        ),
-        "req_id" => array(
+        ],
+        "req_id" => [
             tlInputParameter::INT_N
-        ),
-        "action" => array(
+        ],
+        "action" => [
             tlInputParameter::STRING_N,
             2,
             3
-        )
-    );
+        ]
+    ];
 
     $args = new stdClass();
     R_PARAMS($i2get, $args);
@@ -250,9 +250,9 @@ function getCfg()
  */
 function getLabels($reqCfg)
 {
-    $lbl = array();
+    $lbl = [];
 
-    $l2get = array(
+    $l2get = [
         'no' => 'No',
         'yes' => 'Yes',
         'not_aplicable' => null,
@@ -274,7 +274,7 @@ function getLabels($reqCfg)
         'week_short' => 'calendar_week_short',
         'on2off' => 'on_turn_off',
         'off2on' => 'off_turn_on'
-    );
+    ];
 
     $lbl['mixed'] = init_labels($l2get);
     $lbl['type'] = init_labels($reqCfg->type_labels);
@@ -287,7 +287,7 @@ function getLabels($reqCfg)
  */
 function buildOnClick($args, $lbl, $imgSet)
 {
-    $ret = array();
+    $ret = [];
     $ret['off']['open'] = '<!--monitored--><form method="POST" action="lib/requirements/reqMonitorOverview.php' .
         "?action=off&tproject_id={$args->tproject_id}&req_id=";
     $ret['off']['close'] = '"><input type="image" name="monitor_on" ' .

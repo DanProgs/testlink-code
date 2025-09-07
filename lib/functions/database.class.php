@@ -50,7 +50,7 @@ class database
 
     public $dbType;
 
-    private $queries_array = array();
+    private $queries_array = [];
 
     private $is_connected = false;
 
@@ -65,7 +65,7 @@ class database
     // timer analysis
     private function microtime_float()
     {
-        list ($usec, $sec) = explode(" ", microtime());
+        [$usec, $sec] = explode(" ", microtime());
         return (float) $usec + (float) $sec;
     }
 
@@ -135,10 +135,10 @@ class database
     public function connect($p_dsn, $p_hostname = null, $p_username = null,
         $p_password = null, $p_database_name = null)
     {
-        $result = array(
+        $result = [
             'status' => 1,
             'dbms_msg' => 'ok'
-        );
+        ];
 
         if ($p_dsn === false) {
             $t_result = $this->db->NConnect($p_hostname, $p_username,
@@ -206,7 +206,7 @@ class database
             tLog(
                 "ERROR ON exec_query() - database.class.php <br />" .
                 $this->error(htmlspecialchars($p_query)) .
-                "<br />THE MESSAGE : $message ", 'ERROR', "DATABASE");
+                "<br />THE MESSAGE : {$message} ", 'ERROR', "DATABASE");
             echo "<pre> ============================================================================== </pre>";
             echo "<pre> DB Access Error - debug_print_backtrace() OUTPUT START </pre>";
             echo "<pre> ATTENTION: Enabling more debug info will produce path disclosure weakness (CWE-200) </pre>";
@@ -235,12 +235,12 @@ class database
 
         if ($this->logQueries) {
             array_push($this->queries_array,
-                array(
+                [
                     $p_query,
                     $t_elapsed,
                     $ec,
                     $emsg
-                ));
+                ]);
         }
 
         return $t_result;
@@ -375,7 +375,7 @@ class database
         $c_field = $this->db->prepare_string($p_field);
         $c_key = $this->db->prepare_string($p_key);
 
-        $sql = "DESCRIBE $c_table";
+        $sql = "DESCRIBE {$c_table}";
         $result = $this->exec_query($sql);
 
         $count = $this->num_rows($result);
@@ -469,7 +469,7 @@ class database
     private function count_unique_queries()
     {
         $t_unique_queries = 0;
-        $t_shown_queries = array();
+        $t_shown_queries = [];
         foreach ($this->queries_array as $t_val_array) {
             if (! in_array($t_val_array[0], $t_shown_queries)) {
                 $t_unique_queries ++;
@@ -1055,7 +1055,7 @@ class database
                 if (! isset(
                     $items[$row[$column_main_key]][$row[$column_sec_key]])) {
                     $items[$row[$column_main_key]][$row[$column_sec_key]] = $row;
-                    $items[$row[$column_main_key]][$row[$column_sec_key]][$stackOnCol] = array();
+                    $items[$row[$column_main_key]][$row[$column_sec_key]][$stackOnCol] = [];
                 }
                 $items[$row[$column_main_key]][$row[$column_sec_key]][$stackOnCol][] = $row[$stackOnCol];
             }

@@ -51,10 +51,10 @@ function setUserSession(&$db, $user, $id, $roleID, $email, $locale = null)
     $tproject_mgr = new testproject($db);
 
     $gui_cfg = config_get('gui');
-    $opt = array(
+    $opt = [
         'output' => 'map_name_with_inactive_mark',
         'order_by' => $gui_cfg->tprojects_combo_order_by
-    );
+    ];
     $arrProducts = $tproject_mgr->get_accessible_for_user($id, $opt);
 
     $tproject_cookie = config_get('cookie')->testProjectMemory . $id;
@@ -126,18 +126,18 @@ function getUsersForHtmlOptions(&$db, $whereClause = null,
 function buildUserMap($users, $add_options = false, $additional_options = null,
     $opt = null)
 {
-    $my['opt'] = array(
+    $my['opt'] = [
         'userDisplayFormat' => null
-    );
+    ];
     $my['opt'] = array_merge($my['opt'], (array) $opt);
 
     $usersMap = null;
     $inactivePrefix = lang_get('tag_for_inactive_users');
     if ($users) {
         if ($add_options) {
-            $my_options = is_null($additional_options) ? array(
+            $my_options = is_null($additional_options) ? [
                 0 => ''
-            ) : $additional_options;
+            ] : $additional_options;
             foreach ($my_options as $code => $verbose_code) {
                 $usersMap[$code] = $verbose_code;
             }
@@ -174,11 +174,11 @@ function resetPassword(&$db, $userID,
     $passwordSendMethod = 'send_password_by_mail')
 {
     $doIt = false;
-    $retval = array(
+    $retval = [
         'status' => tl::OK,
         'password' => '',
         'msg' => ''
-    );
+    ];
 
     $user = new tlUser($userID);
     $retval['status'] = $user->readFromDB($db);
@@ -305,10 +305,10 @@ function getUserErrorMessage($code)
  */
 function getAllUsersRoles(&$db, $order_by = null)
 {
-    $tables = tlObject::getDBTables(array(
+    $tables = tlObject::getDBTables([
         'users',
         'roles'
-    ));
+    ]);
 
     $sql = "SELECT users.id FROM {$tables['users']} users " .
         " LEFT OUTER JOIN {$tables['roles']} roles ON users.role_id = roles.id ";
@@ -377,7 +377,7 @@ function getTestersForHtmlOptions(&$db, $tplanID, $tproject, $users = null,
     $users_roles = get_tplan_effective_role($db, $tplanID, $tproject, null,
         $users);
 
-    $userFilter = array();
+    $userFilter = [];
     foreach ($users_roles as $keyUserID => $roleInfo) {
         if (is_object($roleInfo['effective_role']) &&
             $roleInfo['effective_role']->hasRight('testplan_execute') &&

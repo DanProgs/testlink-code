@@ -59,10 +59,10 @@ function initArgs(&$buildMgr)
 
     $_REQUEST = strings_stripSlashes($_REQUEST);
 
-    $k2g = array(
+    $k2g = [
         'build_id',
         'source_build_id'
-    );
+    ];
     foreach ($k2g as $key) {
         $args->$key = isset($_REQUEST[$key]) ? intval($_REQUEST[$key]) : 0;
     }
@@ -88,9 +88,9 @@ function initArgs(&$buildMgr)
     $args->tplan_id = $bi['testplan_id'];
 
     $info = $buildMgr->tree_manager->get_node_hierarchy_info($args->tplan_id,
-        null, array(
+        null, [
             'nodeType' => 'testplan'
-        ));
+        ]);
 
     $args->tproject_id = intval($info['testproject_id']);
 
@@ -138,16 +138,16 @@ function initGui(&$dbHandler, &$argsObj, &$tplanMgr)
  */
 function getBuildDomainForGUI(&$tplanMgr, &$argsObj)
 {
-    $htmlMenu = array(
+    $htmlMenu = [
         'items' => null,
         'selected' => null,
         'build_count' => 0,
         'testers' => null
-    );
-    $opt = array(
+    ];
+    $opt = [
         'orderByDir' => 'id:DESC',
         'excludeBuild' => $argsObj->build_id
-    );
+    ];
 
     $htmlMenu['items'] = $tplanMgr->get_builds_for_html_options(
         $argsObj->tplan_id, testplan::ACTIVE_BUILDS, testplan::OPEN_BUILDS, $opt);
@@ -159,7 +159,7 @@ function getBuildDomainForGUI(&$tplanMgr, &$argsObj)
         foreach ($htmlMenu['items'] as $key => $name) {
             $count = $tplanMgr->assignment_mgr->get_count_of_assignments_for_build_id(
                 $key);
-            $htmlMenu['items'][$key] = $name . " ($lblCount" . $count . ")";
+            $htmlMenu['items'][$key] = $name . " ({$lblCount}" . $count . ")";
             $htmlMenu['testers'][$key] = $count;
         }
 

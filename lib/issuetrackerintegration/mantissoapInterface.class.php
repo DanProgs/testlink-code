@@ -13,7 +13,7 @@ class mantissoapInterface extends issueTrackerInterface
 {
 
     // Copied from mantis configuration
-    private $status_color = array(
+    private $status_color = [
         'new' => '#ffa0a0', # red,
         'feedback' => '#ff50a8', # purple
         'acknowledged' => '#ffd850', # orange
@@ -21,13 +21,13 @@ class mantissoapInterface extends issueTrackerInterface
         'assigned' => '#c8c8ff', # blue
         'resolved' => '#cceedd', # buish-green
         'closed' => '#e8e8e8'
-    );
+    ];
 
     # light gray
-    private $soapOpt = array(
+    private $soapOpt = [
         "connection_timeout" => 1,
         'exceptions' => 1
-    );
+    ];
 
     public $defaultResolvedStatus;
 
@@ -46,30 +46,30 @@ class mantissoapInterface extends issueTrackerInterface
         $this->name = $name;
         $this->interfaceViaDB = false;
 
-        $this->methodOpt['buildViewBugLink'] = array(
+        $this->methodOpt['buildViewBugLink'] = [
             'addSummary' => true,
             'colorByStatus' => true,
             'addReporter' => true,
             'addHandler' => true
-        );
+        ];
 
-        $this->defaultResolvedStatus = array();
-        $this->defaultResolvedStatus[] = array(
+        $this->defaultResolvedStatus = [];
+        $this->defaultResolvedStatus[] = [
             'code' => 80,
             'verbose' => 'resolved'
-        );
-        $this->defaultResolvedStatus[] = array(
+        ];
+        $this->defaultResolvedStatus[] = [
             'code' => 90,
             'verbose' => 'closed'
-        );
+        ];
 
         if ($this->setCfg($config)) {
             $this->completeCfg();
             $this->setResolvedStatusCfg();
             $this->connect();
-            $this->guiCfg = array(
+            $this->guiCfg = [
                 'use_decoration' => true
-            );
+            ];
         }
     }
 
@@ -95,9 +95,9 @@ class mantissoapInterface extends issueTrackerInterface
      */
     public function connect()
     {
-        $op = $this->getClient(array(
+        $op = $this->getClient([
             'log' => true
-        ));
+        ]);
         if ($this->connected = $op['connected']) {
             // OK, we have got WSDL => server is up and we can do SOAP calls, but now we need
             // to do a simple call with user/password only to understand if we are really connected
@@ -119,14 +119,14 @@ class mantissoapInterface extends issueTrackerInterface
     public function getClient($opt = null)
     {
         // IMPORTANT NOTICE - 2012-01-06 - If you are using XDEBUG, Soap Fault will not work
-        $res = array(
+        $res = [
             'client' => null,
             'connected' => false,
             'msg' => 'generic ko'
-        );
-        $my['opt'] = array(
+        ];
+        $my['opt'] = [
             'log' => false
-        );
+        ];
         $my['opt'] = array_merge($my['opt'], (array) $opt);
 
         try {
@@ -360,7 +360,7 @@ class mantissoapInterface extends issueTrackerInterface
 
     public static function checkEnv()
     {
-        $ret = array();
+        $ret = [];
         $ret['status'] = extension_loaded('soap');
         $ret['msg'] = $ret['status'] ? 'OK' : 'You need to enable SOAP extension';
         return $ret;
@@ -395,11 +395,11 @@ class mantissoapInterface extends issueTrackerInterface
     public function addIssue($summary, $description, $opt = null)
     {
         static $client;
-        $ret = array(
+        $ret = [
             'status_ok' => false,
             'id' => - 1,
             'msg' => ''
-        );
+        ];
         if (! $this->isConnected()) {
             return $ret;
         }
@@ -419,13 +419,13 @@ class mantissoapInterface extends issueTrackerInterface
 
             $safeSummary = (strlen($summary) > $this->summaryLengthLimit) ? '...' .
                 substr($summary, - ($this->summaryLengthLimit)) : $summary;
-            $issue = array(
+            $issue = [
                 'summary' => $safeSummary,
                 'description' => $description,
-                'project' => array(
+                'project' => [
                     'id' => $mpid
-                )
-            );
+                ]
+            ];
 
             // check category
             $nameCode = $client->mc_project_get_categories($safe->username,
@@ -438,9 +438,9 @@ class mantissoapInterface extends issueTrackerInterface
 
             // user tester as Reporter
             if (! is_null($opt) && property_exists($opt, 'reporter')) {
-                $issue['reporter'] = array(
+                $issue['reporter'] = [
                     'name' => $opt->reporter
-                );
+                ];
             }
 
             // because issue id on TestLink is considered a string,
@@ -482,17 +482,17 @@ class mantissoapInterface extends issueTrackerInterface
     public function addNote($issueID, $noteText, $opt = null)
     {
         static $client;
-        $ret = array(
+        $ret = [
             'status_ok' => false,
             'msg' => '',
             'note_id' => - 1
-        );
+        ];
         if (! $this->isConnected()) {
-            return array(
+            return [
                 'status_ok' => false,
                 'msg' => 'Connection KO',
                 'note_id' => - 1
-            );
+            ];
         }
 
         if (is_null($client)) {
@@ -508,13 +508,13 @@ class mantissoapInterface extends issueTrackerInterface
         if ($client->mc_issue_exists($safe->username, $safe->password,
             $safe->issueID)) {
 
-            $issueNoteData = array(
+            $issueNoteData = [
                 'text' => $noteText
-            );
+            ];
             if (! is_null($opt) && property_exists($opt, 'reporter')) {
-                $issueNoteData['reporter'] = array(
+                $issueNoteData['reporter'] = [
                     'name' => $opt->reporter
-                );
+                ];
             }
 
             try {
@@ -533,7 +533,7 @@ class mantissoapInterface extends issueTrackerInterface
                         break;
 
                     default:
-                        $ret['msg'] = "Cannot create note, MantisBT message: $faultMsg";
+                        $ret['msg'] = "Cannot create note, MantisBT message: {$faultMsg}";
                         break;
                 }
             }

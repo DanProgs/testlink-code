@@ -77,21 +77,21 @@ function initArgs()
     $argsObj = new stdClass();
     $_REQUEST = strings_stripSlashes($_REQUEST);
 
-    $iParams = array(
-        "importType" => array(
+    $iParams = [
+        "importType" => [
             tlInputParameter::STRING_N,
             0,
             5
-        ),
-        "req_spec_id" => array(
+        ],
+        "req_spec_id" => [
             tlInputParameter::INT_N
-        ),
-        "doAction" => array(
+        ],
+        "doAction" => [
             tlInputParameter::STRING_N,
             0,
             20
-        )
-    );
+        ]
+    ];
 
     R_PARAMS($iParams, $argsObj);
 
@@ -110,18 +110,18 @@ function initializeGui(&$dbHandler, &$argsObj)
     $guiObj = new stdClass();
     $guiObj->importLimitBytes = config_get('import_file_max_size_bytes');
     $guiObj->importLimitKB = ($guiObj->importLimitBytes / 1024);
-    $guiObj->importTypes = array(
+    $guiObj->importTypes = [
         'XML' => 'Mantis XML'
-    );
+    ];
 
     $guiObj->req_spec_id = $argsObj->req_spec_id;
     $guiObj->refreshTree = $guiObj->doImport = tlStringLen($argsObj->importType);
     $guiObj->resultMap = null;
     $guiObj->req_spec_name = '';
-    $guiObj->file_check = array(
+    $guiObj->file_check = [
         'status_ok' => 1,
         'msg' => 'ok'
-    );
+    ];
     $guiObj->import_title = lang_get('title_req_import');
 
     $guiObj->fileName = TL_TEMP_PATH . session_id() . "-import_req_from_issue";
@@ -142,12 +142,12 @@ function initializeGui(&$dbHandler, &$argsObj)
 function doExecuteImport($fileName, &$argsObj, &$reqSpecMgr, &$reqMgr)
 {
     $retval = new stdClass();
-    $retval->items = array();
+    $retval->items = [];
     $retval->msg = '';
-    $retval->file_check = array(
+    $retval->file_check = [
         'status_ok' => 1,
         'msg' => 'ok'
-    );
+    ];
     $retval->userFeedback = null;
 
     $context = new stdClass();
@@ -166,10 +166,10 @@ function doExecuteImport($fileName, &$argsObj, &$reqSpecMgr, &$reqMgr)
                 $fileName)) !== false);
         }
     } else {
-        $retval->file_check = array(
+        $retval->file_check = [
             'status_ok' => 0,
             'msg' => lang_get('please_choose_req_file')
-        );
+        ];
     }
 
     if ($retval->file_check['status_ok']) {
@@ -206,35 +206,35 @@ function getFromMantisIssueSimpleXMLObj($xmlObj)
     }
 
     $l18n = init_labels(
-        array(
+        [
             'issue_issue' => null,
             'issue_steps_to_reproduce' => null,
             'issue_summary' => null,
             'issue_target_version' => null,
             'issue_description' => null,
             'issue_additional_information' => null
-        ));
+        ]);
 
     $jdx = 0;
     $xmlIssue = $xmlObj->issue;
     $loops2do = count($xmlIssue);
 
-    $xmlDef['elements'] = array(
-        'string' => array(
+    $xmlDef['elements'] = [
+        'string' => [
             'summary' => null,
             'description' => null,
             'additional_information' => null,
             'steps_to_reproduce' => null,
             'target_version' => null,
             'id' => null
-        )
-    );
-    $itemSet = array();
+        ]
+    ];
+    $itemSet = [];
     $nl = "<p>";
     for ($idx = 0; $idx < $loops2do; $idx ++) {
-        $dummy = getItemsFromSimpleXMLObj(array(
+        $dummy = getItemsFromSimpleXMLObj([
             $xmlIssue[$idx]
-        ), $xmlDef);
+        ], $xmlDef);
         $dummy = $dummy[0];
 
         $isum = $l18n['issue_description'] . $nl . $dummy['description'];
@@ -247,7 +247,7 @@ function getFromMantisIssueSimpleXMLObj($xmlObj)
                 $dummy['additional_information'];
         }
 
-        $itemSet[$jdx ++] = array(
+        $itemSet[$jdx ++] = [
             'docid' => 'Mantis Task ID:' . $dummy['id'],
             'title' => ($l18n['issue_issue'] . ':' . $dummy['id'] . ' - ' .
             $dummy['summary']),
@@ -256,7 +256,7 @@ function getFromMantisIssueSimpleXMLObj($xmlObj)
             'status' => '',
             'type' => '',
             'expected_coverage' => 1
-        );
+        ];
     }
     return $itemSet;
 }

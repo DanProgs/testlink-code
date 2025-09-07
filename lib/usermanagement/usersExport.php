@@ -45,23 +45,23 @@ function initArgs()
     $args = new stdClass();
     $_REQUEST = strings_stripSlashes($_REQUEST);
 
-    $iParams = array(
-        "doAction" => array(
+    $iParams = [
+        "doAction" => [
             tlInputParameter::STRING_N,
             0,
             50
-        ),
-        "export_filename" => array(
+        ],
+        "export_filename" => [
             tlInputParameter::STRING_N,
             0,
             100
-        ),
-        "goback_url" => array(
+        ],
+        "goback_url" => [
             tlInputParameter::STRING_N,
             0,
             2048
-        )
-    );
+        ]
+    ];
 
     R_PARAMS($iParams, $args);
     $args->userID = $_SESSION['userID'];
@@ -82,9 +82,9 @@ function initializeGui($argsObj)
     $gui->nothing_todo_msg = '';
     $gui->goback_url = ! is_null($argsObj->goback_url) ? $argsObj->goback_url : '';
     $gui->export_filename = is_null($argsObj->export_filename) ? 'users.xml' : $argsObj->export_filename;
-    $gui->exportTypes = array(
+    $gui->exportTypes = [
         'XML' => 'XML'
-    );
+    ];
     return $gui;
 }
 
@@ -100,9 +100,9 @@ function doExport(&$dbHandler, $filename)
     $adodbXML->setRootTagName('users');
     $adodbXML->setRowTagName('user');
 
-    $tables = tlObjectWithDB::getDBTables(array(
+    $tables = tlObjectWithDB::getDBTables([
         'users'
-    ));
+    ]);
     $fieldSet = 'id,login,role_id,email,first,last,locale,' .
         'default_testproject_id,active,expiration_date';
     $sql = " SELECT {$fieldSet} FROM {$tables['users']} ";

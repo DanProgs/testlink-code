@@ -21,12 +21,12 @@ testlinkInitPage($db, false, false, "checkRights");
 $templateCfg = templateConfiguration();
 
 $tables = tlObjectWithDB::getDBTables(
-    array(
+    [
         'req_coverage',
         'nodes_hierarchy',
         'tcversions',
         'node_types'
-    ));
+    ]);
 $args = initArgs();
 $tproject_mgr = new testproject($db);
 
@@ -60,7 +60,7 @@ if ($gui->has_requirements) {
     if (! is_null($tcasesID) && count($tcasesID) > 0) {
         $debugMsg = 'File: ' . basename(__FILE__) . ' - Line: ' . __LINE__ .
             ' - ';
-        $sql = " /* $debugMsg */ " .
+        $sql = " /* {$debugMsg} */ " .
             " SELECT NHA.id AS tc_id, NHA.name, NHA.parent_id AS testsuite_id," .
             " NT.description, REQC.req_id " .
             " FROM {$tables['nodes_hierarchy']} NHA " .
@@ -77,7 +77,7 @@ if ($gui->has_tc = (! is_null($uncovered) && ! empty($uncovered))) {
     $testSet = array_keys($uncovered);
     $inClause = implode(',', $testSet);
     $debugMsg = 'File: ' . basename(__FILE__) . ' - Line: ' . __LINE__ . ' - ';
-    $sql = "/* $debugMsg */ " .
+    $sql = "/* {$debugMsg} */ " .
         " SELECT distinct NHA.id AS tc_id, TCV.tc_external_id " .
         " FROM {$tables['nodes_hierarchy']} NHA, " .
         " {$tables['nodes_hierarchy']} NHB, " .
@@ -88,12 +88,12 @@ if ($gui->has_tc = (! is_null($uncovered) && ! empty($uncovered))) {
     foreach ($external_id as $key => $value) {
         $uncovered[$key]['external_id'] = $value['tc_external_id'];
     }
-    $opt = array(
+    $opt = [
         'write_button_only_if_linked' => 1
-    );
-    $filters = array(
+    ];
+    $filters = [
         'testcases' => $testSet
-    );
+    ];
     $out = gen_spec_view($db, 'uncoveredtestcases', $args->tproject_id,
         $args->tproject_id, null, $uncovered, null, $filters, $opt);
 

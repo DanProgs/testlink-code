@@ -10,7 +10,7 @@
  */
 $method = 'createTestCase';
 
-$args = array();
+$args = [];
 $args["devKey"] = '985978c915f50e47a4b1a54a943d1b76';
 
 $args["testprojectid"] = $env->tlProjectID;
@@ -20,11 +20,11 @@ $args["summary"] = 'Test Case created via API';
 $args["preconditions"] = 'Test Link API Up & Running';
 $args["authorlogin"] = 'admin';
 $args["checkduplicatedname"] = 0;
-$args["steps"][] = array(
+$args["steps"][] = [
     'step_number' => 1,
     'actions' => 'Start Server',
     'expected_results' => 'green light'
-);
+];
 
 $unitTestDescription = "";
 echo $unitTestDescription;

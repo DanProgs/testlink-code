@@ -100,10 +100,10 @@ switch ($args->edit) {
 
             if (null != $method) {
                 $result = 'ok';
-                $glOpt = array(
+                $glOpt = [
                     'output' => 'thin',
                     'active' => 1
-                );
+                ];
 
                 for ($idx = 0; $idx < $loop2do; $idx ++) {
                     $ltcv = $tcaseMgr->getLastVersionInfo($tcs[$idx], $glOpt);
@@ -132,10 +132,10 @@ switch ($args->edit) {
 
         // Now we work only on latest active version.
         // We also need to check if has been executed
-        $glOpt = array(
+        $glOpt = [
             'output' => 'thin',
             'active' => 1
-        );
+        ];
         $ltcv = $tcaseMgr->getLastVersionInfo($args->id, $glOpt);
         $latestActiveVersionID = $ltcv['tcversion_id'];
 
@@ -156,9 +156,9 @@ switch ($args->edit) {
         $opt_cfg->to->lbl = lang_get('assigned_kword');
         $opt_cfg->to->map = $doRecall ? $tcaseMgr->get_keywords_map($args->id,
             $latestActiveVersionID,
-            array(
+            [
                 'orderByClause' => " ORDER BY keyword ASC "
-            )) : null;
+            ]) : null;
         break;
 }
 
@@ -179,49 +179,49 @@ function initArgs(&$opt_cfg)
 {
     $rl_html_name = $opt_cfg->js_ot_name . "_newRight";
 
-    $iParams = array(
-        "id" => array(
+    $iParams = [
+        "id" => [
             tlInputParameter::INT_N
-        ),
-        "edit" => array(
+        ],
+        "edit" => [
             tlInputParameter::STRING_N,
             0,
             100
-        ),
-        "assigntestcase" => array(
+        ],
+        "assigntestcase" => [
             tlInputParameter::STRING_N,
             0,
             1
-        ),
-        "assigntestsuite" => array(
+        ],
+        "assigntestsuite" => [
             tlInputParameter::STRING_N,
             0,
             1
-        ),
-        "removetestcase" => array(
+        ],
+        "removetestcase" => [
             tlInputParameter::STRING_N,
             0,
             1
-        ),
-        "removetestsuite" => array(
+        ],
+        "removetestsuite" => [
             tlInputParameter::STRING_N,
             0,
             1
-        ),
-        "removealltestcase" => array(
+        ],
+        "removealltestcase" => [
             tlInputParameter::STRING_N,
             0,
             1
-        ),
-        "removealltestsuite" => array(
+        ],
+        "removealltestsuite" => [
             tlInputParameter::STRING_N,
             0,
             1
-        ),
-        $rl_html_name => array(
+        ],
+        $rl_html_name => [
             tlInputParameter::STRING_N
-        )
-    );
+        ]
+    ];
 
     $args = new stdClass();
     $pParams = R_PARAMS($iParams, $args);

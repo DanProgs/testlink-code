@@ -179,8 +179,8 @@ class tlMetaString extends tlObject
                 $this->helper->bDontFireEvent);
         }
 
-        $subjects = array();
-        $replacements = array();
+        $subjects = [];
+        $replacements = [];
         $params = (array) $this->helper->params;
         for ($i = 0; $i < count($params); $i ++) {
             $param = $params[$i];

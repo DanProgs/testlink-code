@@ -27,7 +27,7 @@
 // require('aouth.azuread.inc.php');
 //
 // -------------------------------------------------------------
-$tlCfg->OAuthServers['azuread'] = array();
+$tlCfg->OAuthServers['azuread'] = [];
 
 $tlCfg->OAuthServers['azuread']['redirect_uri'] = (empty($_SERVER['HTTPS']) ? 'http://' : 'https://') .
     $_SERVER['HTTP_HOST'] . '/login.php';

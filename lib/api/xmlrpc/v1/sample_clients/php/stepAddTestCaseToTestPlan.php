@@ -28,7 +28,7 @@ global $env;
 global $tlTestCasePrefix;
 
 $unitTestDescription = "";
-$args = array();
+$args = [];
 $args["devKey"] = isset($_REQUEST['apiKey']) ? $_REQUEST['apiKey'] : $tlDevKey;
 $args["testprojectid"] = $env->tlProjectID;
 $args["testplanid"] = $env->tlPlanID;

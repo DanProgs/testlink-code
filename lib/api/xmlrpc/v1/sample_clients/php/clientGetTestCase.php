@@ -19,7 +19,7 @@ $devKey = md5('admin');
 $method = 'getTestCase';
 $test_num = 0;
 
-$args = array();
+$args = [];
 $devKey = isset($_REQUEST['apiKey']) ? $_REQUEST['apiKey'] : 'developer';
 $args["devKey"] = $devKey;
 
@@ -38,7 +38,7 @@ $client->debug = $debug;
 runTest($client, $method, $args, $test_num);
 // ---------------------------------------------------------------------------------
 
-$args = array();
+$args = [];
 $args["devKey"] = isset($_REQUEST['apiKey']) ? $_REQUEST['apiKey'] : $devKey;
 $args["testcaseexternalid"] = 'API-2';
 $args["version"] = 1;
@@ -56,7 +56,7 @@ $client->debug = $debug;
 runTest($client, $method, $args);
 // ---------------------------------------------------------------------------------
 
-$args = array();
+$args = [];
 $args["devKey"] = isset($_REQUEST['apiKey']) ? $_REQUEST['apiKey'] : $devKey;
 $args["testcaseid"] = '1667';
 $args["version"] = 1;
@@ -74,7 +74,7 @@ $client->debug = $debug;
 runTest($client, $method, $args);
 // ---------------------------------------------------------------------------------
 
-$args = array();
+$args = [];
 $args["devKey"] = isset($_REQUEST['apiKey']) ? $_REQUEST['apiKey'] : $devKey;
 $args["testcaseexternalid"] = 'API-2';
 $args["version"] = 3;

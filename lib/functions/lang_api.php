@@ -20,10 +20,10 @@
  **/
 
 // lang_load call
-$g_lang_strings = array();
+$g_lang_strings = [];
 
 # stack for language overrides
-$g_lang_overrides = array();
+$g_lang_overrides = [];
 
 /**
  * Retrieves an internationalized string
@@ -181,7 +181,7 @@ function lang_get_smarty($params, $smarty)
         if (count($labels2translate) == 1) {
             $myLabels = lang_get($params['s'], $myLocale);
         } else {
-            $myLabels = array();
+            $myLabels = [];
             foreach ($labels2translate as $str) {
                 $str2search = trim($str);
                 $myLabels[$str2search] = lang_get($str2search, $myLocale);
@@ -296,7 +296,7 @@ function localize_array($input_array)
  */
 function init_labels($label2translate)
 {
-    $ret = array();
+    $ret = [];
     foreach ($label2translate as $key => $label) {
         $ret[$key] = is_null($label) ? lang_get($key) : lang_get($label);
     }
@@ -367,10 +367,10 @@ function localize_dateOrTimeStamp($params, $smarty, $what, $value)
         // a MSSQL PHP Drivers format
         // YYYY-MM-DDTHH:MM:SSZ
         //
-        $value = trim(str_replace(array(
+        $value = trim(str_replace([
             'T',
             'Z'
-        ), ' ', $value));
+        ], ' ', $value));
         $value = strtotime($value);
     }
 
@@ -390,10 +390,10 @@ function localizeTimeStamp($value, $format)
         // a MSSQL PHP Drivers format
         // YYYY-MM-DDTHH:MM:SSZ
         //
-        $value = trim(str_replace(array(
+        $value = trim(str_replace([
             'T',
             'Z'
-        ), ' ', $value));
+        ], ' ', $value));
         $value = strtotime($value);
     }
 

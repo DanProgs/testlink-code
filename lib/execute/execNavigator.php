@@ -81,10 +81,10 @@ function initializeGui(&$dbH, &$control)
     $grants = checkAccessToExec($dbH, $control);
 
     // feature to enable/disable
-    $gui->features = array(
+    $gui->features = [
         'export' => false,
         'import' => false
-    );
+    ];
     $gui->execAccess = false;
     if ($grants['testplan_execute']) {
         $gui->features['export'] = true;
@@ -107,9 +107,9 @@ function initializeGui(&$dbH, &$control)
 function checkAccessToExec(&$dbH, &$ct)
 {
     $tplan_id = intval($ct->args->testplan_id);
-    $sch = tlObject::getDBTables(array(
+    $sch = tlObject::getDBTables([
         'testplans'
-    ));
+    ]);
     $sql = "SELECT testproject_id FROM {$sch['testplans']} " . "WHERE id=" .
         $tplan_id;
     $rs = $dbH->get_recordset($sql);
@@ -121,10 +121,10 @@ function checkAccessToExec(&$dbH, &$ct)
 
     $user = $_SESSION['currentUser'];
     $grants = null;
-    $k2a = array(
+    $k2a = [
         'testplan_execute',
         'exec_ro_access'
-    );
+    ];
     foreach ($k2a as $r2c) {
         $grants[$r2c] = false;
         if ($user->hasRight($dbH, $r2c, $tproject_id, $tplan_id, true) ||

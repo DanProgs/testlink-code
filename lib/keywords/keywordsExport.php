@@ -38,30 +38,30 @@ $smarty->display($templateCfg->template_dir . $templateCfg->default_template);
  */
 function initArgs(&$dbHandler)
 {
-    $ipcfg = array(
-        "doAction" => array(
+    $ipcfg = [
+        "doAction" => [
             "GET",
             tlInputParameter::STRING_N,
             0,
             50
-        ),
-        "tproject_id" => array(
+        ],
+        "tproject_id" => [
             "GET",
             tlInputParameter::INT_N
-        ),
-        "export_filename" => array(
+        ],
+        "export_filename" => [
             "POST",
             tlInputParameter::STRING_N,
             0,
             255
-        ),
-        "exportType" => array(
+        ],
+        "exportType" => [
             "POST",
             tlInputParameter::STRING_N,
             0,
             255
-        )
-    );
+        ]
+    ];
 
     $args = new stdClass();
     I_PARAMS($ipcfg, $args);
@@ -77,16 +77,16 @@ function initArgs(&$dbHandler)
     $env['tplan_id'] = 0;
 
     $check = new stdClass();
-    $check->items = array(
+    $check->items = [
         'mgt_view_key'
-    );
+    ];
     $check->mode = 'and';
     checkAccess($dbHandler, $args->user, $env, $check);
 
     $tproj_mgr = new testproject($dbHandler);
-    $dm = $tproj_mgr->get_by_id($args->tproject_id, array(
+    $dm = $tproj_mgr->get_by_id($args->tproject_id, [
         'output' => 'name'
-    ));
+    ]);
     $args->tproject_name = $dm['name'];
 
     return $args;
@@ -124,9 +124,9 @@ function do_export(&$db, &$smarty, &$args)
 
     if (null != $pfx) {
         $cu = getKeywordsEnv($db, $args->user, $args->tproject_id,
-            array(
+            [
                 'usage' => 'csvExport'
-            ));
+            ]);
 
         $content = exportKeywordsToCSV($cu->kwOnTCV);
         downloadContentsToFile($content, $args->export_filename);
@@ -164,12 +164,12 @@ function initializeGui(&$argsObj)
  */
 function exportKeywordsToCSV($kwSet)
 {
-    $keys = array(
+    $keys = [
         "keyword",
         "notes",
         "tcv_qty"
-    );
-    return exportDataToCSV($kwSet, $keys, $keys, array(
+    ];
+    return exportDataToCSV($kwSet, $keys, $keys, [
         'addHeader' => 1
-    ));
+    ]);
 }

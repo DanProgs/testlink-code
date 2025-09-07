@@ -47,7 +47,7 @@ function createExecNotesWebEditor($id, $basehref, $editorCfg, $content = null)
     //
     // Rows and Cols values are useless for FCKeditor.
     //
-    $of = web_editor("exec_notes_$id", $basehref, $editorCfg);
+    $of = web_editor("exec_notes_{$id}", $basehref, $editorCfg);
     $of->Value = $content;
     $editor = $of->CreateHTML(10, 60);
     unset($of);
@@ -56,14 +56,14 @@ function createExecNotesWebEditor($id, $basehref, $editorCfg, $content = null)
 
 function initArgs()
 {
-    $iParams = array(
-        "exec_id" => array(
+    $iParams = [
+        "exec_id" => [
             tlInputParameter::INT_N
-        ),
-        "readonly" => array(
+        ],
+        "readonly" => [
             tlInputParameter::INT_N
-        )
-    );
+        ]
+    ];
     $args = new stdClass();
     R_PARAMS($iParams, $args);
     return $args;

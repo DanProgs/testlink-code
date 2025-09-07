@@ -63,28 +63,28 @@ function initArgs()
     // Take care of proper escaping when magic_quotes_gpc is enabled
     $_REQUEST = strings_stripSlashes($_REQUEST);
 
-    $iParams = array(
-        "exec_id" => array(
+    $iParams = [
+        "exec_id" => [
             tlInputParameter::INT_N
-        ),
-        "doAction" => array(
+        ],
+        "doAction" => [
             tlInputParameter::STRING_N,
             0,
             100
-        ),
-        "notes" => array(
+        ],
+        "notes" => [
             tlInputParameter::STRING_N
-        ),
-        "tcversion_id" => array(
+        ],
+        "tcversion_id" => [
             tlInputParameter::INT_N
-        ),
-        "tplan_id" => array(
+        ],
+        "tplan_id" => [
             tlInputParameter::INT_N
-        ),
-        "tproject_id" => array(
+        ],
+        "tproject_id" => [
             tlInputParameter::INT_N
-        )
-    );
+        ]
+    ];
 
     $args = new stdClass();
     R_PARAMS($iParams, $args);

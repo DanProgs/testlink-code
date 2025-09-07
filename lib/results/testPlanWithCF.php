@@ -33,10 +33,10 @@ $gui->tproject_name = $args->tproject_name;
 $gui->tplan_name = $args->tplan_name;
 $gui->tcasePrefix = $tproject_mgr->getTestCasePrefix($args->tproject_id);
 
-$labels = init_labels(array(
+$labels = init_labels([
     'design' => null
-));
-$testCaseSet = array();
+]);
+$testCaseSet = [];
 
 if ($tplan_mgr->count_testcases($args->tplan_id) > 0) {
     $resultsCfg = config_get('results');
@@ -62,7 +62,7 @@ if ($tplan_mgr->count_testcases($args->tplan_id) > 0) {
     // Every row is an execution with exec data plus a column that contains following map:
     // 'cfields' => CFNAME1 => value
     // CFNAME2 => value
-    $result = array();
+    $result = [];
     if (! is_null($cf_map)) {
         foreach ($cf_map as $exec_id => $exec_info) {
             // Get common exec info and remove useless keys
@@ -105,35 +105,35 @@ function buildExtTable($gui, $tcaseMgr, $labels, $edit_icon)
 
     $table = null;
     if (! empty($gui->resultSet)) {
-        $columns = array();
-        $columns[] = array(
+        $columns = [];
+        $columns[] = [
             'title_key' => 'test_suite'
-        );
-        $columns[] = array(
+        ];
+        $columns[] = [
             'title_key' => 'test_case',
             'width' => 80,
             'type' => 'text'
-        );
+        ];
 
         foreach ($gui->cfields as $cfield) {
-            $dummy = array(
+            $dummy = [
                 'title' => $cfield['label'],
                 'col_id' => 'id_cf_' . $cfield['name'],
                 'type' => 'text'
-            );
+            ];
             $columns[] = $dummy;
         }
 
         // Extract the relevant data and build a matrix
-        $matrixData = array();
+        $matrixData = [];
 
         foreach ($gui->resultSet as $item) {
-            $rowData = array();
+            $rowData = [];
 
             // Get test suite path
-            $dummy = $tcaseMgr->getPathLayered(array(
+            $dummy = $tcaseMgr->getPathLayered([
                 $item['tcase_id']
-            ));
+            ]);
             $dummy = end($dummy);
             $rowData[] = $dummy['value'];
 
@@ -160,9 +160,9 @@ function buildExtTable($gui, $tcaseMgr, $labels, $edit_icon)
 
         $table = new tlExtTable($columns, $matrixData, 'tl_table_tplan_with_cf');
 
-        $table->addCustomBehaviour('text', array(
+        $table->addCustomBehaviour('text', [
             'render' => 'columnWrap'
-        ));
+        ]);
 
         $table->setGroupByColumnName(lang_get('test_suite'));
         $table->setSortByColumnName(lang_get('test_case'));
@@ -183,14 +183,14 @@ function buildExtTable($gui, $tcaseMgr, $labels, $edit_icon)
  */
 function initArgs(&$tplan_mgr)
 {
-    $iParams = array(
-        "format" => array(
+    $iParams = [
+        "format" => [
             tlInputParameter::INT_N
-        ),
-        "tplan_id" => array(
+        ],
+        "tplan_id" => [
             tlInputParameter::INT_N
-        )
-    );
+        ]
+    ];
 
     $args = new stdClass();
     R_PARAMS($iParams, $args);

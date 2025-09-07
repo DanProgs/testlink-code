@@ -51,10 +51,10 @@ if ($args->doUpload) {
             }
         }
     } else {
-        $gui->file_check = array(
+        $gui->file_check = [
             'status_ok' => 0,
             'msg' => lang_get('please_choose_file_to_import')
-        );
+        ];
         $args->importType = null;
     }
 }
@@ -100,24 +100,24 @@ function importResults(&$db, &$xml, $context)
         // if yes overwrite GUI selection with value get from file
         //
         $executionContext = $context;
-        $contextKeys = array(
-            'testproject' => array(
+        $contextKeys = [
+            'testproject' => [
                 'id' => 'tprojectID',
                 'name' => 'tprojectName'
-            ),
-            'testplan' => array(
+            ],
+            'testplan' => [
                 'id' => 'tplanID',
                 'name' => 'tplanName'
-            ),
-            'build' => array(
+            ],
+            'build' => [
                 'id' => 'buildID',
                 'name' => 'buildName'
-            ),
-            'platform' => array(
+            ],
+            'platform' => [
                 'id' => 'platformID',
                 'name' => 'platformName'
-            )
-        );
+            ]
+        ];
 
         foreach ($contextKeys as $xmlkey => $execElem) {
             if ($joker = $xml->$xmlkey) {
@@ -162,21 +162,21 @@ function saveImportedResultData(&$db, $resultData, $context, $options)
 
     $debugMsg = ' FUNCTION: ' . __FUNCTION__;
     $tables = tlObjectWithDB::getDBTables(
-        array(
+        [
             'executions',
             'execution_bugs'
-        ));
+        ]);
 
     $tcaseCfg = config_get('testcase_cfg');
 
-    $l10n = array(
+    $l10n = [
         'import_results_tc_not_found' => '',
         'import_results_invalid_result' => '',
         'tproject_id_not_found' => '',
         'import_results_ok' => '',
         'invalid_cf' => '',
         'import_results_skipped' => ''
-    );
+    ];
 
     foreach ($l10n as $key => $value) {
         $l10n[$key] = lang_get($key);
@@ -189,7 +189,7 @@ function saveImportedResultData(&$db, $resultData, $context, $options)
     }
 
     // Get Column definitions to get size dinamically instead of create constants
-    $columnDef = array();
+    $columnDef = [];
     $adodbObj = $db->get_dbmgr_object();
     $columnDef['execution_bugs'] = $adodbObj->MetaColumns(
         $tables['execution_bugs']);
@@ -205,7 +205,7 @@ function saveImportedResultData(&$db, $resultData, $context, $options)
 
     $tcaseMgr = new testcase($db);
 
-    $resultMap = array();
+    $resultMap = [];
     $tplan_mgr = null;
 
     $tc_qty = count($resultData);
@@ -231,22 +231,22 @@ function saveImportedResultData(&$db, $resultData, $context, $options)
     //
     // execution type if not present -> set to MANUAL
     // if presente is valid i.e. inside the TL domain
-    $checks = array();
+    $checks = [];
     $checks['msg'] = null;
     $dummy = null;
 
     if (! is_null($context->tprojectID) && intval($context->tprojectID) > 0) {
-        $dummy = array(
+        $dummy = [
             $tproject_mgr->get_by_id($context->tprojectID,
-                array(
+                [
                     'output' => 'existsByID'
-                ))
-        );
+                ])
+        ];
     } elseif (! is_null($context->tprojectName)) {
         $dummy = $tproject_mgr->get_by_name($context->tprojectName, null,
-            array(
+            [
                 'output' => 'existsByName'
-            ));
+            ]);
     }
 
     $checks['status_ok'] = ! is_null($dummy);
@@ -257,9 +257,9 @@ function saveImportedResultData(&$db, $resultData, $context, $options)
 
     if (! $checks['status_ok']) {
         foreach ($checks['msg'] as $warning) {
-            $resultMap[] = array(
+            $resultMap[] = [
                 $warning
-            );
+            ];
         }
     }
 
@@ -270,17 +270,17 @@ function saveImportedResultData(&$db, $resultData, $context, $options)
     $dummy = null;
     if (! is_null($context->tplanID) && intval($context->tplanID) > 0) {
         $dummy = $tplan_mgr->get_by_id($context->tplanID,
-            array(
+            [
                 'output' => 'minimun'
-            ));
+            ]);
         if (! is_null($dummy)) {
             $dummy['id'] = $context->tplanID;
         }
     } elseif (! is_null($context->tplanName)) {
         $dummy = $tplan_mgr->get_by_name($context->tplanName,
-            $context->tprojectID, array(
+            $context->tprojectID, [
                 'output' => 'minimun'
-            ));
+            ]);
         if (! is_null($dummy)) {
             $dummy = $dummy[0];
         }
@@ -299,33 +299,33 @@ function saveImportedResultData(&$db, $resultData, $context, $options)
     $dummy = null;
     $tplan_mgr->platform_mgr->setTestProjectID($context->tprojectID);
     if (! is_null($context->platformID) && intval($context->platformID) > 0) {
-        $dummy = array(
+        $dummy = [
             $tplan_mgr->platform_mgr->getByID($context->platformID)
-        );
+        ];
     } elseif (property_exists($context, 'platformName') &&
         ! is_null($context->platformName)) {
         if (! is_null(
             $xx = $tplan_mgr->platform_mgr->getID($context->platformName))) {
-            $dummy = array(
-                0 => array(
+            $dummy = [
+                0 => [
                     'id' => $xx
-                )
-            );
+                ]
+            ];
         }
     }
     if (! is_null($dummy)) {
         $context->platformID = $dummy[0]['id'];
     }
 
-    $optGB = array(
+    $optGB = [
         'tplan_id' => $context->tplanID,
         'output' => 'minimun'
-    );
+    ];
     $dummy = null;
     if (! is_null($context->buildID) && intval($context->buildID) > 0) {
-        $dummy = array(
+        $dummy = [
             $build_mgr->get_by_id($context->buildID, $optGB)
-        );
+        ];
     } elseif (! is_null($context->buildName)) {
         $dummy = $build_mgr->get_by_name($context->buildName, $optGB);
     }
@@ -358,9 +358,9 @@ function saveImportedResultData(&$db, $resultData, $context, $options)
             $using_external_id = ($tcase_external_id != "");
         } else {
             foreach ($checks['msg'] as $warning) {
-                $resultMap[] = array(
+                $resultMap[] = [
                     $warning
-                );
+                ];
             }
         }
 
@@ -407,19 +407,19 @@ function saveImportedResultData(&$db, $resultData, $context, $options)
                         $tcversion_id);
                 }
 
-                $idCard = array(
+                $idCard = [
                     'id' => $tcase_id,
                     'version_id' => $tcversion_id
-                );
-                $exco = array(
+                ];
+                $exco = [
                     'tplan_id' => $context->tplanID,
                     'platform_id' => $context->platformID,
                     'build_id' => $context->buildID
-                );
+                ];
                 $lexInfo = $tcaseMgr->getLatestExecSingleContext($idCard, $exco,
-                    array(
+                    [
                         'output' => 'timestamp'
-                    ));
+                    ]);
                 $doInsert = true;
                 if (! is_null($lexInfo)) {
                     $doInsert = ($lexInfo[$tcase_id][0]['execution_ts'] !=
@@ -428,7 +428,7 @@ function saveImportedResultData(&$db, $resultData, $context, $options)
                 }
 
                 if ($doInsert) {
-                    $sql = " /* $debugMsg */ " .
+                    $sql = " /* {$debugMsg} */ " .
                         " INSERT INTO {$tables['executions']} (build_id,tester_id,status,testplan_id," .
                         " tcversion_id,execution_ts,notes,tcversion_number,platform_id,execution_type" .
                         ($addExecDuration ? ',execution_duration' : '') . ")" .
@@ -448,10 +448,10 @@ function saveImportedResultData(&$db, $resultData, $context, $options)
                     if (isset($tcase_exec['steps']) &&
                         ! is_null($tcase_exec['steps']) && $execution_id > 0) {
                         $stepSet = $tcaseMgr->getStepsSimple($tcversion_id, 0,
-                            array(
+                            [
                                 'fields2get' => 'TCSTEPS.step_number,TCSTEPS.id',
                                 'accessKey' => 'step_number'
-                            ));
+                            ]);
                         $sc = count($tcase_exec['steps']);
 
                         for ($sx = 0; $sx < $sc; $sx ++) {
@@ -501,12 +501,12 @@ function saveImportedResultData(&$db, $resultData, $context, $options)
 
                         foreach ($tcase_exec['bug_id'] as $bug_id) {
                             $bug_id = trim($bug_id);
-                            $sql = " /* $debugMsg */ " .
+                            $sql = " /* {$debugMsg} */ " .
                                 " SELECT execution_id AS check_qty FROM  {$tables['execution_bugs']} " .
                                 " WHERE bug_id = '{$bug_id}' AND execution_id={$execution_id} ";
                             $rs = $db->get_recordset($sql);
                             if (is_null($rs)) {
-                                $sql = " /* $debugMsg */ " .
+                                $sql = " /* {$debugMsg} */ " .
                                     " INSERT INTO {$tables['execution_bugs']} (bug_id,execution_id)" .
                                     " VALUES ('" . $db->prepare_string($bug_id) .
                                     "', {$execution_id} )";
@@ -545,9 +545,9 @@ function saveImportedResultData(&$db, $resultData, $context, $options)
                     }
 
                     if (! is_null($message)) {
-                        $resultMap[] = array(
+                        $resultMap[] = [
                             $message
-                        );
+                        ];
                     }
                     $msgTxt = $l10n['import_results_ok'];
                 }
@@ -557,9 +557,9 @@ function saveImportedResultData(&$db, $resultData, $context, $options)
         }
 
         if (! is_null($message)) {
-            $resultMap[] = array(
+            $resultMap[] = [
                 $message
-            );
+            ];
         }
     }
     return $resultMap;
@@ -605,7 +605,7 @@ function importExecutionFromXML(&$xmlTCExec)
         return null;
     }
 
-    $execInfo = array();
+    $execInfo = [];
     $execInfo['tcase_id'] = isset($xmlTCExec["id"]) ? (int) $xmlTCExec["id"] : 0;
     $execInfo['tcase_external_id'] = (string) $xmlTCExec["external_id"];
 
@@ -629,15 +629,15 @@ function importExecutionFromXML(&$xmlTCExec)
     $execInfo['steps'] = null;
     if (property_exists($xmlTCExec, 'steps') &&
         property_exists($xmlTCExec->steps, 'step')) {
-        $itemStructure['elements'] = array(
-            'integer' => array(
+        $itemStructure['elements'] = [
+            'integer' => [
                 "step_number" => 'intval'
-            ),
-            'string' => array(
+            ],
+            'string' => [
                 "result" => 'trim',
                 "notes" => 'trim'
-            )
-        );
+            ]
+        ];
         $execInfo['steps'] = getItemsFromSimpleXMLObj($xmlTCExec->steps->step,
             $itemStructure);
     }
@@ -645,12 +645,12 @@ function importExecutionFromXML(&$xmlTCExec)
     $execInfo['custom_fields'] = null;
     if (property_exists($xmlTCExec, 'custom_fields') &&
         property_exists($xmlTCExec->custom_fields, 'custom_field')) {
-        $itemStructure['elements'] = array(
-            'string' => array(
+        $itemStructure['elements'] = [
+            'string' => [
                 "name" => 'trim',
                 "value" => 'trim'
-            )
-        );
+            ]
+        ];
         $execInfo['custom_fields'] = getItemsFromSimpleXMLObj(
             $xmlTCExec->custom_fields->custom_field, $itemStructure);
     }
@@ -666,22 +666,22 @@ function importExecutionFromXML(&$xmlTCExec)
  */
 function checkXMLExecutionResults($fileName)
 {
-    $file_check = array(
+    $file_check = [
         'status_ok' => 0,
         'msg' => 'xml_ko'
-    );
+    ];
     $xml = @simplexml_load_file_wrapper($fileName);
     if ($xml !== false) {
-        $file_check = array(
+        $file_check = [
             'status_ok' => 1,
             'msg' => 'ok'
-        );
+        ];
         $elementName = $xml->getName();
         if ($elementName != 'results') {
-            $file_check = array(
+            $file_check = [
                 'status_ok' => 0,
                 'msg' => lang_get('wrong_results_import_format')
-            );
+            ];
         }
     }
     return $file_check;
@@ -746,16 +746,16 @@ function initArgs(&$dbHandler)
 function checkExecValues(&$db, &$tcaseMgr, &$user_mgr, $tcaseCfg, &$execValues,
     &$columnDef)
 {
-    $tables = tlObjectWithDB::getDBTables(array(
+    $tables = tlObjectWithDB::getDBTables([
         'users',
         'execution_bugs'
-    ));
-    $checks = array(
+    ]);
+    $checks = [
         'status_ok' => false,
         'tcase_id' => 0,
         'tester_id' => 0,
-        'msg' => array()
-    );
+        'msg' => []
+    ];
     $tcase_id = $execValues['tcase_id'];
     $tcase_external_id = trim($execValues['tcase_external_id']);
     $using_external_id = ($tcase_external_id != ""); // external_id has precedence over internal id
@@ -851,13 +851,13 @@ function initializeGui(&$argsObj)
     $guiObj->platformID = $argsObj->platformID;
     $guiObj->tplanID = $argsObj->tplanID;
 
-    $guiObj->file_check = array(
+    $guiObj->file_check = [
         'status_ok' => 1,
         'msg' => 'ok'
-    );
-    $guiObj->importTypes = array(
+    ];
+    $guiObj->importTypes = [
         "XML" => "XML"
-    );
+    ];
     $guiObj->importLimit = config_get('import_file_max_size_bytes');
     $guiObj->doImport = ($argsObj->importType != "");
     $guiObj->testprojectName = $argsObj->testprojectName;

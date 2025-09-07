@@ -20,12 +20,12 @@ $imgSet = $smarty->getImages();
 $templateCfg = templateConfiguration();
 $charset = config_get('charset');
 $labels = init_labels(
-    array(
+    [
         'design' => null,
         'execution' => null,
         'no_linked_tc_cf' => null,
         'execution_history' => null
-    ));
+    ]);
 
 $tcaseMgr = new testcase($db);
 $args = initArgs($db);
@@ -40,14 +40,14 @@ if ($args->doIt) {
         $args->platforms);
 
     // Extract the relevant data and build a matrix
-    $matrixData = array();
+    $matrixData = [];
     foreach ($gui->resultSet as $item) {
-        $rowData = array();
+        $rowData = [];
 
         // Get test suite path
-        $dummy = $tcaseMgr->getPathLayered(array(
+        $dummy = $tcaseMgr->getPathLayered([
             $item['tcase_id']
-        ));
+        ]);
         $dummy = end($dummy);
         $rowData[] = $dummy['value'];
 
@@ -85,11 +85,11 @@ if ($args->doIt) {
                 $item['execution_ts']);
 
         // Use array for status to get correct rendering and sorting
-        $rowData[] = array(
+        $rowData[] = [
             'value' => $item['exec_status'],
             'text' => $gui->status_code_labels[$item['exec_status']],
             'cssClass' => $gui->code_status[$item['exec_status']] . '_text'
-        );
+        ];
 
         $hasValue = false;
 
@@ -113,9 +113,9 @@ if ($args->doIt) {
 
     if (! empty($matrixData)) {
         $table = new tlExtTable($columns, $matrixData, 'tl_table_tc_with_cf');
-        $table->addCustomBehaviour('text', array(
+        $table->addCustomBehaviour('text', [
             'render' => 'columnWrap'
-        ));
+        ]);
 
         $table->setGroupByColumnName(lang_get('build'));
         $table->setSortByColumnName(lang_get('date'));
@@ -125,9 +125,9 @@ if ($args->doIt) {
         $table->toolbarExpandCollapseGroupsButton = true;
         $table->toolbarShowAllColumnsButton = true;
 
-        $gui->tableSet = array(
+        $gui->tableSet = [
             $table
-        );
+        ];
     } else {
         $gui->warning_msg = $labels['no_linked_tc_cf'];
     }
@@ -171,9 +171,9 @@ function initArgs(&$dbHandler)
         $argsObj->doIt = $tplan_mgr->count_testcases($argsObj->tplan_id) > 0;
         $argsObj->showPlatforms = $tplan_mgr->hasLinkedPlatforms(
             $argsObj->tplan_id);
-        $getOpt = array(
+        $getOpt = [
             'outputFormat' => 'map'
-        );
+        ];
         $argsObj->platforms = $tplan_mgr->getPlatforms($argsObj->tplan_id,
             $getOpt);
         unset($tplan_mgr);
@@ -234,7 +234,7 @@ function buildResultSet(&$dbHandler, &$guiObj, $tproject_id, $tplan_id)
 
     // this way on caller can be used on array operations, without warnings
     $guiObj->cfields = (array) $guiObj->cfields;
-    if (count($guiObj->cfields) > 0) {
+    if ($guiObj->cfields !== []) {
         foreach ($guiObj->cfields as $key => $values) {
             $cf_place_holder['cfields'][$key] = '';
         }
@@ -247,7 +247,7 @@ function buildResultSet(&$dbHandler, &$guiObj, $tproject_id, $tplan_id)
     // Every row is an execution with exec data plus a column that contains following map:
     // 'cfields' => CFNAME1 => value
     // CFNAME2 => value
-    $guiObj->resultSet = array();
+    $guiObj->resultSet = [];
 
     if (! is_null($cf_map)) {
         foreach ($cf_map as $exec_id => $exec_info) {
@@ -283,60 +283,60 @@ function buildResultSet(&$dbHandler, &$guiObj, $tproject_id, $tplan_id)
  */
 function getColumnsDefinition($showPlatforms, $customFields, $platforms)
 {
-    $colDef = array(
-        array(
+    $colDef = [
+        [
             'title_key' => 'test_suite',
             'width' => 80,
             'type' => 'text'
-        ),
-        array(
+        ],
+        [
             'title_key' => 'test_case',
             'width' => 80,
             'type' => 'text'
-        ),
-        array(
+        ],
+        [
             'title_key' => 'version',
             'width' => 20
-        )
-    );
+        ]
+    ];
 
     if ($showPlatforms) {
-        $colDef[] = array(
+        $colDef[] = [
             'title_key' => 'platform',
             'width' => 40,
             'filter' => 'list',
             'filterOptions' => $platforms
-        );
+        ];
     }
-    array_push($colDef, array(
+    array_push($colDef, [
         'title_key' => 'build',
         'width' => 35
-    ), array(
+    ], [
         'title_key' => 'th_owner',
         'width' => 60
-    ), array(
+    ], [
         'title_key' => 'date',
         'width' => 60
-    ), array(
+    ], [
         'title_key' => 'status',
         'type' => 'status',
         'width' => 30
-    ));
+    ]);
 
-    $colDef[] = array(
+    $colDef[] = [
         'title_key' => 'title_execution_notes',
         'type' => 'text'
-    );
+    ];
 
     foreach ($customFields as $cfield) {
         // if custom field is time for computing execution time do not waste space
         // $cfield['id'] is used instead of $cfield['name'] to fix the issue regarding dot on CF name
         // 20130324 - need to understand if col_id is really needed
         //
-        $dummy = array(
+        $dummy = [
             'title' => $cfield['label'],
             'col_id' => 'id_cf_' . $cfield['id']
-        );
+        ];
         if ($cfield['name'] == 'CF_EXEC_TIME') {
             $dummy['width'] = 20;
         } else {

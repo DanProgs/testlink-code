@@ -29,7 +29,7 @@ $tcaseMgr = new testcase($db);
 $tcase_cfg = config_get('testcase_cfg');
 $charset = config_get('charset');
 $filter = null;
-list ($args, $filter) = initArgs($tproject_mgr);
+[$args, $filter] = initArgs($tproject_mgr);
 
 $ga = initializeGui($args, $tproject_mgr);
 $gx = $tcaseMgr->getTcSearchSkeleton($args);
@@ -42,7 +42,7 @@ $emptyTestProject = true;
 
 if ($args->tprojectID && $args->doAction == 'doSearch') {
     $tables = tlObjectWithDB::getDBTables(
-        array(
+        [
             'cfield_design_values',
             'nodes_hierarchy',
             'requirements',
@@ -51,17 +51,17 @@ if ($args->tprojectID && $args->doAction == 'doSearch') {
             'testcase_keywords',
             'tcversions',
             'users'
-        ));
+        ]);
 
     $gui->tcasePrefix = $tproject_mgr->getTestCasePrefix($args->tprojectID);
     $gui->tcasePrefix .= $tcase_cfg->glue_character;
 
-    $from = array(
+    $from = [
         'by_keyword_id' => ' ',
         'by_custom_field' => ' ',
         'by_requirement_doc_id' => '',
         'users' => ''
-    );
+    ];
     $tcaseID = null;
     $emptyTestProject = false;
 
@@ -119,11 +119,11 @@ if ($args->tprojectID && $args->doAction == 'doSearch') {
             " TCSTEPS.expected_results like '%{$args->expected_results}%' ";
     }
 
-    $k2w = array(
+    $k2w = [
         'name' => 'NH_TC',
         'summary' => 'TCV',
         'preconditions' => 'TCV'
-    );
+    ];
     $jollyEscaped = $db->prepare_string($args->jolly);
     foreach ($k2w as $kf => $alias) {
         if ($args->$kf != "" || $args->jolly != '') {
@@ -266,9 +266,9 @@ if ($gui->row_qty > 0) {
     if ($map) {
         $tcaseMgr = new testcase($db);
         $tcase_set = array_keys($map);
-        $options = array(
+        $options = [
             'output_format' => 'path_as_string'
-        );
+        ];
         $gui->path_info = $tproject_mgr->tree_manager->get_full_path_verbose(
             $tcase_set, $options);
         $gui->resultSet = $map;
@@ -297,31 +297,31 @@ function buildExtTable($gui, $charset, $edit_icon, $history_icon)
     $designType = $designCfg['type'];
 
     if (null != $gui->resultSet && count($gui->resultSet) > 0) {
-        $labels = array(
+        $labels = [
             'test_suite' => lang_get('test_suite'),
             'test_case' => lang_get('test_case')
-        );
-        $columns = array();
+        ];
+        $columns = [];
 
-        $columns[] = array(
+        $columns[] = [
             'title_key' => 'test_suite'
-        );
-        $columns[] = array(
+        ];
+        $columns[] = [
             'title_key' => 'test_case',
             'type' => 'text'
-        );
+        ];
 
-        $columns[] = array(
+        $columns[] = [
             'title_key' => 'summary'
-        );
+        ];
 
         // Extract the relevant data and build a matrix
-        $matrixData = array();
+        $matrixData = [];
 
         $titleSeperator = config_get('gui_title_separator_1');
 
         foreach ($gui->resultSet as $result) {
-            $rowData = array();
+            $rowData = [];
             $rowData[] = htmlentities($gui->path_info[$result['testcase_id']],
                 ENT_QUOTES, $charset);
 
@@ -355,9 +355,9 @@ function buildExtTable($gui, $charset, $edit_icon, $history_icon)
         $table->toolbarRefreshButton = false;
         $table->toolbarShowAllColumnsButton = false;
 
-        $table->addCustomBehaviour('text', array(
+        $table->addCustomBehaviour('text', [
             'render' => 'columnWrap'
-        ));
+        ]);
         $table->storeTableState = false;
     }
     return $table;
@@ -369,97 +369,97 @@ function initArgs(&$tprojectMgr)
 {
     $_REQUEST = strings_stripSlashes($_REQUEST);
 
-    $iParams = array(
-        "doAction" => array(
+    $iParams = [
+        "doAction" => [
             tlInputParameter::STRING_N,
             0,
             10
-        ),
-        "tproject_id" => array(
+        ],
+        "tproject_id" => [
             tlInputParameter::INT_N
-        ),
-        "status" => array(
+        ],
+        "status" => [
             tlInputParameter::INT_N
-        ),
-        "keyword_id" => array(
+        ],
+        "keyword_id" => [
             tlInputParameter::INT_N
-        ),
-        "version" => array(
+        ],
+        "version" => [
             tlInputParameter::INT_N,
             999
-        ),
-        "custom_field_id" => array(
+        ],
+        "custom_field_id" => [
             tlInputParameter::INT_N
-        ),
-        "name" => array(
+        ],
+        "name" => [
             tlInputParameter::STRING_N,
             0,
             50
-        ),
-        "created_by" => array(
+        ],
+        "created_by" => [
             tlInputParameter::STRING_N,
             0,
             50
-        ),
-        "edited_by" => array(
+        ],
+        "edited_by" => [
             tlInputParameter::STRING_N,
             0,
             50
-        ),
-        "summary" => array(
+        ],
+        "summary" => [
             tlInputParameter::STRING_N,
             0,
             50
-        ),
-        "steps" => array(
+        ],
+        "steps" => [
             tlInputParameter::STRING_N,
             0,
             50
-        ),
-        "expected_results" => array(
+        ],
+        "expected_results" => [
             tlInputParameter::STRING_N,
             0,
             50
-        ),
-        "custom_field_value" => array(
+        ],
+        "custom_field_value" => [
             tlInputParameter::STRING_N,
             0,
             20
-        ),
-        "targetTestCase" => array(
+        ],
+        "targetTestCase" => [
             tlInputParameter::STRING_N,
             0,
             30
-        ),
-        "preconditions" => array(
+        ],
+        "preconditions" => [
             tlInputParameter::STRING_N,
             0,
             50
-        ),
-        "requirement_doc_id" => array(
+        ],
+        "requirement_doc_id" => [
             tlInputParameter::STRING_N,
             0,
             32
-        ),
-        "importance" => array(
+        ],
+        "importance" => [
             tlInputParameter::INT_N
-        ),
-        "creation_date_from" => array(
+        ],
+        "creation_date_from" => [
             tlInputParameter::STRING_N
-        ),
-        "creation_date_to" => array(
+        ],
+        "creation_date_to" => [
             tlInputParameter::STRING_N
-        ),
-        "modification_date_from" => array(
+        ],
+        "modification_date_from" => [
             tlInputParameter::STRING_N
-        ),
-        "modification_date_to" => array(
+        ],
+        "modification_date_to" => [
             tlInputParameter::STRING_N
-        ),
-        "jolly" => array(
+        ],
+        "jolly" => [
             tlInputParameter::STRING_N
-        )
-    );
+        ]
+    ];
 
     $args = new stdClass();
     R_PARAMS($iParams, $args);
@@ -468,13 +468,13 @@ function initArgs(&$tprojectMgr)
     // remove all blanks
     // remove some html entities
     // remove ()
-    $tt = array(
+    $tt = [
         ' ',
         '<',
         '>',
         '(',
         ')'
-    );
+    ];
     $args->targetTestCase = str_replace($tt, '', $args->targetTestCase);
 
     $args->userID = intval(isset($_SESSION['userID']) ? $_SESSION['userID'] : 0);
@@ -495,19 +495,19 @@ function initArgs(&$tprojectMgr)
     }
 
     // convert "creation date from" to iso format for database usage
-    $k2w = array(
+    $k2w = [
         'creation_date_from' => '',
         'creation_date_to' => " 23:59:59",
         'modification_date_from' => '',
         'modification_date_to' => " 23:59:59"
-    );
+    ];
 
-    $k2f = array(
+    $k2f = [
         'creation_date_from' => ' creation_ts >= ',
         'creation_date_to' => 'creation_ts <= ',
         'modification_date_from' => ' modification_ts >= ',
         'modification_date_to' => ' modification_ts <= '
-    );
+    ];
 
     $dateFormat = config_get('date_format');
     $filter = null;
@@ -522,10 +522,10 @@ function initArgs(&$tprojectMgr)
         }
     }
 
-    return array(
+    return [
         $args,
         $filter
-    );
+    ];
 }
 
 /**
@@ -589,18 +589,18 @@ function initSearch(&$gui, &$argsObj, &$tprojectMgr)
     $gui->targetTestCase = (is_null($argsObj->targetTestCase) ||
         $argsObj->targetTestCase == '') ? $gui->tcasePrefix : $argsObj->targetTestCase;
 
-    $txtin = array(
+    $txtin = [
         "created_by",
         "edited_by",
         "jolly"
-    );
-    $jollyKilled = array(
+    ];
+    $jollyKilled = [
         "summary",
         "steps",
         "expected_results",
         "preconditions",
         "name"
-    );
+    ];
     $txtin = array_merge($txtin, $jollyKilled);
 
     foreach ($txtin as $key) {

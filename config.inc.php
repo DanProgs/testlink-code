@@ -83,11 +83,11 @@ $tlCfg->keywords->onDeleteCheckExecutedTCVersions = true;
 //
 // 'kwPrefix' to remove from keyword to create the ISSUE ID
 //
-$tlCfg->keywords->byTestProject = array();
+$tlCfg->keywords->byTestProject = [];
 
 $tlCfg->keywords->headsUpTSuiteOnExec = 'CMD_OPEN_ON_EXEC';
 
-$tlCfg->accessWithoutLogin = array();
+$tlCfg->accessWithoutLogin = [];
 
 $tlCfg->platforms = new stdClass();
 $tlCfg->platforms->allowedOnAssign = [
@@ -320,9 +320,9 @@ $tlCfg->sessionInactivityTimeout = 9900;
 $tlCfg->notifications->userSignUp = new stdClass();
 $tlCfg->notifications->userSignUp->enabled = true; // @see notifyGlobalAdmins()
 $tlCfg->notifications->userSignUp->to = new stdClass();
-$tlCfg->notifications->userSignUp->to->roles = array(
+$tlCfg->notifications->userSignUp->to->roles = [
     TL_ROLES_ADMIN
-);
+];
 $tlCfg->notifications->userSignUp->to->users = null; // i.e. array('login01','login02');
 
 // ----------------------------------------------------------------------------
@@ -392,11 +392,11 @@ $tlCfg->userDocOnDesktop = OFF;
  * $g_loggerCfg['file']['enable']=true/false;
  * $g_loggerCfg['mail']['enable']=true/false;
  */
-$g_loggerCfg = array(
-    'mail' => array(
+$g_loggerCfg = [
+    'mail' => [
         'enable' => false
-    )
-);
+    ]
+];
 
 /**  @var integer All events older this value [days] are removed from the db, during login */
 $g_removeEventsOlderThan = 30;
@@ -484,16 +484,16 @@ $g_SMTPAutoTLS = false;
  * 'DB' => Same as MD5 use password stored on db
  * 'LDAP' => use password from LDAP Server
  */
-$tlCfg->authentication['domain'] = array(
-    'DB' => array(
+$tlCfg->authentication['domain'] = [
+    'DB' => [
         'description' => 'DB',
         'allowPasswordManagement' => true
-    ),
-    'LDAP' => array(
+    ],
+    'LDAP' => [
         'description' => 'LDAP',
         'allowPasswordManagement' => false
-    )
-);
+    ]
+];
 
 /* Default Authentication method */
 $tlCfg->authentication['method'] = 'DB';
@@ -519,16 +519,16 @@ $tlCfg->loginPagePasswordMaxLenght = 40;
 $tlCfg->logoutUrl = '';
 
 // users that will not allow expiration date management on GUI
-$tlCfg->noExpDateUsers = array(
+$tlCfg->noExpDateUsers = [
     'admin'
-);
+];
 
 /**
  * OAUTH auth
  * Configure this on custom_config.inc.php
  */
 
-$tlCfg->OAuthServers = array();
+$tlCfg->OAuthServers = [];
 
 // Google
 // see cfg/oauth_samples/oauth.google.inc.php
@@ -571,7 +571,7 @@ $tlCfg->authentication['sso_only'] = false;
  * User will be authenticaded against each server (one after other using array index order)
  * till authentication succeed or all servers have been used.
  */
-$tlCfg->authentication['ldap'] = array();
+$tlCfg->authentication['ldap'] = [];
 $tlCfg->authentication['ldap'][1]['ldap_server'] = 'localhost';
 $tlCfg->authentication['ldap'][1]['ldap_port'] = '389';
 $tlCfg->authentication['ldap'][1]['ldap_version'] = '3'; // could be '2' in some cases
@@ -849,7 +849,7 @@ $tlCfg->dashboard_precision = 2;
  * $tlCfg->gui->text_editor['execution'] = array( 'type' => 'none');
  */
 
-$tlCfg->gui->text_editor = array();
+$tlCfg->gui->text_editor = [];
 $tlCfg->gui->text_editor['all'] = [
     'type' => 'ckeditor',
     'toolbar' => 'Testlink',
@@ -880,35 +880,35 @@ $tlCfg->gui->text_editor['summary'] = [
     'height' => 600
 ];
 
-$tlCfg->gui->text_editor['execution'] = array(
+$tlCfg->gui->text_editor['execution'] = [
     'type' => 'none'
-);
-$tlCfg->gui->text_editor['edit_execution'] = array(
+];
+$tlCfg->gui->text_editor['edit_execution'] = [
     'type' => 'none',
     'cols' => 80,
     'rows' => 20
-);
-$tlCfg->gui->text_editor['display_execution_notes'] = array(
+];
+$tlCfg->gui->text_editor['display_execution_notes'] = [
     'type' => 'none',
     'cols' => 80,
     'rows' => 20
-);
+];
 
 /**
  * User can choose order of menu areas
  */
-$tlCfg->gui->layoutMainPageLeft = array(
+$tlCfg->gui->layoutMainPageLeft = [
     'testProject' => 1,
     'userAdministration' => 2,
     'requirements' => 3,
     'testSpecification' => 4,
     'general' => 5
-);
-$tlCfg->gui->layoutMainPageRight = array(
+];
+$tlCfg->gui->layoutMainPageRight = [
     'testPlan' => 1,
     'testExecution' => 2,
     'testPlanContents' => 3
-);
+];
 
 /**
  * Enable warning on a changed content before an user leave a page.
@@ -1076,22 +1076,22 @@ $tlCfg->exec_cfg->att_model = $att_model_m2; // defined in const.inc.php
 // USE_LATEST_EXEC_ON_CONTEX_FOR_COUNTERS
 // USE_LATEST_EXEC_ON_TESTPLAN_FOR_COUNTERS
 // USE_LATEST_EXEC_ON_TESTPLAN_PLAT_FOR_COUNTERS
-$tlCfg->exec_cfg->tcases_counters_mode = array();
+$tlCfg->exec_cfg->tcases_counters_mode = [];
 $tlCfg->exec_cfg->tcases_counters_mode['with_platforms'] = USE_LATEST_EXEC_ON_CONTEX_FOR_COUNTERS;
 
 $tlCfg->exec_cfg->tcases_counters_mode['without_platforms'] = USE_LATEST_EXEC_ON_TESTPLAN_FOR_COUNTERS;
 
-$tlCfg->exec_cfg->tcases_counters_mode_domain = array();
-$tlCfg->exec_cfg->tcases_counters_mode_domain['with_platforms'] = array(
+$tlCfg->exec_cfg->tcases_counters_mode_domain = [];
+$tlCfg->exec_cfg->tcases_counters_mode_domain['with_platforms'] = [
     'USE_LATEST_EXEC_ON_CONTEX_FOR_COUNTERS',
     'USE_LATEST_EXEC_ON_TESTPLAN_FOR_COUNTERS',
     'USE_LATEST_EXEC_ON_TESTPLAN_PLAT_FOR_COUNTERS'
-);
+];
 
-$tlCfg->exec_cfg->tcases_counters_mode_domain['without_platforms'] = array(
+$tlCfg->exec_cfg->tcases_counters_mode_domain['without_platforms'] = [
     'USE_LATEST_EXEC_ON_CONTEX_FOR_COUNTERS',
     'USE_LATEST_EXEC_ON_TESTPLAN_FOR_COUNTERS'
-);
+];
 
 // ENABLED -> test cases will be coloured according to test case status
 $tlCfg->exec_cfg->enable_tree_testcases_colouring = ENABLED;
@@ -1134,9 +1134,9 @@ $tlCfg->exec_cfg->enable_tree_testcase_counters = ENABLED;
 // Will be affected by:
 // $tlCfg->exec_cfg->view_mode and $tlCfg->exec_cfg->exec_mode
 //
-$tlCfg->exec_cfg->simple_tester_roles = array(
+$tlCfg->exec_cfg->simple_tester_roles = [
     TL_ROLES_TESTER
-);
+];
 
 // Filter Test cases a user with tester role can VIEW depending on
 // test execution assignment.
@@ -1326,7 +1326,7 @@ $tlCfg->testcase_cfg->relations->interproject_linking = false;
  * @since TestLink 1.9.12
  */
 
-$tlCfg->testcase_cfg->relations->type_labels = array(
+$tlCfg->testcase_cfg->relations->type_labels = [
     TL_REL_TYPE_PARENT_CHILD => [
         'source' => 'parent_of',
         'destination' => 'child_of'
@@ -1347,7 +1347,7 @@ $tlCfg->testcase_cfg->relations->type_labels = array(
         'source' => 'executed_me_and_also',
         'destination' => 'executed_me_and_also'
     ]
-);
+];
 
 $tlCfg->testcase_cfg->relations->type_description = [
     TL_REL_TYPE_PARENT_CHILD => 'parent_child',
@@ -1693,17 +1693,17 @@ $tlCfg->req_cfg->show_child_reqs_on_reqspec_print_view = DISABLED;
 // Requirement Coverage Status = Partially Passed
 //
 // This logic is implemented using following config parameter
-$tlCfg->req_cfg->coverageStatusAlgorithm['checkOrder'] = array(
+$tlCfg->req_cfg->coverageStatusAlgorithm['checkOrder'] = [
     'atLeastOne',
     'all'
-);
-$tlCfg->req_cfg->coverageStatusAlgorithm['checkType']['atLeastOne'] = array(
+];
+$tlCfg->req_cfg->coverageStatusAlgorithm['checkType']['atLeastOne'] = [
     'failed',
     'blocked'
-);
-$tlCfg->req_cfg->coverageStatusAlgorithm['checkType']['all'] = array(
+];
+$tlCfg->req_cfg->coverageStatusAlgorithm['checkType']['all'] = [
     'passed'
-);
+];
 
 // Configure here what status has to get requirement when check of type 'all' fails like
 // in following situation (Mantis 2171)
@@ -1795,13 +1795,13 @@ $tlCfg->req_cfg->importDocBook->table_head = "thead";
 $tlCfg->req_cfg->importDocBook->table_body = "tbody";
 $tlCfg->req_cfg->importDocBook->table_row = "row";
 $tlCfg->req_cfg->importDocBook->table_entry = "entry";
-$tlCfg->req_cfg->importDocBook->list_item_children = array(
+$tlCfg->req_cfg->importDocBook->list_item_children = [
     'para',
     'title'
-);
-$tlCfg->req_cfg->importDocBook->table_entry_children = array(
+];
+$tlCfg->req_cfg->importDocBook->table_entry_children = [
     'para'
-);
+];
 
 // If an external tool is used for requirement management, enable this setting.
 // You will get an additional field on requirement specifications where you
@@ -1899,7 +1899,7 @@ $tlCfg->tree_filter_cfg->testcases->edit_mode->filter_custom_fields = ENABLED;
 $tlCfg->tree_filter_cfg->testcases->edit_mode->filter_workflow_status = ENABLED;
 $tlCfg->tree_filter_cfg->testcases->edit_mode->advanced_filter_mode_choice = ENABLED;
 
-$tlCfg->tree_filter_cfg->testcases->edit_mode->filter_workflow_status_values = array();
+$tlCfg->tree_filter_cfg->testcases->edit_mode->filter_workflow_status_values = [];
 
 $tlCfg->tree_filter_cfg->testcases->plan_mode->filter_tc_id = ENABLED;
 $tlCfg->tree_filter_cfg->testcases->plan_mode->filter_testcase_name = ENABLED;
@@ -1944,10 +1944,10 @@ $tlCfg->tree_filter_cfg->requirements->advanced_filter_mode_choice = ENABLED;
 $tlCfg->tree_filter_cfg->requirements->automatic_tree_refresh = ENABLED;
 
 /* [Assign test cases to test plan] */
-$tlCfg->tplanDesign->hideTestCaseWithStatusIn = array(
+$tlCfg->tplanDesign->hideTestCaseWithStatusIn = [
     $tlCfg->testCaseStatus['obsolete'] => 'obsolete',
     $tlCfg->testCaseStatus['future'] => 'future'
-);
+];
 
 // ----------------------------------------------------------------------------
 /* [MISC FUNCTIONALITY] */
@@ -1988,20 +1988,20 @@ $tlCfg->custom_fields->max_length = 255;
 // for checkbox,radio is useless
 // Hint: more than 120 produce weird effects on user interface
 //
-$tlCfg->custom_fields->sizes = array(
+$tlCfg->custom_fields->sizes = [
     'string' => 100,
     'numeric' => 10,
     'float' => 10,
     'email' => 100,
     'list' => 1,
     'multiselection list' => 5,
-    'text area' => array(
+    'text area' => [
         'rows' => 6,
         'cols' => 80
-    ),
+    ],
     'script' => 100,
     'server' => 100
-);
+];
 
 // Use this variable (on custom_config.inc.php) to define new Custom Field types.
 // IMPORTANT:
@@ -2069,9 +2069,9 @@ $tlCfg->urgencyImportance->threshold['high'] = 6;
  *      special users manage DISABLE
  */
 $tlCfg->demoMode = OFF;
-$tlCfg->demoSpecialUsers = array(
+$tlCfg->demoSpecialUsers = [
     'admin'
-);
+];
 
 /**
  * If enabled, every Ext JS table in TestLink will offer an export button,
@@ -2102,9 +2102,9 @@ $g_prefix_name_for_copy = date("Y-m-d-H:i:s", time());
  * ON SAME FOLDER where original template is.
  * See example below
  */
-$g_tpl = array(
+$g_tpl = [
     'inc_exec_controls' => 'inc_exec_img_controls.tpl'
-);
+];
 // $g_tpl = array('inc_exec_controls' => 'inc_exec_controls.tpl');
 $g_tpl['login'] = 'login/login-model-marcobiedermann.tpl';
 
@@ -2116,7 +2116,7 @@ $g_tpl['login'] = 'login/login-model-marcobiedermann.tpl';
 /**
  * Add o replace images
  */
-$tlCfg->images = array();
+$tlCfg->images = [];
 
 // ----------------------------------------------------------------------------
 /* [REST API using Slim - Begin] */
@@ -2190,9 +2190,9 @@ if (! defined('TL_DATATABLES_DIR')) {
  * better use $_SESSION['basehref'] in the scripts.
  */
 define('TL_BASE_HREF',
-    get_home_url(array(
+    get_home_url([
         'force_https' => $tlCfg->force_https
-    )));
+    ]));
 
 clearstatcache();
 if (file_exists(TL_ABS_PATH . 'custom_config.inc.php')) {
@@ -2216,8 +2216,8 @@ $tlCfg->reportsCfg->exec_status = $tlCfg->results['status_label_for_exec_ui'];
 // @TODO a better parsing function should be include
 $serverLanguage = false;
 if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
-    @list ($code) = explode(",", $_SERVER['HTTP_ACCEPT_LANGUAGE']);
-    @list ($a, $b) = explode("-", $code);
+    @[$code] = explode(",", $_SERVER['HTTP_ACCEPT_LANGUAGE']);
+    @[$a, $b] = explode("-", $code);
     if ($a && $b) {
         $a = strtolower($a);
         $b = strtoupper($a);
@@ -2299,11 +2299,11 @@ $tlCfg->gui->version_separator_close = $tlCfg->gui_separator_close;
 /**
  * Globals for Events storage
  */
-$g_event_cache = array();
+$g_event_cache = [];
 
 /**
  * Globals for Plugins
  */
-$g_plugin_config_cache = array();
+$g_plugin_config_cache = [];
 
 // ----- END OF FILE --------------------------------------------------------------------

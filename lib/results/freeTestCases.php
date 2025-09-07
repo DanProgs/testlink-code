@@ -47,15 +47,15 @@ $gui->freeTestCases = $tproject_mgr->getFreeTestCases($args->tproject_id);
 if (! is_null($gui->freeTestCases['items'])) {
 
     $l18n = init_labels(
-        array(
+        [
             'low_importance' => null,
             'medium_importance' => null,
             'high_importance' => null,
             'test_suite' => null,
             'design' => null
-        ));
+        ]);
     $il = config_get('importance_levels');
-    $impCols = array();
+    $impCols = [];
     $impCols[$il[LOW]] = "<!-- 1 -->" . $l18n['low_importance'];
     $impCols[$il[MEDIUM]] = "<!-- 2 -->" . $l18n['medium_importance'];
     $impCols[$il[HIGH]] = "<!-- 3 -->" . $l18n['high_importance'];
@@ -69,9 +69,9 @@ if (! is_null($gui->freeTestCases['items'])) {
             $tcase_cfg->glue_character;
         $tcaseSet = array_keys($gui->freeTestCases['items']);
         $tsuites = $tproject_mgr->tree_manager->get_full_path_verbose($tcaseSet,
-            array(
+            [
                 'output_format' => 'path_as_string'
-            ));
+            ]);
         unset($tcaseSet);
 
         // Time tracking
@@ -84,9 +84,9 @@ if (! is_null($gui->freeTestCases['items'])) {
         $columns = getColumnsDefinition($priorityMgmtEnabled);
 
         // Extract the relevant data and build a matrix
-        $matrixData = array();
+        $matrixData = [];
         foreach ($gui->freeTestCases['items'] as &$tcases) {
-            $rowData = array();
+            $rowData = [];
             $rowData[] = strip_tags($tsuites[$tcases['id']]);
             $rowData[] = "<!-- " . sprintf("%010d", $tcases['tc_external_id']) .
                 " -->" .
@@ -119,9 +119,9 @@ if (! is_null($gui->freeTestCases['items'])) {
         $table->toolbarExpandCollapseGroupsButton = true;
         $table->toolbarShowAllColumnsButton = true;
 
-        $gui->tableSet = array(
+        $gui->tableSet = [
             $table
-        );
+        ];
     }
 }
 
@@ -141,28 +141,28 @@ $smarty->display($templateCfg->template_dir . $templateCfg->default_template);
  */
 function getColumnsDefinition($priorityMgmtEnabled)
 {
-    $colDef = array();
+    $colDef = [];
 
-    $colDef[] = array(
+    $colDef[] = [
         'title_key' => 'test_suite',
         'type' => 'text'
-    );
-    $colDef[] = array(
+    ];
+    $colDef[] = [
         'title_key' => 'test_case',
         'type' => 'text'
-    );
+    ];
     if ($priorityMgmtEnabled) {
-        $urgencies_for_filter = array(
+        $urgencies_for_filter = [
             lang_get('urgency_low'),
             lang_get('urgency_medium'),
             lang_get('urgency_high')
-        );
-        $colDef[] = array(
+        ];
+        $colDef[] = [
             'title_key' => 'importance',
             'width' => 20,
             'filter' => 'ListSimpleMatch',
             'filterOptions' => $urgencies_for_filter
-        );
+        ];
     }
 
     return $colDef;
@@ -180,14 +180,14 @@ function getColumnsDefinition($priorityMgmtEnabled)
  */
 function initArgs()
 {
-    $iParams = array(
-        "tplan_id" => array(
+    $iParams = [
+        "tplan_id" => [
             tlInputParameter::INT_N
-        ),
-        "format" => array(
+        ],
+        "format" => [
             tlInputParameter::INT_N
-        )
-    );
+        ]
+    ];
 
     $args = new stdClass();
     G_PARAMS($iParams, $args);

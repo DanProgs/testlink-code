@@ -30,13 +30,13 @@ $exec->status = $tcaseStatusCode['blocked'];
 $exec->notes = "Call using all EXTERNAL ID";
 $exec->overwrite = true;
 
-$exec->steps = array(
-    array(
+$exec->steps = [
+    [
         'step_number' => 1,
         'result' => 'f',
         'notes' => 'no'
-    )
-);
+    ]
+];
 
 $debug = false;
 echo '<br><b>' . $unitTestDescription . '</b>';
@@ -47,13 +47,13 @@ echo "<br> Result was: ";
 new dBug($response);
 echo "<br>";
 
-$exec->steps = array(
-    array(
+$exec->steps = [
+    [
         'step_number' => 2,
         'result' => 'p',
         'notes' => 'no for 2'
-    )
-);
+    ]
+];
 
 $debug = false;
 echo '<br><b>' . $unitTestDescription . '</b>';
@@ -85,7 +85,7 @@ function executeTestCase($server_url, $context, $exec, $debug = false)
     $client = new IXR_Client($server_url);
     $client->debug = $debug;
 
-    $data = array();
+    $data = [];
     $data["devKey"] = '3c41cb6d3c39f263b6bade693f8f7fa7';
     $data["status"] = $exec->status;
 

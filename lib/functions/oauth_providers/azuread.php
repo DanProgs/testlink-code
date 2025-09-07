@@ -16,18 +16,18 @@
 function oauth_get_token($authCfg, $code)
 {
     $result = new stdClass();
-    $result->status = array(
+    $result->status = [
         'status' => tl::OK,
         'msg' => null
-    );
+    ];
 
     // Params to get token
-    $oauthParams = array(
+    $oauthParams = [
         'code' => $code,
         'grant_type' => $authCfg['oauth_grant_type'],
         'client_id' => $authCfg['oauth_client_id'],
         'client_secret' => $authCfg['oauth_client_secret']
-    );
+    ];
 
     $oauthParams['redirect_uri'] = trim($authCfg['redirect_uri']);
     if (isset($_SERVER['HTTPS'])) {
@@ -64,14 +64,14 @@ function oauth_get_token($authCfg, $code)
     // but for now, we are going to ignore it, as all neccessary information is available
     // in the id_token
     if (isset($tokenInfo['id_token'])) {
-        list (, $payload,) = explode(".", $tokenInfo['id_token']);
+        [, $payload, ] = explode(".", $tokenInfo['id_token']);
         $jwtInfo = json_decode(base64_decode($payload), true);
 
         if (isset($jwtInfo['oid'])) {
             if (isset($authCfg['oauth_domain'])) {
                 $domain = substr(strrchr($userInfo['email'], "@"), 1);
                 if ($domain !== $authCfg['oauth_domain']) {
-                    $result->status['msg'] = "TestLink Oauth policy - User email domain:$domain does not
+                    $result->status['msg'] = "TestLink Oauth policy - User email domain:{$domain} does not
            match \$authCfg['oauth_domain']:{$authCfg['oauth_domain']} ";
                     $result->status['status'] = tl::ERROR;
                 }

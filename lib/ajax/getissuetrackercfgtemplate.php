@@ -18,10 +18,10 @@ require_once '../../config.inc.php';
 require_once 'common.php';
 testlinkInitPage($db);
 
-$info = array(
+$info = [
     'sucess' => true,
     'cfg' => ''
-);
+];
 $type = intval($_REQUEST['type']);
 $itemMgr = new tlIssueTracker($db);
 $itt = $itemMgr->getTypes();

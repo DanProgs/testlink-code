@@ -18,7 +18,7 @@ testlinkInitPage($db, false, false, "checkRights");
 
 $templateCfg = templateConfiguration();
 $args = initArgs();
-list ($gui, $smarty) = initializeGui($db, $args);
+[$gui, $smarty] = initializeGui($db, $args);
 
 $template2launch = $templateCfg->default_template;
 if ((! is_null($gui->tprojects) || $args->doAction == 'list') &&
@@ -75,24 +75,24 @@ function initializeGui(&$dbHandler, &$argsObj)
 
         case 'search':
         default:
-            $filters = array(
-                'name' => array(
+            $filters = [
+                'name' => [
                     'op' => 'like',
                     'value' => $argsObj->name
-                )
-            );
+                ]
+            ];
             $guiObj->feedback = lang_get('no_records_found');
             break;
     }
 
     $tproject_mgr = new testproject($dbHandler);
-    $opt = array(
+    $opt = [
         'output' => 'array_of_map',
         'order_by' => " ORDER BY name ",
         'add_issuetracker' => true,
         'add_codetracker' => true,
         'add_reqmgrsystem' => true
-    );
+    ];
     $guiObj->tprojects = $tproject_mgr->get_accessible_for_user(
         $argsObj->userID, $opt, $filters);
     $guiObj->pageTitle = lang_get('title_testproject_management');
@@ -109,10 +109,10 @@ function initializeGui(&$dbHandler, &$argsObj)
         initIntegrations($guiObj->tprojects, $guiObj->itemQty, $tplEngine);
     }
 
-    return array(
+    return [
         $guiObj,
         $tplEngine
-    );
+    ];
 }
 
 /**
@@ -120,17 +120,17 @@ function initializeGui(&$dbHandler, &$argsObj)
 function initIntegrations(&$tprojSet, $tprojQty, &$tplEngine)
 {
     $labels = init_labels(
-        array(
+        [
             'active_integration' => null,
             'inactive_integration' => null
-        ));
+        ]);
 
     $imgSet = $tplEngine->getImages();
 
-    $intk = array(
+    $intk = [
         'it' => 'issue',
         'ct' => 'code'
-    );
+    ];
     for ($idx = 0; $idx < $tprojQty; $idx ++) {
         foreach ($intk as $short => $item) {
             $tprojSet[$idx][$short . 'statusImg'] = '';

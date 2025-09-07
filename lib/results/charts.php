@@ -19,14 +19,14 @@ require_once 'common.php';
 $templateCfg = templateConfiguration();
 
 $l18n = init_labels(
-    array(
+    [
         'overall_metrics' => null,
         'overall_metrics_for_platform' => null,
         'results_by_keyword' => null,
         'results_top_level_suites' => null
-    ));
+    ]);
 
-list ($args, $tproject_mgr, $tplan_mgr) = initArgs($db);
+[$args, $tproject_mgr, $tplan_mgr] = initArgs($db);
 
 $tplan_info = $tplan_mgr->get_by_id($args->tplan_id);
 $tproject_info = $tproject_mgr->get_by_id($args->tproject_id);
@@ -50,16 +50,16 @@ if ($gui->can_use_charts == 'OK') {
         "&tproject_id=$args->tproject_id";
 
     $platformSet = $tplan_mgr->getPlatforms($gui->tplan_id,
-        array(
+        [
             'outputFormat' => 'map'
-        ));
-    $platformIDSet = is_null($platformSet) ? array(
+        ]);
+    $platformIDSet = is_null($platformSet) ? [
         0
-    ) : array_keys($platformSet);
+    ] : array_keys($platformSet);
 
-    $gui->charts = array(
+    $gui->charts = [
         $l18n['overall_metrics'] => $chartsUrl->overallPieChart
-    );
+    ];
     if (! is_null($platformSet)) {
         foreach ($platformIDSet as $platform_id) {
             $description = $l18n['overall_metrics_for_platform'] . ' ' .
@@ -70,10 +70,10 @@ if ($gui->can_use_charts == 'OK') {
     }
 
     $gui->charts = array_merge($gui->charts,
-        array(
+        [
             $l18n['results_by_keyword'] => $chartsUrl->keywordBarChart,
             $l18n['results_top_level_suites'] => $chartsUrl->topLevelSuitesBarChart
-        ));
+        ]);
 }
 
 $smarty = new TLSmarty();
@@ -89,22 +89,22 @@ $smarty->display($templateCfg->template_dir . $templateCfg->default_template);
  */
 function initArgs(&$dbHandler)
 {
-    $iParams = array(
-        "apikey" => array(
+    $iParams = [
+        "apikey" => [
             tlInputParameter::STRING_N,
             0,
             64
-        ),
-        "tproject_id" => array(
+        ],
+        "tproject_id" => [
             tlInputParameter::INT_N
-        ),
-        "tplan_id" => array(
+        ],
+        "tplan_id" => [
             tlInputParameter::INT_N
-        ),
-        "format" => array(
+        ],
+        "format" => [
             tlInputParameter::INT_N
-        )
-    );
+        ]
+    ];
 
     $args = new stdClass();
     R_PARAMS($iParams, $args);
@@ -143,11 +143,11 @@ function initArgs(&$dbHandler)
         $args->tplan_info = $tplan_mgr->get_by_id($args->tplan_id);
     }
 
-    return array(
+    return [
         $args,
         $tproject_mgr,
         $tplan_mgr
-    );
+    ];
 }
 
 /**

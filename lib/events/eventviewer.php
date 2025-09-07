@@ -43,8 +43,8 @@ switch ($args->doAction) {
 
         // reset filters after clearing events
         $args->logLevel = null;
-        $gui->selectedLogLevels = array();
-        $gui->selectedTesters = array();
+        $gui->selectedLogLevels = [];
+        $gui->selectedTesters = [];
         $gui->startDate = null;
         $gui->endDate = null;
         break;
@@ -79,44 +79,44 @@ $smarty->display($templateCfg->template_dir . $templateCfg->default_template);
  */
 function initArgs()
 {
-    $iParams = array(
-        "startDate" => array(
+    $iParams = [
+        "startDate" => [
             "POST",
             tlInputParameter::STRING_N,
             0,
             10
-        ),
-        "endDate" => array(
+        ],
+        "endDate" => [
             "POST",
             tlInputParameter::STRING_N,
             0,
             10
-        ),
-        "doAction" => array(
+        ],
+        "doAction" => [
             "POST",
             tlInputParameter::STRING_N,
             0,
             100
-        ),
-        "object_id" => array(
+        ],
+        "object_id" => [
             "REQUEST",
             tlInputParameter::INT_N
-        ),
-        "object_type" => array(
+        ],
+        "object_type" => [
             "REQUEST",
             tlInputParameter::STRING_N,
             0,
             15
-        ),
-        "logLevel" => array(
+        ],
+        "logLevel" => [
             "POST",
             tlInputParameter::ARRAY_INT
-        ),
-        "testers" => array(
+        ],
+        "testers" => [
             "REQUEST",
             tlInputParameter::ARRAY_INT
-        )
-    );
+        ]
+    ];
 
     $args = new stdClass();
     I_PARAMS($iParams, $args);
@@ -138,13 +138,13 @@ function checkRights(&$db, &$user)
 {
     $checkStatus = $user->hasRight($db, "mgt_view_events");
     if (! $checkStatus) {
-        $iParams = array(
-            "doAction" => array(
+        $iParams = [
+            "doAction" => [
                 tlInputParameter::STRING_N,
                 0,
                 100
-            )
-        );
+            ]
+        ];
         $rParams = R_PARAMS($iParams);
         if ($rParams["doAction"] == 'clear') {
             $checkStatus = $user->hasRight($db, 'events_mgt');
@@ -162,14 +162,14 @@ function checkRights(&$db, &$user)
 function initializeGui(&$dbHandler, &$argsObj)
 {
     $gui = new stdClass();
-    $gui->logLevels = array(
+    $gui->logLevels = [
         tlLogger::AUDIT => lang_get("log_level_AUDIT"),
         tlLogger::ERROR => lang_get("log_level_ERROR"),
         tlLogger::WARNING => lang_get("log_level_WARNING"),
         tlLogger::INFO => lang_get("log_level_INFO"),
         tlLogger::DEBUG => lang_get("log_level_DEBUG"),
         tlLogger::L18N => lang_get("log_level_L18N")
-    );
+    ];
 
     $gui->allusers = tlUser::getAll($dbHandler); // THIS IS AN OVERKILL because get ALL USER OBJECTS
     $gui->testers = getUsersForHtmlOptions($dbHandler, null, null, true,
@@ -183,8 +183,8 @@ function initializeGui(&$dbHandler, &$argsObj)
     $gui->object_type = $argsObj->object_type;
 
     $gui->selectedLogLevels = ($argsObj->logLevel ? array_values(
-        $argsObj->logLevel) : array());
-    $gui->selectedTesters = ($argsObj->testers ? array_values($argsObj->testers) : array());
+        $argsObj->logLevel) : []);
+    $gui->selectedTesters = ($argsObj->testers ? array_values($argsObj->testers) : []);
 
     $gui->canDelete = $argsObj->currentUser->hasRight($dbHandler, "events_mgt");
 
@@ -257,34 +257,34 @@ function buildExtTable($gui, $show_icon, $charset)
 {
     $table = null;
     if (! empty($gui->events)) {
-        $columns = array();
-        $columns[] = array(
+        $columns = [];
+        $columns[] = [
             'title_key' => 'th_timestamp',
             'width' => 15
-        );
-        $columns[] = array(
+        ];
+        $columns[] = [
             'title_key' => 'th_loglevel',
             'width' => 15
-        );
-        $columns[] = array(
+        ];
+        $columns[] = [
             'title_key' => 'th_user',
             'width' => 15
-        );
-        $columns[] = array(
+        ];
+        $columns[] = [
             'title_key' => 'th_event_description',
             'type' => 'text'
-        );
-        $columns[] = array(
+        ];
+        $columns[] = [
             'title_key' => 'th_transaction',
             'width' => 15,
             'hidden' => 'true'
-        );
+        ];
 
         // Extract the relevant data and build a matrix
-        $matrixData = array();
+        $matrixData = [];
 
         foreach ($gui->events as $event) {
-            $rowData = array();
+            $rowData = [];
 
             // necessary as localize_dateOrTimeStamp expects 2nd parameter to pass by reference
             $dummy = null;
@@ -315,9 +315,9 @@ function buildExtTable($gui, $show_icon, $charset)
 
         $table = new tlExtTable($columns, $matrixData, 'tl_table_eventviewer');
 
-        $table->addCustomBehaviour('text', array(
+        $table->addCustomBehaviour('text', [
             'render' => 'columnWrap'
-        ));
+        ]);
 
         $table->setGroupByColumnName(lang_get('th_loglevel'));
         $table->setSortByColumnName(lang_get('th_timestamp'));

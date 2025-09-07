@@ -65,9 +65,9 @@ function initArgs(&$dbH)
     }
 
     $args->testproject_name = '';
-    $tables = tlDBObject::getDBTables(array(
+    $tables = tlDBObject::getDBTables([
         'nodes_hierarchy'
-    ));
+    ]);
     $sql = "SELECT name FROM {$tables['nodes_hierarchy']}
           WHERE id={$args->tproject_id}";
     $info = $dbH->get_recordset($sql);
@@ -99,9 +99,9 @@ function initializeGui(&$argsObj)
         'filename' => ''
     ];
 
-    $guiObj->importTypes = array(
+    $guiObj->importTypes = [
         'XML' => 'XML'
-    );
+    ];
 
     $guiObj->importLimitBytes = config_get('import_file_max_size_bytes');
     $guiObj->max_size_import_file_msg = sprintf(lang_get('max_size_file_msg'),
@@ -118,17 +118,17 @@ function initializeGui(&$argsObj)
  */
 function doImport(&$dbHandler, $testproject_id)
 {
-    $import_msg = array(
-        'ok' => array(),
-        'ko' => array()
-    );
-    $file_check = array(
+    $import_msg = [
+        'ok' => [],
+        'ko' => []
+    ];
+    $file_check = [
         'show_results' => 0,
         'status_ok' => 0,
         'msg' => '',
         'filename' => '',
         'import_msg' => $import_msg
-    );
+    ];
 
     $key = 'targetFilename';
     $dest = TL_TEMP_PATH . session_id() . "-import_platforms.tmp";
@@ -191,11 +191,11 @@ function doImport(&$dbHandler, $testproject_id)
         }
     } else {
         $msg = getFileUploadErrorMessage($fInfo);
-        $file_check = array(
+        $file_check = [
             'show_results' => 0,
             'status_ok' => 0,
             'msg' => $msg
-        );
+        ];
     }
 
     if (count($import_msg['ko']) == 0) {

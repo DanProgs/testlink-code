@@ -19,7 +19,7 @@ testlinkInitPage($db);
 
 $templateCfg = templateConfiguration();
 $args = initArgs();
-list ($add2args, $gui) = initUserEnv($db, $args);
+[$add2args, $gui] = initUserEnv($db, $args);
 
 $gui->optLocale = config_get('locales');
 
@@ -102,57 +102,57 @@ $smarty->display($templateCfg->template_dir . $templateCfg->default_template);
  */
 function initArgs()
 {
-    $iParams = array(
-        "firstName" => array(
+    $iParams = [
+        "firstName" => [
             "POST",
             tlInputParameter::STRING_N,
             0,
             30
-        ),
-        "lastName" => array(
+        ],
+        "lastName" => [
             "REQUEST",
             tlInputParameter::STRING_N,
             0,
             30
-        ),
-        "emailAddress" => array(
+        ],
+        "emailAddress" => [
             "REQUEST",
             tlInputParameter::STRING_N,
             0,
             100
-        ),
-        "locale" => array(
+        ],
+        "locale" => [
             "POST",
             tlInputParameter::STRING_N,
             0,
             10
-        ),
-        "oldpassword" => array(
+        ],
+        "oldpassword" => [
             "POST",
             tlInputParameter::STRING_N,
             0,
             32
-        ),
-        "newpassword" => array(
+        ],
+        "newpassword" => [
             "POST",
             tlInputParameter::STRING_N,
             0,
             32
-        ),
-        "doAction" => array(
+        ],
+        "doAction" => [
             "POST",
             tlInputParameter::STRING_N,
             0,
             15,
             null,
             'checkDoAction'
-        ),
-        "userinfo_token" => array(
+        ],
+        "userinfo_token" => [
             tlInputParameter::STRING_N,
             0,
             255
-        )
-    );
+        ]
+    ];
 
     $pParams = I_PARAMS($iParams);
 
@@ -225,10 +225,10 @@ function generateAPIKey(&$argsObj, &$user)
  */
 function checkDoAction($input)
 {
-    $domain = array_flip(array(
+    $domain = array_flip([
         'editUser',
         'changePassword',
         'genAPIKey'
-    ));
+    ]);
     return isset($domain[$input]) ? true : false;
 }

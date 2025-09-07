@@ -86,7 +86,7 @@ abstract class TestlinkPlugin extends tlObjectWithDB
      */
     public function config()
     {
-        return array();
+        return [];
     }
 
     /**
@@ -95,7 +95,7 @@ abstract class TestlinkPlugin extends tlObjectWithDB
      */
     public function hooks()
     {
-        return array();
+        return [];
     }
 
     # ## Core plugin functionality ###

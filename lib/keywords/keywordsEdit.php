@@ -92,44 +92,44 @@ function initEnv(&$dbHandler)
     $_REQUEST = strings_stripSlashes($_REQUEST);
     $source = count($_POST) ? "POST" : "GET";
 
-    $ipcfg = array(
-        "doAction" => array(
+    $ipcfg = [
+        "doAction" => [
             $source,
             tlInputParameter::STRING_N,
             0,
             50
-        ),
-        "id" => array(
+        ],
+        "id" => [
             $source,
             tlInputParameter::INT_N
-        ),
-        "keyword" => array(
+        ],
+        "keyword" => [
             $source,
             tlInputParameter::STRING_N,
             0,
             100
-        ),
-        "notes" => array(
+        ],
+        "notes" => [
             $source,
             tlInputParameter::STRING_N
-        ),
-        "tproject_id" => array(
+        ],
+        "tproject_id" => [
             $source,
             tlInputParameter::INT_N
-        ),
-        "openByOther" => array(
+        ],
+        "openByOther" => [
             $source,
             tlInputParameter::INT_N
-        ),
-        "directAccess" => array(
+        ],
+        "directAccess" => [
             $source,
             tlInputParameter::INT_N
-        ),
-        "tcversion_id" => array(
+        ],
+        "tcversion_id" => [
             $source,
             tlInputParameter::INT_N
-        )
-    );
+        ]
+    ];
 
     $ip = I_PARAMS($ipcfg);
 
@@ -154,10 +154,10 @@ function initEnv(&$dbHandler)
     $env['tplan_id'] = 0;
 
     $check = new stdClass();
-    $check->items = array(
+    $check->items = [
         'mgt_modify_key',
         'mgt_view_key'
-    );
+    ];
     $check->mode = 'and';
     checkAccess($dbHandler, $args->user, $env, $check);
 
@@ -290,10 +290,10 @@ function do_delete(&$args, &$guiObj, &$tproject_mgr)
     $ret = new stdClass();
     $ret->template = 'keywordsView.tpl';
 
-    $dko = array(
+    $dko = [
         'context' => 'getTestProjectName',
         'tproject_id' => $args->tproject_id
-    );
+    ];
     $ret->status = $tproject_mgr->deleteKeyword($args->keyword_id, $dko);
 
     return $ret;
@@ -348,9 +348,9 @@ function do_cfl(&$args, &$guiObj, &$tproject_mgr)
         $rs = $tproject_mgr->db->get_recordset($sql);
         $tcase_id = intval($rs[0]['parent_id']);
         $tcaseMgr->addKeywords($tcase_id, $args->tcversion_id,
-            array(
+            [
                 $op['id']
-            ));
+            ]);
     }
     $ret->status = $op['status'];
     return $ret;
@@ -403,10 +403,10 @@ function initializeGui(&$dbH, &$args)
     $gui->user_feedback = '';
 
     // Needed by the smarty template to be launched
-    $kr = array(
+    $kr = [
         'canManage' => "mgt_modify_key",
         'canAssign' => "keyword_assignment"
-    );
+    ];
     foreach ($kr as $vk => $rk) {
         $gui->$vk = $args->user->hasRight($dbH, $rk, $args->tproject_id);
     }

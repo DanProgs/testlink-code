@@ -37,7 +37,7 @@ if (! isset($_SESSION)) {
 }
 
 // catch DB input data
-$validKeys = array(
+$validKeys = [
     "databasetype",
     "databasehost",
     "databasename",
@@ -46,7 +46,7 @@ $validKeys = array(
     "databaseloginpassword",
     "tl_loginname",
     "tl_loginpassword"
-);
+];
 foreach ($validKeys as $key) {
     $_SESSION[$key] = '';
     if (isset($_POST[$key])) {
@@ -62,8 +62,8 @@ define('LEN_PWD_TL_1_0_4', 15);
 define('ADD_DIR', 1);
 
 $migration_process = '';
-$sql_update_schema = array();
-$sql_update_data = array();
+$sql_update_schema = [];
+$sql_update_data = [];
 
 // Wants to sanitize some user inputs
 // Because we use host:port, need to remove port before check
@@ -94,7 +94,7 @@ $validator = new Zend_Validate_Hostname(Zend_Validate_Hostname::ALLOW_ALL);
 if (! $validator->isValid($dbHost)) {
     // hostname is invalid; print the reasons
     foreach ($validator->getMessages() as $message) {
-        echo "$message\n";
+        echo "{$message}\n";
     }
     die();
 }
@@ -123,14 +123,14 @@ $tl_db_login = substr(preg_replace($san, '', $tl_db_login), 0, 32);
 $db_admin_name = trim($_SESSION['databaseloginname']);
 $db_admin_name = substr(preg_replace($san, '', $db_admin_name), 0, 32);
 
-$sql_create_schema = array();
+$sql_create_schema = [];
 $sql_create_schema[] = "sql/{$db_type}/testlink_create_tables.sql";
-$a_sql_schema = array();
+$a_sql_schema = [];
 $a_sql_schema[] = $sql_create_schema;
 
-$sql_default_data = array();
+$sql_default_data = [];
 $sql_default_data[] = "sql/{$db_type}/testlink_create_default_data.sql";
-$a_sql_data = array();
+$a_sql_data = [];
 $a_sql_data[] = $sql_default_data;
 
 global $g_tlLogger;
@@ -141,7 +141,7 @@ $install = $_SESSION['isNew'];
 $upgrade = ! $install;
 if ($upgrade) {
     $inst_type_verbose = " Upgrade ";
-    $a_sql_data = array();
+    $a_sql_data = [];
 }
 $the_title = $_SESSION['title'];
 ?>
@@ -238,7 +238,7 @@ $db = new database($dbDriverName);
 
 if ($conn_result['status'] == 0) {
     $db->close();
-    echo "<br>Database $db_name does not exist. <br>";
+    echo "<br>Database {$db_name} does not exist. <br>";
 
     if ($upgrade) {
         echo "Can't Upgrade";
@@ -283,7 +283,7 @@ if ($create) {
     $sql_create_db = $db->build_sql_create_db($db_name);
 
     if (! $db->exec_query($sql_create_db)) {
-        echo "<span class='notok'>Failed!</span></b> - Could not create database: $db! " .
+        echo "<span class='notok'>Failed!</span></b> - Could not create database: {$db}! " .
             $db->error_msg();
         $errors += 1;
 
@@ -315,8 +315,8 @@ if ($upgrade) {
         }
     }
 
-    $a_sql_upd_dir = array();
-    $a_sql_data_dir = array();
+    $a_sql_upd_dir = [];
+    $a_sql_data_dir = [];
 
     $the_version_table = $my_ado->MetaTables('TABLES', false,
         $db_table_prefix . 'db_version');
@@ -410,10 +410,10 @@ $msg = create_user_for_db($dbDriverName, $db_name, $db_server, $db_admin_name,
 
 echo "<br /><b>Creating Testlink DB user `" . $user_host[0] . "`</b>:";
 if (strpos($msg, 'ok -') === false) {
-    echo "<span class='notok'>Failed!</span></b> - Could not create user: $tl_db_login!";
+    echo "<span class='notok'>Failed!</span></b> - Could not create user: {$tl_db_login}!";
     $errors += 1;
 } else {
-    echo "<span class='ok'>OK! ($msg) </span>";
+    echo "<span class='ok'>OK! ({$msg}) </span>";
 }
 
 // Schema Operations (CREATE, ALTER, ecc).
@@ -565,10 +565,10 @@ function manual_operations($dbType)
 
 function write_config_db($filename, $data)
 {
-    $ret = array(
+    $ret = [
         'status' => 'ok',
         'cfg_string' => ''
-    );
+    ];
 
     $db_host = $data['db_host'];
     $db_login = $data['db_login'];
@@ -629,8 +629,8 @@ function drop_tables(&$dbHandler, $dbTablePrefix, $dbType)
             $targetTable = $dbTablePrefix . $tablePlainName;
             if (in_array($targetTable, $tablesOnDB)) {
                 // Need to add option (CASCADE ?) to delete dependent object
-                echo "Dropping $targetTable" . "<br />";
-                $sql = "DROP TABLE $targetTable";
+                echo "Dropping {$targetTable}" . "<br />";
+                $sql = "DROP TABLE {$targetTable}";
                 $sql .= (($dbType != 'mssql') && ($dbType != 'sqlsrv')) ? " CASCADE " : ' ';
                 $dbHandler->exec_query($sql);
             }
@@ -652,8 +652,8 @@ function drop_views(&$dbHandler, $dbItemPrefix, $dbType)
             $target = $dbItemPrefix . $itemPlainName;
             if (in_array($target, $itemsOnDB)) {
                 // Need to add option (CASCADE ?) to delete dependent object
-                echo "Dropping $target" . "<br />";
-                $sql = "DROP VIEW $target";
+                echo "Dropping {$target}" . "<br />";
+                $sql = "DROP VIEW {$target}";
                 $sql .= (($dbType != 'mssql') && ($dbType != 'sqlsrv')) ? " CASCADE " : ' ';
                 $dbHandler->exec_query($sql);
             }

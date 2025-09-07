@@ -75,20 +75,20 @@ $smarty->display($tpl);
  */
 function init_args()
 {
-    $iParams = array(
-        "login" => array(
+    $iParams = [
+        "login" => [
             'POST',
             tlInputParameter::STRING_N,
             0,
             30
-        ),
-        "viewer" => array(
+        ],
+        "viewer" => [
             'GET',
             tlInputParameter::STRING_N,
             0,
             3
-        )
-    );
+        ]
+    ];
 
     $args = new stdClass();
     I_PARAMS($iParams, $args);

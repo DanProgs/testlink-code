@@ -53,16 +53,16 @@ abstract class issueTrackerInterface
 
     public $resolvedStatus;
 
-    public $methodOpt = array(
-        'buildViewBugLink' => array(
+    public $methodOpt = [
+        'buildViewBugLink' => [
             'addSummary' => false,
             'colorByStatus' => false,
             'addReporter' => false,
             'addHandler' => false
-        )
-    );
+        ]
+    ];
 
-    private $guiCfg = array();
+    private $guiCfg = [];
 
     private $summaryLengthLimit = 120;
 
@@ -79,9 +79,9 @@ abstract class issueTrackerInterface
     public function __construct($type, $config, $name)
     {
         $this->tlCharSet = config_get('charset');
-        $this->guiCfg = array(
+        $this->guiCfg = [
             'use_decoration' => true
-        ); // add [] on summary and statusHTMLString
+        ]; // add [] on summary and statusHTMLString
         $this->name = $name;
 
         if ($this->setCfg($config)) {
@@ -325,10 +325,10 @@ abstract class issueTrackerInterface
         static $l10n;
 
         if (! $l10n) {
-            $tg = array(
+            $tg = [
                 'issueReporter' => null,
                 'issueHandler' => null
-            );
+            ];
             $l10n = init_labels($tg);
         }
 
@@ -345,7 +345,7 @@ abstract class issueTrackerInterface
         $ret->op = false;
 
         if (is_null($issue) || ! is_object($issue)) {
-            $ret->link = "TestLink Internal Message: getIssue($issueID) FAILURE on " .
+            $ret->link = "TestLink Internal Message: getIssue({$issueID}) FAILURE on " .
                 __METHOD__;
             return $ret;
         }
@@ -413,7 +413,7 @@ abstract class issueTrackerInterface
 
         if ($my['opt']['colorByStatus'] && property_exists($issue, 'statusColor')) {
             $title = lang_get('access_to_bts');
-            $link = "<div  title=\"{$title}\" style=\"display: inline; background: $issue->statusColor;\">$link</div>";
+            $link = "<div  title=\"{$title}\" style=\"display: inline; background: $issue->statusColor;\">{$link}</div>";
         }
 
         $ret = new stdClass();
@@ -511,7 +511,7 @@ abstract class issueTrackerInterface
      */
     public static function checkEnv()
     {
-        $ret = array();
+        $ret = [];
         $ret['status'] = true;
         $ret['msg'] = 'OK';
         return $ret;

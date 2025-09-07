@@ -129,11 +129,11 @@ function write_execution(&$db, &$execSign, &$exec_data, &$issueTracker)
         $is_bulk_save = 0;
     }
 
-    $addIssueOp = array(
+    $addIssueOp = [
         'createIssue' => null,
         'issueForStep' => null,
         'type' => null
-    );
+    ];
 
     foreach ($item2loop as $tcversion_id => $val) {
         $tcase_id = $exec_data['tc_version'][$tcversion_id];
@@ -184,9 +184,9 @@ function write_execution(&$db, &$execSign, &$exec_data, &$issueTracker)
             // Check if Test Project has the requirement management feature enabled
             $topt = $tprojectMgr->getOptions($execSign->tproject_id);
             if ($topt->requirementsEnabled) {
-                $cOpt = array(
+                $cOpt = [
                     'freeze_req_version' => $tcaseCfg->freezeReqVersionAfterExec
-                );
+                ];
                 $tcaseMgr->closeOpenReqLinks($tcversion_id,
                     LINK_TC_REQ_CLOSED_BY_EXEC, $cOpt);
             }
@@ -259,9 +259,9 @@ function write_execution(&$db, &$execSign, &$exec_data, &$issueTracker)
                         $execution_tcsteps_id = $db->insert_id($target);
 
                         // NOW MANAGE attachments
-                        $repOpt = array(
+                        $repOpt = [
                             'allow_empty_title' => true
-                        );
+                        ];
                         $opeOKMsg = lang_get('file_upload_step_exec_ok');
                         $opeKOMsg = lang_get('file_upload_step_exec_ko');
 
@@ -346,11 +346,11 @@ function write_execution(&$db, &$execSign, &$exec_data, &$issueTracker)
                 method_exists($issueTracker, 'addIssue');
 
             // re-init
-            $addIssueOp = array(
+            $addIssueOp = [
                 'createIssue' => null,
                 'issueForStep' => null,
                 'type' => null
-            );
+            ];
 
             if ($itCheckOK) {
                 $execContext = new stdClass();
@@ -370,10 +370,10 @@ function write_execution(&$db, &$execSign, &$exec_data, &$issueTracker)
                 if (isset($exec_data['createIssue'])) {
                     completeCreateIssue($execContext, $execSign);
 
-                    $aop = array(
+                    $aop = [
                         'addLinkToTL' => $execContext->addLinkToTL,
                         'addLinkToTLPrintView' => $execContext->addLinkToTLPrintView
-                    );
+                    ];
 
                     $addIssueOp['createIssue'] = addIssue($db, $execContext,
                         $issueTracker, $aop);
@@ -394,11 +394,11 @@ function write_execution(&$db, &$execSign, &$exec_data, &$issueTracker)
         }
     }
 
-    return array(
+    return [
         $execSet,
         $addIssueOp,
         $uploadOp
-    );
+    ];
 }
 
 /**
@@ -446,18 +446,18 @@ function write_execution_bug(&$db, $exec_id, $bug_id, $tcstep_id,
 function get_bugs_for_exec(&$db, &$bug_interface, $execution_id, $raw = null)
 {
     $tables = tlObjectWithDB::getDBTables(
-        array(
+        [
             'executions',
             'execution_bugs',
             'builds',
             'tcsteps'
-        ));
-    $bug_list = array();
+        ]);
+    $bug_list = [];
     $cfg = config_get('exec_cfg');
 
     $debugMsg = 'FILE:: ' . __FILE__ . ' :: FUNCTION:: ' . __FUNCTION__;
     if (is_object($bug_interface)) {
-        $sql = "/* $debugMsg */ " .
+        $sql = "/* {$debugMsg} */ " .
             " SELECT execution_id,bug_id,tcstep_id,step_number," .
             " builds.name AS build_name " . " FROM {$tables['execution_bugs']} " .
             " JOIN {$tables['executions']} executions " .
@@ -508,19 +508,19 @@ function get_bugs_for_exec(&$db, &$bug_interface, $execution_id, $raw = null)
  */
 function get_execution(&$dbHandler, $execution_id, $opt = null)
 {
-    $my = array(
-        'options' => array(
+    $my = [
+        'options' => [
             'output' => 'raw'
-        )
-    );
+        ]
+    ];
     $my['options'] = array_merge($my['options'], (array) $opt);
     $tables = tlObjectWithDB::getDBTables(
-        array(
+        [
             'executions',
             'nodes_hierarchy',
             'builds',
             'platforms'
-        ));
+        ]);
 
     $safe_id = intval($execution_id);
     switch ($my['options']['output']) {
@@ -563,13 +563,13 @@ function get_execution(&$dbHandler, $execution_id, $opt = null)
 function delete_execution(&$db, $exec_id)
 {
     $tables = tlObjectWithDB::getDBTables(
-        array(
+        [
             'executions',
             'execution_bugs',
             'cfield_execution_values',
             'execution_tcsteps',
             'attachments'
-        ));
+        ]);
 
     $sid = intval($exec_id);
 
@@ -598,7 +598,7 @@ function delete_execution(&$db, $exec_id)
     }
 
     // order is CRITIC, because is DELETING ORDER => ATTENTION to Foreing Keys
-    $sql = array();
+    $sql = [];
     $sql[] = "DELETE FROM {$tables['execution_bugs']} WHERE execution_id = {$sid}";
     $sql[] = "DELETE FROM {$tables['cfield_execution_values']} WHERE execution_id = {$sid}";
     $sql[] = "DELETE FROM {$tables['execution_tcsteps']} WHERE execution_id = {$sid}";
@@ -651,17 +651,17 @@ function updateExecutionNotes(&$db, $execID, $notes)
 function getBugsForExecutions(&$db, &$bug_interface, $execSet, $raw = null)
 {
     $tables = tlObjectWithDB::getDBTables(
-        array(
+        [
             'executions',
             'execution_bugs',
             'builds'
-        ));
-    $bugSet = array();
-    $bugCache = array();
+        ]);
+    $bugSet = [];
+    $bugCache = [];
 
     $debugMsg = 'FILE:: ' . __FILE__ . ' :: FUNCTION:: ' . __FUNCTION__;
     if (is_object($bug_interface)) {
-        $sql = "/* $debugMsg */ SELECT EB.execution_id,EB.bug_id,B.name AS build_name " .
+        $sql = "/* {$debugMsg} */ SELECT EB.execution_id,EB.bug_id,B.name AS build_name " .
             " FROM {$tables['execution_bugs']} EB " .
             " JOIN {$tables['executions']} E ON E.id = EB.execution_id " .
             " JOIN {$tables['builds']} B  ON B.id = E.build_id " .
@@ -710,7 +710,7 @@ function addIssue($dbHandler, $argsObj, $itsObj, $opt = null)
         $my->tcaseMgr = new testcase($dbHandler);
     }
 
-    $ret = array();
+    $ret = [];
     $ret['status_ok'] = true;
 
     $issueText = generateIssueText($dbHandler, $argsObj, $itsObj, $opt);
@@ -751,12 +751,12 @@ function addIssue($dbHandler, $argsObj, $itsObj, $opt = null)
         $opt = new stdClass();
     }
 
-    $p2check = array(
+    $p2check = [
         'issueType',
         'issuePriority',
         'artifactComponent',
         'artifactVersion'
-    );
+    ];
     foreach ($p2check as $prop) {
         if (property_exists($argsObj, $prop) && ! is_null($argsObj->$prop)) {
             $opt->$prop = $argsObj->$prop;
@@ -790,12 +790,12 @@ function copyIssues(&$dbHandler, $source, $dest)
 {
     $debugMsg = 'FILE:: ' . __FILE__ . ' :: FUNCTION:: ' . __FUNCTION__;
 
-    $tables = tlObjectWithDB::getDBTables(array(
+    $tables = tlObjectWithDB::getDBTables([
         'execution_bugs'
-    ));
-    $blist = array();
+    ]);
+    $blist = [];
 
-    $sql = "/* $debugMsg */ SELECT bug_id FROM {$tables['execution_bugs']} " .
+    $sql = "/* {$debugMsg} */ SELECT bug_id FROM {$tables['execution_bugs']} " .
         " WHERE execution_id = " . intval($source);
 
     $linkedIssues = $dbHandler->fetchRowsIntoMap($sql, 'bug_id');
@@ -804,13 +804,13 @@ function copyIssues(&$dbHandler, $source, $dest)
         $safeDest = intval($dest);
 
         $blist = implode("','", $idSet);
-        $sql = "/* $debugMsg */ DELETE FROM {$tables['execution_bugs']} " .
+        $sql = "/* {$debugMsg} */ DELETE FROM {$tables['execution_bugs']} " .
             " WHERE execution_id=" . $safeDest . " AND bug_id IN ('" . $blist .
             "')";
 
         $dbHandler->exec_query($sql);
 
-        $dummy = array();
+        $dummy = [];
         foreach ($idSet as $bi) {
             $dummy[] = "({$safeDest},'{$bi}')";
         }
@@ -827,10 +827,10 @@ function generateIssueText($dbHandler, $argsObj, $itsObj, $opt = null)
 {
     $ret = new stdClass();
 
-    $options = array(
+    $options = [
         'addLinkToTL' => false,
         'addLinkToTLPrintView' => false
-    );
+    ];
     $options = array_merge($options, (array) $opt);
 
     $resultsCfg = config_get('results');
@@ -838,15 +838,15 @@ function generateIssueText($dbHandler, $argsObj, $itsObj, $opt = null)
     $exec = current(
         $tcaseMgr->getExecution($argsObj->exec_id, $argsObj->tcversion_id));
     $tcase = $tcaseMgr->get_by_id(null, $argsObj->tcversion_id, null,
-        array(
+        [
             'output' => 'essential',
             'getPrefix' => true
-        ));
+        ]);
 
     $ret->auditSign = $tcaseMgr->getAuditSignature(
-        (object) array(
+        (object) [
             'id' => $tcase[0]['testcase_id']
-        ));
+        ]);
 
     $exec['statusVerbose'] = $exec['status'];
     if (isset($resultsCfg['code_status'][$exec['status']])) {
@@ -862,7 +862,7 @@ function generateIssueText($dbHandler, $argsObj, $itsObj, $opt = null)
 
     // will be used to manage Dynamic Values From XML Configuration
     $ret->tagValue = new stdClass();
-    $ret->tagValue->tag = array(
+    $ret->tagValue->tag = [
         '%%EXECID%%',
         '%%TESTER%%',
         '%%TESTPLAN%%',
@@ -872,9 +872,9 @@ function generateIssueText($dbHandler, $argsObj, $itsObj, $opt = null)
         '%%EXECSTATUS%%',
         '%%TCNAME%%',
         '%%TCEXTID%%'
-    );
+    ];
 
-    $ret->tagValue->value = array(
+    $ret->tagValue->value = [
         $argsObj->exec_id,
         $exec['tester_login'],
         $exec['testplan_name'],
@@ -884,22 +884,22 @@ function generateIssueText($dbHandler, $argsObj, $itsObj, $opt = null)
         $exec['statusVerbose'],
         $tcase[0]['name'],
         $tcase[0]['fullExternalID']
-    );
+    ];
 
-    $ret->execContext = array(
+    $ret->execContext = [
         'testplan_name' => $exec['testplan_name'],
         'platform_name' => $platform_identity,
         'build_name' => $exec['build_name']
-    );
+    ];
 
-    $ret->execSignature = array(
+    $ret->execSignature = [
         'id' => $argsObj->exec_id,
         'timestamp' => $exec['execution_ts'],
         'status' => $exec['statusVerbose']
-    );
+    ];
 
     if (property_exists($argsObj, 'bug_notes')) {
-        $lblKeys = array(
+        $lblKeys = [
             'issue_exec_id',
             'issue_tester',
             'issue_tplan',
@@ -909,9 +909,9 @@ function generateIssueText($dbHandler, $argsObj, $itsObj, $opt = null)
             'issue_platform',
             'tc_name',
             'tc_external_id'
-        );
+        ];
 
-        $lbl = array();
+        $lbl = [];
         $l2d = count($lblKeys);
         for ($ldx = 0; $ldx < $l2d; $ldx ++) {
             $lbl[$lblKeys[$ldx]] = lang_get($lblKeys[$ldx]);
@@ -919,7 +919,7 @@ function generateIssueText($dbHandler, $argsObj, $itsObj, $opt = null)
 
         $tags = $ret->tagValue->tag;
         $tags[] = '%%EXECNOTES%%';
-        $values = array(
+        $values = [
             sprintf($lbl['issue_exec_id'], $argsObj->exec_id),
             sprintf($lbl['issue_tester'], $exec['tester_login']),
             sprintf($lbl['issue_tplan'], $exec['testplan_name']),
@@ -930,7 +930,7 @@ function generateIssueText($dbHandler, $argsObj, $itsObj, $opt = null)
             sprintf($lbl['tc_name'], $tcase[0]['name']),
             sprintf($lbl['tc_external_id'], $tcase[0]['fullExternalID']),
             $exec['execution_notes']
-        );
+        ];
 
         $ret->description = str_replace($tags, $values, $argsObj->bug_notes);
 
@@ -1007,18 +1007,18 @@ function getIssueTrackerMetaData($itsObj)
 {
     if (! isset($_SESSION['issueTrackerCfg']) ||
         ! $_SESSION['issueTrackerCfg'][$itsObj->name]) {
-        $ret = array();
+        $ret = [];
         $ret['issueTypes'] = null;
         $ret['components'] = null;
         $ret['priorities'] = null;
         $ret['versions'] = null;
 
-        $target = array(
+        $target = [
             'issueTypes' => 'getIssueTypesForHTMLSelect',
             'priorities' => 'getPrioritiesForHTMLSelect',
             'versions' => 'getVersionsForHTMLSelect',
             'components' => 'getComponentsForHTMLSelect'
-        );
+        ];
 
         foreach ($target as $key => $worker) {
             if (method_exists($itsObj, $worker)) {
@@ -1036,14 +1036,14 @@ function getIssueTrackerMetaData($itsObj)
  */
 function completeCreateIssue(&$execContext, $exsig)
 {
-    $p2i = array(
+    $p2i = [
         'bug_summary',
         'bug_notes',
         'issueType',
         'issuePriority',
         'artifactVersion',
         'artifactComponent'
-    );
+    ];
     foreach ($p2i as $key) {
         if (property_exists($exsig, $key)) {
             $execContext->$key = $exsig->$key;
@@ -1055,32 +1055,32 @@ function completeCreateIssue(&$execContext, $exsig)
  */
 function completeIssueForStep(&$execContext, $execSigfrid, $exData, $stepID)
 {
-    $p2i = array(
+    $p2i = [
         'issueSummaryForStep',
         'issueBodyForStep',
         'issueTypeForStep',
         'issuePriorityForStep',
         'artifactVersionForStep',
         'artifactComponentForStep'
-    );
+    ];
     foreach ($p2i as $key) {
         if (isset($exData, $key) && isset($exData[$key], $stepID)) {
             if (! property_exists($execContext, $key)) {
-                $execContext->$key = array();
+                $execContext->$key = [];
             }
             $ref = &$execContext->$key;
             $ref[$stepID] = $exData[$key][$stepID];
         }
     }
 
-    $p2i = array(
+    $p2i = [
         'issueSummaryForStep' => 'bug_summary',
         'issueBodyForStep' => 'bug_notes',
         'issueTypeForStep' => 'issueType',
         'issuePriorityForStep' => 'issuePriority',
         'artifactVersionForStep' => 'artifactVersion',
         'artifactComponentForStep' => 'artifactComponent'
-    );
+    ];
     foreach ($p2i as $from => $to) {
         if (property_exists($execContext, $from)) {
             $ref = &$execContext->$from;
@@ -1101,9 +1101,9 @@ function completeIssueForStep(&$execContext, $execSigfrid, $exData, $stepID)
 function addAttachmentsToExec($execID, &$docRepo)
 {
     $tableRef = DB_TABLE_PREFIX . 'executions';
-    $repOpt = array(
+    $repOpt = [
         'allow_empty_title' => true
-    );
+    ];
 
     echo '<pre>';
     var_dump($_FILES['uploadedFile']['name'][0]);

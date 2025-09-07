@@ -25,16 +25,16 @@ $tplan_id = 32674;
 // ------------------------------------------------------------------------------------
 $descr = 'Get all linked test case versions';
 
-$filters = array(
+$filters = [
     'tcase_id' => 32614
-);
-$opt = array(
-    'exclude_info' => array(
+];
+$opt = [
+    'exclude_info' => [
         'exec_info',
         'assigned_on_build',
         'priority'
-    )
-);
+    ]
+];
 $lt = $obj_mgr->get_linked_tcversions($tplan_id, $filters, $opt);
 echo '<hr>';
 echo $descr . '<br>';
@@ -55,16 +55,16 @@ new dBug($lt);
 // ------------------------------------------------------------------------------------
 $descr = 'Get all linked test case versions';
 
-$filters = array(
+$filters = [
     'tcase_id' => 32614,
     'assigned_on_build' => 5
-);
-$opt = array(
-    'exclude_info' => array(
+];
+$opt = [
+    'exclude_info' => [
         'exec_info',
         'priority'
-    )
-);
+    ]
+];
 $lt = $obj_mgr->get_linked_tcversions($tplan_id, $filters, $opt);
 echo '<hr>';
 echo $descr . '<br>';
@@ -85,16 +85,16 @@ new dBug($lt);
 // ------------------------------------------------------------------------------------
 $descr = 'Get all linked test case versions';
 
-$filters = array(
+$filters = [
     'tcase_id' => 32614,
     'assigned_on_build' => 5555
-);
-$opt = array(
-    'exclude_info' => array(
+];
+$opt = [
+    'exclude_info' => [
         'exec_info',
         'priority'
-    )
-);
+    ]
+];
 $lt = $obj_mgr->get_linked_tcversions($tplan_id, $filters, $opt);
 echo '<hr>';
 echo $descr . '<br>';
@@ -115,16 +115,16 @@ new dBug($lt);
 // ------------------------------------------------------------------------------------
 $descr = 'Get all linked test case versions';
 
-$filters = array(
+$filters = [
     'platform_id' => 2,
     'assigned_on_build' => 5555
-);
-$opt = array(
-    'exclude_info' => array(
+];
+$opt = [
+    'exclude_info' => [
         'exec_info',
         'priority'
-    )
-);
+    ]
+];
 $lt = $obj_mgr->get_linked_tcversions($tplan_id, $filters, $opt);
 echo '<hr>';
 echo $descr . '<br>';
@@ -146,16 +146,16 @@ new dBug($lt);
 $tplan_id = 32676;
 $descr = 'Get all linked test case versions';
 
-$filters = array(
+$filters = [
     'platform_id' => 9,
     'assigned_on_build' => 5555
-);
-$opt = array(
-    'exclude_info' => array(
+];
+$opt = [
+    'exclude_info' => [
         'exec_info',
         'priority'
-    )
-);
+    ]
+];
 $lt = $obj_mgr->get_linked_tcversions($tplan_id, $filters, $opt);
 echo '<hr>';
 echo $descr . '<br>';

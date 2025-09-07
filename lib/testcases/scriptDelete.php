@@ -13,13 +13,13 @@ require_once '../functions/common.php';
 testlinkInitPage($db, false, false, "checkRights");
 
 $templateCfg = templateConfiguration();
-list ($args, $gui, $cts, $codeT) = initEnv($db);
+[$args, $gui, $cts, $codeT] = initEnv($db);
 
 if (! is_null($codeT) && $args->project_key != "" && $args->repository_name != "" &&
     $args->code_path != "") {
-    $l18n = init_labels(array(
+    $l18n = init_labels([
         "error_code_does_not_exist_on_cts" => null
-    ));
+    ]);
 
     $gui->msg = "";
     $scriptDeleted = delTestcaseScript($db, $args->tcversion_id,
@@ -48,23 +48,23 @@ $smarty->display($templateCfg->template_dir . $templateCfg->default_template);
  */
 function initEnv(&$dbHandler)
 {
-    $iParams = array(
-        "script_id" => array(
+    $iParams = [
+        "script_id" => [
             "REQUEST",
             tlInputParameter::STRING_N
-        ),
-        "tproject_id" => array(
+        ],
+        "tproject_id" => [
             "REQUEST",
             tlInputParameter::INT_N
-        ),
-        "tcversion_id" => array(
+        ],
+        "tcversion_id" => [
             "REQUEST",
             tlInputParameter::INT_N
-        ),
+        ],
         "project_key" => null,
         "repository_name" => null,
         "code_path" => null
-    );
+    ];
 
     $args = new stdClass();
     I_PARAMS($iParams, $args);
@@ -94,16 +94,16 @@ function initEnv(&$dbHandler)
     $gui->code_path = $args->code_path;
 
     // Special processing
-    list ($ctObj, $ctCfg) = getCodeTracker($dbHandler, $args, $gui);
+    [$ctObj, $ctCfg] = getCodeTracker($dbHandler, $args, $gui);
 
     $args->basehref = $_SESSION['basehref'];
 
-    return array(
+    return [
         $args,
         $gui,
         $ctObj,
         $ctCfg
-    );
+    ];
 }
 
 /**
@@ -130,10 +130,10 @@ function getCodeTracker(&$dbHandler, $argsObj, &$guiObj)
             $guiObj->codeTrackerCfg->createCodeURL = $cts->getEnterCodeURL();
         }
     }
-    return array(
+    return [
         $cts,
         $codeTrackerCfg
-    );
+    ];
 }
 
 /**
@@ -141,9 +141,9 @@ function getCodeTracker(&$dbHandler, $argsObj, &$guiObj)
 function delTestcaseScript(&$dbHandler, $tcversion_id, $project_key, $repo_name,
     $code_path)
 {
-    $tbk = array(
+    $tbk = [
         'testcase_script_links'
-    );
+    ];
     $tbl = tlObjectWithDB::getDBTables($tbk);
     $sql = " DELETE FROM `{$tbl['testcase_script_links']}` " .
         " WHERE `tcversion_id` = " . intval($tcversion_id) .

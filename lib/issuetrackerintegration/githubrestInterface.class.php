@@ -36,20 +36,20 @@ class githubrestInterface extends issueTrackerInterface
     {
         $this->name = $name;
         $this->interfaceViaDB = false;
-        $this->methodOpt['buildViewBugLink'] = array(
+        $this->methodOpt['buildViewBugLink'] = [
             'addSummary' => true,
             'colorByStatus' => false
-        );
+        ];
 
-        $this->defaultResolvedStatus = array();
-        $this->defaultResolvedStatus[] = array(
+        $this->defaultResolvedStatus = [];
+        $this->defaultResolvedStatus[] = [
             'code' => 'open',
             'verbose' => 'open'
-        );
-        $this->defaultResolvedStatus[] = array(
+        ];
+        $this->defaultResolvedStatus[] = [
             'code' => 'closed',
             'verbose' => 'closed'
-        );
+        ];
 
         if (! $this->setCfg($config)) {
             return false;
@@ -83,9 +83,9 @@ class githubrestInterface extends issueTrackerInterface
                     $cc = current($elem);
                     $kk = key($elem);
                     foreach ($cc as $value) {
-                        $this->issueOtherAttr[$name][] = array(
+                        $this->issueOtherAttr[$name][] = [
                             $kk => (string) $value
-                        );
+                        ];
                     }
                 } else {
                     $this->issueOtherAttr[$name] = (string) $elem;
@@ -97,9 +97,9 @@ class githubrestInterface extends issueTrackerInterface
         // are managed through the issueAdditionalAttributes
         //
         // On Redmine 1 seems to be standard for Issues/Bugs
-        $this->issueDefaults = array(
+        $this->issueDefaults = [
             'trackerid' => 1
-        );
+        ];
         foreach ($this->issueDefaults as $prop => $default) {
             if (! isset($this->issueAttr[$prop])) {
                 $this->issueAttr[$prop] = $default;
@@ -165,18 +165,18 @@ class githubrestInterface extends issueTrackerInterface
 
         if ($processCatch) {
             $logDetails = '';
-            foreach (array(
+            foreach ([
                 'url',
                 'user',
                 'apikey',
                 'owner',
                 'repo'
-            ) as $v) {
-                $logDetails .= "$v={$this->cfg->$v} / ";
+            ] as $v) {
+                $logDetails .= "{$v}={$this->cfg->$v} / ";
             }
             $logDetails = trim($logDetails, '/ ');
             $this->connected = false;
-            tLog(__METHOD__ . " [$logDetails] " . $e->getMessage(), 'ERROR');
+            tLog(__METHOD__ . " [{$logDetails}] " . $e->getMessage(), 'ERROR');
         }
     }
 
@@ -222,10 +222,10 @@ class githubrestInterface extends issueTrackerInterface
                 $issue->summary = (string) $jsonObj->title . ":\n" .
                     (string) $jsonObj->body;
                 $notes = $this->APIClient->getNotes((int) $issueID);
-                if (is_array($notes) && count($notes) > 0) {
+                if (is_array($notes) && $notes !== []) {
                     foreach ($notes as $key => $note) {
-                        $issue->summaryHTMLString .= "</br>[Note $key]:$note->body";
-                        $issue->summary .= "\n[Note $key]: $note->body";
+                        $issue->summaryHTMLString .= "</br>[Note {$key}]:$note->body";
+                        $issue->summary .= "\n[Note {$key}]: $note->body";
                     }
                 }
                 $issue->isResolved = $this->state == 'closed';
@@ -296,20 +296,20 @@ class githubrestInterface extends issueTrackerInterface
             if (is_null($op)) {
                 throw new Exception("Error creating issue", 1);
             }
-            $ret = array(
+            $ret = [
                 'status_ok' => true,
                 'id' => (string) $op->number,
                 'msg' => sprintf(lang_get('github_bug_created'), $summary,
                     $this->APIClient->repo)
-            );
+            ];
         } catch (Exception $e) {
             $msg = "Create github Ticket FAILURE => " . $e->getMessage();
             tLog($msg, 'WARNING');
-            $ret = array(
+            $ret = [
                 'status_ok' => false,
                 'id' => - 1,
                 'msg' => $msg . ' - serialized issue:' . serialize($issue)
-            );
+            ];
         }
         return $ret;
     }
@@ -322,12 +322,12 @@ class githubrestInterface extends issueTrackerInterface
         if (is_null($op)) {
             throw new Exception("Error setting note", 1);
         }
-        return array(
+        return [
             'status_ok' => true,
             'id' => (string) $op->id,
             'msg' => sprintf(lang_get('github_bug_comment'), $op->body,
                 $this->APIClient->repo)
-        );
+        ];
     }
 
     /**

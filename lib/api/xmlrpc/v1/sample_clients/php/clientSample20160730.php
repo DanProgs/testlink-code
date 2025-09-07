@@ -26,29 +26,29 @@ $env->tlTestCaseVersion = 1;
 // ---------------------------------------------- :)
 
 $doSetUp = false;
-$phpSteps = array();
+$phpSteps = [];
 
 if ($doSetUp) {
-    $phpSteps[] = array(
+    $phpSteps[] = [
         'f2i' => 'stepDeleteTestProject.php',
         'id' => 'tlProjectID'
-    );
-    $phpSteps[] = array(
+    ];
+    $phpSteps[] = [
         'f2i' => 'stepCreateTestProject.php',
         'id' => 'tlProjectID'
-    );
-    $phpSteps[] = array(
+    ];
+    $phpSteps[] = [
         'f2i' => 'stepCreateTestSuite.php',
         'id' => 'tlSuiteID'
-    );
-    $phpSteps[] = array(
+    ];
+    $phpSteps[] = [
         'f2i' => 'stepCreateTestCase.php',
         'id' => 'tlJolt'
-    );
-    $phpSteps[] = array(
+    ];
+    $phpSteps[] = [
         'f2i' => 'stepCreateTestPlan.php',
         'id' => 'tlPlanID'
-    );
+    ];
 } else {
     //
     $env->tlProjectID = 1046;
@@ -57,10 +57,10 @@ if ($doSetUp) {
     $tlOverWriteOnAdd = 1;
 }
 
-$phpSteps[] = array(
+$phpSteps[] = [
     'f2i' => 'stepAddTestCaseToTestPlan.php',
     'id' => 'tlJolt'
-);
+];
 
 foreach ($phpSteps as $m2i) {
     try {

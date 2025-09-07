@@ -51,24 +51,24 @@ $op = config_get('bugInterfaceOn');
 echo 'Connection Status:' . ($op ? 'OK' : 'KO Oohhh!') . '<br><br>';
 
 if ($op) {
-    $issue2check = array(
-        array(
+    $issue2check = [
+        [
             'issue' => 11776,
             'exists' => true
-        ),
-        array(
+        ],
+        [
             'issue' => 99999,
             'exists' => false
-        )
-    );
+        ]
+    ];
 
-    $methods = array(
+    $methods = [
         'getBugSummaryString',
         'getBugStatus',
         'getBugStatusString',
         'checkBugID_existence',
         'buildViewBugLink'
-    );
+    ];
 
     $if = config_get('bugInterface');
     $tc = 1;
@@ -80,7 +80,7 @@ if ($op) {
         foreach ($methods as $call) {
             $x = $if->$call($issue);
             echo '<br><b>Test Case #' . $tc . '</b><br>';
-            echo "<br>\$if->$call($issue) => " . $x . '<br><br>';
+            echo "<br>\$if->{$call}({$issue}) => " . $x . '<br><br>';
             $tc ++;
         }
     }

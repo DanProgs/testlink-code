@@ -175,17 +175,17 @@ function doUpdate(&$dbObj, &$argsObj)
 {
     $debugMsg = 'File:' . __FILE__ . ' - Function: ' . __FUNCTION__;
     $tables = tlObject::getDBTables(
-        array(
+        [
             'testplan_tcversions',
             'executions',
             'cfield_execution_values'
-        ));
+        ]);
     $msg = "";
     if (! is_null($argsObj->checkedTestCaseSet)) {
         foreach ($argsObj->checkedTestCaseSet as $tcaseID => $tcversionID) {
             $newtcversion = $argsObj->newVersionSet[$tcaseID];
             foreach ($tables as $table2update) {
-                $sql = "/* $debugMsg */ UPDATE $table2update " .
+                $sql = "/* {$debugMsg} */ UPDATE {$table2update} " .
                     " SET tcversion_id={$newtcversion} " .
                     " WHERE tcversion_id={$tcversionID} " .
                     " AND testplan_id={$argsObj->tplan_id}";
@@ -238,9 +238,9 @@ function processTestSuite(&$dbHandler, &$argsObj, $keywordsFilter, &$tplanMgr,
 {
     // hmm need to document why we use ONLY $keywordsFilter
     $out = getFilteredSpecView($dbHandler, $argsObj, $tplanMgr, $tcaseMgr,
-        array(
+        [
             'keywordsFilter' => $keywordsFilter
-        ));
+        ]);
     tideUpForGUI($out);
     return $out;
 }
@@ -309,10 +309,10 @@ function doUpdateAllToLatest(&$dbObj, $argsObj, &$tplanMgr)
 function processTestCase(&$dbHandler, &$argsObj, &$tplanMgr, &$treeMgr)
 {
     $xx = $tplanMgr->getLinkInfo($argsObj->tplan_id, $argsObj->id, null,
-        array(
+        [
             'output' => 'tcase_info',
             'collapse' => true
-        ));
+        ]);
     $linked_items[$xx['tc_id']][0] = $xx; // adapt data structure to gen_spec_view() desires
 
     $my_path = $treeMgr->get_path($argsObj->id);
@@ -320,14 +320,14 @@ function processTestCase(&$dbHandler, &$argsObj, &$tplanMgr, &$treeMgr)
     $tsuite_data = $my_path[$idx_ts - 1];
 
     // Again here need to understand why we seems to consider ONLY keywords filter.
-    $filters = array(
+    $filters = [
         'keywords' => $argsObj->keyword_id,
         'testcases' => $argsObj->id
-    );
-    $opt = array(
+    ];
+    $opt = [
         'write_button_only_if_linked' => 1,
         'prune_unlinked_tcversions' => 1
-    );
+    ];
     $out = gen_spec_view($dbHandler, 'testplan', $argsObj->tplan_id,
         $tsuite_data['id'], $tsuite_data['name'], $linked_items, null, $filters,
         $opt);
@@ -346,10 +346,10 @@ function processTestCase(&$dbHandler, &$argsObj, &$tplanMgr, &$treeMgr)
  */
 function processTestPlan(&$argsObj, &$tplanMgr)
 {
-    $set2update = array(
+    $set2update = [
         'items' => null,
         'msg' => ''
-    );
+    ];
     $check = $tplanMgr->getLinkedCount($argsObj->tplan_id);
     $set2update['msg'] = $check == 0 ? lang_get('testplan_seems_empty') : lang_get(
         'no_newest_version_of_linked_tcversions');

@@ -18,25 +18,25 @@ show_api_db_sample_msg();
 $method = 'assignRequirements';
 $unitTestDescription = "Test - {$method}";
 
-$args = array();
+$args = [];
 $args["devKey"] = DEV_KEY;
 $args["testprojectid"] = 1;
 $args["testcaseexternalid"] = 'OPSLC-55';
-$args["requirements"] = array(
-    array(
+$args["requirements"] = [
+    [
         'req_spec' => 336,
-        'requirements' => array(
+        'requirements' => [
             340
-        )
-    ),
-    array(
+        ]
+    ],
+    [
         'req_spec' => 345,
-        'requirements' => array(
+        'requirements' => [
             346,
             348
-        )
-    )
-);
+        ]
+    ]
+];
 
 $additionalInfo = '';
 

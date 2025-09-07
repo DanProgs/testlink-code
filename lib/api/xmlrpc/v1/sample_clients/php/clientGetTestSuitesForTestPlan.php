@@ -31,7 +31,7 @@ $method = 'getTestSuitesForTestPlan';
 $test_num = 1;
 $unitTestDescription = "Test {$test_num} - {$method}";
 
-$args = array();
+$args = [];
 $args["devKey"] = DEV_KEY;
 $args["testplanid"] = 3;
 

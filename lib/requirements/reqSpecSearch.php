@@ -46,12 +46,12 @@ $gui->tableSet = null;
 $itemSet = null;
 if ($args->tprojectID) {
     $tables = tlObjectWithDB::getDBTables(
-        array(
+        [
             'cfield_design_values',
             'nodes_hierarchy',
             'req_specs',
             'req_specs_revisions'
-        ));
+        ]);
     $filter = null;
     $join = null;
 
@@ -117,9 +117,9 @@ if (! empty($itemSet)) {
     $gui->resultSet = $itemSet;
     if ($gui->row_qty <= $req_cfg->search->max_qty_for_display) {
         $req_set = array_keys($itemSet);
-        $options = array(
+        $options = [
             'output_format' => 'path_as_string'
-        );
+        ];
         $gui->path_info = $tproject_mgr->tree_manager->get_full_path_verbose(
             $req_set, $options);
     } else {
@@ -141,13 +141,13 @@ $smarty->display($templateCfg->template_dir . $tpl);
 
 function buildExtTable($gui, $charset)
 {
-    $lbl = array(
+    $lbl = [
         'edit' => 'requirement_spec',
         'rev' => 'revision_short',
         'req_spec' => 'req_spec',
         'revision_tag' => 'revision_tag',
         'open_on_new_window' => 'open_on_new_window'
-    );
+    ];
     $labels = init_labels($lbl);
     $edit_icon = TL_THEME_IMG_DIR . "edit_icon.png";
     $table = null;
@@ -164,18 +164,18 @@ function buildExtTable($gui, $charset)
     // ...
     // }
     if (! empty($gui->resultSet)) {
-        $matrixData = array();
-        $columns = array();
-        $columns[] = array(
+        $matrixData = [];
+        $columns = [];
+        $columns[] = [
             'title_key' => 'req_spec',
             'type' => 'text',
             'groupable' => 'false',
             'hideable' => 'false'
-        );
+        ];
 
         $key2loop = array_keys($gui->resultSet);
         foreach ($key2loop as $rspec_id) {
-            $rowData = array();
+            $rowData = [];
 
             $itemSet = $gui->resultSet[$rspec_id];
             $rfx = &$itemSet[0];
@@ -202,9 +202,9 @@ function buildExtTable($gui, $charset)
         $table->sortDirection = 'ASC';
 
         $table->showToolbar = false;
-        $table->addCustomBehaviour('text', array(
+        $table->addCustomBehaviour('text', [
             'render' => 'columnWrap'
-        ));
+        ]);
         $table->storeTableState = false;
     }
     return $table;
@@ -223,7 +223,7 @@ function initArgs()
     $args = new stdClass();
     $_REQUEST = strings_stripSlashes($_REQUEST);
 
-    $strnull = array(
+    $strnull = [
         'requirement_document_id',
         'name',
         'scope',
@@ -231,7 +231,7 @@ function initArgs()
         'custom_field_value',
         'reqSpecType',
         'log_message'
-    );
+    ];
 
     foreach ($strnull as $keyvar) {
         $args->$keyvar = isset($_REQUEST[$keyvar]) ? trim($_REQUEST[$keyvar]) : null;
@@ -239,9 +239,9 @@ function initArgs()
             $args->$keyvar) : null;
     }
 
-    $int0 = array(
+    $int0 = [
         'custom_field_id'
-    );
+    ];
     foreach ($int0 as $keyvar) {
         $args->$keyvar = isset($_REQUEST[$keyvar]) ? intval($_REQUEST[$keyvar]) : 0;
     }

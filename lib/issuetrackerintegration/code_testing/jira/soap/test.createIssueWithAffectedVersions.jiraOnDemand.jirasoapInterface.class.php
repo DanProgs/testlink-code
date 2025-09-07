@@ -48,10 +48,10 @@ var_dump($its->isConnected());
 
 if ($its->isConnected()) {
     $today = date("Y-m-d H:i:s");
-    $issue = array(
+    $issue = [
         'summary' => 'Issue Via API' . $today,
         'description' => 'Do Androids Dream of Electric Sheep?'
-    );
+    ];
     $zorro = $its->addIssue($issue['summary'], $issue['description']);
     echo '<pre>';
     var_dump($zorro);

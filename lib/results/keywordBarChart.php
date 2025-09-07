@@ -42,7 +42,7 @@ function getDataAndScale(&$dbHandler, $argsObj)
 {
     $resultsCfg = config_get('results');
     $obj = new stdClass();
-    $items = array();
+    $items = [];
     $totals = null;
 
     $metricsMgr = new tlTestPlanMetrics($dbHandler);
@@ -103,19 +103,19 @@ function getDataAndScale(&$dbHandler, $argsObj)
  */
 function initArgs(&$dbHandler)
 {
-    $iParams = array(
-        "apikey" => array(
+    $iParams = [
+        "apikey" => [
             tlInputParameter::STRING_N,
             0,
             64
-        ),
-        "tproject_id" => array(
+        ],
+        "tproject_id" => [
             tlInputParameter::INT_N
-        ),
-        "tplan_id" => array(
+        ],
+        "tplan_id" => [
             tlInputParameter::INT_N
-        )
-    );
+        ]
+    ];
 
     $args = new stdClass();
     R_PARAMS($iParams, $args);

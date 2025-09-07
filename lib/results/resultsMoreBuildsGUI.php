@@ -92,17 +92,17 @@ function initializeGui(&$dbHandler, $args)
     // array(TL_USER_ANYBODY => $gui->str_option_any,
     // TL_USER_NOBODY => $gui->str_option_none) );
     $gui->assigned_users->items = getUsersForHtmlOptions($dbHandler,
-        ALL_USERS_FILTER, array(
+        ALL_USERS_FILTER, [
             TL_USER_ANYBODY => $gui->str_option_any
-        ));
+        ]);
 
     $gui->builds->items = $tplan_mgr->get_builds($gui->tplan_id,
         testplan::ACTIVE_BUILDS);
     $gui->platforms->items = $tplan_mgr->getPlatforms($gui->tplan_id);
     $gui->testsuites->items = $tplan_mgr->getRootTestSuites($gui->tplan_id,
-        $gui->tproject_id, array(
+        $gui->tproject_id, [
             'output' => 'plain'
-        ));
+        ]);
 
     $gui->keywords->items[0] = $gui->str_option_any;
     if (! is_null(
@@ -110,13 +110,13 @@ function initializeGui(&$dbHandler, $args)
         $gui->keywords->items += $tplan_keywords_map;
     }
 
-    $key2loop = array(
+    $key2loop = [
         'keywords',
         'builds',
         'platforms',
         'testsuites',
         'assigned_users'
-    );
+    ];
     foreach ($key2loop as $kx) {
         $gui->$kx->qty = count($gui->$kx->items);
     }
@@ -141,14 +141,14 @@ function initializeGui(&$dbHandler, $args)
  */
 function initArgs()
 {
-    $iParams = array(
-        "format" => array(
+    $iParams = [
+        "format" => [
             tlInputParameter::INT_N
-        ),
-        "tplan_id" => array(
+        ],
+        "tplan_id" => [
             tlInputParameter::INT_N
-        )
-    );
+        ]
+    ];
 
     $args = new stdClass();
     R_PARAMS($iParams, $args);

@@ -16,19 +16,19 @@
 function oauth_get_token($authCfg, $code)
 {
     $result = new stdClass();
-    $result->status = array(
+    $result->status = [
         'status' => tl::OK,
         'msg' => null
-    );
+    ];
 
     // Params to get token
-    $oauthParams = array(
+    $oauthParams = [
         'code' => $code,
         'client_id' => $authCfg['oauth_client_id'],
         'client_secret' => $authCfg['oauth_client_secret'],
         'scope' => $authCfg['oauth_scope'],
         'grant_type' => $authCfg['oauth_grant_type']
-    );
+    ];
 
     $oauthParams['redirect_uri'] = $authCfg['redirect_uri'];
     if (isset($_SERVER['HTTPS'])) {
@@ -37,18 +37,18 @@ function oauth_get_token($authCfg, $code)
     }
 
     $curlAgent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.7; rv:7.0.1) Gecko/20100101 Firefox/7.0.1';
-    $curlContentType = array(
+    $curlContentType = [
         'Content-Type: application/xml',
         'Accept: application/json'
-    );
+    ];
 
     // Step #1 - Get the token
     $curl = curl_init();
     curl_setopt($curl, CURLOPT_URL, $authCfg['token_url']);
     curl_setopt($curl, CURLOPT_POST, 1);
-    curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+    curl_setopt($curl, CURLOPT_HTTPHEADER, [
         'Accept: application/json'
-    ));
+    ]);
     curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($oauthParams));
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($curl, CURLOPT_COOKIESESSION, true);
@@ -69,7 +69,7 @@ function oauth_get_token($authCfg, $code)
     if (isset($tokenInfo->access_token)) {
         $oauthParams['access_token'] = $tokenInfo->access_token;
 
-        $targetURL = array();
+        $targetURL = [];
         $targetURL['user'] = $authCfg['oauth_profile'];
         $curlContentType[] = 'Authorization: Bearer ' .
             $oauthParams['access_token'];

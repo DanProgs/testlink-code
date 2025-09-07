@@ -23,13 +23,13 @@ $gui = initializeGui($db, $args);
 $statusGui = getStatusGuiCfg();
 
 // Get all test cases assigned to user without filtering by execution status
-$opt = array(
+$opt = [
     'mode' => 'full_path'
-);
+];
 $filters = initFilters($args);
-$tplan_param = ($args->tplan_id) ? array(
+$tplan_param = ($args->tplan_id) ? [
     $args->tplan_id
-) : testcase::ALL_TESTPLANS;
+] : testcase::ALL_TESTPLANS;
 
 $tcaseMgr = new testcase($db);
 $gui->resultSet = $tcaseMgr->getAssignedToUser($args->user_id,
@@ -41,11 +41,11 @@ $doIt = ! is_null($gui->resultSet);
 $exec = getQuickExecCfg($gui, $imgSet, $statusGui->status_code);
 
 $tables = tlObjectWithDB::getDBTables(
-    array(
+    [
         'nodes_hierarchy',
         'executions',
         'tcversions'
-    ));
+    ]);
 
 if ($args->result != '' && $args->tcvx > 0) {
 
@@ -66,25 +66,25 @@ if ($args->result != '' && $args->tcvx > 0) {
 if ($doIt) {
     $execCfg = config_get('exec_cfg');
 
-    $tables = tlObjectWithDB::getDBTables(array(
+    $tables = tlObjectWithDB::getDBTables([
         'nodes_hierarchy'
-    ));
+    ]);
     $tplanSet = array_keys($gui->resultSet);
     $sql = "SELECT name,id FROM {$tables['nodes_hierarchy']} " . "WHERE id IN (" .
         implode(',', $tplanSet) . ")";
     $gui->tplanNames = $db->fetchRowsIntoMap($sql, 'id');
-    $optColumns = array(
+    $optColumns = [
         'user' => $args->show_user_column,
         'priority' => $args->priority_enabled
-    );
+    ];
 
     $whoiam = $args->show_all_users ? 'tcAssignedToUser' : 'tcAssignedToMe';
 
     foreach ($gui->resultSet as $tplan_id => $tcase_set) {
-        list ($columns, $sortByColumn, $show_platforms) = getColumnsDefinition(
+        [$columns, $sortByColumn, $show_platforms] = getColumnsDefinition(
             $db, $tplan_id, $optColumns);
 
-        $rows = array();
+        $rows = [];
 
         // has logged user right to execute test cases on this (test project,test plan)?
         $hasExecRight = $_SESSION['currentUser']->hasRight($db,
@@ -92,7 +92,7 @@ if ($doIt) {
 
         foreach ($tcase_set as $tcase_platform) {
             foreach ($tcase_platform as $tcase) {
-                $current_row = array();
+                $current_row = [];
                 $tcase_id = $tcase['testcase_id'];
                 $tcversion_id = $tcase['tcversion_id'];
 
@@ -156,9 +156,9 @@ if ($doIt) {
                         $gui->priority[priority_to_level($tcase['priority'])];
                 }
 
-                $leOptions = array(
+                $leOptions = [
                     'getSteps' => 0
-                );
+                ];
                 $lexec = $tcaseMgr->getLastExecution($tcase_id, $tcversion_id,
                     $tplan_id, $tcase['build_id'], $tcase['platform_id'],
                     $leOptions);
@@ -338,11 +338,11 @@ function initArgs(&$dbHandler)
 
     // quick & dirty execution
     $args->tpx = isset($_REQUEST['tpx']) ? intval($_REQUEST['tpx']) : 0;
-    $dirtyHarry = array(
+    $dirtyHarry = [
         'pxi',
         'bxi',
         'tcvx'
-    );
+    ];
     foreach ($dirtyHarry as $tg) {
         $key = $tg . '_' . $args->tpx;
         $args->$tg = isset($_REQUEST[$key]) ? intval($_REQUEST[$key]) : 0;
@@ -363,7 +363,7 @@ function getColumnsDefinition($dbHandler, $tplan_id, $optionalColumns)
     if (is_null($labels)) {
         $tplan_mgr = new testplan($dbHandler);
 
-        $lbl2get = array(
+        $lbl2get = [
             'build' => null,
             'testsuite' => null,
             'testcase' => null,
@@ -376,84 +376,84 @@ function getColumnsDefinition($dbHandler, $tplan_id, $optionalColumns)
             'medium_priority' => null,
             'high_priority' => null,
             'due_since' => null
-        );
+        ];
         $labels = init_labels($lbl2get);
     }
 
-    $colDef = array();
+    $colDef = [];
     $sortByCol = $labels['testsuite'];
 
     // user column is only shown for assignment overview
     if ($optionalColumns['user']) {
-        $colDef[] = array(
+        $colDef[] = [
             'title_key' => 'user',
             'width' => 80
-        );
+        ];
         $sortByCol = $labels['build'];
     }
 
-    $colDef[] = array(
+    $colDef[] = [
         'title_key' => 'build',
         'width' => 80
-    );
-    $colDef[] = array(
+    ];
+    $colDef[] = [
         'title_key' => 'testsuite',
         'width' => 130
-    );
-    $colDef[] = array(
+    ];
+    $colDef[] = [
         'title_key' => 'testcase',
         'width' => 130
-    );
+    ];
 
     $platforms = $tplan_mgr->getPlatforms($tplan_id,
-        array(
+        [
             'outputFormat' => 'map'
-        ));
+        ]);
     if ($show_plat = ! is_null($platforms)) {
-        $colDef[] = array(
+        $colDef[] = [
             'title_key' => 'platform',
             'width' => 50,
             'filter' => 'list',
             'filterOptions' => $platforms
-        );
+        ];
     }
 
     if ($optionalColumns['priority']) {
         $sortByCol = $labels['priority'];
-        $colDef[] = array(
+        $colDef[] = [
             'title_key' => 'priority',
             'width' => 50,
             'filter' => 'ListSimpleMatch',
-            'filterOptions' => array(
+            'filterOptions' => [
                 $labels['low_priority'],
                 $labels['medium_priority'],
                 $labels['high_priority']
-            )
-        );
+            ]
+        ];
     }
 
-    $colDef[] = array(
+    $colDef[] = [
         'title_key' => 'status',
         'width' => 50,
         'type' => 'status'
-    );
+    ];
     if ($optionalColumns['user']) {
-        $colDef[] = array(
+        $colDef[] = [
             'title_key' => 'tester',
             'width' => 80
-        );
+        ];
     }
 
-    $colDef[] = array(
+    $colDef[] = [
         'title_key' => 'due_since',
         'width' => 100
-    );
+    ];
 
-    return array(
+    return [
         $colDef,
         $sortByCol,
         $show_plat
-    );
+    ];
 }
 
 function initializeGui(&$dbHandler, $argsObj)
@@ -469,7 +469,7 @@ function initializeGui(&$dbHandler, $argsObj)
     $gui->warning_msg = '';
     $gui->tableSet = null;
     $gui->l18n = init_labels(
-        array(
+        [
             'tcversion_indicator' => null,
             'goto_testspec' => null,
             'version' => null,
@@ -485,13 +485,13 @@ function initializeGui(&$dbHandler, $argsObj)
             'design' => null,
             'execution' => null,
             'execution_history' => null
-        ));
+        ]);
 
-    $gui->priority = array(
+    $gui->priority = [
         LOW => $gui->l18n['low_priority'],
         MEDIUM => $gui->l18n['medium_priority'],
         HIGH => $gui->l18n['high_priority']
-    );
+    ];
 
     if ($argsObj->show_all_users) {
         $gui->pageTitle = sprintf($gui->l18n['assigned_tc_overview'],
@@ -512,7 +512,7 @@ function initializeGui(&$dbHandler, $argsObj)
 
 function initFilters($argsObj)
 {
-    $filters = array();
+    $filters = [];
 
     $filters['tplan_status'] = $argsObj->show_inactive_tplans ? 'all' : 'active';
     $filters['build_status'] = $argsObj->show_closed_builds ? 'all' : 'open';
@@ -533,21 +533,21 @@ function getStatusGuiCfg()
 
     $ret = new stdClass();
     $ret->status_code = $cfg['status_code'];
-    $ret->code_css = array();
-    $ret->definition = array();
+    $ret->code_css = [];
+    $ret->definition = [];
 
     foreach ($cfg['code_status'] as $code => $status) {
         if (isset($cfg['status_label'][$status])) {
             $label = $cfg['status_label'][$status];
-            $ret->code_css[$code] = array();
+            $ret->code_css[$code] = [];
             $ret->code_css[$code]['translation'] = lang_get($label);
             $ret->code_css[$code]['css_class'] = $cfg['code_status'][$code] .
                 '_text';
-            $ret->definition[$code] = array(
+            $ret->definition[$code] = [
                 "value" => $code,
                 "text" => $ret->code_css[$code]['translation'],
                 "cssClass" => $ret->code_css[$code]['css_class']
-            );
+            ];
         }
     }
     return $ret;

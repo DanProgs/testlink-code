@@ -13,7 +13,7 @@ require_once 'exec.inc.php';
 testlinkInitPage($db, false, false, "checkRights");
 
 $templateCfg = templateConfiguration();
-list ($args, $gui, $its, $issueT) = initEnv($db);
+[$args, $gui, $its, $issueT] = initEnv($db);
 
 if (($args->user_action == 'create' || $args->user_action == 'doCreate') &&
     $gui->issueTrackerCfg->tlCanCreateIssue) {
@@ -32,10 +32,10 @@ if (($args->user_action == 'create' || $args->user_action == 'doCreate') &&
             $dummy = generateIssueText($db, $args, $its);
             $gui->bug_summary = $dummy->summary;
 
-            $aop = array(
+            $aop = [
                 'addLinkToTL' => $args->addLinkToTL,
                 'addLinkToTLPrintView' => $args->addLinkToTLPrintView
-            );
+            ];
 
             $ret = addIssue($db, $args, $its, $aop);
             $gui->issueTrackerCfg->tlCanCreateIssue = $ret['status_ok'];
@@ -47,10 +47,10 @@ if (($args->user_action == 'create' || $args->user_action == 'doCreate') &&
     // to understand if user has pressed ADD Button
     if (! is_null($issueT) && $args->bug_id != "") {
         $l18n = init_labels(
-            array(
+            [
                 "error_wrong_BugID_format" => null,
                 "error_bug_does_not_exist_on_bts" => null
-            ));
+            ]);
 
         switch ($args->user_action) {
             case 'link':
@@ -74,10 +74,10 @@ if (($args->user_action == 'create' || $args->user_action == 'doCreate') &&
                                     $args->direct_link = getDirectLinkToExec(
                                         $db, $args->exec_id);
 
-                                    $aop = array(
+                                    $aop = [
                                         'addLinkToTL' => $args->addLinkToTL,
                                         'addLinkToTLPrintView' => $args->addLinkToTLPrintView
-                                    );
+                                    ];
 
                                     $dummy = generateIssueText($db, $args, $its,
                                         $aop);
@@ -137,80 +137,80 @@ $smarty->display($templateCfg->template_dir . $templateCfg->default_template);
  */
 function initEnv(&$dbHandler)
 {
-    $uaWhiteList = array();
-    $uaWhiteList['elements'] = array(
+    $uaWhiteList = [];
+    $uaWhiteList['elements'] = [
         'link',
         'create',
         'doCreate',
         'add_note'
-    );
-    $uaWhiteList['lenght'] = array();
+    ];
+    $uaWhiteList['lenght'] = [];
     foreach ($uaWhiteList['elements'] as $xmen) {
         $uaWhiteList['lenght'][] = strlen($xmen);
     }
     $user_action['maxLengh'] = max($uaWhiteList['lenght']);
     $user_action['minLengh'] = min($uaWhiteList['lenght']);
 
-    $iParams = array(
-        "exec_id" => array(
+    $iParams = [
+        "exec_id" => [
             "GET",
             tlInputParameter::INT_N
-        ),
-        "bug_id" => array(
+        ],
+        "bug_id" => [
             "REQUEST",
             tlInputParameter::STRING_N
-        ),
-        "tproject_id" => array(
+        ],
+        "tproject_id" => [
             "REQUEST",
             tlInputParameter::INT_N
-        ),
-        "tplan_id" => array(
+        ],
+        "tplan_id" => [
             "REQUEST",
             tlInputParameter::INT_N
-        ),
-        "tcversion_id" => array(
+        ],
+        "tcversion_id" => [
             "REQUEST",
             tlInputParameter::INT_N
-        ),
-        "bug_notes" => array(
+        ],
+        "bug_notes" => [
             "POST",
             tlInputParameter::STRING_N
-        ),
-        "issueType" => array(
+        ],
+        "issueType" => [
             "POST",
             tlInputParameter::INT_N
-        ),
-        "issuePriority" => array(
+        ],
+        "issuePriority" => [
             "POST",
             tlInputParameter::INT_N
-        ),
-        "artifactComponent" => array(
+        ],
+        "artifactComponent" => [
             "POST",
             tlInputParameter::ARRAY_INT
-        ),
-        "artifactVersion" => array(
+        ],
+        "artifactVersion" => [
             "POST",
             tlInputParameter::ARRAY_INT
-        ),
-        "user_action" => array(
+        ],
+        "user_action" => [
             "REQUEST",
             tlInputParameter::STRING_N,
             $user_action['minLengh'],
             $user_action['maxLengh']
-        ),
-        "addLinkToTL" => array(
+        ],
+        "addLinkToTL" => [
             "POST",
             tlInputParameter::CB_BOOL
-        ),
-        "addLinkToTLPrintView" => array(
+        ],
+        "addLinkToTLPrintView" => [
             "POST",
             tlInputParameter::CB_BOOL
-        ),
-        "tcstep_id" => array(
+        ],
+        "tcstep_id" => [
             "REQUEST",
             tlInputParameter::INT_N
-        )
-    );
+        ]
+    ];
 
     $args = new stdClass();
     I_PARAMS($iParams, $args);
@@ -260,7 +260,7 @@ function initEnv(&$dbHandler)
 
     // ---------------------------------------------------------------
     // Special processing
-    list ($itObj, $itCfg) = getIssueTracker($dbHandler, $args, $gui);
+    [$itObj, $itCfg] = getIssueTracker($dbHandler, $args, $gui);
     $itsDefaults = $itObj->getCfg();
 
     $gui->issueType = $args->issueType;
@@ -271,18 +271,18 @@ function initEnv(&$dbHandler)
 
     // This code has been verified with JIRA REST
     if ($itsDefaults->userinteraction == 0) {
-        $singleVal = array(
+        $singleVal = [
             'issuetype' => 'issueType',
             'issuepriority' => 'issuePriority'
-        );
+        ];
         foreach ($singleVal as $kj => $attr) {
             $gui->$attr = $itsDefaults->$kj;
         }
 
-        $multiVal = array(
+        $multiVal = [
             'version' => 'artifactVersion',
             'component' => 'artifactComponent'
-        );
+        ];
         foreach ($multiVal as $kj => $attr) {
             $gui->$attr = (array) $itsDefaults->$kj;
         }
@@ -293,14 +293,14 @@ function initEnv(&$dbHandler)
     $bug_summary['minLengh'] = 1;
     $bug_summary['maxLengh'] = $itObj->getBugSummaryMaxLength();
 
-    $inputCfg = array(
-        "bug_summary" => array(
+    $inputCfg = [
+        "bug_summary" => [
             "POST",
             tlInputParameter::STRING_N,
             $bug_summary['minLengh'],
             $bug_summary['maxLengh']
-        )
-    );
+        ]
+    ];
 
     I_PARAMS($inputCfg, $args);
 
@@ -323,21 +323,21 @@ function initEnv(&$dbHandler)
     $gui->bug_notes = $args->bug_notes = trim($args->bug_notes);
 
     $args->basehref = $_SESSION['basehref'];
-    $tables = tlObjectWithDB::getDBTables(array(
+    $tables = tlObjectWithDB::getDBTables([
         'testplans'
-    ));
+    ]);
     $sql = ' SELECT api_key FROM ' . $tables['testplans'] . ' WHERE id=' .
         intval($args->tplan_id);
 
     $rs = $dbHandler->get_recordset($sql);
     $args->tplan_apikey = $rs[0]['api_key'];
 
-    return array(
+    return [
         $args,
         $gui,
         $itObj,
         $itCfg
-    );
+    ];
 }
 
 /**
@@ -376,20 +376,20 @@ function getIssueTracker(&$dbHandler, $argsObj, &$guiObj)
                 'addNote');
         }
     }
-    return array(
+    return [
         $its,
         $issueTrackerCfg
-    );
+    ];
 }
 
 /**
  */
 function getDirectLinkToExec(&$dbHandler, $execID)
 {
-    $tbk = array(
+    $tbk = [
         'executions',
         'testplan_tcversions'
-    );
+    ];
     $tbl = tlObjectWithDB::getDBTables($tbk);
     $sql = " SELECT EX.id,EX.build_id,EX.testplan_id," .
         " EX.tcversion_id,TPTCV.id AS feature_id " .

@@ -85,7 +85,7 @@ function reportResult($server_url, $tcaseid = null, $tcaseexternalid = null,
 
     $client->debug = $debug;
 
-    $data = array();
+    $data = [];
     $data["devKey"] = constant("DEV_KEY");
     $data["testplanid"] = $tplanid;
 

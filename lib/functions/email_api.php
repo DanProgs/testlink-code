@@ -26,19 +26,19 @@ $g_phpMailer = null;
  */
 function email_send_wrapper($mailObj, $opt = null)
 {
-    $prop = array();
-    $prop['opt'] = array(
+    $prop = [];
+    $prop['opt'] = [
         'cc',
         'attachment'
-    );
+    ];
 
-    $oops = array(
+    $oops = [
         'cc' => '',
         'attachment' => null,
         'exit_on_error' => false,
         'htmlFormat' => false,
         'strip_email_links' => true
-    );
+    ];
 
     $oops = array_merge($oops, (array) $opt);
 
@@ -69,9 +69,9 @@ function email_send($p_from, $p_recipient, $p_subject, $p_message, $p_cc = '',
     $op->status_ok = true;
     $op->msg = 'ok';
 
-    $options = array(
+    $options = [
         'strip_email_links' => true
-    );
+    ];
     $options = array_merge($options, (array) $opt);
 
     // Check fatal Error
@@ -183,7 +183,7 @@ function email_send($p_from, $p_recipient, $p_subject, $p_message, $p_cc = '',
 
     if (! $mail->Send()) {
         if ($p_exit_on_error) {
-            print "PROBLEMS SENDING MAIL TO: $p_recipient<br />";
+            print "PROBLEMS SENDING MAIL TO: {$p_recipient}<br />";
             print 'Mailer Error: ' . $mail->ErrorInfo . '<br />';
             exit();
         } else {
@@ -228,7 +228,7 @@ function email_append_domain($p_email)
 {
     $t_limit_email_domain = config_get('limit_email_domain');
     if ($t_limit_email_domain && ! isBlank($p_email)) {
-        $p_email = "$p_email@$t_limit_email_domain";
+        $p_email = "{$p_email}@{$t_limit_email_domain}";
     }
 
     return $p_email;

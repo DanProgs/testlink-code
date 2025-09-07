@@ -58,9 +58,9 @@ function initializeGui(&$dbHandler, &$argsObj)
     $gui->tplan_name = $tplan_info['name'];
     $gui->tproject_name = $tproject_info['name'];
 
-    $getOpt = array(
+    $getOpt = [
         'outputFormat' => 'map'
-    );
+    ];
     $gui->platformSet = $tplan_mgr->getPlatforms($argsObj->tplan_id, $getOpt);
     $gui->showPlatforms = true;
     if (is_null($gui->platformSet)) {
@@ -71,7 +71,7 @@ function initializeGui(&$dbHandler, &$argsObj)
     }
 
     // convert starttime to iso format for database usage
-    list ($gui->startTime, $gui->endTime) = helper2ISO($_REQUEST);
+    [$gui->startTime, $gui->endTime] = helper2ISO($_REQUEST);
 
     $gui_open = config_get('gui_separator_open');
     $gui_close = config_get('gui_separator_close');
@@ -81,14 +81,14 @@ function initializeGui(&$dbHandler, &$argsObj)
     $gui->search_notes_string = $argsObj->search_notes_string;
 
     $everest = $tplan_mgr->getRootTestSuites($gui->tplan_id, $gui->tproject_id,
-        array(
+        [
             'output' => 'plain'
-        ));
+        ]);
     $tsuites_qty = count($argsObj->testsuitesSelected);
 
     $filters['top_level_tsuites'] = ($tsuites_qty == 0 ||
         $tsuites_qty == count($everest)) ? null : $argsObj->testsuitesSelected;
-    $gui->testsuitesSelected = array();
+    $gui->testsuitesSelected = [];
     foreach ($argsObj->testsuitesSelected as $dmy) {
         $gui->testsuitesSelected[$dmy] = $everest[$dmy]['name'];
     }
@@ -107,7 +107,7 @@ function initializeGui(&$dbHandler, &$argsObj)
     // Prepare User Feedback
     $gui->totals = new stdClass();
     $gui->totals->items = 0;
-    $gui->totals->labels = array();
+    $gui->totals->labels = [];
 
     foreach ($gui->totals->items as $key => $value) {
         $l18n = $key == 'total' ? 'th_total_cases' : $gui->resultsCfg['status_label'][$key];
@@ -125,9 +125,9 @@ function initializeGui(&$dbHandler, &$argsObj)
 
     $gui->builds_html = $tplan_mgr->get_builds_for_html_options($gui->tplan_id);
     $gui->users = getUsersForHtmlOptions($dbHandler, ALL_USERS_FILTER,
-        array(
+        [
             TL_USER_ANYBODY => $gui->str_option_any
-        ));
+        ]);
 
     $gui->ownerSelected = $gui->users[$argsObj->ownerSelected];
     $gui->executorSelected = $gui->users[$argsObj->executorSelected];
@@ -136,8 +136,8 @@ function initializeGui(&$dbHandler, &$argsObj)
     $gui->display = $argsObj->display;
 
     // init display rows attribute and some status localized labels
-    $gui->displayResults = array();
-    $gui->lastStatus = array();
+    $gui->displayResults = [];
+    $gui->lastStatus = [];
     foreach ($reports_cfg->exec_status as $verbose => $label) {
         $gui->displayResults[$gui->resultsCfg['status_code'][$verbose]] = false;
     }
@@ -164,61 +164,61 @@ function initializeGui(&$dbHandler, &$argsObj)
  */
 function initArgs()
 {
-    $iParams = array(
-        "format" => array(
+    $iParams = [
+        "format" => [
             tlInputParameter::INT_N
-        ),
-        "report_type" => array(
+        ],
+        "report_type" => [
             tlInputParameter::INT_N
-        ),
-        "tplan_id" => array(
+        ],
+        "tplan_id" => [
             tlInputParameter::INT_N
-        ),
-        "build" => array(
+        ],
+        "build" => [
             tlInputParameter::ARRAY_INT
-        ),
-        "platform" => array(
+        ],
+        "platform" => [
             tlInputParameter::ARRAY_INT
-        ),
-        "keyword" => array(
+        ],
+        "keyword" => [
             tlInputParameter::INT_N
-        ),
-        "owner" => array(
+        ],
+        "owner" => [
             tlInputParameter::INT_N
-        ),
-        "executor" => array(
+        ],
+        "executor" => [
             tlInputParameter::INT_N
-        ),
-        "display_totals" => array(
+        ],
+        "display_totals" => [
             tlInputParameter::INT_N,
             1
-        ),
-        "display_query_params" => array(
+        ],
+        "display_query_params" => [
             tlInputParameter::INT_N,
             1
-        ),
-        "display_test_cases" => array(
+        ],
+        "display_test_cases" => [
             tlInputParameter::INT_N,
             1
-        ),
-        "display_latest_results" => array(
+        ],
+        "display_latest_results" => [
             tlInputParameter::INT_N,
             1
-        ),
-        "display_suite_summaries" => array(
+        ],
+        "display_suite_summaries" => [
             tlInputParameter::INT_N,
             1
-        ),
-        "lastStatus" => array(
+        ],
+        "lastStatus" => [
             tlInputParameter::ARRAY_STRING_N
-        ),
-        "testsuite" => array(
+        ],
+        "testsuite" => [
             tlInputParameter::ARRAY_STRING_N
-        ),
-        "search_notes_string" => array(
+        ],
+        "search_notes_string" => [
             tlInputParameter::STRING_N
-        )
-    );
+        ]
+    ];
     $args = new stdClass();
 
     $_REQUEST = strings_stripSlashes($_REQUEST);
@@ -237,13 +237,13 @@ function initArgs()
     $args->display->test_cases = $pParams["display_test_cases"];
     $args->display->latest_results = $pParams["display_latest_results"];
 
-    $args->lastStatus = $pParams["lastStatus"] ? $pParams["lastStatus"] : array();
+    $args->lastStatus = $pParams["lastStatus"] ? $pParams["lastStatus"] : [];
     $args->keywordSelected = $pParams["keyword"];
     $args->ownerSelected = $pParams["owner"];
     $args->executorSelected = $pParams["executor"];
-    $args->buildsSelected = $pParams["build"] ? $pParams["build"] : array();
-    $args->platformsSelected = $pParams["platform"] ? $pParams["platform"] : array();
-    $args->testsuitesSelected = $pParams["testsuite"] ? $pParams["testsuite"] : array();
+    $args->buildsSelected = $pParams["build"] ? $pParams["build"] : [];
+    $args->platformsSelected = $pParams["platform"] ? $pParams["platform"] : [];
+    $args->testsuitesSelected = $pParams["testsuite"] ? $pParams["testsuite"] : [];
     $args->search_notes_string = $pParams['search_notes_string'];
 
     return $args;
@@ -256,10 +256,10 @@ function initArgs()
  */
 function buildMailCfg(&$guiObj)
 {
-    $labels = init_labels(array(
+    $labels = init_labels([
         'testplan' => null,
         'testproject' => null
-    ));
+    ]);
     $cfg = new stdClass();
     $cfg->cc = '';
     $cfg->subject = $guiObj->title . ' : ' . $labels['testproject'] . ' : ' .
@@ -276,11 +276,11 @@ function buildMailCfg(&$guiObj)
 function helper2ISO($userInput)
 {
     $dateFormatMask = config_get('date_format');
-    $zy = array();
-    $key2loop = array(
+    $zy = [];
+    $key2loop = [
         'selected_start_date' => 'startTime',
         'selected_end_date' => 'endTime'
-    );
+    ];
     foreach ($key2loop as $target => $prop) {
         if (isset($userInput[$target]) && $userInput[$target] != '') {
             $dummy = split_localized_date($userInput[$target], $dateFormatMask);
@@ -296,10 +296,10 @@ function helper2ISO($userInput)
     $dummy = isset($userInput['end_Hour']) ? $userInput['end_Hour'] : "00";
     $zy['endTime'] .= " " . $dummy . ":59:59";
 
-    return array(
+    return [
         $zy['startTime'],
         $zy['endTime']
-    );
+    ];
 }
 
 /**

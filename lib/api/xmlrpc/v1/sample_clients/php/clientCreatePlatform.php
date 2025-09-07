@@ -18,7 +18,7 @@ $method = 'createPlatform';
 $unitTestDescription = "Test - {$method}";
 $idx = 1;
 
-$args = array();
+$args = [];
 $args["devKey"] = 'dev01';
 $args["testprojectname"] = 'GAGA';
 $args["platformname"] = "Nian";

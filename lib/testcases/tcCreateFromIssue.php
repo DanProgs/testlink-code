@@ -58,13 +58,13 @@ if ($args->do_upload) {
         }
         if ($gui->file_check['status_ok'] && $pimport_fn) {
             tLog('Check is Ok.');
-            $opt = array();
+            $opt = [];
             $opt['useRecursion'] = $args->useRecursion;
             $opt['importIntoProject'] = $args->bIntoProject;
-            $opt['duplicateLogic'] = array(
+            $opt['duplicateLogic'] = [
                 'hitCriteria' => $args->hit_criteria,
                 'actionOnHit' => $args->action_on_duplicated_name
-            );
+            ];
             $gui->resultMap = $pimport_fn($db, $gui->dest,
                 intval($args->container_id), intval($args->tproject_id),
                 intval($args->userID), $opt);
@@ -72,40 +72,40 @@ if ($args->do_upload) {
     } elseif (is_null($gui->file_check)) {
 
         tLog('Missing upload file', 'WARNING');
-        $gui->file_check = array(
+        $gui->file_check = [
             'status_ok' => 0,
             'msg' => lang_get('please_choose_file_to_import')
-        );
+        ];
         $args->importType = null;
     }
 }
 
 if ($args->useRecursion) {
     $obj_mgr = new testsuite($db);
-    $gui->actionOptions = array(
+    $gui->actionOptions = [
         'update_last_version' => lang_get('update_last_testcase_version'),
         'generate_new' => lang_get('generate_new_testcase'),
         'create_new_version' => lang_get('create_new_testcase_version')
-    );
+    ];
 
-    $gui->hitOptions = array(
+    $gui->hitOptions = [
         'name' => lang_get('same_name'),
         'internalID' => lang_get('same_internalID'),
         'externalID' => lang_get('same_externalID')
-    );
+    ];
 } else {
     $obj_mgr = new testcase($db);
-    $gui->actionOptions = array(
+    $gui->actionOptions = [
         'update_last_version' => lang_get('update_last_testcase_version'),
         'generate_new' => lang_get('generate_new_testcase'),
         'create_new_version' => lang_get('create_new_testcase_version')
-    );
+    ];
 
-    $gui->hitOptions = array(
+    $gui->hitOptions = [
         'name' => lang_get('same_name'),
         'internalID' => lang_get('same_internalID'),
         'externalID' => lang_get('same_externalID')
-    );
+    ];
 }
 
 $gui->testprojectName = $_SESSION['testprojectName'];
@@ -126,15 +126,15 @@ function importTestCaseDataFromXML(&$db, $fileName, $parentID, $tproject_id,
 {
     tLog('importTestCaseDataFromXML called for file: ' . $fileName);
     $resultMap = null;
-    $my = array();
-    $my['options'] = array(
+    $my = [];
+    $my['options'] = [
         'useRecursion' => false,
         'importIntoProject' => 0,
-        'duplicateLogic' => array(
+        'duplicateLogic' => [
             'hitCriteria' => 'name',
             'actionOnHit' => null
-        )
-    );
+        ]
+    ];
     $my['options'] = array_merge($my['options'], (array) $options);
     foreach ($my['options'] as $varname => $value) {
         $$varname = $value;
@@ -178,10 +178,10 @@ function importTestCaseDataFromXML(&$db, $fileName, $parentID, $tproject_id,
  */
 function saveImportedTCData(&$db, $tcData, $tproject_id, $container_id, $userID,
     $kwMap,
-    $duplicatedLogic = array(
+    $duplicatedLogic = [
         'hitCriteria' => 'name',
         'actionOnHit' => null
-    ))
+    ])
 {
     static $messages;
     static $fieldSizeCfg;
@@ -204,8 +204,8 @@ function saveImportedTCData(&$db, $tcData, $tproject_id, $container_id, $userID,
     $hasRequirements = false;
 
     if (is_null($messages)) {
-        $feedbackMsg = array();
-        $messages = array();
+        $feedbackMsg = [];
+        $messages = [];
         $fieldSizeCfg = config_get('field_size');
 
         $tcaseMgr = new testcase($db);
@@ -215,7 +215,7 @@ function saveImportedTCData(&$db, $tcData, $tproject_id, $container_id, $userID,
         $req_mgr = new requirement_mgr($db);
         $userObj = new tlUser();
 
-        $k2l = array(
+        $k2l = [
             'already_exists_updated',
             'original_name',
             'testcase_name_too_long',
@@ -223,7 +223,7 @@ function saveImportedTCData(&$db, $tcData, $tproject_id, $container_id, $userID,
             'end_warning',
             'testlink_warning',
             'hit_with_same_external_ID'
-        );
+        ];
         foreach ($k2l as $k) {
             $messages[$k] = lang_get($k);
         }
@@ -252,24 +252,24 @@ function saveImportedTCData(&$db, $tcData, $tproject_id, $container_id, $userID,
         $tprojectHas['customFields'] = ! is_null($linkedCustomFields);
 
         $reqSpecSet = $tproject_mgr->getReqSpec($tproject_id, null,
-            array(
+            [
                 'RSPEC.id',
                 'NH.name AS title',
                 'RSPEC.doc_id as rspec_doc_id',
                 'REQ.req_doc_id'
-            ), 'req_doc_id');
+            ], 'req_doc_id');
         $tprojectHas['reqSpec'] = (! is_null($reqSpecSet) &&
             count($reqSpecSet) > 0);
 
-        $getVersionOpt = array(
+        $getVersionOpt = [
             'output' => 'minimun'
-        );
+        ];
         $tcasePrefix = $tproject_mgr->getTestCasePrefix($tproject_id);
     }
 
-    $resultMap = array();
+    $resultMap = [];
     $tc_qty = count($tcData);
-    $userIDCache = array();
+    $userIDCache = [];
 
     for ($idx = 0; $idx < $tc_qty; $idx ++) {
         $tc = $tcData[$idx];
@@ -365,10 +365,10 @@ function saveImportedTCData(&$db, $tcData, $tproject_id, $container_id, $userID,
 
                         $ret['id'] = $tcase_id;
                         $ret['tcversion_id'] = $tcversion_id;
-                        $resultMap[] = array(
+                        $resultMap[] = [
                             $name,
                             $messages['already_exists_updated']
-                        );
+                        ];
                         break;
 
                     case 0:
@@ -386,9 +386,9 @@ function saveImportedTCData(&$db, $tcData, $tproject_id, $container_id, $userID,
             // Want to block creation of with existent EXTERNAL ID, if containers ARE DIFFERENT.
             $item_id = intval(
                 $tcaseMgr->getInternalID($externalid,
-                    array(
+                    [
                         'tproject_id' => $tproject_id
-                    )));
+                    ]));
             if ($item_id > 0) {
                 // who is his parent ?
                 $owner = $tcaseMgr->getTestSuite($item_id);
@@ -402,28 +402,28 @@ function saveImportedTCData(&$db, $tcData, $tproject_id, $container_id, $userID,
                         ':' . $stain[$n - 1];
                     $stain = implode('/', $stain);
 
-                    $resultMap[] = array(
+                    $resultMap[] = [
                         $name,
                         $messages['hit_with_same_external_ID'] . $stain
-                    );
+                    ];
                     $doCreate = false;
                 }
             }
         }
         if ($doCreate) {
-            $createOptions = array(
+            $createOptions = [
                 'check_duplicate_name' => testcase::CHECK_DUPLICATE_NAME,
                 'action_on_duplicate_name' => $duplicatedLogic['actionOnHit'],
                 'external_id' => $externalid
-            );
+            ];
 
             if ($ret = $tcaseMgr->create($container_id, $name, $summary,
                 $preconditions, $steps, $personID, $kwIDs, $node_order,
                 testcase::AUTOMATIC_ID, $exec_type, $importance, $createOptions)) {
-                $resultMap[] = array(
+                $resultMap[] = [
                     $name,
                     $ret['msg']
-                );
+                ];
             }
         }
 
@@ -443,10 +443,10 @@ function saveImportedTCData(&$db, $tcData, $tproject_id, $container_id, $userID,
                 }
             } else {
                 // Can not import Custom Fields Values, give feedback
-                $msg[] = array(
+                $msg[] = [
                     $name,
                     $messages['cf_warning']
-                );
+                ];
                 $resultMap = array_merge($resultMap, $msg);
             }
         }
@@ -466,10 +466,10 @@ function saveImportedTCData(&$db, $tcData, $tproject_id, $container_id, $userID,
                     $resultMap = array_merge($resultMap, $msg);
                 }
             } else {
-                $msg[] = array(
+                $msg[] = [
                     $name,
                     $messages['reqspec_warning']
-                );
+                ];
                 $resultMap = array_merge($resultMap, $msg);
             }
         }
@@ -484,7 +484,7 @@ function saveImportedTCData(&$db, $tcData, $tproject_id, $container_id, $userID,
  */
 function buildKeywordList($kwMap, $keywords)
 {
-    $items = array();
+    $items = [];
     $loop2do = count($keywords);
     for ($jdx = 0; $jdx < $loop2do; $jdx ++) {
         $items[] = $kwMap[trim($keywords[$jdx]['name'])];
@@ -498,29 +498,29 @@ function buildKeywordList($kwMap, $keywords)
 function checkXMLTCTsuite($fileName, $recursiveMode)
 {
     $xml = @simplexml_load_file_wrapper($fileName);
-    $file_check = array(
+    $file_check = [
         'status_ok' => 0,
         'msg' => 'xml_load_ko'
-    );
+    ];
     if ($xml !== false) {
-        $file_check = array(
+        $file_check = [
             'status_ok' => 1,
             'msg' => 'ok'
-        );
+        ];
         $elementName = $xml->getName();
         if ($recursiveMode) {
             if ($elementName != 'testsuite') {
-                $file_check = array(
+                $file_check = [
                     'status_ok' => 0,
                     'msg' => lang_get('wrong_xml_tsuite_file')
-                );
+                ];
             }
         } else {
             if ($elementName != 'testcases' && $elementName != 'testcase') {
-                $file_check = array(
+                $file_check = [
                     'status_ok' => 0,
                     'msg' => lang_get('wrong_xml_tcase_file')
-                );
+                ];
             }
         }
     }
@@ -594,19 +594,19 @@ function processCustomFields(&$tcaseMgr, $tcaseName, $tcversionId, $cfValues,
 
     foreach ($cfValues as $value) {
         if (isset($cfDefinition[$value['name']])) {
-            $cf2insert[$cfDefinition[$value['name']]['id']] = array(
+            $cf2insert[$cfDefinition[$value['name']]['id']] = [
                 'type_id' => $cfDefinition[$value['name']]['type'],
                 'cf_value' => $value['value']
-            );
+            ];
         } else {
             if (! isset($missingCfMsg[$value['name']])) {
                 $missingCfMsg[$value['name']] = sprintf($messages['cfield'],
                     $value['name'], $messages['tcase']);
             }
-            $resultMsg[] = array(
+            $resultMsg[] = [
                 $tcaseName,
                 $missingCfMsg[$value['name']]
-            );
+            ];
         }
     }
 
@@ -633,12 +633,12 @@ function processRequirements(&$dbHandler, &$reqMgr, $tcaseName, $tcaseId, $tcReq
     static $missingReqSpecMsg;
     static $cachedReqSpec;
     $resultMsg = null;
-    $tables = tlObjectWithDB::getDBTables(array(
+    $tables = tlObjectWithDB::getDBTables([
         'requirements'
-    ));
+    ]);
 
     foreach ($tcReq as $value) {
-        $cachedReqSpec = array();
+        $cachedReqSpec = [];
         $doit = false;
         if ($doit = isset($reqSpecSet[$value['doc_id']]) &&
             ! (isset($cachedReqSpec[$value['req_spec_title']]))) {
@@ -678,10 +678,10 @@ function processRequirements(&$dbHandler, &$reqMgr, $tcaseName, $tcaseId, $tcReq
                     $missingReqMsg[$value['doc_id']] = sprintf($messages['req'],
                         $value['doc_id'], $value['req_spec_title']);
                 }
-                $resultMsg[] = array(
+                $resultMsg[] = [
                     $tcaseName,
                     $missingReqMsg[$value['doc_id']]
-                );
+                ];
             }
         } else {
             // Requirement Specification not found
@@ -689,10 +689,10 @@ function processRequirements(&$dbHandler, &$reqMgr, $tcaseName, $tcaseId, $tcReq
                 $missingReqSpecMsg[$value['req_spec_title']] = sprintf(
                     $messages['req_spec'], $value['req_spec_title']);
             }
-            $resultMsg[] = array(
+            $resultMsg[] = [
                 $tcaseName,
                 $missingReqSpecMsg[$value['req_spec_title']]
-            );
+            ];
         }
     } // foreach
 
@@ -728,35 +728,35 @@ function getTestCaseSetFromSimpleXMLObj($xmlTCs)
 
     $jdx = 0;
     $loops2do = count($xmlTCs);
-    $tcaseSet = array();
+    $tcaseSet = [];
 
     // TICKET 4963: Test case / Tes suite XML format, new element to set author
-    $tcXML['elements'] = array(
-        'string' => array(
+    $tcXML['elements'] = [
+        'string' => [
             "summary" => null,
             "preconditions" => null,
             "author_login" => null
-        ),
-        'integer' => array(
+        ],
+        'integer' => [
             "node_order" => null,
             "externalid" => null,
             "execution_type" => null,
             "importance" => null
-        )
-    );
-    $tcXML['attributes'] = array(
-        'string' => array(
+        ]
+    ];
+    $tcXML['attributes'] = [
+        'string' => [
             "name" => 'trim'
-        ),
-        'integer' => array(
+        ],
+        'integer' => [
             'internalid' => null
-        )
-    );
+        ]
+    ];
 
     for ($idx = 0; $idx < $loops2do; $idx ++) {
-        $dummy = getItemsFromSimpleXMLObj(array(
+        $dummy = getItemsFromSimpleXMLObj([
             $xmlTCs[$idx]
-        ), $tcXML);
+        ], $tcXML);
         $tc = $dummy[0];
 
         if ($tc) {
@@ -794,22 +794,22 @@ function getTestCaseSetFromSimpleXMLObj($xmlTCs)
  */
 function getStepsFromSimpleXMLObj($simpleXMLItems)
 {
-    $itemStructure['elements'] = array(
-        'string' => array(
+    $itemStructure['elements'] = [
+        'string' => [
             "actions" => null,
             "expectedresults" => null
-        ),
-        'integer' => array(
+        ],
+        'integer' => [
             "step_number" => null,
             "execution_type" => null
-        )
-    );
+        ]
+    ];
 
     // 20110205 - franciscom - seems key 'transformations' is not managed on
     // getItemsFromSimpleXMLObj(), then ??? is useless???
-    $itemStructure['transformations'] = array(
+    $itemStructure['transformations'] = [
         "expectedresults" => "expected_results"
-    );
+    ];
 
     $items = getItemsFromSimpleXMLObj($simpleXMLItems, $itemStructure);
 
@@ -829,39 +829,39 @@ function getStepsFromSimpleXMLObj($simpleXMLItems)
 
 function getCustomFieldsFromSimpleXMLObj($simpleXMLItems)
 {
-    $itemStructure['elements'] = array(
-        'string' => array(
+    $itemStructure['elements'] = [
+        'string' => [
             "name" => 'trim',
             "value" => 'trim'
-        )
-    );
+        ]
+    ];
     return getItemsFromSimpleXMLObj($simpleXMLItems, $itemStructure);
 }
 
 function getRequirementsFromSimpleXMLObj($simpleXMLItems)
 {
-    $itemStructure['elements'] = array(
-        'string' => array(
+    $itemStructure['elements'] = [
+        'string' => [
             "req_spec_title" => 'trim',
             "doc_id" => 'trim',
             "title" => 'trim'
-        )
-    );
+        ]
+    ];
     return getItemsFromSimpleXMLObj($simpleXMLItems, $itemStructure);
 }
 
 function getKeywordsFromSimpleXMLObj($simpleXMLItems)
 {
-    $itemStructure['elements'] = array(
-        'string' => array(
+    $itemStructure['elements'] = [
+        'string' => [
             "notes" => null
-        )
-    );
-    $itemStructure['attributes'] = array(
-        'string' => array(
+        ]
+    ];
+    $itemStructure['attributes'] = [
+        'string' => [
             "name" => 'trim'
-        )
-    );
+        ]
+    ];
     return getItemsFromSimpleXMLObj($simpleXMLItems, $itemStructure);
 }
 
@@ -883,23 +883,23 @@ function importTestSuitesFromSimpleXML(&$dbHandler, &$xml, $parentID,
     static $cfSpec;
     static $doCF;
 
-    $resultMap = array();
+    $resultMap = [];
     if (is_null($tsuiteXML)) {
         $myself = __FUNCTION__;
-        $tsuiteXML = array();
-        $tsuiteXML['elements'] = array(
-            'string' => array(
+        $tsuiteXML = [];
+        $tsuiteXML['elements'] = [
+            'string' => [
                 "details" => null
-            ),
-            'integer' => array(
+            ],
+            'integer' => [
                 "node_order" => null
-            )
-        );
-        $tsuiteXML['attributes'] = array(
-            'string' => array(
+            ]
+        ];
+        $tsuiteXML['attributes'] = [
+            'string' => [
                 "name" => 'trim'
-            )
-        );
+            ]
+        ];
 
         $tsuiteMgr = new testsuite($dbHandler);
         $doCF = ! is_null(
@@ -910,9 +910,9 @@ function importTestSuitesFromSimpleXML(&$dbHandler, &$xml, $parentID,
     if ($xml->getName() == 'testsuite') {
 
         // getItemsFromSimpleXMLObj() first argument must be an array
-        $dummy = getItemsFromSimpleXMLObj(array(
+        $dummy = getItemsFromSimpleXMLObj([
             $xml
-        ), $tsuiteXML);
+        ], $tsuiteXML);
         $tsuite = current($dummy);
         $tsuiteID = $parentID; // hmmm, not clear
 
@@ -963,9 +963,9 @@ function importTestSuitesFromSimpleXML(&$dbHandler, &$xml, $parentID,
             switch ($target->getName()) {
                 case 'testcase':
                     // getTestCaseSetFromSimpleXMLObj() first argument must be an array
-                    $tcData = getTestCaseSetFromSimpleXMLObj(array(
+                    $tcData = getTestCaseSetFromSimpleXMLObj([
                         $target
-                    ));
+                    ]);
                     $resultMap = array_merge($resultMap,
                         saveImportedTCData($dbHandler, $tcData, $tproject_id,
                             $tsuiteID, $userID, $kwMap, $duplicateLogic));
@@ -1010,18 +1010,18 @@ function initializeGui(&$dbHandler, &$argsObj)
     $guiObj->container_name = '';
 
     $dest_common = TL_TEMP_PATH . session_id() . "-importtcs";
-    $dest_files = array(
+    $dest_files = [
         'XML' => $dest_common . ".xml"
-    );
+    ];
     $guiObj->dest = $dest_files['XML'];
     if (! is_null($argsObj->importType)) {
         $guiObj->dest = $dest_files[$argsObj->importType];
     }
 
-    $guiObj->file_check = array(
+    $guiObj->file_check = [
         'status_ok' => 1,
         'msg' => 'ok'
-    );
+    ];
 
     if ($argsObj->useRecursion) {
         $guiObj->import_title = lang_get('title_tsuite_import_to');
@@ -1057,7 +1057,7 @@ function processTestSuiteCF(&$tsuiteMgr, $xmlObj, &$cfDefinition, &$cfValues,
     static $missingCfMsg;
 
     if (is_null($messages)) {
-        $messages = array();
+        $messages = [];
         $messages['cf_warning'] = lang_get('no_cf_defined_can_not_import');
         $messages['start_warning'] = lang_get('start_warning');
         $messages['end_warning'] = lang_get('end_warning');
@@ -1073,19 +1073,19 @@ function processTestSuiteCF(&$tsuiteMgr, $xmlObj, &$cfDefinition, &$cfValues,
     $resultMsg = null;
     foreach ($cfValues as $value) {
         if (isset($cfDefinition[$value['name']])) {
-            $cf2insert[$cfDefinition[$value['name']]['id']] = array(
+            $cf2insert[$cfDefinition[$value['name']]['id']] = [
                 'type_id' => $cfDefinition[$value['name']]['type'],
                 'cf_value' => $value['value']
-            );
+            ];
         } else {
             if (! isset($missingCfMsg[$value['name']])) {
                 $missingCfMsg[$value['name']] = sprintf($messages['cfield'],
                     $value['name'], $messages['tsuite']);
             }
-            $resultMsg[] = array(
+            $resultMsg[] = [
                 $tsuite['name'],
                 $missingCfMsg[$value['name']]
-            );
+            ];
         }
     }
     $tsuiteMgr->cfield_mgr->design_values_to_db($cf2insert, $tsuite['id'], null,

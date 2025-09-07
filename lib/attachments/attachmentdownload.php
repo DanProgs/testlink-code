@@ -51,9 +51,9 @@ if ($args->id) {
                         $item = getEntityByAPIKey($db, $args->apikey, 'testplan');
                         if (! is_null($item)) {
                             $tables = tlObjectWithDB::getDBTables(
-                                array(
+                                [
                                     'executions'
-                                ));
+                                ]);
                             $sql = "SELECT testplan_id FROM {$tables['executions']} " .
                                 "WHERE id = " . intval($attachInfo['fk_id']);
 
@@ -135,20 +135,20 @@ $smarty->display('attachment404.tpl');
 function initArgs(&$dbHandler)
 {
     // id (attachments.id) of the attachment to be downloaded
-    $iParams = array(
-        'id' => array(
+    $iParams = [
+        'id' => [
             tlInputParameter::INT_N
-        ),
-        'apikey' => array(
+        ],
+        'apikey' => [
             tlInputParameter::STRING_N,
             64
-        ),
-        'skipCheck' => array(
+        ],
+        'skipCheck' => [
             tlInputParameter::STRING_N,
             1,
             64
-        )
-    );
+        ]
+    ];
 
     $args = new stdClass();
     G_PARAMS($iParams, $args);

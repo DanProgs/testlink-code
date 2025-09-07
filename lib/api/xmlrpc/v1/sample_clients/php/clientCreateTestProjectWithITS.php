@@ -24,7 +24,7 @@ $prefix = uniqid();
 $devKey = '985978c915f50e47a4b1a54a943d1b76';
 $devKey = isset($_REQUEST['apiKey']) ? $_REQUEST['apiKey'] : $devKey;
 
-$args = array();
+$args = [];
 $args["devKey"] = $devKey;
 $args["testcaseprefix"] = $prefix . $test_num;
 $args["testprojectname"] = "API Methods Test Project {$args['testcaseprefix']}";
@@ -46,7 +46,7 @@ $prefix = uniqid();
 $devKey = '985978c915f50e47a4b1a54a943d1b76';
 $devKey = isset($_REQUEST['apiKey']) ? $_REQUEST['apiKey'] : $devKey;
 
-$args = array();
+$args = [];
 $args["devKey"] = $devKey;
 $args["testcaseprefix"] = $prefix . $test_num;
 $args["testprojectname"] = "API Methods Test Project {$args['testcaseprefix']}";

@@ -251,7 +251,7 @@ abstract class tlObject implements iSerialization
      */
     public static function getDBTables($tableNames = null)
     {
-        $items = array(
+        $items = [
             'assignment_status',
             'assignment_types',
             'attachments',
@@ -318,9 +318,9 @@ abstract class tlObject implements iSerialization
             'user_testproject_roles',
             'users',
             'execution_tcsteps_wip'
-        );
+        ];
 
-        $tables = array();
+        $tables = [];
         foreach ($items as $tblKey) {
             $tables[$tblKey] = DB_TABLE_PREFIX . $tblKey;
         }
@@ -342,7 +342,7 @@ abstract class tlObject implements iSerialization
      */
     public static function getDBViews($itemNames = null)
     {
-        $items = array(
+        $items = [
             'tcversions_last_active' => null,
             'tcversions_without_keywords' => null,
             'tcversions_without_platforms' => null,
@@ -357,7 +357,7 @@ abstract class tlObject implements iSerialization
             'tsuites_tree_depth_2' => null,
             'exec_by_date_time' => null,
             'exec_daily_stats' => null
-        );
+        ];
 
         foreach ($items as $key => $value) {
             $items[$key] = DB_TABLE_PREFIX . $key;

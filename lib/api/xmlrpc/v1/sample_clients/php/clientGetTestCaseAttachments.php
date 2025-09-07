@@ -14,7 +14,7 @@ $method = 'getTestCaseAttachments';
 $test_num = 1;
 $unitTestDescription = "Test {$test_num} - {$method}";
 
-$args = array();
+$args = [];
 $args["devKey"] = 'developer';
 $args["testcaseexternalid"] = 'SSQA-39153';
 

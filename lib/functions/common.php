@@ -100,9 +100,9 @@ function tlAutoload($class_name)
     $classFileName = $class_name;
 
     // 2. add a lower case directory
-    $addDirToInclude = array(
+    $addDirToInclude = [
         'Kint' => true
-    );
+    ];
 
     // this way Zend_Loader_Autoloader will take care of these classes.
     // Needed in order to make work bugzillaxmlrpc interface
@@ -179,16 +179,16 @@ function doDBConnect(&$db, $onErrorExit = false)
     if (! $result['status']) {
         echo $result['dbms_msg'];
         $result['status'] = 0;
-        $search = array(
+        $search = [
             '<b>',
             '</b>',
             '<br>'
-        );
-        $replace = array(
+        ];
+        $replace = [
             '',
             '',
             " :: "
-        );
+        ];
         $logtext = ' Connect to database <b>' . DB_NAME . '</b> on Host <b>' .
             DB_HOST . '</b> fails <br>';
         $logtext .= 'DBMS Error Message: ' . $result['dbms_msg'];
@@ -260,9 +260,9 @@ function setPaths()
 {
     if (! isset($_SESSION['basehref'])) {
         $_SESSION['basehref'] = get_home_url(
-            array(
+            [
                 'force_https' => config_get('force_https')
-            ));
+            ]);
     }
 }
 
@@ -422,10 +422,10 @@ function initProject(&$db, $hash_user_sel)
     $ckCfg = config_get('cookie');
 
     $tproject = new testproject($db);
-    $user_sel = array(
+    $user_sel = [
         "tplan_id" => 0,
         "tproject_id" => 0
-    );
+    ];
     $user_sel["tproject_id"] = isset($hash_user_sel['testproject']) ? intval(
         $hash_user_sel['testproject']) : 0;
     $user_sel["tplan_id"] = isset($hash_user_sel['testplan']) ? intval(
@@ -566,7 +566,7 @@ function redirect($url, $level = 'location')
     $safeUrl = addslashes($url);
     echo "<html><head></head><body>";
     echo "<script type='text/javascript'>";
-    echo "$level.href='$safeUrl';";
+    echo "{$level}.href='{$safeUrl}';";
     echo "</script></body></html>";
 
     exit();
@@ -586,7 +586,7 @@ function strings_stripSlashes($parameter, $bGPC = true)
 
     if (is_array($parameter)) {
         $retParameter = null;
-        if (count($parameter)) {
+        if ($parameter !== []) {
             foreach ($parameter as $key => $value) {
                 if (is_array($value)) {
                     $retParameter[$key] = strings_stripSlashes($value, $bGPC);
@@ -608,12 +608,12 @@ function to_boolean($alt_boolean)
     if (is_numeric($alt_boolean) && ! intval($alt_boolean)) {
         $the_val = 0;
     } else {
-        $a_bool = array(
+        $a_bool = [
             "on" => 1,
             "y" => 1,
             "off" => 0,
             "n" => 0
-        );
+        ];
         $alt_boolean = strtolower($alt_boolean);
         if (isset($a_bool[$alt_boolean])) {
             $the_val = $a_bool[$alt_boolean];
@@ -657,10 +657,10 @@ function config_get($config_id, $default = null)
 {
     $t_value = (null == $default) ? '' : $default;
     $t_found = false;
-    $logInfo = array(
+    $logInfo = [
         'msg' => "config option not available: {$config_id}",
         'level' => 'WARNING'
-    );
+    ];
     if (! $t_found) {
         $my = "g_" . $config_id;
         if ($t_found = isset($GLOBALS[$my])) {
@@ -710,10 +710,10 @@ function isBlank($p_var)
  */
 function downloadContentsToFile($content, $fileName, $opt = null)
 {
-    $my = array();
-    $my['opt'] = array(
+    $my = [];
+    $my['opt'] = [
         'Content-Type' => 'text/plain'
-    );
+    ];
     $my['opt'] = array_merge($my['opt'], (array) $opt);
     $charSet = config_get('charset');
 
@@ -735,7 +735,7 @@ function downloadContentsToFile($content, $fileName, $opt = null)
  */
 function microtime_float()
 {
-    list ($usec, $sec) = explode(" ", microtime());
+    [$usec, $sec] = explode(" ", microtime());
     return (float) $usec + (float) $sec;
 }
 
@@ -920,11 +920,11 @@ function templateConfiguration($template2get = null)
  */
 function isValidISODateTime($isoDateTime)
 {
-    $dateParts = array(
+    $dateParts = [
         'YEAR' => 1,
         'MONTH' => 2,
         'DAY' => 3
-    );
+    ];
 
     $matches = null;
     $status_ok = false;
@@ -964,12 +964,12 @@ function split_localized_date($timestamp, $dateFormat)
     }
 
     $splitChar = null;
-    $needle = array(
+    $needle = [
         ".",
         "-",
         "/",
         "%"
-    );
+    ];
     foreach ($needle as $target) {
         if (strpos($timestamp, $target) !== false) {
             $splitChar = $target;
@@ -980,14 +980,14 @@ function split_localized_date($timestamp, $dateFormat)
     $strippedDateFormat = str_replace($needle, "", $dateFormat);
     $format = preg_split('//', $strippedDateFormat, - 1, PREG_SPLIT_NO_EMPTY);
     $pieces = explode($splitChar, $timestamp);
-    $result = array();
+    $result = [];
     if (count($pieces) == 3) // MAGIC ALLOWED
     {
-        $k2t = array(
+        $k2t = [
             'Y' => 'year',
             'm' => 'month',
             'd' => 'day'
-        );
+        ];
         foreach ($format as $idx => $access) {
             $result[$k2t[$access]] = $pieces[$idx];
         }
@@ -1151,12 +1151,12 @@ function displayMemUsage($msg = '')
 function setUpEnvForRemoteAccess(&$dbHandler, $apikey, $rightsCheck = null,
     $opt = null)
 {
-    $my = array(
-        'opt' => array(
+    $my = [
+        'opt' => [
             'setPaths' => false,
             'clearSession' => false
-        )
-    );
+        ]
+    ];
     $my['opt'] = array_merge($my['opt'], (array) $opt);
 
     if ($my['opt']['clearSession']) {
@@ -1259,10 +1259,10 @@ function getConfigAndLabels($configKey, $accessMode = 'key')
         $index = ($accessMode == 'key') ? $accessKey : $code;
         $labels[$index] = lang_get($configKey . '_' . $accessKey);
     }
-    return array(
+    return [
         'cfg' => $stringKeyCode,
         'lbl' => $labels
-    );
+    ];
 }
 
 function setDateTimeFormats($locale)
@@ -1297,12 +1297,12 @@ function windowCloseAndOpenerReload()
 function setUpEnvForAnonymousAccess(&$dbHandler, $apikey, $rightsCheck = null,
     $opt = null)
 {
-    $my = array(
-        'opt' => array(
+    $my = [
+        'opt' => [
             'setPaths' => false,
             'clearSession' => false
-        )
-    );
+        ]
+    ];
     $my['opt'] = array_merge($my['opt'], (array) $opt);
 
     if ($my['opt']['clearSession']) {
@@ -1323,10 +1323,10 @@ function setUpEnvForAnonymousAccess(&$dbHandler, $apikey, $rightsCheck = null,
 
     switch ($checkMode) {
         case 'hippie':
-            $tk = array(
+            $tk = [
                 'testplan',
                 'testproject'
-            );
+            ];
             break;
 
         default:
@@ -1390,10 +1390,10 @@ function getEntityByAPIKey(&$dbHandler, $apiKey, $type)
 {
     $debugMsg = 'Class:' . __CLASS__ . ' - Method: ' . __FUNCTION__;
 
-    $tables = tlObjectWithDB::getDBTables(array(
+    $tables = tlObjectWithDB::getDBTables([
         'testprojects',
         'testplans'
-    ));
+    ]);
     switch ($type) {
         case 'testproject':
             $target = $tables['testprojects'];
@@ -1408,7 +1408,7 @@ function getEntityByAPIKey(&$dbHandler, $apiKey, $type)
             break;
     }
 
-    $sql = "/* $debugMsg */ " . " SELECT id FROM {$target} " .
+    $sql = "/* {$debugMsg} */ " . " SELECT id FROM {$target} " .
         " WHERE api_key = '" . $dbHandler->prepare_string($apiKey) . "'";
 
     $rs = $dbHandler->get_recordset($sql);
@@ -1423,10 +1423,10 @@ function checkAccess(&$dbHandler, &$userObj, $context, $rightsToCheck)
     $script = basename($_SERVER['PHP_SELF']);
     $doExit = false;
     $action = 'any';
-    $env = array(
+    $env = [
         'tproject_id' => 0,
         'tplan_id' => 0
-    );
+    ];
     $env = array_merge($env, $context);
     foreach ($env as $key => $val) {
         $env[$key] = intval($val);
@@ -1483,19 +1483,19 @@ function getWebEditorCfg($feature = 'all')
  */
 function downloadXls($fname, $xlsType, $gui, $filePrefix)
 {
-    $sets = array();
-    $sets['Excel2007'] = array(
+    $sets = [];
+    $sets['Excel2007'] = [
         'ext' => '.xlsx',
         'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-    );
-    $sets['Excel5'] = array(
+    ];
+    $sets['Excel5'] = [
         'ext' => '.xls',
         'Content-Type' => 'application/vnd.ms-excel'
-    );
+    ];
 
-    $dct = array(
+    $dct = [
         'Content-Type' => $sets[$xlsType]['Content-Type']
-    );
+    ];
     $content = file_get_contents($fname);
     $f2d = $filePrefix . $gui->tproject_name . '_' . $gui->tplan_name .
         $sets[$xlsType]['ext'];
@@ -1551,17 +1551,17 @@ function initUserEnv(&$dbH, $context, $opt = null)
     $args = new stdClass();
     $gui = new stdClass();
 
-    $optDeep = array(
-        'skip' => array(
+    $optDeep = [
+        'skip' => [
             'tplanForInit' => false,
             'tplanToGetEffectiveRole' => false
-        )
-    );
-    $options = array(
+        ]
+    ];
+    $options = [
         'forceCreateProj' => false,
         'initNavBarMenu' => false,
         'caller' => 'not provided'
-    );
+    ];
     if (null != $opt) {
         if (isset($opt['skip'])) {
             $optDeep['skip'] = array_merge($optDeep['skip'], $opt['skip']);
@@ -1575,11 +1575,11 @@ function initUserEnv(&$dbH, $context, $opt = null)
     }
 
     $args->user = $_SESSION['currentUser'];
-    $k2l = array(
+    $k2l = [
         'tproject_id' => 0,
         'current_tproject_id' => 0,
         'tplan_id' => 0
-    );
+    ];
 
     foreach ($k2l as $pp => $vv) {
         $args->$pp = $vv;
@@ -1591,11 +1591,11 @@ function initUserEnv(&$dbH, $context, $opt = null)
     }
     $tprjMgr = new testproject($dbH);
     $guiCfg = config_get("gui");
-    $opx = array(
+    $opx = [
         'output' => 'map_name_with_inactive_mark',
         'field_set' => $guiCfg->tprojects_combo_format,
         'order_by' => $guiCfg->tprojects_combo_order_by
-    );
+    ];
 
     $gui->prjSet = $tprjMgr->get_accessible_for_user($args->user->dbID, $opx);
     $gui->prjQtyWholeSystem = $tprjMgr->getItemCount();
@@ -1712,11 +1712,11 @@ function initUserEnv(&$dbH, $context, $opt = null)
     }
     $gui->treeFormToken = $gui->form_token;
 
-    return array(
+    return [
         $args,
         $gui,
         $tprjMgr
-    );
+    ];
 }
 
 /**
@@ -1740,36 +1740,36 @@ function getActions(&$gui, $baseURL)
 
     $actions = new stdClass();
 
-    $actions->events = "$bb/events/eventviewer.php?{$ctx}";
-    $actions->usersAssign = "$bb/usermanagement/usersAssign.php?{$ctx}&featureType=testproject&featureID=" .
+    $actions->events = "{$bb}/events/eventviewer.php?{$ctx}";
+    $actions->usersAssign = "{$bb}/usermanagement/usersAssign.php?{$ctx}&featureType=testproject&featureID=" .
         intval($gui->tproject_id);
 
-    $actions->userMgmt = "$bb/usermanagement/usersView.php?{$ctx}" .
+    $actions->userMgmt = "{$bb}/usermanagement/usersView.php?{$ctx}" .
         intval($gui->tproject_id);
 
-    $actions->userInfo = "$bb/usermanagement/userInfo.php?{$ctx}";
-    $actions->projectView = "$bb/project/projectView.php?{$ctx}";
+    $actions->userInfo = "{$bb}/usermanagement/userInfo.php?{$ctx}";
+    $actions->projectView = "{$bb}/project/projectView.php?{$ctx}";
 
-    $actions->cfAssignment = "$bb/cfields/cfieldsTprojectAssign.php?{$ctx}";
-    $actions->cfieldsView = "$bb/cfields/cfieldsView.php?{$ctx}";
+    $actions->cfAssignment = "{$bb}/cfields/cfieldsTprojectAssign.php?{$ctx}";
+    $actions->cfieldsView = "{$bb}/cfields/cfieldsView.php?{$ctx}";
 
-    $actions->keywordsView = "$bb/keywords/keywordsView.php?{$ctx}";
-    $actions->platformsView = "$bb/platforms/platformsView.php?{$ctx}";
-    $actions->issueTrackerView = "$bb/issuetrackers/issueTrackerView.php?{$ctx}";
-    $actions->codeTrackerView = "$bb/codetrackers/codeTrackerView.php?{$ctx}";
-    $actions->reqOverView = "$bb/requirements/reqOverview.php?{$ctx}";
-    $actions->reqMonOverView = "$bb/requirements/reqMonitorOverview.php?{$ctx}";
-    $actions->tcSearch = "$bb/testcases/tcSearch.php?doAction=userInput&{$ctx}";
-    $actions->tcCreatedUser = "$bb/results/tcCreatedPerUserOnTestProject.php?do_action=uinput&{$ctx}";
-    $actions->assignReq = "$bb/general/frmWorkArea.php?feature=assignReqs&{$ctx}";
-    $actions->inventoryView = "$bb/inventory/inventoryView.php?{$ctx}";
+    $actions->keywordsView = "{$bb}/keywords/keywordsView.php?{$ctx}";
+    $actions->platformsView = "{$bb}/platforms/platformsView.php?{$ctx}";
+    $actions->issueTrackerView = "{$bb}/issuetrackers/issueTrackerView.php?{$ctx}";
+    $actions->codeTrackerView = "{$bb}/codetrackers/codeTrackerView.php?{$ctx}";
+    $actions->reqOverView = "{$bb}/requirements/reqOverview.php?{$ctx}";
+    $actions->reqMonOverView = "{$bb}/requirements/reqMonitorOverview.php?{$ctx}";
+    $actions->tcSearch = "{$bb}/testcases/tcSearch.php?doAction=userInput&{$ctx}";
+    $actions->tcCreatedUser = "{$bb}/results/tcCreatedPerUserOnTestProject.php?do_action=uinput&{$ctx}";
+    $actions->assignReq = "{$bb}/general/frmWorkArea.php?feature=assignReqs&{$ctx}";
+    $actions->inventoryView = "{$bb}/inventory/inventoryView.php?{$ctx}";
 
-    $actions->fullTextSearch = "$bb/search/searchMgmt.php?{$ctx}";
+    $actions->fullTextSearch = "{$bb}/search/searchMgmt.php?{$ctx}";
 
-    $actions->metrics_dashboard = "$bb/results/metricsDashboard.php?{$ctx}";
+    $actions->metrics_dashboard = "{$bb}/results/metricsDashboard.php?{$ctx}";
 
     $pp = $bb . '/plan';
-    $actions->planView = "$pp/planView.php?{$ctx}";
+    $actions->planView = "{$pp}/planView.php?{$ctx}";
 
     $actions->buildView = null;
     $actions->mileView = null;
@@ -1777,11 +1777,11 @@ function getActions(&$gui, $baseURL)
     $actions->milestonesView = null;
     $actions->testcase_assignments = null;
     if ($tplan_id > 0) {
-        $actions->buildView = "$pp/buildView.php?{$ctx}";
-        $actions->mileView = "$pp/planMilestonesView.php?{$ctx}";
-        $actions->platformAssign = "$bb/platforms/platformsAssign.php?{$ctx}";
-        $actions->milestonesView = "$bb/plan/planMilestonesView.php?{$ctx}";
-        $actions->testcase_assignments = "$bb/testcases/tcAssignedToUser.php?{$ctx}";
+        $actions->buildView = "{$pp}/buildView.php?{$ctx}";
+        $actions->mileView = "{$pp}/planMilestonesView.php?{$ctx}";
+        $actions->platformAssign = "{$bb}/platforms/platformsAssign.php?{$ctx}";
+        $actions->milestonesView = "{$bb}/plan/planMilestonesView.php?{$ctx}";
+        $actions->testcase_assignments = "{$bb}/testcases/tcAssignedToUser.php?{$ctx}";
     }
 
     $launcher = $_SESSION['basehref'] . "lib/general/frmWorkArea.php?feature=";
@@ -1836,9 +1836,9 @@ function getGrantSetWithExit(&$dbHandler, &$argsObj, &$tprojMgr, $opt = null)
     /**
      * redirect admin to create testproject if not found
      */
-    $options = array(
+    $options = [
         'forceCreateProj' => true
-    );
+    ];
     $options = array_merge($options, (array) $opt);
 
     if ($options['forceCreateProj'] && $argsObj->zeroTestProjects &&
@@ -1854,15 +1854,15 @@ function getGrantSetWithExit(&$dbHandler, &$argsObj, &$tprojMgr, $opt = null)
     // key: more or less verbose
     // value: string present on rights table
 
-    $systemWideRights = array(
+    $systemWideRights = [
         'project_edit' => 'mgt_modify_product',
         'configuration' => "system_configuraton",
         'usergroups' => "mgt_view_usergroups",
         'event_viewer' => "events_mgt",
         'user_mgmt' => "mgt_users"
-    );
+    ];
 
-    $r2cTranslate = array(
+    $r2cTranslate = [
         'reqs_view' => "mgt_view_req",
         'monitor_req' => "monitor_requirement",
         'reqs_edit' => "mgt_modify_req",
@@ -1872,9 +1872,9 @@ function getGrantSetWithExit(&$dbHandler, &$argsObj, &$tprojMgr, $opt = null)
         'view_testcase_spec' => "mgt_view_tc",
         'modify_tc' => 'mgt_modify_tc',
         'testplan_create' => 'mgt_testplan_create'
-    );
+    ];
 
-    $r2cSame = array(
+    $r2cSame = [
         'req_tcase_link_management',
         'keyword_assignment',
         'issuetracker_management',
@@ -1906,7 +1906,7 @@ function getGrantSetWithExit(&$dbHandler, &$argsObj, &$tprojMgr, $opt = null)
         'exec_ro_access',
         'exec_testcases_assigned_to_me',
         'exec_assign_testcases'
-    );
+    ];
 
     if ($argsObj->userIsBlindFolded) {
         $tr = array_merge($systemWideRights, $r2cTranslate);
@@ -1937,10 +1937,10 @@ function getGrantSetWithExit(&$dbHandler, &$argsObj, &$tprojMgr, $opt = null)
     // check right ONLY if option is enabled
     $tprojOpt = $tprojMgr->getOptions($argsObj->tproject_id);
     if ($tprojOpt->inventoryEnabled) {
-        $invr = array(
+        $invr = [
             'project_inventory_view',
             'project_inventory_management'
-        );
+        ];
         foreach ($invr as $r) {
             $grants[$r] = ($argsObj->user->hasRight($dbHandler, $r) == 'yes') ? 1 : 0;
         }
@@ -1959,11 +1959,11 @@ function getGrantSetWithExit(&$dbHandler, &$argsObj, &$tprojMgr, $opt = null)
  */
 function getAccess(&$gui)
 {
-    $k2l = array(
+    $k2l = [
         'codetracker',
         'issuetracker',
         'platform'
-    );
+    ];
     foreach ($k2l as $ak) {
         $access[$ak] = 'no';
         $p_m = $ak . '_management';
@@ -2054,7 +2054,7 @@ function setSystemWideActiveMenuOFF()
  */
 function getFirstLevelMenuStructure()
 {
-    return array(
+    return [
         'dashboard' => false,
         'system' => false,
         'projects' => false,
@@ -2063,7 +2063,7 @@ function getFirstLevelMenuStructure()
         'plans' => false,
         'execution' => false,
         'reports' => false
-    );
+    ];
 }
 
 /**
@@ -2102,11 +2102,11 @@ function initContext()
     $_REQUEST = strings_stripSlashes($_REQUEST);
     $context = new stdClass();
     $env = '';
-    $k2ctx = array(
+    $k2ctx = [
         'tproject_id' => 0,
         'tplan_id' => 0,
         'form_token' => 0
-    );
+    ];
     foreach ($k2ctx as $prop => $defa) {
         $context->$prop = isset($_REQUEST[$prop]) ? $_REQUEST[$prop] : $defa;
         if (is_numeric($defa)) {
@@ -2115,13 +2115,13 @@ function initContext()
         if ($env != '') {
             $env .= "&";
         }
-        $env .= "$prop=" . $context->$prop;
+        $env .= "{$prop}=" . $context->$prop;
     }
 
-    return array(
+    return [
         $context,
         $env
-    );
+    ];
 }
 
 /*

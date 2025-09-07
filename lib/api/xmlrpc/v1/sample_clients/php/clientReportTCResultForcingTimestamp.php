@@ -58,7 +58,7 @@ function executeTestCase($server_url, $context, $exec, $debug = false)
     $client = new IXR_Client($server_url);
     $client->debug = $debug;
 
-    $data = array();
+    $data = [];
     $data["devKey"] = 'admin';
     $data["status"] = $exec->status;
 

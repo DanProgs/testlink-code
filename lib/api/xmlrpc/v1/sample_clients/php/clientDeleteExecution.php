@@ -19,7 +19,7 @@ $method = "deleteExecution";
 
 $unitTestDescription = "Test - {$method}";
 
-$args = array();
+$args = [];
 $args["devKey"] = DEV_KEY;
 $args["executionid"] = - 19;
 

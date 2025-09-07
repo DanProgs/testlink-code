@@ -24,8 +24,8 @@ require_once 'tlPlugin.class.php';
 require_once 'event_api.php';
 
 # Cache variables #####
-$g_plugin_cache = array();
-$g_plugin_current = array();
+$g_plugin_cache = [];
+$g_plugin_current = [];
 
 # Public API #####
 /**
@@ -116,15 +116,15 @@ function plugin_config_get($option, $default = null, $project = TL_ANY_PROJECT)
     $debugMsg = "Function: " . __FUNCTION__;
 
     doDBConnect($dbHandler);
-    $tables = tlObjectWithDB::getDBTables(array(
+    $tables = tlObjectWithDB::getDBTables([
         'plugins_configuration'
-    ));
+    ]);
 
     $basename = plugin_get_current();
     $full_option = 'plugin_' . $basename . '_' . $option;
     $full_option = $dbHandler->prepare_string($full_option);
 
-    $sql = "/* $debugMsg */ " . " SELECT config_value FROM " .
+    $sql = "/* {$debugMsg} */ " . " SELECT config_value FROM " .
         $tables['plugins_configuration'] . " where config_key = '" . $full_option .
         "' AND  testproject_id = ";
 
@@ -160,9 +160,9 @@ function plugin_config_get($option, $default = null, $project = TL_ANY_PROJECT)
 function plugin_config_set($option, $value, $project = TL_ANY_PROJECT)
 {
     doDBConnect($dbHandler);
-    $tables = tlObjectWithDB::getDBTables(array(
+    $tables = tlObjectWithDB::getDBTables([
         'plugins_configuration'
-    ));
+    ]);
     $plugin_config_table = $tables['plugins_configuration'];
 
     $basename = plugin_get_current();
@@ -182,21 +182,21 @@ function plugin_config_set($option, $value, $project = TL_ANY_PROJECT)
     }
 
     $safe_id = intval($project);
-    $sql = " SELECT COUNT(*) from $plugin_config_table " .
+    $sql = " SELECT COUNT(*) from {$plugin_config_table} " .
         " WHERE config_key = '" . $dbHandler->prepare_string($full_option) . "' " .
         " AND testproject_id = {$safe_id} ";
     $rows_exist = $dbHandler->fetchOneValue($sql);
 
     if ($rows_exist > 0) {
         // Update the existing record
-        $sql = " UPDATE $plugin_config_table " . " SET config_value = '" .
+        $sql = " UPDATE {$plugin_config_table} " . " SET config_value = '" .
             $dbHandler->prepare_string($value) . "'," . " config_type = " .
             $config_type . " WHERE config_key = '" .
             $dbHandler->prepare_string($full_option) . "' " .
             " AND testproject_id = {$safe_id} ";
     } else {
         // Insert new config value
-        $sql = " INSERT INTO $plugin_config_table " .
+        $sql = " INSERT INTO {$plugin_config_table} " .
             " (config_key, config_type, config_value, testproject_id, author_id) " .
             " VALUES (" . "'" . $dbHandler->prepare_string($full_option) . "', " .
             $config_type . "," . "'" . $dbHandler->prepare_string($value) . "', " .
@@ -322,9 +322,9 @@ function plugin_is_loaded($p_basename)
 function plugin_is_installed($p_basename)
 {
     doDBConnect($dbHandler);
-    $tables = tlObjectWithDB::getDBTables(array(
+    $tables = tlObjectWithDB::getDBTables([
         'plugins'
-    ));
+    ]);
 
     $sql = " SELECT COUNT(*) count FROM {$tables['plugins']} " .
         " WHERE basename='" . $dbHandler->prepare_string($p_basename) . "'";
@@ -357,10 +357,10 @@ function plugin_install($p_plugin)
     }
 
     doDBConnect($dbHandler);
-    $tables = tlObjectWithDB::getDBTables(array(
+    $tables = tlObjectWithDB::getDBTables([
         'plugins'
-    ));
-    $sql = "/* $debugMsg */ INSERT INTO {$tables['plugins']} (basename,enabled) " .
+    ]);
+    $sql = "/* {$debugMsg} */ INSERT INTO {$tables['plugins']} (basename,enabled) " .
         " VALUES ('" . $dbHandler->prepare_string($p_plugin->basename) . "',1)";
     $dbHandler->exec_query($sql);
 
@@ -379,9 +379,9 @@ function plugin_uninstall($plugin_id)
     $debugMsg = "Function: " . __FUNCTION__;
 
     doDBConnect($dbHandler);
-    $tables = tlObjectWithDB::getDBTables(array(
+    $tables = tlObjectWithDB::getDBTables([
         'plugins'
-    ));
+    ]);
     $sql = "/* debugMsg */ " .
         " SELECT basename FROM {$tables['plugins']} WHERE id=" . $plugin_id;
 
@@ -393,7 +393,7 @@ function plugin_uninstall($plugin_id)
     }
     $t_basename = $t_row['basename'];
 
-    $sql = "/* $debugMsg */ DELETE FROM {$tables['plugins']} " . " WHERE id=" .
+    $sql = "/* {$debugMsg} */ DELETE FROM {$tables['plugins']} " . " WHERE id=" .
         $plugin_id;
     $dbHandler->exec_query($sql);
 
@@ -501,9 +501,9 @@ function plugin_register($p_basename, $p_return = false)
 function plugin_register_installed()
 {
     doDBConnect($dbHandler);
-    $tables = tlObjectWithDB::getDBTables(array(
+    $tables = tlObjectWithDB::getDBTables([
         'plugins'
-    ));
+    ]);
     $sql = "/* debugMsg */ " .
         " SELECT basename FROM {$tables['plugins']} WHERE enabled=1 ";
 
@@ -520,9 +520,9 @@ function plugin_register_installed()
 function plugin_init_installed()
 {
     global $g_plugin_cache, $g_plugin_current, $g_plugin_cache_init;
-    $g_plugin_cache = array();
-    $g_plugin_current = array();
-    $g_plugin_cache_init = array();
+    $g_plugin_cache = [];
+    $g_plugin_current = [];
+    $g_plugin_cache_init = [];
 
     plugin_register_installed();
 
@@ -565,11 +565,11 @@ function get_all_installed_plugins()
     doDBConnect($dbHandler);
 
     // Store all the available plugins (Enabled + Disabled + Just Available)
-    $installed_plugins = array();
+    $installed_plugins = [];
 
-    $tables = tlObjectWithDB::getDBTables(array(
+    $tables = tlObjectWithDB::getDBTables([
         'plugins'
-    ));
+    ]);
     $sql = "/* debugMsg */ " .
         " SELECT id, basename, enabled FROM {$tables['plugins']}";
 
@@ -583,13 +583,13 @@ function get_all_installed_plugins()
             $t_classname = $t_basename . 'Plugin';
             $t_plugin = new $t_classname($dbHandler, $t_basename);
 
-            $installed_plugins[] = array(
+            $installed_plugins[] = [
                 'id' => $t_pluginid,
                 'name' => $t_basename,
                 'enabled' => $t_enabled,
                 'description' => $t_plugin->description,
                 'version' => $t_plugin->version
-            );
+            ];
         }
     }
 
@@ -607,7 +607,7 @@ function get_plugin_name($arr)
 function get_all_available_plugins($existing_plugins)
 {
     $registered_plugin_names = array_map("get_plugin_name", $existing_plugins);
-    $available_plugins = array();
+    $available_plugins = [];
     // Find all plugins that are newly available (And not already registered)
     if ($t_dir = opendir(TL_PLUGIN_PATH)) {
         while (($t_file = readdir($t_dir)) !== false) {
@@ -621,12 +621,12 @@ function get_all_available_plugins($existing_plugins)
                     is_subclass_of($t_classname, 'TestlinkPlugin')) {
                     $t_plugin = new $t_classname($dbHandler, $t_file);
 
-                    $available_plugins[] = array(
+                    $available_plugins[] = [
                         'name' => $t_plugin->name,
                         'enabled' => 0,
                         'description' => $t_plugin->description,
                         'version' => $t_plugin->version
-                    );
+                    ];
                 }
             }
         }

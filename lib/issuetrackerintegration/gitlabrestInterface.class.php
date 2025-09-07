@@ -35,20 +35,20 @@ class gitlabrestInterface extends issueTrackerInterface
     {
         $this->name = $name;
         $this->interfaceViaDB = false;
-        $this->methodOpt['buildViewBugLink'] = array(
+        $this->methodOpt['buildViewBugLink'] = [
             'addSummary' => true,
             'colorByStatus' => false
-        );
+        ];
 
-        $this->defaultResolvedStatus = array();
-        $this->defaultResolvedStatus[] = array(
+        $this->defaultResolvedStatus = [];
+        $this->defaultResolvedStatus[] = [
             'code' => 3,
             'verbose' => 'resolved'
-        );
-        $this->defaultResolvedStatus[] = array(
+        ];
+        $this->defaultResolvedStatus[] = [
             'code' => 5,
             'verbose' => 'closed'
-        );
+        ];
 
         if (! $this->setCfg($config)) {
             return false;
@@ -83,9 +83,9 @@ class gitlabrestInterface extends issueTrackerInterface
                     $cc = current($elem);
                     $kk = key($elem);
                     foreach ($cc as $value) {
-                        $this->issueOtherAttr[$name][] = array(
+                        $this->issueOtherAttr[$name][] = [
                             $kk => (string) $value
-                        );
+                        ];
                     }
                 } else {
                     $this->issueOtherAttr[$name] = (string) $elem;
@@ -97,9 +97,9 @@ class gitlabrestInterface extends issueTrackerInterface
         // are managed through the issueAdditionalAttributes
         //
         // On Redmine 1 seems to be standard for Issues/Bugs
-        $this->issueDefaults = array(
+        $this->issueDefaults = [
             'trackerid' => 1
-        );
+        ];
         foreach ($this->issueDefaults as $prop => $default) {
             if (! isset($this->issueAttr[$prop])) {
                 $this->issueAttr[$prop] = $default;
@@ -168,15 +168,15 @@ class gitlabrestInterface extends issueTrackerInterface
 
         if ($processCatch) {
             $logDetails = '';
-            foreach (array(
+            foreach ([
                 'uribase',
                 'apikey'
-            ) as $v) {
-                $logDetails .= "$v={$this->cfg->$v} / ";
+            ] as $v) {
+                $logDetails .= "{$v}={$this->cfg->$v} / ";
             }
             $logDetails = trim($logDetails, '/ ');
             $this->connected = false;
-            tLog(__METHOD__ . " [$logDetails] " . $e->getMessage(), 'ERROR');
+            tLog(__METHOD__ . " [{$logDetails}] " . $e->getMessage(), 'ERROR');
         }
     }
 
@@ -216,10 +216,10 @@ class gitlabrestInterface extends issueTrackerInterface
                 $issue->statusVerbose = (string) $jsonObj->state;
                 $issue->statusHTMLString = "[$issue->statusVerbose] ";
                 $issue->summary = $issue->summaryHTMLString = (string) $jsonObj->title;
-                $issue->gitlabProject = array(
+                $issue->gitlabProject = [
                     'name' => (string) $jsonObj->project_id,
                     'id' => (int) $jsonObj->project_id
-                );
+                ];
 
                 $issue->isResolved = isset($this->state);
             }
@@ -292,20 +292,20 @@ class gitlabrestInterface extends issueTrackerInterface
             if (is_null($op)) {
                 throw new Exception("Error creating issue", 1);
             }
-            $ret = array(
+            $ret = [
                 'status_ok' => true,
                 'id' => (string) $op->iid,
                 'msg' => sprintf(lang_get('gitlab_bug_created'), $summary,
                     $this->APIClient->projectId)
-            );
+            ];
         } catch (Exception $e) {
             $msg = "Create GITLAB Ticket FAILURE => " . $e->getMessage();
             tLog($msg, 'WARNING');
-            $ret = array(
+            $ret = [
                 'status_ok' => false,
                 'id' => - 1,
                 'msg' => $msg . ' - serialized issue:' . serialize($issue)
-            );
+            ];
         }
         return $ret;
     }
@@ -318,12 +318,12 @@ class gitlabrestInterface extends issueTrackerInterface
         if (is_null($op)) {
             throw new Exception("Error setting note", 1);
         }
-        return array(
+        return [
             'status_ok' => true,
             'id' => (string) $op->iid,
             'msg' => sprintf(lang_get('gitlab_bug_comment'), $op->body,
                 $this->APIClient->projectId)
-        );
+        ];
     }
 
     /**

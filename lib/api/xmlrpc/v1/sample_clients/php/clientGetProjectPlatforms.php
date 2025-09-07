@@ -20,7 +20,7 @@ $tlDevKey = isset($_REQUEST['apiKey']) ? $_REQUEST['apiKey'] : $tlDevKey;
 $test_num ++;
 $unitTestDescription = "Test {$test_num} - {$method}";
 
-$args = array();
+$args = [];
 $args["devKey"] = $tlDevKey;
 $args["prefix"] = 'ZTZ';
 $additionalInfo = 'Access By Test Project PREFIX';
@@ -38,7 +38,7 @@ runTest($client, $method, $args, $test_num);
 $test_num ++;
 $unitTestDescription = "Test {$test_num} - {$method}";
 
-$args = array();
+$args = [];
 $args["devKey"] = $tlDevKey;
 $args["testprojectid"] = 1046;
 $additionalInfo = 'Access By Test Project ID';

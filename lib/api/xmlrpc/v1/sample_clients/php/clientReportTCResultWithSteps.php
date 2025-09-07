@@ -30,13 +30,13 @@ $exec->notes = "OVERWRITE - Call using all EXTERNAL ID ({$context->testcaseexter
 $exec->customfields = null;
 $exec->bugid = null;
 $exec->overwrite = false;
-$exec->steps = array(
-    array(
+$exec->steps = [
+    [
         'step_number' => 1,
         'result' => 'n',
         'notes' => 'no'
-    )
-);
+    ]
+];
 
 $debug = false;
 echo $unitTestDescription;
@@ -138,7 +138,7 @@ function executeTestCase($server_url, $context, $exec, $debug = false)
     $client = new IXR_Client($server_url);
     $client->debug = $debug;
 
-    $data = array();
+    $data = [];
     $data["devKey"] = 'devkey';
 
     $data["status"] = $exec->status;

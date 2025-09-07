@@ -13,7 +13,7 @@
 class mantisdbInterface extends issueTrackerInterface
 {
 
-    private $code_status = array(
+    private $code_status = [
         10 => 'new',
         20 => 'feedback',
         30 => 'acknowledged',
@@ -21,9 +21,9 @@ class mantisdbInterface extends issueTrackerInterface
         50 => 'assigned',
         80 => 'resolved',
         90 => 'closed'
-    );
+    ];
 
-    private $status_color = array(
+    private $status_color = [
         'new' => '#ffa0a0', # red,
         'feedback' => '#ff50a8', # purple
         'acknowledged' => '#ffd850', # orange
@@ -31,7 +31,7 @@ class mantisdbInterface extends issueTrackerInterface
         'assigned' => '#c8c8ff', # blue
         'resolved' => '#cceedd', # buish-green
         'closed' => '#e8e8e8'
-    );
+    ];
 
     # light gray
     public $defaultResolvedStatus;
@@ -51,26 +51,26 @@ class mantisdbInterface extends issueTrackerInterface
         }
 
         $this->interfaceViaDB = true;
-        $this->defaultResolvedStatus = array();
-        $this->defaultResolvedStatus[] = array(
+        $this->defaultResolvedStatus = [];
+        $this->defaultResolvedStatus[] = [
             'code' => 80,
             'verbose' => 'resolved'
-        );
-        $this->defaultResolvedStatus[] = array(
+        ];
+        $this->defaultResolvedStatus[] = [
             'code' => 90,
             'verbose' => 'closed'
-        );
+        ];
 
         $this->setResolvedStatusCfg();
 
-        $this->methodOpt['buildViewBugLink'] = array(
+        $this->methodOpt['buildViewBugLink'] = [
             'addSummary' => true,
             'colorByStatus' => true
-        );
+        ];
 
-        $this->guiCfg = array(
+        $this->guiCfg = [
             'use_decoration' => true
-        );
+        ];
         if (property_exists($this->cfg, 'statuscfg')) {
             $this->setStatusCfg();
         }
@@ -97,7 +97,7 @@ class mantisdbInterface extends issueTrackerInterface
         if (! $this->isConnected()) {
             return false;
         }
-        $sql = "/* $debugMsg */ SELECT id,status,summary FROM mantis_bug_table " .
+        $sql = "/* {$debugMsg} */ SELECT id,status,summary FROM mantis_bug_table " .
             " WHERE id=" . intval($id);
 
         $rs = $this->dbConnection->fetchRowsIntoMap($sql, 'id');

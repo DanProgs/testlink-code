@@ -17,7 +17,7 @@ $method = 'getExecCountersByBuild';
 
 echo '<h2>Simple client to test method:' . $method . '()</h2>';
 
-$args = array();
+$args = [];
 $args["devKey"] = DEV_KEY;
 $args["testplanid"] = 337058;
 $client = new IXR_Client($server_url);

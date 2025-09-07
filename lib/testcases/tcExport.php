@@ -48,9 +48,9 @@ if ($args->useRecursion) {
     if ($gui->oneTestCaseExport) {
         $tcaseMgr = new testcase($db);
         $tcinfo = $tcaseMgr->get_by_id($args->tcase_id, $args->tcversion_id,
-            null, array(
+            null, [
                 'output' => 'essential'
-            ));
+            ]);
         $tcinfo = $tcinfo[0];
         $node_id = $args->tcase_id;
         $gui->export_filename = $tcinfo['name'] . '.version' . $tcinfo['version'] .
@@ -70,11 +70,11 @@ $gui->export_filename = is_null($args->export_filename) ? $gui->export_filename 
 if ($check_children) {
     // Check if there is something to export
     $children = $tree_mgr->get_children($node_id,
-        array(
+        [
             "testplan" => "exclude_me",
             "requirement_spec" => "exclude_me",
             "requirement" => "exclude_me"
-        ));
+        ]);
 
     $gui->nothing_todo_msg = '';
     if (count($children) == 0) {
@@ -149,7 +149,7 @@ function initArgs(&$dbHandler)
     $args->doExport = isset($_REQUEST['export']) ? 1 : 0;
     $args->doExportSkel = isset($_REQUEST['exportSkel']) ? 1 : 0;
 
-    $k2l = array(
+    $k2l = [
         'useRecursion',
         'exportReqs',
         'exportCFields',
@@ -159,7 +159,7 @@ function initArgs(&$dbHandler)
         'exportTCPreconditions',
         'exportTCSteps',
         'exportAttachments'
-    );
+    ];
 
     foreach ($k2l as $key) {
         $args->$key = isset($_REQUEST[$key]) ? intval($_REQUEST[$key]) : 0;
@@ -170,7 +170,7 @@ function initArgs(&$dbHandler)
         $args->addPrefix = isset($_REQUEST['addPrefix']) ? 1 : 0;
     }
 
-    $args->optExport = array(
+    $args->optExport = [
         'REQS' => $args->exportReqs,
         'CFIELDS' => $args->exportCFields,
         'KEYWORDS' => $args->exportKeywords,
@@ -181,7 +181,7 @@ function initArgs(&$dbHandler)
         'TCPRECONDITIONS' => $args->exportTCPreconditions,
         'ATTACHMENTS' => $args->exportAttachments,
         'TCSTEPS' => $args->exportTCSteps
-    );
+    ];
 
     $omgr = $args->useRecursion ? new testsuite($dbHandler) : new testcase(
         $dbHandler);

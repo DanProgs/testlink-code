@@ -26,10 +26,10 @@ if ($args->stepSeq != '') {
 
     // Get test case version id from 1 step
     $nt = $tcaseMgr->tree_manager->get_available_node_types();
-    $tables = tlObjectWithDB::getDBTables(array(
+    $tables = tlObjectWithDB::getDBTables([
         'tcsteps',
         'nodes_hierarchy'
-    ));
+    ]);
     $sql = "SELECT NH_STEPS.parent_id
           FROM {$tables['nodes_hierarchy']} NH_STEPS
           WHERE NH_STEPS.id = {$xx[0]}

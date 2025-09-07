@@ -45,12 +45,12 @@ if ($its->isConnected()) {
     // I watched C-beams glitter in the dark near the Tannhauser gate.
     // All those moments will be lost in time... like tears in rain... Time to die.
     //
-    $issue = array(
+    $issue = [
         'project' => 'ZOFF',
         'summary' => 'My Firts ISSUE VIA API',
         'description' => 'Do Androids Dream of Electric Sheep?',
         'type' => 1
-    );
+    ];
     $zorro = $its->addIssue($issue);
     var_dump($zorro);
 }

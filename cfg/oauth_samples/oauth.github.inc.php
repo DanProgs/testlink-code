@@ -33,7 +33,7 @@
 # This is only a working example that is useful
 # for the TestLink Development Team
 #
-$tlCfg->OAuthServers['github'] = array();
+$tlCfg->OAuthServers['github'] = [];
 $tlCfg->OAuthServers['github']['redirect_uri'] = 'http://fman.hopto.org/login.php?oauth=github';
 
 $tlCfg->OAuthServers['github']['oauth_client_id'] = 'aa5f70a8de342fb95043';

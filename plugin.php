@@ -19,7 +19,7 @@ require_once 'common.php';
 plugin_init_installed();
 
 $page = $_GET['page'];
-$t_matches = array();
+$t_matches = [];
 
 if (! preg_match('/^([a-zA-Z0-9_-]+)\/([a-zA-Z0-9_-]+[\/a-zA-Z0-9_-]*)/', $page,
     $t_matches)) {

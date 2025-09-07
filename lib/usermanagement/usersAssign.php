@@ -94,7 +94,7 @@ switch ($assignRolesFor) {
     case 'testproject':
         $info = getTestProjectEffectiveRoles($db, $tprojectMgr, $args,
             $gui->users);
-        list ($gui->userFeatureRoles, $gui->features, $gui->featureID) = $info;
+        [$gui->userFeatureRoles, $gui->features, $gui->featureID] = $info;
         $target->testprojectID = $gui->featureID;
         break;
 
@@ -104,7 +104,7 @@ switch ($assignRolesFor) {
         if (is_null($info)) {
             $gui->user_feedback = lang_get('no_test_plans_available');
         }
-        list ($gui->userFeatureRoles, $gui->features, $gui->featureID) = $info;
+        [$gui->userFeatureRoles, $gui->features, $gui->featureID] = $info;
         break;
 }
 
@@ -141,24 +141,24 @@ $smarty->display($templateCfg->template_dir . $templateCfg->default_template);
  */
 function initArgs(&$tprojMgr)
 {
-    $iParams = array(
-        "featureType" => array(
+    $iParams = [
+        "featureType" => [
             tlInputParameter::STRING_N,
             0,
             100
-        ),
-        "featureID" => array(
+        ],
+        "featureID" => [
             tlInputParameter::INT_N
-        ),
-        "userRole" => array(
+        ],
+        "userRole" => [
             tlInputParameter::ARRAY_INT
-        ),
-        "do_update" => array(
+        ],
+        "do_update" => [
             tlInputParameter::STRING_N,
             0,
             100
-        )
-    );
+        ]
+    ];
 
     $pParams = R_PARAMS($iParams);
 
@@ -189,9 +189,9 @@ function initArgs(&$tprojMgr)
     }
 
     $prjInfo = $tprojMgr->get_by_id($args->testprojectID,
-        array(
+        [
             'output' => 'name'
-        ));
+        ]);
 
     $args->testprojectName = $prjInfo['name'];
 
@@ -302,16 +302,16 @@ function getTestProjectEffectiveRoles($dbHandler, &$objMgr, &$argsObj, $users)
     $gui_cfg = config_get('gui');
 
     // Accessible means user has a role on test project ?
-    $opt = array(
+    $opt = [
         'output' => 'map_of_map_full',
         'order_by' => $gui_cfg->tprojects_combo_order_by
-    );
+    ];
     $testprojects = $objMgr->get_accessible_for_user($argsObj->userID, $opt);
 
     // We need to populate the combo box with test project where current logged user ($argsObj->userID)
     // has right enough to assign user role.
     //
-    $features = array();
+    $features = [];
     $idSet = $key2loop = array_keys($testprojects);
     $rolesCache = null;
     foreach ($idSet as $tk) {
@@ -341,7 +341,7 @@ function getTestProjectEffectiveRoles($dbHandler, &$objMgr, &$argsObj, $users)
     if (! $argsObj->featureID) {
         if ($argsObj->testprojectID) {
             $argsObj->featureID = $argsObj->testprojectID;
-        } elseif (count($features)) {
+        } elseif ($features !== []) {
             $xx = current($features);
             $argsObj->featureID = $xx['id'];
         }
@@ -361,16 +361,16 @@ function getTestProjectEffectiveRoles($dbHandler, &$objMgr, &$argsObj, $users)
         $user->readTestProjectRoles($dbHandler, $argsObj->featureID);
     }
     $effectiveRoles = get_tproject_effective_role($dbHandler,
-        array(
+        [
             'id' => $argsObj->featureID,
             'is_public' => $featureIsPublic
-        ), null, $users);
+        ], null, $users);
 
-    return array(
+    return [
         $effectiveRoles,
         $features,
         $argsObj->featureID
-    );
+    ];
 }
 
 /**
@@ -386,19 +386,19 @@ function getTestProjectEffectiveRoles($dbHandler, &$objMgr, &$argsObj, $users)
 function getTestPlanEffectiveRoles(&$dbHandler, &$tplanMgr, $tprojectMgr,
     &$argsObj, &$users)
 {
-    $features = array();
+    $features = [];
     $activeTestplans = $tprojectMgr->get_all_testplans($argsObj->testprojectID,
-        array(
+        [
             'plan_status' => 1
-        ));
+        ]);
 
     $ret = null;
     $status_ok = ! is_null($activeTestplans);
     if ($status_ok) {
         $myAccessibleSet = $argsObj->user->getAccessibleTestPlans($dbHandler,
-            $argsObj->testprojectID, null, array(
+            $argsObj->testprojectID, null, [
                 'output' => 'map'
-            ));
+            ]);
 
         // we want to change map key, from testplan id to a sequential index
         // to maintain old logic
@@ -414,7 +414,7 @@ function getTestPlanEffectiveRoles(&$dbHandler, &$tplanMgr, $tprojectMgr,
         if ($argsObj->user->hasRight($dbHandler, "mgt_users")) {
             $features = $activeTestplans;
         } else {
-            $features = array();
+            $features = [];
             $key2loop = array_keys($activeTestplans);
             foreach ($key2loop as $idx) {
                 if ($argsObj->user->hasRight($dbHandler,
@@ -450,11 +450,11 @@ function getTestPlanEffectiveRoles(&$dbHandler, &$tplanMgr, $tprojectMgr,
         $tproject_info = $tprojectMgr->get_by_id($argsObj->testprojectID);
         $effectiveRoles = get_tplan_effective_role($dbHandler,
             $argsObj->featureID, $tproject_info, null, $users);
-        $ret = array(
+        $ret = [
             $effectiveRoles,
             $features,
             $argsObj->featureID
-        );
+        ];
     }
     return $ret;
 }
@@ -472,19 +472,19 @@ function getTestPlanEffectiveRoles(&$dbHandler, &$tplanMgr, $tprojectMgr,
 function getTestPlanEffectiveRolesNEW(&$dbHandler, &$tplanMgr, $tprojectMgr,
     &$argsObj, &$users)
 {
-    $features = array();
+    $features = [];
     $activeTestplans = $tprojectMgr->get_all_testplans($argsObj->testprojectID,
-        array(
+        [
             'plan_status' => 1
-        ));
+        ]);
 
     $ret = null;
     $status_ok = ! is_null($activeTestplans);
     if ($status_ok) {
         $myAccessibleSet = $argsObj->user->getAccessibleTestPlans($dbHandler,
-            $argsObj->testprojectID, null, array(
+            $argsObj->testprojectID, null, [
                 'output' => 'map'
-            ));
+            ]);
 
         // we want to change map key, from testplan id to a sequential index to maintain old logic
         $activeKeys = array_keys($activeTestplans);
@@ -512,7 +512,7 @@ function getTestPlanEffectiveRolesNEW(&$dbHandler, &$tplanMgr, $tprojectMgr,
         } else {
             // $loop2do = count($activeTestplans);
             // for($idx = 0; $idx < $loop2do; $idx++)
-            $features = array();
+            $features = [];
             $key2loop = array_keys($activeTestplans);
             foreach ($key2loop as $idx) {
                 // Humm!!, think we need to check testplan_user_role_assignment and not "testplan_planning"
@@ -553,7 +553,7 @@ function getTestPlanEffectiveRolesNEW(&$dbHandler, &$tplanMgr, $tprojectMgr,
         // it seems that here is the best place to check if current logged user
         // can manege roles on current selected test plan.
         // why I did not find this before ???
-        $features = array();
+        $features = [];
         $key2loop = array_keys($activeTestplans);
         foreach ($key2loop as $idx) {
             $answer = $rolesCache[$testprojects[$idx]['effective_role']]->hasRight(
@@ -576,11 +576,11 @@ function getTestPlanEffectiveRolesNEW(&$dbHandler, &$tplanMgr, $tprojectMgr,
             }
         }
 
-        $ret = array(
+        $ret = [
             $effectiveRoles,
             $features,
             $argsObj->featureID
-        );
+        ];
     }
     return $ret;
 }
@@ -637,11 +637,11 @@ function initializeGui(&$dbHandler, $argsObj)
  */
 function initLabels()
 {
-    $tg = array(
+    $tg = [
         'test_project_user_roles_updated' => null,
         'testproject_roles_assign_disabled' => null,
         'assign_tproject_roles' => null,
         'assign_tplan_roles' => null
-    );
+    ];
     return init_labels($tg);
 }

@@ -10,89 +10,89 @@ return function (App $app): void {
 
     // using array(), was the way in Slim3 and
     // still seems valid
-    $app->get('/whoAmI', array(
+    $app->get('/whoAmI', [
         $app->restApi,
         'whoAmI'
-    ));
+    ]);
 
-    $app->get('/testprojects', array(
+    $app->get('/testprojects', [
         $app->restApi,
         'testprojects'
-    ));
-    $app->get('/testprojects/{id}', array(
+    ]);
+    $app->get('/testprojects/{id}', [
         $app->restApi,
         'testprojects'
-    ));
+    ]);
 
     $app->get('/testprojects/{id}/testcases',
-        array(
+        [
             $app->restApi,
             'getProjectTestCases'
-        ));
+        ]);
     $app->get('/testprojects/{mixedID}/testplans',
-        array(
+        [
             $app->restApi,
             'getProjectTestPlans'
-        ));
+        ]);
 
     $app->get('/testplans/{tplanApiKey}/builds',
-        array(
+        [
             $app->restApi,
             'getPlanBuilds'
-        ));
+        ]);
 
-    $app->post('/executions', array(
+    $app->post('/executions', [
         $app->restApi,
         'createTestCaseExecution'
-    ));
+    ]);
 
-    $app->post('/builds', array(
+    $app->post('/builds', [
         $app->restApi,
         'createBuild'
-    ));
+    ]);
 
-    $app->post('/keywords', array(
+    $app->post('/keywords', [
         $app->restApi,
         'createKeyword'
-    ));
+    ]);
 
-    $app->post('/testcases', array(
+    $app->post('/testcases', [
         $app->restApi,
         'createTestCase'
-    ));
+    ]);
 
-    $app->post('/testplans', array(
+    $app->post('/testplans', [
         $app->restApi,
         'createTestPlan'
-    ));
+    ]);
 
-    $app->post('/testprojects', array(
+    $app->post('/testprojects', [
         $app->restApi,
         'createTestProject'
-    ));
+    ]);
 
-    $app->post('/testsuites', array(
+    $app->post('/testsuites', [
         $app->restApi,
         'createTestSuite'
-    ));
+    ]);
 
     // Update Routes
     // Following advice from
     // https://restfulapi.net/rest-put-vs-post/
     //
-    $app->put('/builds/{id}', array(
+    $app->put('/builds/{id}', [
         $app->restApi,
         'updateBuild'
-    ));
+    ]);
 
-    $app->put('/testplans/{id}', array(
+    $app->put('/testplans/{id}', [
         $app->restApi,
         'updateTestPlan'
-    ));
+    ]);
 
     $app->put('/testplans/{tplan_id}/platforms',
-        array(
+        [
             $app->restApi,
             'addPlatformsToTestPlan'
-        ));
+        ]);
 };

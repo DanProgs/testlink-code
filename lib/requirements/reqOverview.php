@@ -46,7 +46,7 @@ if (count($gui->reqIDs) > 0) {
     $type_labels = init_labels($cfg->req->type_labels);
     $status_labels = init_labels($cfg->req->status_labels);
 
-    $labels2get = array(
+    $labels2get = [
         'no' => 'No',
         'yes' => 'Yes',
         'not_aplicable' => null,
@@ -65,13 +65,13 @@ if (count($gui->reqIDs) > 0) {
         'requirement' => null,
         'version_revision_tag' => null,
         'week_short' => 'calendar_week_short'
-    );
+    ];
 
     $labels = init_labels($labels2get);
 
     $gui->cfields4req = (array) $cfield_mgr->get_linked_cfields_at_design(
         $args->tproject_id, 1, null, 'requirement', null, 'name');
-    $gui->processCF = count($gui->cfields4req) > 0;
+    $gui->processCF = $gui->cfields4req !== [];
 
     $coverageSet = null;
     $relationCounters = null;
@@ -79,14 +79,14 @@ if (count($gui->reqIDs) > 0) {
     $version_option = $args->all_versions ? requirement_mgr::ALL_VERSIONS : requirement_mgr::LATEST_VERSION;
     if ($version_option == requirement_mgr::LATEST_VERSION) {
         $reqSet = $req_mgr->getByIDBulkLatestVersionRevision($gui->reqIDs,
-            array(
+            [
                 'outputFormat' => 'mapOfArray'
-            ));
+            ]);
     } else {
         $reqSet = $req_mgr->get_by_id($gui->reqIDs, $version_option, null,
-            array(
+            [
                 'output_format' => 'mapOfArray'
-            ));
+            ]);
     }
 
     // conditions to generate reqVersion Set
@@ -114,13 +114,13 @@ if (count($gui->reqIDs) > 0) {
     if ($gui->processCF) {
         // get custom field values bulk
         $cfByReqVer = (array) $req_mgr->get_linked_cfields(null, $reqVersionSet,
-            $args->tproject_id, array(
+            $args->tproject_id, [
                 'access_key' => 'node_id'
-            ));
+            ]);
     }
 
     // array to gather table data row per row
-    $rows = array();
+    $rows = [];
 
     foreach ($gui->reqIDs as $id) {
 
@@ -142,14 +142,14 @@ if (count($gui->reqIDs) > 0) {
         }
 
         # get all cfield ids we have columns for in the req overview
-        $cfield_ids = array();
+        $cfield_ids = [];
         foreach ($gui->cfields4req as $cf) {
             $cfield_ids[] = $cf['id'];
         }
 
         foreach ($req as $version) {
             // get content for each row to display
-            $result = array();
+            $result = [];
 
             /**
              * IMPORTANT:
@@ -215,11 +215,11 @@ if (count($gui->reqIDs) > 0) {
                 $tc_coverage = isset($coverageSet[$id]) ? $coverageSet[$id]['qty'] : 0;
                 $expected = $version['expected_coverage'];
                 $coverage_string = "<!-- -1 -->" . $labels['not_aplicable'] .
-                    " ($tc_coverage/0)";
+                    " ({$tc_coverage}/0)";
                 if ($expected > 0) {
                     $percentage = round(100 / $expected * $tc_coverage, 2);
                     $padded_data = sprintf("%010d", $percentage); // bring all percentages to same length
-                    $coverage_string = "<!-- $padded_data --> {$percentage}% ({$tc_coverage}/{$expected})";
+                    $coverage_string = "<!-- {$padded_data} --> {$percentage}% ({$tc_coverage}/{$expected})";
                 }
                 $result[] = $coverage_string;
             }
@@ -234,7 +234,7 @@ if (count($gui->reqIDs) > 0) {
 
             # 8792: append one item to $result for every displayed column (no content?: append empty string)
             if ($gui->processCF) {
-                $linkedCFWithContent = array();
+                $linkedCFWithContent = [];
                 if (isset($cfByReqVer[$version['version_id']])) {
                     $linkedCFWithContent = $cfByReqVer[$version['version_id']];
                 }
@@ -287,73 +287,73 @@ if (count($gui->reqIDs) > 0) {
          * 8. relations (if enabled)
          * 9. then all custom fields in order of $fields
          */
-        $columns = array();
-        $columns[] = array(
+        $columns = [];
+        $columns[] = [
             'title_key' => 'req_spec_short',
             'width' => 200
-        );
-        $columns[] = array(
+        ];
+        $columns[] = [
             'title_key' => 'title',
             'width' => 150
-        );
-        $columns[] = array(
+        ];
+        $columns[] = [
             'title_key' => 'version',
             'width' => 30
-        );
-        $columns[] = array(
+        ];
+        $columns[] = [
             'title_key' => 'created_on',
             'width' => 55
-        );
-        $columns[] = array(
+        ];
+        $columns[] = [
             'title_key' => 'modified_on',
             'width' => 55
-        );
+        ];
 
-        $frozen_for_filter = array(
+        $frozen_for_filter = [
             $labels['yes'],
             $labels['no']
-        );
-        $columns[] = array(
+        ];
+        $columns[] = [
             'title_key' => 'frozen',
             'width' => 30,
             'filter' => 'list',
             'filterOptions' => $frozen_for_filter
-        );
+        ];
 
         if ($cfg->req->expected_coverage_management) {
-            $columns[] = array(
+            $columns[] = [
                 'title_key' => 'th_coverage',
                 'width' => 80
-            );
+            ];
         }
 
-        $columns[] = array(
+        $columns[] = [
             'title_key' => 'type',
             'width' => 60,
             'filter' => 'list',
             'filterOptions' => $type_labels
-        );
-        $columns[] = array(
+        ];
+        $columns[] = [
             'title_key' => 'status',
             'width' => 60,
             'filter' => 'list',
             'filterOptions' => $status_labels
-        );
+        ];
 
         if ($cfg->req->relations->enable) {
-            $columns[] = array(
+            $columns[] = [
                 'title_key' => 'th_relations',
                 'width' => 50,
                 'filter' => 'numeric'
-            );
+            ];
         }
 
         foreach ($gui->cfields4req as $cf) {
-            $columns[] = array(
+            $columns[] = [
                 'title' => htmlentities($cf['label'], ENT_QUOTES, $cfg->charset),
                 'type' => 'text',
                 'col_id' => 'id_cf_' . $cf['name']
-            );
+            ];
         }
 
         // create table object, fill it with columns and row data and give it a title
@@ -376,12 +376,12 @@ if (count($gui->reqIDs) > 0) {
         $matrix->showGroupItemsCount = true;
 
         // show custom field content in multiple lines
-        $matrix->addCustomBehaviour('text', array(
+        $matrix->addCustomBehaviour('text', [
             'render' => 'columnWrap'
-        ));
-        $gui->tableSet = array(
+        ]);
+        $gui->tableSet = [
             $matrix
-        );
+        ];
     }
 
     $chronoStop = microtime(true);

@@ -16,7 +16,7 @@ $test_num = 1;
 $unitTestDescription = "Test {$test_num} - {$method}";
 
 $tplan_id = intval(isset($_REQUEST['id']) ? $_REQUEST['id'] : 92);
-$args = array();
+$args = [];
 $args["devKey"] = isset($_REQUEST['apiKey']) ? $_REQUEST['apiKey'] : 'admin';
 $args["testplanid"] = $tplan_id;
 $args["platformid"] = 3;
@@ -36,7 +36,7 @@ $answer = runTest($client, $method, $args, $test_num);
 // ---------------------------------------------------------------------------------
 $test_num ++;
 
-$args = array();
+$args = [];
 $args["devKey"] = isset($_REQUEST['apiKey']) ? $_REQUEST['apiKey'] : DEV_KEY;
 $args["testplanid"] = $tplan_id;
 $args["getstepsinfo"] = false;
@@ -56,7 +56,7 @@ $answer = runTest($client, $method, $args, $test_num);
 // ---------------------------------------------------------------------------------
 $test_num ++;
 
-$args = array();
+$args = [];
 $args["devKey"] = isset($_REQUEST['apiKey']) ? $_REQUEST['apiKey'] : DEV_KEY;
 $args["testplanid"] = $tplan_id;
 $args["getstepsinfo"] = false;
@@ -76,7 +76,7 @@ $answer = runTest($client, $method, $args, $test_num);
 // ---------------------------------------------------------------------------------
 $test_num ++;
 
-$args = array();
+$args = [];
 $args["devKey"] = isset($_REQUEST['apiKey']) ? $_REQUEST['apiKey'] : DEV_KEY;
 $args["testplanid"] = $tplan_id;
 $args["getstepsinfo"] = false;
@@ -96,7 +96,7 @@ $answer = runTest($client, $method, $args, $test_num);
 // ---------------------------------------------------------------------------------
 $test_num ++;
 
-$args = array();
+$args = [];
 $args["devKey"] = isset($_REQUEST['apiKey']) ? $_REQUEST['apiKey'] : DEV_KEY;
 $args["testplanid"] = $tplan_id;
 $args["keywords"] = 'Key Feature';
@@ -115,7 +115,7 @@ $answer = runTest($client, $method, $args, $test_num);
 // ---------------------------------------------------------------------------------
 $test_num ++;
 
-$args = array();
+$args = [];
 $args["devKey"] = isset($_REQUEST['apiKey']) ? $_REQUEST['apiKey'] : DEV_KEY;
 $args["testplanid"] = $tplan_id;
 $args["keywords"] = 'Key Feature,Must have,Obsolete,Performance,System wide,Usability';
@@ -134,7 +134,7 @@ $answer = runTest($client, $method, $args, $test_num);
 // ---------------------------------------------------------------------------------
 $test_num ++;
 
-$args = array();
+$args = [];
 $args["devKey"] = isset($_REQUEST['apiKey']) ? $_REQUEST['apiKey'] : DEV_KEY;
 $args["testplanid"] = $tplan_id;
 $args["getstepsinfo"] = false;
@@ -154,7 +154,7 @@ $answer = runTest($client, $method, $args, $test_num);
 // ---------------------------------------------------------------------------------
 $test_num ++;
 
-$args = array();
+$args = [];
 $args["devKey"] = isset($_REQUEST['apiKey']) ? $_REQUEST['apiKey'] : DEV_KEY;
 $args["testplanid"] = $tplan_id;
 $args["getstepsinfo"] = true;

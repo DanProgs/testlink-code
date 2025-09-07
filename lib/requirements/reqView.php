@@ -33,34 +33,34 @@ $smarty->display($templateCfg->template_dir . 'reqViewVersions.tpl');
 function initArgs(&$reqMgr)
 {
     $_REQUEST = strings_stripSlashes($_REQUEST);
-    $iParams = array(
-        "req_id" => array(
+    $iParams = [
+        "req_id" => [
             tlInputParameter::INT_N
-        ),
-        "requirement_id" => array(
+        ],
+        "requirement_id" => [
             tlInputParameter::INT_N
-        ),
-        "req_version_id" => array(
+        ],
+        "req_version_id" => [
             tlInputParameter::INT_N
-        ),
-        "showReqSpecTitle" => array(
+        ],
+        "showReqSpecTitle" => [
             tlInputParameter::INT_N
-        ),
-        "refreshTree" => array(
+        ],
+        "refreshTree" => [
             tlInputParameter::INT_N
-        ),
-        "relation_add_result_msg" => array(
+        ],
+        "relation_add_result_msg" => [
             tlInputParameter::STRING_N
-        ),
-        "user_feedback" => array(
+        ],
+        "user_feedback" => [
             tlInputParameter::STRING_N
-        ),
-        "uploadOPStatusCode" => array(
+        ],
+        "uploadOPStatusCode" => [
             tlInputParameter::STRING_N,
             0,
             30
-        )
-    );
+        ]
+    ];
 
     $args = new stdClass();
     R_PARAMS($iParams, $args);
@@ -96,9 +96,9 @@ function initializeGui(&$dbHandler, $argsObj, &$tproject_mgr, &$req_mgr)
 
     $gui = $commandMgr->initGuiBean($argsObj);
 
-    $opt = array(
+    $opt = [
         'renderImageInline' => true
-    );
+    ];
     $gui->req_versions = $req_mgr->get_by_id($gui->req_id, $gui->version_option,
         1, $opt);
 
@@ -135,8 +135,8 @@ function initializeGui(&$dbHandler, $argsObj, &$tproject_mgr, &$req_mgr)
     // 2018 $gui->req_coverage = $req_mgr->get_coverage($gui->req_id);
     // This need to become an array.
     $loop2do = count($gui->req_versions);
-    $gui->current_req_coverage = array();
-    $gui->other_req_coverage = array();
+    $gui->current_req_coverage = [];
+    $gui->other_req_coverage = [];
     for ($cvx = 0; $cvx < $loop2do; $cvx ++) {
         $bebe = $gui->req_versions[$cvx]['version_id'];
 
@@ -157,7 +157,7 @@ function initializeGui(&$dbHandler, $argsObj, &$tproject_mgr, &$req_mgr)
     $gui->delAttachmentURL = $_SESSION['basehref'] .
         $req_mgr->getDeleteAttachmentRelativeURL($gui->req_id, 0);
 
-    $gui->fileUploadURL = array();
+    $gui->fileUploadURL = [];
     $gui->fileUploadURL[$gui->req_version_id] = $_SESSION['basehref'] .
         $req_mgr->getFileUploadRelativeURL($gui->req_id, $gui->req_version_id);
 
@@ -168,16 +168,16 @@ function initializeGui(&$dbHandler, $argsObj, &$tproject_mgr, &$req_mgr)
     }
 
     $gui->req_has_history = count(
-        $req_mgr->get_history($gui->req_id, array(
+        $req_mgr->get_history($gui->req_id, [
             'output' => 'array'
-        ))) > 1;
+        ])) > 1;
 
     // This seems weird but is done to adapt template than can
     // display multiple requirements.
     // This logic has been borrowed from test case versions management
-    $gui->current_version[0] = array(
+    $gui->current_version[0] = [
         $gui->req
-    );
+    ];
     $gui->cfields_current_version[0] = $req_mgr->html_table_of_custom_field_values(
         $gui->req_id, $gui->req['version_id'], $argsObj->tproject_id);
 
@@ -208,15 +208,15 @@ function initializeGui(&$dbHandler, $argsObj, &$tproject_mgr, &$req_mgr)
     }
 
     if ($gui->showAllVersions) {
-        $versionSet = array();
+        $versionSet = [];
         $loop2do = count($gui->req_versions);
         for ($ggx = 0; $ggx < $loop2do; $ggx ++) {
             $versionSet[] = intval($gui->req_versions[$ggx]['version_id']);
         }
     } else {
-        $versionSet = array(
+        $versionSet = [
             $gui->req_version_id
-        );
+        ];
     }
 
     foreach ($versionSet as $kiwi) {
@@ -257,12 +257,12 @@ function initializeGui(&$dbHandler, $argsObj, &$tproject_mgr, &$req_mgr)
 function getGrants(&$dbH, &$userObj, $tproject_id)
 {
     $grants = new stdClass();
-    $gk = array(
+    $gk = [
         'req_mgmt' => "mgt_modify_req",
         'monitor_req' => "monitor_requirement",
         'req_tcase_link_management' => 'req_tcase_link_management',
         'unfreeze_req' => 'mgt_unfreeze_req'
-    );
+    ];
 
     foreach ($gk as $p => $g) {
         $grants->$p = $userObj->hasRight($dbH, $g, $tproject_id);
@@ -288,13 +288,13 @@ function checkRights(&$db, &$user, &$context)
  */
 function initTestprojectSelect($userID, $tprojectID, &$tprojectMgr)
 {
-    $opt = array(
+    $opt = [
         'output' => 'map_name_with_inactive_mark',
         'order_by' => config_get('gui')->tprojects_combo_order_by
-    );
+    ];
     $testprojects = $tprojectMgr->get_accessible_for_user($userID, $opt);
-    return array(
+    return [
         'items' => $testprojects,
         'selected' => $tprojectID
-    );
+    ];
 }

@@ -16,7 +16,7 @@ $method = 'getTestCaseCustomFieldDesignValue';
 $test_num = 1;
 $unitTestDescription = "Test {$test_num} - {$method}";
 
-$args = array();
+$args = [];
 $args["devKey"] = DEV_KEY;
 $args["testcaseexternalid"] = 'QAZ-1';
 $args["testprojectid"] = 455;
@@ -35,7 +35,7 @@ $client->debug = $debug;
 runTest($client, $method, $args);
 
 // -----------------------------------------------------------------------
-$args = array();
+$args = [];
 $args["devKey"] = DEV_KEY;
 $args["testcaseexternalid"] = 'QAZ-1';
 $args["testprojectid"] = 455;
@@ -54,7 +54,7 @@ $client->debug = $debug;
 runTest($client, $method, $args);
 
 // -----------------------------------------------------------------------
-$args = array();
+$args = [];
 $args["devKey"] = DEV_KEY;
 $args["testcaseexternalid"] = 'QAZ-1';
 $args["testprojectid"] = 455;

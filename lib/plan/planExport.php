@@ -42,27 +42,27 @@ if ($args->doExport) {
         ' : $args->exportContent : ' . $args->exportContent;
     switch ($args->exportContent) {
         case 'tree':
-            $context = array(
+            $context = [
                 'platform_id' => $args->platform_id,
                 'build_id' => $args->build_id,
                 'tproject_id' => $args->tproject_id
-            );
+            ];
             $content = $tplan_mgr->exportTestPlanDataToXML($args->tplan_id,
                 $context);
             $tLogMsg .= ' : exportTestPlanDataToXML()';
             break;
 
         case '4results':
-            $context = array(
+            $context = [
                 'platform_id' => $args->platform_id,
                 'build_id' => $args->build_id,
                 'tproject_id' => $args->tproject_id
-            );
+            ];
 
             $content = $tplan_mgr->exportForResultsToXML($args->tplan_id,
-                $context, null, array(
+                $context, null, [
                     'tcaseSet' => $args->testCaseSet
-                ));
+                ]);
             $tLogMsg .= ' : exportForResultsToXML()';
             break;
 
@@ -166,10 +166,10 @@ function initArgs()
 function initializeGui(&$argsObj, &$tplanMgr)
 {
     $info = $tplanMgr->get_by_id($argsObj->tplan_id,
-        array(
+        [
             'output' => 'minimun',
             'caller' => __LINE__
-        ));
+        ]);
     $add2name = '';
 
     $guiObj = new stdClass();
@@ -180,9 +180,9 @@ function initializeGui(&$argsObj, &$tplanMgr)
     // If there is a platform setted -> use in name.
     if ($argsObj->platform_id > 0) {
         $dummy = $tplanMgr->getPlatforms($argsObj->tplan_id,
-            array(
+            [
                 'outputFormat' => 'mapAccessByID'
-            ));
+            ]);
         $add2name .= '_' .
             str_replace(' ', '_', $dummy[$argsObj->platform_id]['name']);
     }
@@ -200,9 +200,9 @@ function initializeGui(&$argsObj, &$tplanMgr)
             str_replace(' ', '_', $info['name']) . $add2name . '.xml';
     }
 
-    $guiObj->exportTypes = array(
+    $guiObj->exportTypes = [
         'XML' => 'XML'
-    );
+    ];
     $guiObj->page_title = lang_get('export_test_plan');
     $guiObj->object_name = $info['name'];
     $guiObj->goback_url = ! is_null($argsObj->goback_url) ? $argsObj->goback_url : '';

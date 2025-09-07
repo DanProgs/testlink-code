@@ -122,13 +122,13 @@ switch ($args->doAction) {
         }
 
         $gui->doAction = $reloadType;
-        $opt = array(
+        $opt = [
             'output' => 'array_of_map',
             'order_by' => " ORDER BY nodes_hierarchy.name ",
             'add_issuetracker' => $addIssueTracker,
             'add_codetracker' => $addCodeTracker,
             'add_reqmgrsystem' => $addReqMgrSystem
-        );
+        ];
         $gui->tprojects = (array) $tproject_mgr->get_accessible_for_user(
             $args->userID, $opt);
 
@@ -143,10 +143,10 @@ switch ($args->doAction) {
 
         if ($addIssueTracker) {
             $labels = init_labels(
-                array(
+                [
                     'active_integration' => null,
                     'inactive_integration' => null
-                ));
+                ]);
 
             for ($idx = 0; $idx < $tprojQty; $idx ++) {
                 $gui->tprojects[$idx]['itstatusImg'] = '';
@@ -162,10 +162,10 @@ switch ($args->doAction) {
 
         if ($addCodeTracker) {
             $labels = init_labels(
-                array(
+                [
                     'active_integration' => null,
                     'inactive_integration' => null
-                ));
+                ]);
 
             for ($idx = 0; $idx < $tprojQty; $idx ++) {
                 $gui->tprojects[$idx]['ctstatusImg'] = '';
@@ -181,10 +181,10 @@ switch ($args->doAction) {
 
         if ($addReqMgrSystem) {
             $labels = init_labels(
-                array(
+                [
                     'active_integration' => null,
                     'inactive_integration' => null
-                ));
+                ]);
 
             for ($idx = 0; $idx < $tprojQty; $idx ++) {
                 $gui->tprojects[$idx]['rmsstatusImg'] = '';
@@ -243,29 +243,29 @@ function initArgs($tprojectMgr, $request_hash)
     $args = new stdClass();
     $request_hash = strings_stripSlashes($request_hash);
 
-    $nullable_keys = array(
+    $nullable_keys = [
         'tprojectName',
         'color',
         'notes',
         'doAction',
         'tcasePrefix',
         'api_key'
-    );
+    ];
     foreach ($nullable_keys as $value) {
         $args->$value = isset($request_hash[$value]) ? trim(
             $request_hash[$value]) : null;
     }
 
-    $intval_keys = array(
+    $intval_keys = [
         'tprojectID' => 0,
         'copy_from_tproject_id' => 0
-    );
+    ];
     foreach ($intval_keys as $key => $value) {
         $args->$key = isset($request_hash[$key]) ? intval($request_hash[$key]) : $value;
     }
 
     // get input from the project edit/create page
-    $checkbox_keys = array(
+    $checkbox_keys = [
         'is_public' => 0,
         'active' => 0,
         'optPriority' => 0,
@@ -275,7 +275,7 @@ function initArgs($tprojectMgr, $request_hash)
         'issue_tracker_enabled' => 0,
         'code_tracker_enabled' => 0,
         'reqmgr_integration_enabled' => 0
-    );
+    ];
     foreach ($checkbox_keys as $key => $value) {
         $args->$key = isset($request_hash[$key]) ? 1 : $value;
     }
@@ -339,10 +339,10 @@ function initArgs($tprojectMgr, $request_hash)
     // sanitize output via black list
     if ($args->notes != '') {
         // The Black List - Jon Bokenkamp
-        $bl = array(
+        $bl = [
             '<script>',
             '</script>'
-        );
+        ];
         foreach ($bl as $tg) {
             $cl[] = htmlentities($tg);
         }
@@ -381,10 +381,10 @@ function prepareOptions($argsObj)
  */
 function doCreate($argsObj, &$tprojectMgr)
 {
-    $key2get = array(
+    $key2get = [
         'status_ok',
         'msg'
-    );
+    ];
 
     $op = new stdClass();
     $op->ui = new stdClass();
@@ -408,10 +408,10 @@ function doCreate($argsObj, &$tprojectMgr)
             $item->prefix = $argsObj->tcasePrefix;
             $item->options = prepareOptions($argsObj);
             $new_id = $tprojectMgr->create($item,
-                array(
+                [
                     'doChecks' => true,
                     'setSessionProject' => true
-                ));
+                ]);
         } catch (Exception $e) {
             $new_id = - 1;
             $op->status_ok = false;
@@ -461,9 +461,9 @@ function doCreate($argsObj, &$tprojectMgr)
     if ($op->status_ok) {
         $op->reloadType = 'reloadNavBar';
         if ($argsObj->copy_from_tproject_id > 0) {
-            $options = array(
+            $options = [
                 'copy_requirements' => $argsObj->optReq
-            );
+            ];
             $tprojectMgr->copy_as($argsObj->copy_from_tproject_id, $new_id,
                 $argsObj->userID, trim($argsObj->tprojectName), $options);
         }
@@ -486,10 +486,10 @@ function doCreate($argsObj, &$tprojectMgr)
  */
 function doUpdate($argsObj, &$tprojectMgr, $sessionTprojectID)
 {
-    $key2get = array(
+    $key2get = [
         'status_ok',
         'msg'
-    );
+    ];
 
     $op = new stdClass();
     $op->ui = new stdClass();
@@ -607,7 +607,7 @@ function edit(&$argsObj, &$tprojectMgr)
     $argsObj->projectOptions = $tprojectInfo['opt'];
     $argsObj->tcasePrefix = $tprojectInfo['prefix'];
 
-    $k2l = array(
+    $k2l = [
         'color',
         'notes',
         'active',
@@ -616,7 +616,7 @@ function edit(&$argsObj, &$tprojectMgr)
         'code_tracker_enabled',
         'reqmgr_integration_enabled',
         'api_key'
-    );
+    ];
     foreach ($k2l as $key) {
         $argsObj->$key = $tprojectInfo[$key];
     }
@@ -647,8 +647,8 @@ function crossChecks($argsObj, &$tprojectMgr)
     $updateAdditionalSQLFilter = null;
     $op = $tprojectMgr->checkName($argsObj->tprojectName);
 
-    $check_op = array();
-    $check_op['msg'] = array();
+    $check_op = [];
+    $check_op['msg'] = [];
     $check_op['status_ok'] = $op['status_ok'];
 
     if ($argsObj->doAction == 'doUpdate') {
@@ -703,9 +703,9 @@ function create(&$argsObj, &$tprojectMgr)
     $gui->caption = lang_get('caption_new_tproject');
 
     $gui->testprojects = $tprojectMgr->get_all(null,
-        array(
+        [
             'access_key' => 'id'
-        ));
+        ]);
     return $gui;
 }
 
@@ -750,11 +750,11 @@ function initializeGui(&$dbHandler, $argsObj)
         "mgt_modify_product");
     $guiObj->found = 'yes';
 
-    $ent2loop = array(
+    $ent2loop = [
         'tlIssueTracker' => 'issueTrackers',
         'tlCodeTracker' => 'codeTrackers',
         'tlReqMgrSystem' => 'reqMgrSystems'
-    );
+    ];
 
     foreach ($ent2loop as $cl => $pr) {
         $mgr = new $cl($dbHandler);

@@ -19,7 +19,7 @@ show_api_db_sample_msg();
 $method = 'getBuildsForTestPlan';
 $unitTestDescription = "Test - {$method}";
 
-$args = array();
+$args = [];
 $args["devKey"] = DEV_KEY;
 $args["testplanid"] = 3;
 
@@ -33,7 +33,7 @@ runTest($client, $method, $args);
 $method = 'getLatestBuildForTestPlan';
 $unitTestDescription = "Test - {$method}";
 
-$args = array();
+$args = [];
 $args["devKey"] = DEV_KEY;
 $args["testplanid"] = 3;
 

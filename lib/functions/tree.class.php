@@ -23,7 +23,7 @@ class tree extends tlObject
     // configurable values - pseudoconstants
     // VERBOSE description do not map 100% contents of node_types table
     // Now contains also PSEUDO NODES => build
-    public $node_types = array(
+    public $node_types = [
         1 => 'testproject',
         'testsuite',
         'testcase',
@@ -36,10 +36,10 @@ class tree extends tlObject
         'req_revision',
         'requirement_spec_revision',
         'build'
-    );
+    ];
 
     // key: node type id, value: class name
-    public $class_name = array(
+    public $class_name = [
         1 => 'testproject',
         'testsuite',
         'testcase',
@@ -52,16 +52,16 @@ class tree extends tlObject
         null,
         null,
         null
-    );
+    ];
 
     private $nodeWithoutClass = null;
 
-    public $node_descr_id = array();
+    public $node_descr_id = [];
 
     // Order here means NOTHING
-    public $node_tables_by = array(
-        'id' => array(),
-        'name' => array(
+    public $node_tables_by = [
+        'id' => [],
+        'name' => [
             'testproject' => 'testprojects',
             'testsuite' => 'testsuites',
             'testplan' => 'testplans',
@@ -72,8 +72,8 @@ class tree extends tlObject
             'req_version' => 'req_versions',
             'req_revision' => 'req_versions',
             'requirement_spec_revision' => 'req_specs_revisions'
-        )
-    );
+        ]
+    ];
 
     private $node_tables;
 
@@ -200,11 +200,11 @@ class tree extends tlObject
     public function get_node_hierarchy_info($node_id, $parent_id = null,
         $options = null)
     {
-        $opt = array(
+        $opt = [
             'nodeTypeID' => null,
             'nodeType' => null,
             'fields' => 'id,name,parent_id,node_type_id,node_order'
-        );
+        ];
         $opt = array_merge($opt, (array) $options);
         $sql = "SELECT {$opt['fields']} " . "FROM {$this->object_table} WHERE id";
 
@@ -265,7 +265,7 @@ class tree extends tlObject
     public function get_subtree_list($node_id, $node_type_id = null,
         $output = null)
     {
-        $nodes = array();
+        $nodes = [];
         $this->_get_subtree_list($node_id, $nodes, $node_type_id);
         return is_null($output) ? implode(',', $nodes) : $nodes;
     }
@@ -317,7 +317,7 @@ class tree extends tlObject
         if ($children != "") {
             $id2del .= ",{$children}";
         }
-        $sql = "/* $debugMsg */ DELETE FROM {$this->object_table} WHERE id IN ({$id2del})";
+        $sql = "/* {$debugMsg} */ DELETE FROM {$this->object_table} WHERE id IN ({$id2del})";
 
         $this->db->exec_query($sql);
     }
@@ -409,7 +409,7 @@ class tree extends tlObject
      */
     public function get_path($node_id, $to_node_id = null, $format = 'full')
     {
-        $the_path = array();
+        $the_path = [];
         $this->_get_path($node_id, $the_path, $to_node_id, $format);
         if (! is_null($the_path) && count($the_path) > 0) {
             $the_path = array_reverse($the_path);
@@ -421,15 +421,15 @@ class tree extends tlObject
      */
     private function get_path_new($node_id, $to_node_id = null, $format = 'full')
     {
-        $the_path = array();
+        $the_path = [];
         $trip = '';
-        $matrioska = array();
+        $matrioska = [];
         $this->_get_path($node_id, $the_path, $to_node_id, $format);
 
         if (! is_null($the_path) && ($loop2do = count($the_path)) > 0) {
             $the_path = array_reverse($the_path);
             $matrioska = $the_path[0];
-            $matrioska['childNodes'] = array();
+            $matrioska['childNodes'] = [];
             $target = &$matrioska['childNodes'];
 
             $trip = '';
@@ -442,10 +442,10 @@ class tree extends tlObject
             }
         }
 
-        return array(
+        return [
             $trip,
             $the_path
-        );
+        ];
     }
 
     /*
@@ -467,7 +467,7 @@ class tree extends tlObject
         $debugMsg = 'Class:' . __CLASS__ . ' - Method: ' . __FUNCTION__;
 
         // look up the parent of this node
-        $sql = "/* $debugMsg */ " .
+        $sql = "/* {$debugMsg} */ " .
             " SELECT id,name,parent_id,node_type_id,node_order " .
             " FROM {$this->object_table} WHERE id = " . intval($node_id);
 
@@ -541,20 +541,20 @@ class tree extends tlObject
         if (is_array($node_id)) {
             $safeSet = array_map('intval', $node_id);
             $id_list = implode(",", $safeSet);
-            $where_clause = " WHERE id IN ($id_list) ";
+            $where_clause = " WHERE id IN ({$id_list}) ";
         } else {
             $safe = intval($node_id);
             if ($safe <= 0) {
                 throw new Exception("BAD node_id", 1);
             }
-            $where_clause = " WHERE id = $safe";
+            $where_clause = " WHERE id = {$safe}";
         }
 
         $safeP = $this->db->prepare_int($parent_id);
-        $sql = "/* $debugMsg */
+        $sql = "/* {$debugMsg} */
             UPDATE {$this->object_table}
-            SET parent_id = $safeP
-            $where_clause ";
+            SET parent_id = {$safeP}
+            {$where_clause} ";
 
         $result = $this->db->exec_query($sql);
 
@@ -585,17 +585,17 @@ class tree extends tlObject
     {
         $debugMsg = 'Class:' . __CLASS__ . ' - Method: ' . __FUNCTION__;
 
-        $my['opt'] = array(
+        $my['opt'] = [
             'accessKey' => null
-        );
+        ];
         $my['opt'] = array_merge($my['opt'], (array) $opt);
 
-        $sql = "/* $debugMsg */ " .
+        $sql = "/* {$debugMsg} */ " .
             " SELECT id,name,parent_id,node_type_id,node_order FROM {$this->object_table} " .
             " WHERE parent_id = " . $this->db->prepare_int($id) .
             " ORDER BY node_order,id";
 
-        $node_list = array();
+        $node_list = [];
         $result = $this->db->exec_query($sql);
 
         if ($this->db->num_rows($result) == 0) {
@@ -609,14 +609,14 @@ class tree extends tlObject
                 $node_table = $this->node_tables_by['id'][$row['node_type_id']];
 
                 $ak = is_null($my['opt']['accessKey']) ? $xdx : $row[$my['opt']['accessKey']];
-                $node_list[$ak] = array(
+                $node_list[$ak] = [
                     'id' => $row['id'],
                     'parent_id' => $row['parent_id'],
                     'node_type_id' => $row['node_type_id'],
                     'node_order' => $row['node_order'],
                     'node_table' => $node_table,
                     'name' => $row['name']
-                );
+                ];
                 $xdx ++;
             }
         }
@@ -815,35 +815,35 @@ class tree extends tlObject
      */
     public function get_subtree($node_id, $filters = null, $options = null)
     {
-        $my['filters'] = array(
+        $my['filters'] = [
             'exclude_node_types' => null,
             'exclude_children_of' => null,
             'exclude_branches' => null,
             'additionalWhereClause' => '',
             'family' => null
-        );
+        ];
 
-        $my['options'] = array(
+        $my['options'] = [
             'recursive' => false,
-            'order_cfg' => array(
+            'order_cfg' => [
                 "type" => 'spec_order'
-            ),
+            ],
             'output' => 'essential',
             'key_type' => 'std',
             'addJoin' => '',
             'addFields' => ''
-        );
+        ];
 
         // Cast to array to handle $options = null
         $my['filters'] = array_merge($my['filters'], (array) $filters);
         $my['options'] = array_merge($my['options'], (array) $options);
 
-        $the_subtree = array();
+        $the_subtree = [];
 
         // Generate NOT IN CLAUSE to exclude some node types
         // $not_in_clause = $my['filters']['additionalWhereClause'];
         if (! is_null($my['filters']['exclude_node_types'])) {
-            $exclude = array();
+            $exclude = [];
             foreach ($my['filters']['exclude_node_types'] as $the_key => $elem) {
                 $exclude[] = $this->node_descr_id[$the_key];
             }
@@ -864,22 +864,22 @@ class tree extends tlObject
     {
         static $my;
         if (! $my) {
-            $my['filters'] = array(
+            $my['filters'] = [
                 'exclude_children_of' => null,
                 'exclude_branches' => null,
                 'additionalWhereClause' => '',
                 'family' => null
-            );
+            ];
 
-            $my['options'] = array(
-                'order_cfg' => array(
+            $my['options'] = [
+                'order_cfg' => [
                     "type" => 'spec_order'
-                ),
+                ],
                 'output' => 'full',
                 'key_type' => 'std',
                 'addJoin' => '',
                 'addFields' => ''
-            );
+            ];
         }
 
         $my['filters'] = array_merge($my['filters'], (array) $filters);
@@ -963,18 +963,18 @@ class tree extends tlObject
                         break;
 
                     case 'essential':
-                        $node_list[] = array(
+                        $node_list[] = [
                             'id' => $row['id'],
                             'parent_id' => $row['parent_id'],
                             'node_type_id' => $row['node_type_id'],
                             'node_order' => $row['node_order'],
                             'node_table' => $node_table,
                             'name' => $row['name']
-                        );
+                        ];
                         break;
 
                     case 'rspec':
-                        $node_list[] = array(
+                        $node_list[] = [
                             'id' => $row['id'],
                             'parent_id' => $row['parent_id'],
                             'doc_id' => $row['doc_id'],
@@ -982,7 +982,7 @@ class tree extends tlObject
                             'node_order' => $row['node_order'],
                             'node_table' => $node_table,
                             'name' => $row['name']
-                        );
+                        ];
                         break;
 
                     case 'full':
@@ -990,7 +990,7 @@ class tree extends tlObject
                         // this choice
                         // 'tcversion_id' => (isset($row['parent_id']) ? $row['parent_id'] : -1),
                         // need to be documented and REVIEWED, because can generate confusion
-                        $node_list[] = array(
+                        $node_list[] = [
                             'id' => $row['id'],
                             'parent_id' => $row['parent_id'],
                             'tcversion_id' => (isset($row['parent_id']) ? $row['parent_id'] : - 1),
@@ -998,7 +998,7 @@ class tree extends tlObject
                             'node_order' => $row['node_order'],
                             'node_table' => $node_table,
                             'name' => $row['name']
-                        );
+                        ];
                         break;
                 }
                 // Basically we use this because:
@@ -1039,20 +1039,20 @@ class tree extends tlObject
 
             $qnum = 0;
 
-            $my['filters'] = array(
+            $my['filters'] = [
                 'exclude_children_of' => null,
                 'exclude_branches' => null,
                 'additionalWhereClause' => '',
                 'family' => null
-            );
+            ];
 
-            $my['options'] = array(
-                'order_cfg' => array(
+            $my['options'] = [
+                'order_cfg' => [
                     "type" => 'spec_order'
-                ),
+                ],
                 'key_type' => 'std',
                 'remove_empty_nodes_of_type' => null
-            );
+            ];
 
             // Cast to array to handle $options = null
             $my['filters'] = array_merge($my['filters'], (array) $filters);
@@ -1121,7 +1121,7 @@ class tree extends tlObject
             if (! isset($exclude_branches[$row['id']])) {
                 switch ($my['options']['key_type']) {
                     case 'std':
-                        $node = array(
+                        $node = [
                             'parent_id' => $row['parent_id'],
                             'id' => $row['id'],
                             'name' => $row['name'],
@@ -1129,7 +1129,7 @@ class tree extends tlObject
                             'node_table' => $this->node_tables_by['id'][$row['node_type_id']],
                             'node_type_id' => $row['node_type_id'],
                             'node_order' => $row['node_order']
-                        );
+                        ];
 
                         if (isset($row['tcversion_id']) &&
                             $row['tcversion_id'] > 0) {
@@ -1138,7 +1138,7 @@ class tree extends tlObject
                         break;
 
                     case 'extjs':
-                        $node = array(
+                        $node = [
                             'text' => $row['name'],
                             'id' => $row['id'],
                             'parent_id' => $row['parent_id'],
@@ -1146,7 +1146,7 @@ class tree extends tlObject
                             'position' => $row['node_order'],
                             'childNodes' => null,
                             'leaf' => false
-                        );
+                        ];
 
                         switch ($this->node_types[$row['node_type_id']]) {
                             case 'testproject':
@@ -1204,7 +1204,7 @@ class tree extends tlObject
         $debugMsg = 'Class:' . __CLASS__ . ' - Method:' . __FUNCTION__ . ' :: ';
         $goto_root = null;
         $path_to = null;
-        $all_nodes = array();
+        $all_nodes = [];
         $path_format = 'simple';
         $output_format = 'simple';
 
@@ -1226,7 +1226,7 @@ class tree extends tlObject
 
             $xmen = $this->db->fetchRowsIntoMap($xsql, 'parent_id',
                 database::CUMULATIVE);
-            $all_nodes = array();
+            $all_nodes = [];
             foreach ($xmen as $parent_id => &$children) {
                 $paty = $this->get_path($parent_id, $goto_root, $path_format);
                 $paty[] = $parent_id;
@@ -1253,7 +1253,7 @@ class tree extends tlObject
             // get only different items, to get descriptions
             $unique_nodes = implode(',', array_unique($all_nodes));
 
-            $sql = "/* $debugMsg */ " .
+            $sql = "/* {$debugMsg} */ " .
                 " SELECT id,name FROM {$this->tables['nodes_hierarchy']}  WHERE id IN ({$unique_nodes})";
             $decode = $this->db->fetchRowsIntoMap($sql, 'id');
 
@@ -1397,7 +1397,7 @@ class tree extends tlObject
             $debugMsg = 'Class:' . __CLASS__ . ' - Method: ' . __FUNCTION__;
         }
 
-        $sql = "/* $debugMsg */ SELECT NH.* FROM {$this->object_table} NH " .
+        $sql = "/* {$debugMsg} */ SELECT NH.* FROM {$this->object_table} NH " .
             " WHERE NH.parent_id = " . $this->db->prepare_int($node_id) .
             " {$additionalWhereClause} ";
         $rs = $this->db->get_recordset($sql);
@@ -1441,7 +1441,7 @@ class tree extends tlObject
         if (! is_null($root_id) && ($node_id != $root_id)) {
             $children = (array) $this->db->get_recordset($sql);
             if (count($children) == 0) {
-                $sql2 = "/* $debugMsg */ SELECT NH.* FROM {$this->object_table} NH " .
+                $sql2 = "/* {$debugMsg} */ SELECT NH.* FROM {$this->object_table} NH " .
                     " WHERE NH.id = " . $this->db->prepare_int($node_id);
                 $node_info = $this->db->get_recordset($sql2);
                 if (isset($this->class_name[$node_info[0]['node_type_id']])) {
@@ -1499,9 +1499,9 @@ class tree extends tlObject
     public function createHierarchyMap($array2map, $mode = 'dotted',
         $field2add = null)
     {
-        $hmap = array();
+        $hmap = [];
         $the_level = 1;
-        $level = array();
+        $level = [];
         $pivot = $array2map[0];
         $addField = ! is_null($field2add);
         $mode = is_null($mode) ? 'dotted' : $mode;
@@ -1528,10 +1528,10 @@ class tree extends tlObject
                 case 'array':
                     $str = ($addField ? $current[$field2add] : '') .
                         $current['name'];
-                    $hmap[$current['id']] = array(
+                    $hmap[$current['id']] = [
                         'name' => $str,
                         'level' => $the_level
-                    );
+                    ];
                     break;
             }
 
@@ -1553,14 +1553,14 @@ class tree extends tlObject
     public function getAllItemsID($parentList, &$itemSet, $coupleTypes)
     {
         $debugMsg = 'Class:' . __CLASS__ . ' - Method:' . __FUNCTION__ . ' :: ';
-        $sql = "/* $debugMsg */  " .
+        $sql = "/* {$debugMsg} */  " .
             " SELECT id,node_type_id from {$this->tables['nodes_hierarchy']} " .
             " WHERE parent_id IN ({$parentList})";
         $sql .= " AND node_type_id IN ({$coupleTypes['target']},{$coupleTypes['container']}) ";
 
         $result = $this->db->exec_query($sql);
         if ($result) {
-            $containerSet = array();
+            $containerSet = [];
             while ($row = $this->db->fetch_array($result)) {
                 if ($row['node_type_id'] == $coupleTypes['target']) {
                     $itemSet[] = $row['id'];
@@ -1568,7 +1568,7 @@ class tree extends tlObject
                     $containerSet[] = $row['id'];
                 }
             }
-            if (count($containerSet)) {
+            if ($containerSet !== []) {
                 $containerSet = implode(",", $containerSet);
                 $this->getAllItemsID($containerSet, $itemSet, $coupleTypes);
             }
@@ -1582,7 +1582,7 @@ class tree extends tlObject
         $debugMsg = 'Class:' . __CLASS__ . ' - Method: ' . __FUNCTION__;
 
         $addJoin = '';
-        $sql = "/* $debugMsg */ ";
+        $sql = "/* {$debugMsg} */ ";
         $sql .= " SELECT NH_MAIN.id,NH_MAIN.parent_id,NH_MAIN.name,NH_MAIN.node_type_id " .
             " FROM {$this->object_table} AS NH_MAIN " .
             " JOIN {$this->tables['node_types']} AS NT ON NT.id = NH_MAIN.node_type_id ";
@@ -1635,9 +1635,9 @@ class tree extends tlObject
      */
     public function getNameL2($node_id, $opt = null)
     {
-        $options = array(
+        $options = [
             'l2CutFirst' => 0
-        );
+        ];
 
         $options = array_merge($options, (array) $opt);
 
@@ -1647,7 +1647,7 @@ class tree extends tlObject
             $concat = " CONCAT(NHL1.name,':'," .
                 " SUBSTRING(NHL2.name,{$where2cut}) )";
         }
-        $sql = "SELECT $concat AS name
+        $sql = "SELECT {$concat} AS name
             FROM {$this->tables['nodes_hierarchy']} NHL2
             JOIN {$this->tables['nodes_hierarchy']} NHL1
             ON NHL1.id = NHL2.parent_id

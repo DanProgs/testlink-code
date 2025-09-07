@@ -11,6 +11,6 @@ use Slim\App;
 
 return function (App $app): void {
   $app->get('/CustomExample/whoAmI',
-            array($app->restApiCustomExample,'whoAmI'));
+            [$app->restApiCustomExample,'whoAmI']);
 
 };

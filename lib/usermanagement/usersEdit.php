@@ -25,14 +25,14 @@ $lbl = initLabels();
 
 $highlight = initializeTabsmenu();
 
-$actionOperation = array(
+$actionOperation = [
     'create' => 'doCreate',
     'edit' => 'doUpdate',
     'doCreate' => 'doCreate',
     'doUpdate' => 'doUpdate',
     'resetPassword' => 'doUpdate',
     'genAPIKey' => 'doUpdate'
-);
+];
 
 switch ($args->doAction) {
     case "edit":
@@ -99,63 +99,63 @@ renderGui($smarty, $args, $templateCfg);
 function initArgs()
 {
     $_REQUEST = strings_stripSlashes($_REQUEST);
-    $iParams = array(
-        "delete" => array(
+    $iParams = [
+        "delete" => [
             tlInputParameter::INT_N
-        ),
-        "user" => array(
+        ],
+        "user" => [
             tlInputParameter::INT_N
-        ),
-        "user_id" => array(
+        ],
+        "user_id" => [
             tlInputParameter::INT_N
-        ),
-        "rights_id" => array(
+        ],
+        "rights_id" => [
             tlInputParameter::INT_N
-        ),
-        "doAction" => array(
+        ],
+        "doAction" => [
             tlInputParameter::STRING_N,
             0,
             30
-        ),
-        "firstName" => array(
+        ],
+        "firstName" => [
             tlInputParameter::STRING_N,
             0,
             50
-        ),
-        "lastName" => array(
+        ],
+        "lastName" => [
             tlInputParameter::STRING_N,
             0,
             50
-        ),
-        "emailAddress" => array(
+        ],
+        "emailAddress" => [
             tlInputParameter::STRING_N,
             0,
             100
-        ),
-        "locale" => array(
+        ],
+        "locale" => [
             tlInputParameter::STRING_N,
             0,
             10
-        ),
-        "login" => array(
+        ],
+        "login" => [
             tlInputParameter::STRING_N,
             0,
             100
-        ),
-        "password" => array(
+        ],
+        "password" => [
             tlInputParameter::STRING_N,
             0,
             32
-        ),
-        "authentication" => array(
+        ],
+        "authentication" => [
             tlInputParameter::STRING_N,
             0,
             10
-        ),
-        "user_is_active" => array(
+        ],
+        "user_is_active" => [
             tlInputParameter::CB_BOOL
-        )
-    );
+        ]
+    ];
 
     $args = new stdClass();
     R_PARAMS($iParams, $args);
@@ -385,7 +385,7 @@ function initializeUserProperties(&$userObj, &$argsObj)
     $userObj->emailAddress = $argsObj->emailAddress;
 
     // The Black List - Jon Bokenkamp
-    $reddington = array(
+    $reddington = [
         '/',
         '\\',
         ':',
@@ -394,7 +394,7 @@ function initializeUserProperties(&$userObj, &$argsObj)
         '<',
         '>',
         '|'
-    );
+    ];
     $userObj->firstName = str_replace($reddington, '', $argsObj->firstName);
     $userObj->lastName = str_replace($reddington, '', $argsObj->lastName);
 
@@ -498,11 +498,11 @@ function initializeGui(&$dbHandler, &$argsObj)
     $guiObj->op->status = tl::OK;
 
     $guiObj->authCfg = config_get('authentication');
-    $guiObj->auth_method_opt = array(
+    $guiObj->auth_method_opt = [
         lang_get('default_auth_method') . "(" .
         $guiObj->authCfg['domain'][$guiObj->authCfg['method']]['description'] .
         ")" => ''
-    );
+    ];
 
     $dummy = array_keys($guiObj->authCfg['domain']);
     foreach ($dummy as $xc) {
@@ -537,10 +537,10 @@ function initializeGui(&$dbHandler, &$argsObj)
  */
 function initLabels()
 {
-    $tg = array(
+    $tg = [
         'action_create_user' => null,
         'action_edit_user' => null
-    );
+    ];
     return init_labels($tg);
 }
 

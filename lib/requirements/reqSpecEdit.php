@@ -43,73 +43,73 @@ renderGui($args, $gui, $op, $templateCfg, $editorCfg);
  */
 function initArgs()
 {
-    $iParams = array(
-        "countReq" => array(
+    $iParams = [
+        "countReq" => [
             tlInputParameter::INT_N,
             99999
-        ),
-        "req_spec_id" => array(
+        ],
+        "req_spec_id" => [
             tlInputParameter::INT_N
-        ),
-        "req_spec_revision_id" => array(
+        ],
+        "req_spec_revision_id" => [
             tlInputParameter::INT_N
-        ),
-        "parentID" => array(
+        ],
+        "parentID" => [
             tlInputParameter::INT_N
-        ),
-        "doAction" => array(
+        ],
+        "doAction" => [
             tlInputParameter::STRING_N,
             0,
             250
-        ),
-        "title" => array(
+        ],
+        "title" => [
             tlInputParameter::STRING_N,
             0,
             100
-        ),
-        "scope" => array(
+        ],
+        "scope" => [
             tlInputParameter::STRING_N
-        ),
-        "doc_id" => array(
+        ],
+        "doc_id" => [
             tlInputParameter::STRING_N,
             1,
             32
-        ),
-        "nodes_order" => array(
+        ],
+        "nodes_order" => [
             tlInputParameter::ARRAY_INT
-        ),
-        "containerID" => array(
+        ],
+        "containerID" => [
             tlInputParameter::INT_N
-        ),
-        "itemSet" => array(
+        ],
+        "itemSet" => [
             tlInputParameter::ARRAY_INT
-        ),
-        "reqSpecType" => array(
+        ],
+        "reqSpecType" => [
             tlInputParameter::STRING_N,
             0,
             1
-        ),
-        "copy_testcase_assignment" => array(
+        ],
+        "copy_testcase_assignment" => [
             tlInputParameter::CB_BOOL
-        ),
-        "save_rev" => array(
+        ],
+        "save_rev" => [
             tlInputParameter::INT_N
-        ),
-        "do_save" => array(
+        ],
+        "do_save" => [
             tlInputParameter::INT_N
-        ),
-        "log_message" => array(
+        ],
+        "log_message" => [
             tlInputParameter::STRING_N
-        ),
-        "file_id" => array(
+        ],
+        "file_id" => [
             tlInputParameter::INT_N
-        ),
-        "fileTitle" => array(
+        ],
+        "fileTitle" => [
             tlInputParameter::STRING_N,
             0,
             100
-        )
-    );
+        ]
+    ];
 
     $args = new stdClass();
     R_PARAMS($iParams, $args);
@@ -131,11 +131,11 @@ function initArgs()
 
     // Process buttons
     $args->op = null;
-    $btnSet = array(
+    $btnSet = [
         'toogleMon',
         'startMon',
         'stopMon'
-    );
+    ];
     foreach ($btnSet as $btn) {
         if (isset($_REQUEST[$btn])) {
             $args->op = $btn;
@@ -157,7 +157,7 @@ function renderGui(&$argsObj, $guiObj, $opObj, $templateCfg, $editorCfg)
     $renderType = 'none';
     $tpl = $tpd = null;
 
-    $actionOperation = array(
+    $actionOperation = [
         'create' => 'doCreate',
         'edit' => 'doUpdate',
         'doDelete' => '',
@@ -176,7 +176,7 @@ function renderGui(&$argsObj, $guiObj, $opObj, $templateCfg, $editorCfg)
         'deleteFile' => '',
         'bulkReqMon' => 'doBulkReqMon',
         'doBulkReqMon' => 'doBulkReqMon'
-    );
+    ];
     // ------------------------------------------------------------------------------------------------
     // Web Editor Processing
     $owebEditor = web_editor('scope', $argsObj->basehref, $editorCfg);

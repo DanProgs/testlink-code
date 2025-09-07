@@ -17,27 +17,27 @@
 require_once '../../config.inc.php';
 require_once 'common.php';
 testlinkInitPage($db);
-$data = array(
+$data = [
     'success' => true,
     'message' => ''
-);
+];
 
-$iParams = array(
-    "name" => array(
+$iParams = [
+    "name" => [
         tlInputParameter::STRING_N,
         0,
         100
-    ),
-    "testcase_id" => array(
+    ],
+    "testcase_id" => [
         tlInputParameter::INT
-    ),
-    "testsuite_id" => array(
+    ],
+    "testsuite_id" => [
         tlInputParameter::INT
-    ),
-    "testproject_id" => array(
+    ],
+    "testproject_id" => [
         tlInputParameter::INT
-    )
-);
+    ]
+];
 
 $args = G_PARAMS($iParams);
 

@@ -89,9 +89,9 @@ function checkTestPlan(&$db, &$user, &$args)
     $tplan_mgr = new testplan($db);
 
     $item_info = $tplan_mgr->get_by_id($args->tplan_id,
-        array(
+        [
             'output' => 'minimun'
-        ));
+        ]);
     if ($op['status_ok'] = ! is_null($item_info)) {
         $args->tproject_id = intval($item_info['tproject_id']);
 
@@ -181,7 +181,7 @@ function build_link_exec(&$argsObj)
  */
 function process_exec(&$dbHandler, $context)
 {
-    $ret = array();
+    $ret = [];
 
     $treeMgr = new tree($dbHandler);
     $info = $treeMgr->get_node_hierarchy_info($context['tcversion_id']);
@@ -201,7 +201,7 @@ function process_exec(&$dbHandler, $context)
  */
 function process_xta2m(&$dbHandler, $context)
 {
-    $ret = array();
+    $ret = [];
 
     $treeMgr = new tree($dbHandler);
     $info = $treeMgr->get_node_hierarchy_info($context['tcversion_id']);
@@ -251,20 +251,20 @@ function check_xta2m(&$dbHandler, &$argsObj)
  */
 function launch_inner_exec(&$dbHandler, &$tplMgr)
 {
-    $itemCode = array(
+    $itemCode = [
         'exec' => 'lib/execute/execNavigator.php'
-    );
-    $op = array(
+    ];
+    $op = [
         'status_ok' => true,
         'msg' => ''
-    );
+    ];
 
     // First check for keys in _GET that MUST EXIST
     // key: key on _GET, value: labelID defined on strings.txt
-    $mandatoryKeys = array(
+    $mandatoryKeys = [
         'item' => 'item_not_set',
         'build_id' => 'build_id_not_set'
-    );
+    ];
 
     foreach ($mandatoryKeys as $key => $labelID) {
         $op['status_ok'] = isset($_GET[$key]);
@@ -277,11 +277,11 @@ function launch_inner_exec(&$dbHandler, &$tplMgr)
     if ($op['status_ok']) {
         $op['status_ok'] = isset($_GET['feature_id']);
         if (! $op['status_ok']) {
-            $keySet = array(
+            $keySet = [
                 'tplan_id' => 'testplan_not_set',
                 'tcversion_id' => 'tcversion_id',
                 'platform_id' => 'platform_id_not_set'
-            );
+            ];
 
             foreach ($keySet as $key => $labelID) {
                 $op['status_ok'] = isset($_GET[$key]);
@@ -298,9 +298,9 @@ function launch_inner_exec(&$dbHandler, &$tplMgr)
         // Set Environment
         $tplan_mgr = new testplan($dbHandler);
         $info = $tplan_mgr->get_by_id($args->tplan_id,
-            array(
+            [
                 'output' => 'minimun'
-            ));
+            ]);
 
         if (is_null($info)) {
             die('ltx - tplan info does not exist');
@@ -315,7 +315,7 @@ function launch_inner_exec(&$dbHandler, &$tplMgr)
         // Build name of function to call for doing the job.
         $pfn = 'process_' . $args->item;
 
-        $ctx = array();
+        $ctx = [];
         $ctx['setting_testplan'] = $args->tplan_id;
         $ctx['setting_build'] = $args->build_id;
         $ctx['setting_platform'] = $args->platform_id;
@@ -357,13 +357,13 @@ function launch_inner_xta2m(&$dbHandler, &$tplMgr)
     $jt = $_SESSION['basehref'] . '/lib/testcases/' .
         'tcAssignedToUser.php?user_id=' . $args->target_user_id .
 
-        $k2c = array(
+        $k2c = [
             'tplan_id',
             'build_id'
-        );
+        ];
     foreach ($k2c as $tg) {
         if (property_exists($args, $tg) && $args->$tg > 0) {
-            $jt .= "&$tg=" . $args->$tg;
+            $jt .= "&{$tg}=" . $args->$tg;
         }
     }
 
@@ -414,7 +414,7 @@ function buildCookie(&$dbHandler, $itemID, $tprojectID, $cookiePrefix)
 {
     $tree_mgr = new tree($dbHandler);
     $path = $tree_mgr->get_path($itemID);
-    $parents = array();
+    $parents = [];
     $parents[] = $tprojectID;
     foreach ($path as $node) {
         $parents[] = $node['id'];

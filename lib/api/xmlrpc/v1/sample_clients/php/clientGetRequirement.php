@@ -18,7 +18,7 @@ $devKey = isset($_REQUEST['apiKey']) ? $_REQUEST['apiKey'] : $devKey;
 // Get a requirement from reqID
 // with no version -> latest is returned
 
-$args=array();
+$args=[];
 $args["devKey"]= $devKey;
 $args["testprojectid"] = 10;
 $args["requirementid"] = 26;
@@ -30,7 +30,7 @@ $answer = runTest($client, $method, $args);
 // Get a requirement from reqID
 // with a version number
 
-$args=array();
+$args=[];
 $args["devKey"]= $devKey;
 $args["testprojectid"] = 10;
 $args["requirementid"] = 26;
@@ -43,7 +43,7 @@ $answer = runTest($client, $method, $args);
 // Get a requirement from reqID
 // with a version ID
 
-$args=array();
+$args=[];
 $args["devKey"]= $devKey;
 $args["testprojectid"] = 10;
 $args["requirementid"] = 26;
@@ -55,7 +55,7 @@ $answer = runTest($client, $method, $args);
 
 // Get a requirement from reqDocID
 
-$args=array();
+$args=[];
 $args["devKey"]= $devKey;
 $args["testprojectid"] = 10;
 $args["requirementdocid"] = "R1";

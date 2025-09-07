@@ -37,10 +37,10 @@ var_dump($its->isConnected());
 
 {
     $today = date("Y-m-d H:i:s");
-    $issue = array(
+    $issue = [
         'summary' => 'Issue Via API' . $today,
         'description' => 'Some text'
-    );
+    ];
     $resp = $its->addIssue($issue['summary'], $issue['description']);
     echo '<br>' . __FILE__ . '<br>';
     echo '<pre>';

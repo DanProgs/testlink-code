@@ -19,29 +19,29 @@ require_once __DIR__ . '/../../vendor/autoload.php';
  */
 function createChart(&$info, &$cfg)
 {
-    $backgndColor = array(
+    $backgndColor = [
         'R' => 255,
         'G' => 255,
         'B' => 254
-    );
+    ];
     $chartCfg = new stdClass();
     $chartCfg->XSize = $info->canDraw ? $cfg->XSize : 600;
     $chartCfg->YSize = $info->canDraw ? $cfg->YSize : 50;
 
     $chartCfg->border = new stdClass();
     $chartCfg->border->width = 1;
-    $chartCfg->border->color = array(
+    $chartCfg->border->color = [
         'R' => 0,
         'G' => 0,
         'B' => 0
-    );
+    ];
 
     $chartCfg->graphArea = new stdClass();
-    $chartCfg->graphArea->color = array(
+    $chartCfg->graphArea->color = [
         'R' => 213,
         'G' => 217,
         'B' => 221
-    );
+    ];
 
     $chartCfg->graphArea->beginX = property_exists($cfg, 'beginX') ? $cfg->beginX : 40;
     $chartCfg->graphArea->beginY = property_exists($cfg, 'beginY') ? $cfg->beginY : 100;
@@ -66,11 +66,11 @@ function createChart(&$info, &$cfg)
     // Drawing graphs were you want to fix the min value to 0 you must use the SCALE_START0 option.
     //
     $chartCfg->scale->mode = SCALE_ADDALLSTART0;
-    $chartCfg->scale->color = array(
+    $chartCfg->scale->color = [
         'R' => 0,
         'G' => 0,
         'B' => 0
-    );
+    ];
     $chartCfg->scale->drawTicks = true;
     $chartCfg->scale->angle = $cfg->scale->legendXAngle;
     $chartCfg->scale->decimals = 1;
@@ -79,22 +79,22 @@ function createChart(&$info, &$cfg)
     $chartCfg->legend = new stdClass();
     $chartCfg->legend->X = 15;
     $chartCfg->legend->Y = 20;
-    $chartCfg->legend->color = array(
+    $chartCfg->legend->color = [
         'R' => 236,
         'G' => 238,
         'B' => 240
-    );
+    ];
 
     $chartCfg->title = new stdClass();
     $chartCfg->title->value = $cfg->chartTitle;
     $chartCfg->title->X = ($chartCfg->XSize / 2) -
         (strlen($chartCfg->title->value) * 2.5);
     $chartCfg->title->Y = 15;
-    $chartCfg->title->color = array(
+    $chartCfg->title->color = [
         'R' => 0,
         'G' => 0,
         'B' => 255
-    );
+    ];
 
     $test = new pChart($chartCfg->XSize, $chartCfg->YSize);
     $test->drawBackground($backgndColor['R'], $backgndColor['G'],

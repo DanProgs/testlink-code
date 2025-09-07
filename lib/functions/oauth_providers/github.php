@@ -16,10 +16,10 @@ require_once 'autoload.php';
 function oauth_get_token($authCfg, $code)
 {
     $result = new stdClass();
-    $result->status = array(
+    $result->status = [
         'status' => tl::OK,
         'msg' => null
-    );
+    ];
 
     $oauthParams['redirect_uri'] = $authCfg['redirect_uri'];
     if (isset($_SERVER['HTTPS'])) {

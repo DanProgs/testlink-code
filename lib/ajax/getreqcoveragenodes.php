@@ -42,12 +42,12 @@ function display_children($dbHandler, $root_node, $parent, $filter_node,
     $show_children = ON, $operation = 'manage')
 {
     $tables = tlObjectWithDB::getDBTables(
-        array(
+        [
             'requirements',
             'nodes_hierarchy',
             'node_types',
             'req_specs'
-        ));
+        ]);
     $cfg = config_get('req_cfg');
     $forbidden_parent['testproject'] = 'none';
     $forbidden_parent['requirement'] = 'testproject';
@@ -59,20 +59,20 @@ function display_children($dbHandler, $root_node, $parent, $filter_node,
     switch ($operation) {
 
         case 'print':
-            $js_function = array(
+            $js_function = [
                 'testproject' => 'TPROJECT_PTP',
                 'requirement_spec' => 'TPROJECT_PRS',
                 'requirement' => 'TPROJECT_PRS'
-            );
+            ];
             break;
 
         case 'manage':
         default:
-            $js_function = array(
+            $js_function = [
                 'testproject' => 'EP',
                 'requirement_spec' => 'ERS',
                 'requirement' => 'ER'
-            );
+            ];
             break;
     }
 
@@ -102,10 +102,10 @@ function display_children($dbHandler, $root_node, $parent, $filter_node,
 
         $treeMgr = new tree($dbHandler);
         $ntypes = $treeMgr->get_available_node_types();
-        $peerTypes = array(
+        $peerTypes = [
             'target' => $ntypes['requirement'],
             'container' => $ntypes['requirement_spec']
-        );
+        ];
         foreach ($nodeSet as $row) {
             $path['text'] = htmlspecialchars($row['name']);
             $path['id'] = $row['id'];
@@ -126,7 +126,7 @@ function display_children($dbHandler, $root_node, $parent, $filter_node,
                     break;
 
                 case 'requirement_spec':
-                    $req_list = array();
+                    $req_list = [];
                     $treeMgr->getAllItemsID($row['id'], $req_list, $peerTypes);
 
                     $path['href'] = "javascript:" .

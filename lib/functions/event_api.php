@@ -26,10 +26,10 @@ function event_declare($p_name, $p_type = EVENT_TYPE_DEFAULT)
     global $g_event_cache;
 
     if (! isset($g_event_cache[$p_name])) {
-        $g_event_cache[$p_name] = array(
+        $g_event_cache[$p_name] = [
             'type' => $p_type,
-            'callbacks' => array()
-        );
+            'callbacks' => []
+        ];
     }
 }
 
@@ -103,7 +103,7 @@ function event_clear_callbacks()
 {
     global $g_event_cache;
     foreach ($g_event_cache as $t_name => $t_event_info) {
-        $g_event_cache[$t_name]['callbacks'] = array();
+        $g_event_cache[$t_name]['callbacks'] = [];
     }
 }
 
@@ -162,9 +162,9 @@ function event_callback($p_event, $p_callback, $p_plugin, $p_params = null)
 {
     $t_value = null;
     if (! is_array($p_params)) {
-        $p_params = array(
+        $p_params = [
             $p_params
-        );
+        ];
     }
 
     if ($p_plugin !== 0) {
@@ -172,12 +172,12 @@ function event_callback($p_event, $p_callback, $p_plugin, $p_params = null)
         plugin_push_current($p_plugin);
         if (method_exists($g_plugin_cache[$p_plugin], $p_callback)) {
             $t_value = call_user_func_array(
-                array(
+                [
                     $g_plugin_cache[$p_plugin],
                     $p_callback
-                ), array_merge(array(
+                ], array_merge([
                     $p_event
-                ), $p_params));
+                ], $p_params));
         }
         plugin_pop_current();
     }
@@ -207,7 +207,7 @@ function event_type_execute($p_event, array $p_callbacks, $params = null)
 
 function event_type_output($p_event, $p_callbacks, $p_params = null)
 {
-    $t_output = array();
+    $t_output = [];
     foreach ($p_callbacks as $t_plugin => $t_callbacks) {
         foreach ($t_callbacks as $t_callback) {
             $t_output[] = event_callback($p_event, $t_callback, $t_plugin,

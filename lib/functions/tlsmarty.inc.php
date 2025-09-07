@@ -72,7 +72,7 @@ function translate_tc_status_smarty($params, $smarty)
  */
 function guard_header_smarty($file)
 {
-    static $guarded = array();
+    static $guarded = [];
     $status_ok = false;
 
     if (! isset($guarded[$file])) {
@@ -175,7 +175,7 @@ class TLSmarty extends Smarty
         $this->assign('locale', $my_locale);
 
         //
-        $stdTPLCfg = array();
+        $stdTPLCfg = [];
         $stdTPLCfg['inc_tcbody'] = 'testcases/inc_tcbody.tpl';
         $stdTPLCfg['inc_steps'] = 'testcases/inc_steps.tpl';
 
@@ -207,25 +207,25 @@ class TLSmarty extends Smarty
 
         // define a select structure for {html_options ...}
         $this->assign('gsmarty_option_yes_no',
-            array(
+            [
                 0 => lang_get('No'),
                 1 => lang_get('Yes')
-            ));
+            ]);
         $this->assign('gsmarty_option_priority',
-            array(
+            [
                 HIGH => lang_get('high_priority'),
                 MEDIUM => lang_get('medium_priority'),
                 LOW => lang_get('low_priority')
-            ));
+            ]);
 
         $this->assign('gsmarty_option_importance',
-            array(
+            [
                 HIGH => lang_get('high_importance'),
                 MEDIUM => lang_get('medium_importance'),
                 LOW => lang_get('low_importance')
-            ));
+            ]);
 
-        $wkf = array();
+        $wkf = [];
         $xcfg = config_get('testCaseStatus');
         foreach ($xcfg as $human => $key) {
             $wkf[$key] = lang_get('testCaseStatus_' . $human);
@@ -338,7 +338,7 @@ class TLSmarty extends Smarty
         $burl = isset($_SESSION['basehref']) ? $_SESSION['basehref'] : TL_BASE_HREF;
         $imgLoc = $burl . TL_THEME_IMG_DIR;
 
-        $dummy = array(
+        $dummy = [
             'active' => $imgLoc . 'flag_green.png',
             'activity' => $imgLoc . 'information.png',
             'account' => $imgLoc . 'user_edit.png',
@@ -459,7 +459,7 @@ class TLSmarty extends Smarty
             'test_status_blocked_next' => $imgLoc .
             'test_status_blocked_next.png',
             'keyword_add' => $imgLoc . 'tag_blue_add.png'
-        );
+        ];
 
         $imi = config_get('images');
         if (! empty($imi)) {

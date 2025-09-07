@@ -24,13 +24,13 @@ class fogbugzdbInterface extends issueTrackerInterface
         parent::__construct($type, $config, $name);
 
         $this->interfaceViaDB = true;
-        $this->methodOpt['buildViewBugLink'] = array(
+        $this->methodOpt['buildViewBugLink'] = [
             'addSummary' => true,
             'colorByStatus' => true
-        );
-        $this->guiCfg = array(
+        ];
+        $this->guiCfg = [
             'use_decoration' => true
-        );
+        ];
     }
 
     /**
@@ -54,7 +54,7 @@ class fogbugzdbInterface extends issueTrackerInterface
         if (! $this->isConnected()) {
             return false;
         }
-        $sql = "/* $debugMsg */ " .
+        $sql = "/* {$debugMsg} */ " .
             " SELECT Bug.ixBug AS id, Bug.ixStatus AS status, Status.sStatus AS statusVerbose," .
             " Bug.sTitle AS summary, Bug.fOpen AS openStatus " .
             " FROM Bug JOIN Status ON Status.ixStatus = Bug.ixStatus " .
@@ -112,7 +112,7 @@ class fogbugzdbInterface extends issueTrackerInterface
         $status = $this->getBugStatus($bugID);
         $color = isset($this->status_color[$status]) ? $this->status_color[$status] : 'white';
         $title = lang_get('access_to_bts');
-        return "<div  title=\"{$title}\" style=\"display: inline; background: $color;\">$linkVerbose</div>";
+        return "<div  title=\"{$title}\" style=\"display: inline; background: {$color};\">{$linkVerbose}</div>";
     }
 
     /**

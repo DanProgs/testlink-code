@@ -72,7 +72,7 @@ class searchCommands
      */
     public function getTestCaseIDSet($tproject_id)
     {
-        $items = array();
+        $items = [];
         $this->tprojectMgr->get_all_testcases_id($tproject_id, $items);
         return $items;
     }
@@ -81,26 +81,26 @@ class searchCommands
      */
     private function getTestSuiteIDSet($tproject_id)
     {
-        $nt2ex = array(
+        $nt2ex = [
             'testcase' => 'exclude_me',
             'testplan' => 'exclude_me',
             'requirement_spec' => 'exclude_me',
             'requirement' => 'exclude_me'
-        );
+        ];
 
-        $nt2exchi = array(
+        $nt2exchi = [
             'testcase' => 'exclude_my_children',
             'requirement_spec' => 'exclude_my_children'
-        );
+        ];
 
-        $opt = array(
+        $opt = [
             'recursive' => 0,
             'output' => 'id'
-        );
-        $filters = array(
+        ];
+        $filters = [
             'exclude_node_types' => $nt2ex,
             'exclude_children_of' => $nt2exchi
-        );
+        ];
 
         return $this->tprojectMgr->tree_manager->get_subtree($tproject_id,
             $filters, $opt);
@@ -169,7 +169,7 @@ class searchCommands
     public function initSchema()
     {
         $this->tables = tlObjectWithDB::getDBTables(
-            array(
+            [
                 'cfield_design_values',
                 'nodes_hierarchy',
                 'requirements',
@@ -181,132 +181,132 @@ class searchCommands
                 'tcversions',
                 'users',
                 'object_keywords'
-            ));
+            ]);
 
         $this->views = tlObjectWithDB::getDBViews(
-            array(
+            [
                 'latest_rspec_revision',
                 'latest_req_version',
                 'latest_tcase_version_number'
-            ));
+            ]);
     }
 
     /**
      */
     private function initArgs()
     {
-        $cb = array(
-            "rq_scope" => array(
+        $cb = [
+            "rq_scope" => [
                 tlInputParameter::CB_BOOL
-            ),
-            "rq_title" => array(
+            ],
+            "rq_title" => [
                 tlInputParameter::CB_BOOL
-            ),
-            "rq_doc_id" => array(
+            ],
+            "rq_doc_id" => [
                 tlInputParameter::CB_BOOL
-            ),
-            "rs_scope" => array(
+            ],
+            "rs_scope" => [
                 tlInputParameter::CB_BOOL
-            ),
-            "rs_title" => array(
+            ],
+            "rs_title" => [
                 tlInputParameter::CB_BOOL
-            ),
-            "tc_summary" => array(
+            ],
+            "tc_summary" => [
                 tlInputParameter::CB_BOOL
-            ),
-            "tc_title" => array(
+            ],
+            "tc_title" => [
                 tlInputParameter::CB_BOOL
-            ),
-            "tc_steps" => array(
+            ],
+            "tc_steps" => [
                 tlInputParameter::CB_BOOL
-            ),
-            "tc_expected_results" => array(
+            ],
+            "tc_expected_results" => [
                 tlInputParameter::CB_BOOL
-            ),
-            "tc_preconditions" => array(
+            ],
+            "tc_preconditions" => [
                 tlInputParameter::CB_BOOL
-            ),
-            "tc_id" => array(
+            ],
+            "tc_id" => [
                 tlInputParameter::CB_BOOL
-            ),
-            "ts_summary" => array(
+            ],
+            "ts_summary" => [
                 tlInputParameter::CB_BOOL
-            ),
-            "ts_title" => array(
+            ],
+            "ts_title" => [
                 tlInputParameter::CB_BOOL
-            )
-        );
+            ]
+        ];
 
-        $strIn = array(
-            "tcWKFStatus" => array(
+        $strIn = [
+            "tcWKFStatus" => [
                 tlInputParameter::STRING_N,
                 0,
                 1
-            ),
-            "reqStatus" => array(
+            ],
+            "reqStatus" => [
                 tlInputParameter::STRING_N,
                 0,
                 1
-            ),
-            "reqType" => array(
+            ],
+            "reqType" => [
                 tlInputParameter::STRING_N
-            ),
-            "created_by" => array(
+            ],
+            "created_by" => [
                 tlInputParameter::STRING_N,
                 0,
                 50
-            ),
-            "edited_by" => array(
+            ],
+            "edited_by" => [
                 tlInputParameter::STRING_N,
                 0,
                 50
-            ),
-            "creation_date_from" => array(
+            ],
+            "creation_date_from" => [
                 tlInputParameter::STRING_N
-            ),
-            "creation_date_to" => array(
+            ],
+            "creation_date_to" => [
                 tlInputParameter::STRING_N
-            ),
-            "modification_date_from" => array(
+            ],
+            "modification_date_from" => [
                 tlInputParameter::STRING_N
-            ),
-            "modification_date_to" => array(
+            ],
+            "modification_date_to" => [
                 tlInputParameter::STRING_N
-            ),
-            "and_or" => array(
+            ],
+            "and_or" => [
                 tlInputParameter::STRING_N,
                 2,
                 3
-            )
-        );
+            ]
+        ];
 
-        $numIn = array(
-            "keyword_id" => array(
+        $numIn = [
+            "keyword_id" => [
                 tlInputParameter::INT_N
-            ),
-            "custom_field_id" => array(
+            ],
+            "custom_field_id" => [
                 tlInputParameter::INT_N
-            )
-        );
+            ]
+        ];
 
-        $iParams = array(
-            "target" => array(
+        $iParams = [
+            "target" => [
                 tlInputParameter::STRING_N
-            ),
-            "doAction" => array(
+            ],
+            "doAction" => [
                 tlInputParameter::STRING_N,
                 0,
                 10
-            ),
-            "custom_field_value" => array(
+            ],
+            "custom_field_value" => [
                 tlInputParameter::STRING_N,
                 0,
                 20
-            ),
-            "tproject_id" => array(
+            ],
+            "tproject_id" => [
                 tlInputParameter::INT_N
-            )
-        );
+            ]
+        ];
 
         $this->args = new stdClass();
         $args = &$this->args;
@@ -372,19 +372,19 @@ class searchCommands
         // convert according local
 
         // convert "creation date from" to iso format for database usage
-        $k2w = array(
+        $k2w = [
             'creation_date_from' => '',
             'creation_date_to' => " 23:59:59",
             'modification_date_from' => '',
             'modification_date_to' => " 23:59:59"
-        );
+        ];
 
-        $k2f = array(
+        $k2f = [
             'creation_date_from' => ' creation_ts >= ',
             'creation_date_to' => 'creation_ts <= ',
             'modification_date_from' => ' modification_ts >= ',
             'modification_date_to' => ' modification_ts <= '
-        );
+        ];
 
         $dateFormat = config_get('date_format');
         $filter['dates4tc'] = null;
@@ -584,7 +584,7 @@ class searchCommands
             $filterRS['scope'] .= $args->and_or == 'or' ? ' 1=0 ' : ' 1=1 ';
             foreach ($targetSet as $target) {
                 $filterRS['scope'] .= $args->and_or .
-                    " $udf(RSRV.scope) $this->likeOp '%{$target}%' ";
+                    " {$udf}(RSRV.scope) $this->likeOp '%{$target}%' ";
             }
             $filterRS['scope'] .= ')';
 
@@ -715,7 +715,7 @@ class searchCommands
                     $filterRQ['scope'] .= $args->and_or == 'or' ? ' 1=0 ' : ' 1=1 ';
                     foreach ($targetSet as $target) {
                         $filterRQ['scope'] .= $args->and_or .
-                            " $udf(RQV.scope) $this->likeOp '%{$target}%' ";
+                            " {$udf}(RQV.scope) $this->likeOp '%{$target}%' ";
                     }
                     $filterRQ['scope'] .= ')';
                 }
@@ -789,7 +789,7 @@ class searchCommands
 
             foreach ($targetSet as $target) {
                 $filterSpecial['ts_summary'] .= $args->and_or .
-                    " $udf(TS.details) $this->likeOp '%{$target}%' ";
+                    " {$udf}(TS.details) $this->likeOp '%{$target}%' ";
             }
             $filterSpecial['ts_summary'] .= ')';
         }
@@ -873,7 +873,7 @@ class searchCommands
                 $target = trim($tgx);
                 if (is_numeric($target)) {
                     $filterSpecial['by_tc_id'] .= $args->and_or .
-                        " TCV.tc_external_id = $target ";
+                        " TCV.tc_external_id = {$target} ";
                 }
             }
         }
@@ -919,7 +919,7 @@ class searchCommands
 
             foreach ($targetSet as $target) {
                 $filterSpecial['by_steps'] .= $args->and_or .
-                    " $udf(TCSTEPS.actions) $this->likeOp '%{$target}%' ";
+                    " {$udf}(TCSTEPS.actions) $this->likeOp '%{$target}%' ";
             }
             $filterSpecial['by_steps'] .= ')';
         }
@@ -930,22 +930,22 @@ class searchCommands
 
             foreach ($targetSet as $target) {
                 $filterSpecial['by_expected_results'] .= $args->and_or .
-                    " $udf(TCSTEPS.expected_results) $this->likeOp '%{$target}%' ";
+                    " {$udf}(TCSTEPS.expected_results) $this->likeOp '%{$target}%' ";
             }
             $filterSpecial['by_expected_results'] .= ')';
         }
 
         if ($canUseTarget) {
-            $k2w = array(
+            $k2w = [
                 'name' => 'NH_TC',
                 'summary' => 'TCV',
                 'preconditions' => 'TCV'
-            );
-            $i2s = array(
+            ];
+            $i2s = [
                 'name' => 'tc_title',
                 'summary' => 'tc_summary',
                 'preconditions' => 'tc_preconditions'
-            );
+            ];
             foreach ($k2w as $kf => $alias) {
                 $in = $i2s[$kf];
                 if ($args->$in) {
@@ -960,7 +960,7 @@ class searchCommands
                         switch ($kf) {
                             case 'summary':
                             case 'preconditions':
-                                $xx = " $udf(" . $xx . ") ";
+                                $xx = " {$udf}(" . $xx . ") ";
                                 break;
                         }
                         $filterSpecial[$kf] .= "{$xx} {$this->likeOp}  '%{$target}%' ";
@@ -1023,7 +1023,7 @@ class searchCommands
 
         $mapTC = null;
         if ($doFilter) {
-            $mixedFilter = $this->getFilters();
+            $mixedFilter = $this->filters;
             if ($filter) {
                 $sqlPart2 .= implode("", $filter);
             }

@@ -41,7 +41,7 @@ $show_tcases = isset($_REQUEST['show_tcases']) ? intval(
 $tcprefix = isset($_REQUEST['tcprefix']) ? $_REQUEST['tcprefix'] : '';
 $operation = isset($_REQUEST['operation']) ? $_REQUEST['operation'] : 'manage';
 
-$helpText = array();
+$helpText = [];
 $helpText['testproject'] = isset($_REQUEST['tprojectHelp']) ? $_REQUEST['tprojectHelp'] : '';
 $helpText['testsuite'] = isset($_REQUEST['tsuiteHelp']) ? $_REQUEST['tsuiteHelp'] : '';
 $nodes = display_children($db, $root_node, $node, $filter_node, $tcprefix,
@@ -61,42 +61,42 @@ echo json_encode($nodes);
  * @return NULL|string
  */
 function display_children($dbHandler, $root_node, $parent, $filter_node,
-    $tcprefix, $show_tcases = 1, $operation = 'manage', $helpText = array())
+    $tcprefix, $show_tcases = 1, $operation = 'manage', $helpText = [])
 {
     static $showTestCaseID;
 
     $tables = tlObjectWithDB::getDBTables(
-        array(
+        [
             'tcversions',
             'nodes_hierarchy',
             'node_types'
-        ));
+        ]);
 
-    $forbidden_parent = array(
+    $forbidden_parent = [
         'testproject' => 'none',
         'testcase' => 'testproject',
         'testsuite' => 'none'
-    );
+    ];
     $external = '';
     $nodes = null;
     $filter_node_type = $show_tcases ? '' : ",'testcase'";
 
     switch ($operation) {
         case 'print':
-            $js_function = array(
+            $js_function = [
                 'testproject' => 'TPROJECT_PTP',
                 'testsuite' => 'TPROJECT_PTS',
                 'testcase' => 'TPROJECT_PTS'
-            );
+            ];
             break;
 
         case 'manage':
         default:
-            $js_function = array(
+            $js_function = [
                 'testproject' => 'EP',
                 'testsuite' => 'ETS',
                 'testcase' => 'ET'
-            );
+            ];
             break;
     }
 
@@ -148,7 +148,7 @@ function display_children($dbHandler, $root_node, $parent, $filter_node,
                     break;
 
                 case 'testsuite':
-                    $items = array();
+                    $items = [];
                     getAllTCasesID($row['id'], $items);
                     $tcase_qty = count($items);
 
@@ -206,13 +206,13 @@ function getAllTCasesID($idList, &$tcIDs)
     $tcNodeTypeID = 3;
 
     $tbl = DB_TABLE_PREFIX . 'nodes_hierarchy';
-    $sql = " SELECT id,node_type_id FROM $tbl
-           WHERE parent_id IN ($idList)
+    $sql = " SELECT id,node_type_id FROM {$tbl}
+           WHERE parent_id IN ({$idList})
            AND node_type_id IN (3,2) ";
 
     $result = $db->exec_query($sql);
     if ($result) {
-        $suiteIDs = array();
+        $suiteIDs = [];
         while ($row = $db->fetch_array($result)) {
             if ($row['node_type_id'] == $tcNodeTypeID) {
                 $tcIDs[] = $row['id'];
@@ -220,7 +220,7 @@ function getAllTCasesID($idList, &$tcIDs)
                 $suiteIDs[] = $row['id'];
             }
         }
-        if (count($suiteIDs)) {
+        if ($suiteIDs !== []) {
             $suiteIDs = implode(",", $suiteIDs);
             getAllTCasesID($suiteIDs, $tcIDs);
         }

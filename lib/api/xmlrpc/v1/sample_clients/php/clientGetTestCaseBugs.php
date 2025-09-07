@@ -10,7 +10,7 @@ require_once 'sample.inc.php';
 $method = lcfirst(str_replace('client', '', basename(__FILE__, ".php")));
 $unitTestDescription = "Test - {$method}";
 
-$args = array();
+$args = [];
 $args["devKey"] = isset($_REQUEST['apiKey']) ? $_REQUEST['apiKey'] : DEV_KEY;
 
 $debug = true;

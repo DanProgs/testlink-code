@@ -33,9 +33,9 @@ if ($info['issue_tracker_enabled']) {
 
 $smarty = new TLSmarty();
 $img = $smarty->getImages();
-$openBugs = array();
-$resolvedBugs = array();
-$arrData = array();
+$openBugs = [];
+$resolvedBugs = [];
+$arrData = [];
 
 $tplan_mgr = new testplan($db);
 $metricsMgr = new tlTestPlanMetrics($db);
@@ -54,25 +54,25 @@ switch ($args->verboseType) {
     default:
         $execSet = (array) $metricsMgr->getLTCVNewGeneration($args->tplan_id,
             null,
-            array(
+            [
                 'addExecInfo' => true,
                 'accessKeyType' => 'index',
                 'specViewFields' => true,
                 'testSuiteInfo' => true,
                 'includeNotRun' => false
-            ));
+            ]);
         break;
 }
 
-$testcase_bugs = array();
-$mine = array();
+$testcase_bugs = [];
+$mine = [];
 
 $l18n = init_labels(
-    array(
+    [
         'execution_history' => null,
         'design' => null,
         'no_linked_bugs' => null
-    ));
+    ]);
 foreach ($execSet as $execution) {
     $tc_id = $execution['tc_id'];
     $mine[] = $execution['exec_id'];
@@ -97,11 +97,11 @@ foreach ($execSet as $execution) {
             $tc_name = "<!-- " . sprintf("%010d", $execution['external_id']) .
                 " -->" . $exec_history_link . $edit_link . $tc_name;
 
-            $testcase_bugs[$tc_id] = array(
+            $testcase_bugs[$tc_id] = [
                 $suiteName,
                 $tc_name,
-                array()
-            );
+                []
+            ];
         }
         foreach ($bug_urls as $url) {
             if (! in_array($url, $testcase_bugs[$tc_id][2])) {
@@ -120,10 +120,10 @@ if (! empty($arrData)) {
     $columns = getColumnsDefinition();
 
     // Extract the relevant data and build a matrix
-    $matrixData = array();
+    $matrixData = [];
 
     foreach ($arrData as $bugs) {
-        $rowData = array();
+        $rowData = [];
         $rowData[] = $bugs[0];
         $rowData[] = $bugs[1];
         $rowData[] = $bugs[2];
@@ -142,9 +142,9 @@ if (! empty($arrData)) {
     $table->toolbarExpandCollapseGroupsButton = true;
     $table->toolbarShowAllColumnsButton = true;
 
-    $gui->tableSet = array(
+    $gui->tableSet = [
         $table
-    );
+    ];
 } else {
     $gui->warning_msg = $l18n['no_linked_bugs'];
 }
@@ -183,7 +183,7 @@ $smarty->display($templateCfg->template_dir . $templateCfg->default_template);
 function buildBugString(&$db, $execID, &$bugInterface, &$openBugsArray,
     &$resolvedBugsArray)
 {
-    $bugUrls = array();
+    $bugUrls = [];
     if ($bugInterface) {
         $bugs = get_bugs_for_exec($db, $bugInterface, $execID);
         if ($bugs) {
@@ -211,23 +211,23 @@ function buildBugString(&$db, $execID, &$bugInterface, &$openBugsArray,
  */
 function getColumnsDefinition()
 {
-    $colDef = array();
+    $colDef = [];
 
-    $colDef[] = array(
+    $colDef[] = [
         'title_key' => 'title_test_suite_name',
         'width' => 30,
         'type' => 'text'
-    );
-    $colDef[] = array(
+    ];
+    $colDef[] = [
         'title_key' => 'title_test_case_title',
         'width' => 30,
         'type' => 'text'
-    );
-    $colDef[] = array(
+    ];
+    $colDef[] = [
         'title_key' => 'title_test_case_bugs',
         'width' => 40,
         'type' => 'text'
-    );
+    ];
 
     return $colDef;
 }
@@ -238,17 +238,17 @@ function getColumnsDefinition()
  */
 function initArgs()
 {
-    $iParams = array(
-        "format" => array(
+    $iParams = [
+        "format" => [
             tlInputParameter::INT_N
-        ),
-        "tplan_id" => array(
+        ],
+        "tplan_id" => [
             tlInputParameter::INT_N
-        ),
-        "type" => array(
+        ],
+        "type" => [
             tlInputParameter::INT_N
-        )
-    );
+        ]
+    ];
 
     $args = new stdClass();
     R_PARAMS($iParams, $args);

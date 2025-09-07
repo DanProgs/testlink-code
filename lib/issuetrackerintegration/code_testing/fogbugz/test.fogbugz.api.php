@@ -16,10 +16,10 @@ try {
     // get request automatically
 
     // Go for an issue
-    $xml = $fogbugz->search(array(
+    $xml = $fogbugz->search([
         'q' => 3,
         'cols' => 'sTitle,sStatus'
-    ));
+    ]);
 
     echo (string) $xml->description . '<br>';
     echo (int) $xml->cases['count'] . '<br>';

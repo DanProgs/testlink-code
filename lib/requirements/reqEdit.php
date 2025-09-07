@@ -49,103 +49,103 @@ renderGui($args, $gui, $op, $templateCfg, $editorCfg, $db);
 function initArgs(&$dbHandler)
 {
     $reqTitleSize = config_get('field_size')->requirement_title;
-    $iParams = array(
-        "requirement_id" => array(
+    $iParams = [
+        "requirement_id" => [
             tlInputParameter::INT_N
-        ),
-        "req_version_id" => array(
+        ],
+        "req_version_id" => [
             tlInputParameter::INT_N
-        ),
-        "req_spec_id" => array(
+        ],
+        "req_spec_id" => [
             tlInputParameter::INT_N
-        ),
-        "req_title" => array(
+        ],
+        "req_title" => [
             tlInputParameter::STRING_N,
             0,
             $reqTitleSize
-        ),
-        "req_id_cbox" => array(
+        ],
+        "req_id_cbox" => [
             tlInputParameter::ARRAY_INT
-        ),
-        "reqDocId" => array(
+        ],
+        "reqDocId" => [
             tlInputParameter::STRING_N,
             0,
             64
-        ),
-        "reqStatus" => array(
+        ],
+        "reqStatus" => [
             tlInputParameter::STRING_N,
             0,
             1
-        ),
-        "reqType" => array(
+        ],
+        "reqType" => [
             tlInputParameter::STRING_N,
             0,
             1
-        ),
-        "containerID" => array(
+        ],
+        "containerID" => [
             tlInputParameter::INT_N
-        ),
-        "scope" => array(
+        ],
+        "scope" => [
             tlInputParameter::STRING_N
-        ),
-        "countReq" => array(
+        ],
+        "countReq" => [
             tlInputParameter::INT_N
-        ),
-        "expected_coverage" => array(
+        ],
+        "expected_coverage" => [
             tlInputParameter::INT_N
-        ),
-        "doAction" => array(
+        ],
+        "doAction" => [
             tlInputParameter::STRING_N,
             0,
             20
-        ),
-        "itemSet" => array(
+        ],
+        "itemSet" => [
             tlInputParameter::ARRAY_INT
-        ),
-        "testcase_count" => array(
+        ],
+        "testcase_count" => [
             tlInputParameter::ARRAY_INT
-        ),
-        "copy_testcase_assignment" => array(
+        ],
+        "copy_testcase_assignment" => [
             tlInputParameter::CB_BOOL
-        ),
-        "relation_id" => array(
+        ],
+        "relation_id" => [
             tlInputParameter::INT_N
-        ),
-        "relation_source_req_id" => array(
+        ],
+        "relation_source_req_id" => [
             tlInputParameter::INT_N
-        ),
-        "relation_type" => array(
+        ],
+        "relation_type" => [
             tlInputParameter::STRING_N
-        ),
-        "relation_destination_req_doc_id" => array(
+        ],
+        "relation_destination_req_doc_id" => [
             tlInputParameter::STRING_N,
             0,
             64
-        ),
-        "relation_destination_testproject_id" => array(
+        ],
+        "relation_destination_testproject_id" => [
             tlInputParameter::INT_N
-        ),
-        "save_rev" => array(
+        ],
+        "save_rev" => [
             tlInputParameter::INT_N
-        ),
-        "do_save" => array(
+        ],
+        "do_save" => [
             tlInputParameter::INT_N
-        ),
-        "log_message" => array(
+        ],
+        "log_message" => [
             tlInputParameter::STRING_N
-        ),
-        "tcaseIdentity" => array(
+        ],
+        "tcaseIdentity" => [
             tlInputParameter::STRING_N
-        ),
-        "file_id" => array(
+        ],
+        "file_id" => [
             tlInputParameter::INT_N
-        ),
-        "fileTitle" => array(
+        ],
+        "fileTitle" => [
             tlInputParameter::STRING_N,
             0,
             100
-        )
-    );
+        ]
+    ];
 
     $args = new stdClass();
     R_PARAMS($iParams, $args);
@@ -194,7 +194,7 @@ function renderGui(&$argsObj, $guiObj, $opObj, $templateCfg, $editorCfg,
     $smartyObj = new TLSmarty();
     $renderType = 'none';
     // @TODO document
-    $actionOpe = array(
+    $actionOpe = [
         'create' => 'doCreate',
         'edit' => 'doUpdate',
         'doDelete' => '',
@@ -217,7 +217,7 @@ function renderGui(&$argsObj, $guiObj, $opObj, $templateCfg, $editorCfg,
         'deleteFile' => '',
         'startMonitoring' => '',
         'stopMonitoring' => ''
-    );
+    ];
 
     $owebEditor = web_editor('scope', $argsObj->basehref, $editorCfg);
     switch ($argsObj->doAction) {

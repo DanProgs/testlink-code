@@ -26,20 +26,20 @@ class tlCodeTracker extends tlObject
     // array index is used AS CODE that will be written to DB
     // if you need to add a new item start on 200, to avoid crash with standard ID
     //
-    private $systems = array(
-        1 => array(
+    private $systems = [
+        1 => [
             'type' => 'stash',
             'api' => 'rest',
             'enabled' => true,
             'order' => - 1
-        )
-    );
+        ]
+    ];
 
-    private $entitySpec = array(
+    private $entitySpec = [
         'name' => 'string',
         'cfg' => 'string',
         'type' => 'int'
-    );
+    ];
 
     /**
      * Class constructor
@@ -64,9 +64,9 @@ class tlCodeTracker extends tlObject
      */
     private function getSystems($opt = null)
     {
-        $my = array(
+        $my = [
             'options' => null
-        );
+        ];
         $my['options']['status'] = 'enabled'; // enabled,disabled,all
         $my['options'] = array_merge($my['options'], (array) $opt);
 
@@ -84,7 +84,7 @@ class tlCodeTracker extends tlObject
                 break;
         }
 
-        $ret = array();
+        $ret = [];
         foreach ($this->systems as $code => $elem) {
             if ($tval == null || $elem['enabled'] == $tval) {
                 $ret[$code] = $elem;
@@ -139,11 +139,11 @@ class tlCodeTracker extends tlObject
      */
     public function create($it)
     {
-        $ret = array(
+        $ret = [
             'status_ok' => 0,
             'id' => 0,
             'msg' => 'name already exists'
-        );
+        ];
 
         // Critic we need to do this before sanitize, because $it is changed
         $xlmCfg = trim($it->cfg);
@@ -164,9 +164,9 @@ class tlCodeTracker extends tlObject
         }
 
         // need to check if name already exist
-        if (is_null($this->getByName($it->name, array(
+        if (is_null($this->getByName($it->name, [
             'output' => 'id'
-        )))) {
+        ]))) {
             $sql = "/* debugMsg */ INSERT  INTO {$this->tables['codetrackers']} " .
                 " (name,cfg,type) " . " VALUES('" . $safeobj->name . "','" .
                 $safeobj->cfg . "',{$safeobj->type})";
@@ -174,17 +174,17 @@ class tlCodeTracker extends tlObject
             if ($this->db->exec_query($sql)) {
                 // at least for Postgres DBMS table name is needed.
                 $itemID = $this->db->insert_id($this->tables['codetrackers']);
-                $ret = array(
+                $ret = [
                     'status_ok' => 1,
                     'id' => $itemID,
                     'msg' => 'ok'
-                );
+                ];
             } else {
-                $ret = array(
+                $ret = [
                     'status_ok' => 0,
                     'id' => 0,
                     'msg' => $this->db->error_msg()
-                );
+                ];
             }
         }
 
@@ -195,7 +195,7 @@ class tlCodeTracker extends tlObject
      */
     public function update($it)
     {
-        $msg = array();
+        $msg = [];
         $msg['duplicate_name'] = "Update can not be done - name %s already exists for id %s";
         $msg['ok'] = "operation OK for id %s";
 
@@ -203,11 +203,11 @@ class tlCodeTracker extends tlObject
         $xlmCfg = trim($it->cfg);
 
         $safeobj = $this->sanitize($it);
-        $ret = array(
+        $ret = [
             'status_ok' => 1,
             'id' => $it->id,
             'msg' => ''
-        );
+        ];
 
         // allow empty config
         if (strlen($xlmCfg) > 0) {
@@ -242,17 +242,17 @@ class tlCodeTracker extends tlObject
     {
         $debugMsg = 'Class:' . __CLASS__ . ' - Method: ' . __FUNCTION__ . ' - ';
 
-        $msg = array();
+        $msg = [];
         $msg['linked'] = "Failure - id %s is linked to: ";
         $msg['tproject_details'] = " testproject '%s' with id %s %s";
         $msg['syntax_error'] = "Syntax failure - id %s seems to be an invalid value";
         $msg['ok'] = "operation OK for id %s";
 
-        $ret = array(
+        $ret = [
             'status_ok' => 1,
             'id' => $id,
             'msg' => $debugMsg
-        );
+        ];
         if (is_null($id) || ($safeID = intval($id)) <= 0) {
             $ret['status_ok'] = 0;
             $ret['id'] = $id;
@@ -263,7 +263,7 @@ class tlCodeTracker extends tlObject
         // check if ID is linked
         $links = $this->getLinks($safeID);
         if (is_null($links)) {
-            $sql = " /* $debugMsg */ DELETE FROM {$this->tables['codetrackers']}  " .
+            $sql = " /* {$debugMsg} */ DELETE FROM {$this->tables['codetrackers']}  " .
                 " WHERE id = " . intval($safeID);
             $this->db->exec_query($sql);
             $ret['msg'] .= sprintf($msg['ok'], $safeID);
@@ -284,29 +284,29 @@ class tlCodeTracker extends tlObject
      */
     public function getByID($id, $options = null)
     {
-        return $this->getByAttr(array(
+        return $this->getByAttr([
             'key' => 'id',
             'value' => $id
-        ), $options);
+        ], $options);
     }
 
     /**
      */
     private function getByName($name, $options = null)
     {
-        return $this->getByAttr(array(
+        return $this->getByAttr([
             'key' => 'name',
             'value' => $name
-        ), $options);
+        ], $options);
     }
 
     /**
      */
     private function getByAttr($attr, $options = null)
     {
-        $my['options'] = array(
+        $my['options'] = [
             'output' => 'full'
-        );
+        ];
         $my['options'] = array_merge($my['options'], (array) $options);
 
         $sql = "/* debugMsg */ SELECT ";
@@ -366,9 +366,9 @@ class tlCodeTracker extends tlObject
         // "\r" - carriage return
         // and spaces
         // fortunatelly this is trim standard behaviour
-        $k2san = array(
+        $k2san = [
             'name'
-        );
+        ];
         foreach ($k2san as $key) {
             $value = trim($obj->$key);
             switch ($key) {
@@ -405,11 +405,11 @@ class tlCodeTracker extends tlObject
         $statusQuo = $this->getLinkedTo($tprojectID);
 
         if (is_null($statusQuo)) {
-            $sql = "/* $debugMsg */ INSERT INTO {$this->tables['testproject_codetracker']} " .
+            $sql = "/* {$debugMsg} */ INSERT INTO {$this->tables['testproject_codetracker']} " .
                 " (testproject_id,codetracker_id) " . " VALUES(" .
                 intval($tprojectID) . "," . intval($id) . ")";
         } else {
-            $sql = "/* $debugMsg */ UPDATE {$this->tables['testproject_codetracker']} " .
+            $sql = "/* {$debugMsg} */ UPDATE {$this->tables['testproject_codetracker']} " .
                 " SET codetracker_id = " . intval($id) .
                 " WHERE testproject_id = " . intval($tprojectID);
         }
@@ -427,7 +427,7 @@ class tlCodeTracker extends tlObject
         if (is_null($id)) {
             return;
         }
-        $sql = "/* $debugMsg */ DELETE FROM {$this->tables['testproject_codetracker']} " .
+        $sql = "/* {$debugMsg} */ DELETE FROM {$this->tables['testproject_codetracker']} " .
             " WHERE testproject_id = " . intval($tprojectID) .
             " AND codetracker_id = " . intval($id);
         $this->db->exec_query($sql);
@@ -441,18 +441,18 @@ class tlCodeTracker extends tlObject
     {
         $debugMsg = 'Class:' . __CLASS__ . ' - Method: ' . __FUNCTION__;
 
-        $my = array(
-            'opt' => array(
+        $my = [
+            'opt' => [
                 'getDeadLinks' => false
-            )
-        );
+            ]
+        ];
         $my['opt'] = array_merge($my['opt'], (array) $opt);
 
         if (is_null($id)) {
             return;
         }
 
-        $sql = "/* $debugMsg */ " .
+        $sql = "/* {$debugMsg} */ " .
             " SELECT TPCT.testproject_id, NHTPR.name AS testproject_name " .
             " FROM {$this->tables['testproject_codetracker']} TPCT" .
             " LEFT OUTER JOIN {$this->tables['nodes_hierarchy']} NHTPR " .
@@ -474,7 +474,7 @@ class tlCodeTracker extends tlObject
     {
         $debugMsg = 'Class:' . __CLASS__ . ' - Method: ' . __FUNCTION__;
 
-        $sql = "/* $debugMsg */ " .
+        $sql = "/* {$debugMsg} */ " .
             " SELECT TPCT.testproject_id, NHTPR.name AS testproject_name, TPCT.codetracker_id " .
             " FROM {$this->tables['testproject_codetracker']} TPCT" .
             " LEFT OUTER JOIN {$this->tables['nodes_hierarchy']} NHTPR " .
@@ -489,11 +489,11 @@ class tlCodeTracker extends tlObject
      */
     public function getAll($options = null)
     {
-        $my['options'] = array(
+        $my['options'] = [
             'output' => null,
             'orderByField' => 'name',
             'checkEnv' => false
-        );
+        ];
         $my['options'] = array_merge($my['options'], (array) $options);
 
         $add_fields = '';
@@ -553,7 +553,7 @@ class tlCodeTracker extends tlObject
         if (is_null($tprojectID)) {
             return;
         }
-        $sql = "/* $debugMsg */ " .
+        $sql = "/* {$debugMsg} */ " .
             " SELECT TPCT.testproject_id, NHTPR.name AS testproject_name, " .
             " TPCT.codetracker_id,CTRK.name AS codetracker_name, CTRK.type" .
             " FROM {$this->tables['testproject_codetracker']} TPCT" .
@@ -631,10 +631,10 @@ class tlCodeTracker extends tlObject
     private function checkXMLCfg($xmlString)
     {
         $signature = 'Source:' . __METHOD__;
-        $op = array(
+        $op = [
             'status_ok' => true,
             'msg' => ''
-        );
+        ];
 
         $xmlCfg = "<?xml version='1.0'?> " . trim($xmlString);
         libxml_use_internal_errors(true);

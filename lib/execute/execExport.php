@@ -49,13 +49,13 @@ function initArgs()
     $args->doExport = isset($_REQUEST['export']) ? $_REQUEST['export'] : null;
     $args->exportType = isset($_REQUEST['exportType']) ? $_REQUEST['exportType'] : null;
 
-    $key2loop = array(
+    $key2loop = [
         'tproject',
         'tplan',
         'platform',
         'build',
         'tsuite'
-    );
+    ];
     foreach ($key2loop as $item) {
         $argsKey = $item . '_id';
         $inputKey = $item . 'ID';
@@ -78,20 +78,20 @@ function initializeGui(&$argsObj, &$tplanMgr)
     $guiObj->do_it = 1;
     $guiObj->nothing_todo_msg = '';
     $guiObj->export_filename = 'export_execution_set.xml';
-    $guiObj->exportTypes = array(
+    $guiObj->exportTypes = [
         'XML' => 'XML'
-    );
+    ];
     $guiObj->page_title = lang_get('export_execution_set');
     $guiObj->object_name = '';
     $guiObj->goback_url = ! is_null($argsObj->goback_url) ? $argsObj->goback_url : '';
 
-    $key2loop = array(
+    $key2loop = [
         'tproject',
         'tplan',
         'platform',
         'build',
         'tsuite'
-    );
+    ];
     foreach ($key2loop as $item) {
         $argsKey = $item . '_id';
         $guiObj->$argsKey = intval($argsObj->$argsKey);
@@ -106,7 +106,7 @@ function initializeGui(&$argsObj, &$tplanMgr)
  */
 function contentAsXML(&$dbHandler, $contextSet, &$tplanMgr)
 {
-    $dummy = array();
+    $dummy = [];
     $dummy['context'] = contextAsXML($dbHandler, $contextSet, $tplanMgr);
     $dummy['tcaseSet'] = tcaseSetAsXML($dbHandler, $contextSet);
 
@@ -118,7 +118,7 @@ function contentAsXML(&$dbHandler, $contextSet, &$tplanMgr)
  */
 function contextAsXML(&$dbHandler, $contextSet, &$tplanMgr)
 {
-    $info = array();
+    $info = [];
     $tprojectMgr = new testproject($dbHandler);
     $info['tproject'] = $tprojectMgr->get_by_id($contextSet->tproject_id);
     unset($tprojectMgr);
@@ -165,7 +165,7 @@ function contextAsXML(&$dbHandler, $contextSet, &$tplanMgr)
         "</build>";
 
     $xml_mapping = null;
-    $xml_mapping = array(
+    $xml_mapping = [
         "||TPROJECTNAME||" => "tproject_name",
         "||TPROJECTID||" => 'tproject_id',
         "||TPROJECTPREFIX||" => "prefix",
@@ -175,11 +175,11 @@ function contextAsXML(&$dbHandler, $contextSet, &$tplanMgr)
         "||BUILDID||" => 'build_id',
         "||PLATFORMNAME||" => "platform_name",
         "||PLATFORMID||" => 'platform_id'
-    );
+    ];
 
-    $mm = array(
+    $mm = [
         $contextInfo
-    );
+    ];
     return exportDataToXML($mm, $xml_root, $xml_template, $xml_mapping, true);
 }
 

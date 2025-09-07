@@ -71,19 +71,19 @@ function doUpdate(&$dbHandler, &$argsObj)
  */
 function initArgs()
 {
-    $iParams = array(
-        "exec_id" => array(
+    $iParams = [
+        "exec_id" => [
             tlInputParameter::INT_N
-        ),
-        "doAction" => array(
+        ],
+        "doAction" => [
             tlInputParameter::STRING_N,
             0,
             100
-        ),
-        "notes" => array(
+        ],
+        "notes" => [
             tlInputParameter::STRING_N
-        )
-    );
+        ]
+    ];
     $args = new stdClass();
     R_PARAMS($iParams, $args);
     return $args;

@@ -26,11 +26,11 @@ function exportReqDataToXML($reqData)
         '</docid><title><![CDATA[' . "\n||TITLE||\n]]>" . '</title>' .
         '<description><![CDATA[' . "\n||DESCRIPTION||\n]]>" . '</description>' .
         '</requirement>' . "\n";
-    $info = array(
+    $info = [
         "||DOCID||" => "req_doc_id",
         "||TITLE||" => "title",
         "||DESCRIPTION||" => "scope"
-    );
+    ];
     return exportDataToXML($reqData, $rootElem, $elemTpl, $info);
 }
 
@@ -65,7 +65,7 @@ function executeImportedReqs(&$db, $arrImportSource, $map_cur_reqdoc_id,
             $import_status = lang_get('req_import_result_skipped');
         } else {
             $crash = $map_cur_reqdoc_id &&
-                array_search($docID, $map_cur_reqdoc_id);
+                array_search($docID, $map_cur_reqdoc_id, true);
             if ($crash) {
                 // process conflict according to choosen solution
                 tLog('Conflict found. solution: ' . $conflictSolution);
@@ -97,11 +97,11 @@ function executeImportedReqs(&$db, $arrImportSource, $map_cur_reqdoc_id,
                 $import_status = $req_mgr->create($idSRS, $docID, $title, $scope,
                     $userID, $status, $type, $expected_coverage, $node_order);
             }
-            $arrImport[] = array(
+            $arrImport[] = [
                 'doc_id' => $docID,
                 'title' => $title,
                 'import_status' => $import_status['msg']
-            );
+            ];
         }
     }
     return $arrImport;
@@ -114,32 +114,32 @@ function compareImportedReqs(&$dbHandler, $arrImportSource, $tprojectID,
     $reqSpecID)
 {
     $reqCfg = config_get('req_cfg');
-    $labels = array(
+    $labels = [
         'type' => $reqCfg->type_labels,
         'status' => $reqCfg->status_labels
-    );
-    $verbose = array(
+    ];
+    $verbose = [
         'type' => null,
         'status' => null
-    );
-    $cache = array(
+    ];
+    $cache = [
         'type' => null,
         'status' => null
-    );
+    ];
     $cacheKeys = array_keys($cache);
 
     $unknown_code = lang_get('unknown_code');
     $reqMgr = new requirement_mgr($dbHandler);
     $arrImport = null;
     if ($loop2do = count($arrImportSource)) {
-        $getOptions = array(
+        $getOptions = [
             'output' => 'minimun'
-        );
-        $messages = array(
+        ];
+        $messages = [
             'ok' => '',
             'import_req_conflicts_other_branch' => '',
             'import_req_exists_here' => ''
-        );
+        ];
         foreach ($messages as $key => $dummy) {
             $messages[$key] = lang_get($key);
         }
@@ -183,7 +183,7 @@ function compareImportedReqs(&$dbHandler, $arrImportSource, $tprojectID,
                 }
             }
 
-            $arrImport[] = array(
+            $arrImport[] = [
                 'req_doc_id' => $req['docid'],
                 'title' => trim($req['title']),
                 'scope' => $req['description'],
@@ -192,7 +192,7 @@ function compareImportedReqs(&$dbHandler, $arrImportSource, $tprojectID,
                 'expected_coverage' => $req['expected_coverage'],
                 'node_order' => $req['order'],
                 'check_status' => $messages[$msgID]
-            );
+            ];
         }
     }
     return $arrImport;
@@ -245,10 +245,10 @@ function loadImportedReq($fileName, $importType)
             // But we need to return same data structure ALWAYS
             // for DocBook we do not use 'parsedCounter' and 'syntaxError'
             //
-            $dummy = array(
+            $dummy = [
                 'userFeedback' => null,
                 'info' => $retVal
-            );
+            ];
             $retVal = $dummy;
         }
     }
@@ -262,7 +262,7 @@ function loadImportedReq($fileName, $importType)
 function importReqDataFromCSV($fileName)
 {
     // CSV line format
-    $fieldMappings = array(
+    $fieldMappings = [
         "docid",
         "title",
         "description",
@@ -270,34 +270,34 @@ function importReqDataFromCSV($fileName)
         "status",
         "expected_coverage",
         "node_order"
-    );
+    ];
 
-    $options = array(
+    $options = [
         'delimiter' => ',',
         'fieldQty' => count($fieldMappings)
-    );
+    ];
     $impData = importCSVData($fileName, $fieldMappings, $options);
 
     $reqData = &$impData['info'];
     if ($reqData) {
         // lenght will be adjusted to these values
         $field_size = config_get('field_size');
-        $fieldLength = array(
+        $fieldLength = [
             "docid" => $field_size->req_docid,
             "title" => $field_size->req_title
-        );
+        ];
 
         $reqCfg = config_get('req_cfg');
-        $fieldDefault = array(
-            "type" => array(
+        $fieldDefault = [
+            "type" => [
                 'check' => 'type_labels',
                 'value' => TL_REQ_TYPE_FEATURE
-            ),
-            "status" => array(
+            ],
+            "status" => [
                 'check' => 'status_labels',
                 'value' => TL_REQ_STATUS_VALID
-            )
-        );
+            ]
+        ];
 
         $loop2do = count($reqData);
         for ($ddx = 0; $ddx < $loop2do; $ddx ++) {
@@ -329,20 +329,20 @@ function importReqDataFromCSV($fileName)
 function importReqDataFromCSVDoors($fileName)
 {
     // Some keys are strings, other numeric
-    $fieldMappings = array(
+    $fieldMappings = [
         "Object Identifier" => "title",
         "Object Text" => "description",
         "Created By",
         "Created On",
         "Last Modified By",
         "Last Modified On"
-    );
+    ];
 
-    $options = array(
+    $options = [
         'delimiter' => ',',
         'fieldQty' => count($fieldMappings),
         'processHeader' => true
-    );
+    ];
     return importCSVData($fileName, $fieldMappings, $options);
 }
 
@@ -369,16 +369,16 @@ function getDocBookTableAsHtmlString($docTable, $parseCfg)
             $tbodyName = $tbody->getName();
             $doIt = false;
             if ($tbodyName == $parseCfg->table_head) {
-                $cellTag = array(
+                $cellTag = [
                     'open' => '<th>',
                     'close' => '</th>'
-                );
+                ];
                 $doIt = true;
             } elseif ($tbodyName == $parseCfg->table_body) {
-                $cellTag = array(
+                $cellTag = [
                     'open' => '<td>',
                     'close' => '</td>'
-                );
+                ];
                 $doIt = true;
             }
 
@@ -552,11 +552,11 @@ function doReqImport(&$dbHandler, $tprojectID, $userID, $reqSpecID, $fileName,
  */
 function exportReqDataToCSV($reqData)
 {
-    $sKeys = array(
+    $sKeys = [
         "req_doc_id",
         "title",
         "scope"
-    );
+    ];
     return exportDataToCSV($reqData, $sKeys, $sKeys, 0, ',');
 }
 
@@ -573,9 +573,9 @@ function getReqCoverage(&$dbHandler, $reqs, &$execMap)
     $coverage['withTestCase'] = null;
     $coverage['withoutTestCase'] = null;
     $coverage['byStatus'] = $resultsCfg['status_label_for_exec_ui'];
-    $status_counters = array();
+    $status_counters = [];
     foreach ($coverage['byStatus'] as $status_code => $value) {
-        $coverage['byStatus'][$status_code] = array();
+        $coverage['byStatus'][$status_code] = [];
         $status_counters[$resultsCfg['status_code'][$status_code]] = 0;
     }
 
@@ -584,11 +584,11 @@ function getReqCoverage(&$dbHandler, $reqs, &$execMap)
         foreach ($reqs as $requirement_id => $req_tcase_set) {
             $first_key = key($req_tcase_set);
             $item_qty = count($req_tcase_set);
-            $req = array(
+            $req = [
                 "id" => $requirement_id,
                 "title" => $req_tcase_set[$first_key]['req_title'],
                 "req_doc_id" => $req_tcase_set[$first_key]["req_doc_id"]
-            );
+            ];
 
             foreach ($status_counters as $key => $value) {
                 $status_counters[$key] = 0;
@@ -627,7 +627,7 @@ function getReqCoverage(&$dbHandler, $reqs, &$execMap)
                             $path_info[$item_info['testcase_id']]);
                     }
                     $status_counters[$exec_status] ++;
-                    $req['tcList'][] = array(
+                    $req['tcList'][] = [
                         "tcID" => $item_info['testcase_id'],
                         "title" => $item_info['testcase_name'],
                         "tcaseExternalID" => $item_info['testcase_external_id'],
@@ -635,7 +635,7 @@ function getReqCoverage(&$dbHandler, $reqs, &$execMap)
                         "tcase_path" => $tcase_path,
                         "status" => $exec_status,
                         "status_label" => $resultsCfg['status_label'][$resultsCfg['code_status'][$exec_status]]
-                    );
+                    ];
                 }
             } // for($idx = 0; $idx < $item_qty; $idx++)
 
@@ -699,15 +699,15 @@ function getReqCoverage(&$dbHandler, $reqs, &$execMap)
  */
 function getLastExecutions(&$db, $tcaseSet, $tplanId)
 {
-    $execMap = array();
+    $execMap = [];
     if (count($tcaseSet)) {
         $tcaseMgr = new testcase($db);
         $items = array_keys($tcaseSet);
         $path_info = $tcaseMgr->tree_manager->get_full_path_verbose($items);
-        $options = array(
+        $options = [
             'getNoExecutions' => 1,
             'groupByBuild' => 0
-        );
+        ];
         foreach ($tcaseSet as $tcaseId => $tcInfo) {
             $execMap[$tcaseId] = $tcaseMgr->getLastExecution($tcaseId,
                 $tcInfo['tcversion_id'], $tplanId, testcase::ANY_BUILD,
@@ -759,7 +759,7 @@ function check_syntax($fileName, $importType)
  */
 function check_syntax_xml($fileName)
 {
-    $ret = array();
+    $ret = [];
     $ret['status_ok'] = 1;
     $ret['msg'] = 'ok';
     return $ret;
@@ -767,7 +767,7 @@ function check_syntax_xml($fileName)
 
 function check_syntax_csv($fileName)
 {
-    $ret = array();
+    $ret = [];
     $ret['status_ok'] = 1;
     $ret['msg'] = 'ok';
     return $ret;
@@ -776,7 +776,7 @@ function check_syntax_csv($fileName)
 // Must be implemented !!!
 function check_syntax_csv_doors($fileName)
 {
-    $ret = array();
+    $ret = [];
     $ret['status_ok'] = 1;
     $ret['msg'] = 'ok';
 
@@ -816,27 +816,27 @@ function req_link_replace($dbHandler, $scope, $tprojectID)
         $req_mgr = new requirement_mgr($dbHandler);
 
         $tables = tlObjectWithDB::getDBTables(
-            array(
+            [
                 'requirements',
                 'req_specs'
-            ));
+            ]);
 
         $cfg = config_get('internal_links');
         $l18n['version'] = lang_get('tcversion_indicator');
 
-        $prop2loop = array(
-            'req' => array(
+        $prop2loop = [
+            'req' => [
                 'prop' => 'req_link_title',
                 'default_lbl' => 'requirement'
-            ),
-            'req_spec' => array(
+            ],
+            'req_spec' => [
                 'prop' => 'req_spec_link_title',
                 'default_lbl' => 'req_spec_short'
-            )
-        );
+            ]
+        ];
 
         // configure link title (first part of the generated link)
-        $title = array();
+        $title = [];
         foreach ($prop2loop as $key => $elem) {
             $prop = $elem['prop'];
             if ($cfg->$prop->type == 'string' && $cfg->$prop->value != '') {
@@ -850,7 +850,7 @@ function req_link_replace($dbHandler, $scope, $tprojectID)
     }
 
     $prefix = $tproject_mgr->getTestCasePrefix($tprojectID);
-    $string2replace = array();
+    $string2replace = [];
 
     // configure target in which link shall open
     // use a reasonable default value if nothing is set in config
@@ -876,30 +876,30 @@ function req_link_replace($dbHandler, $scope, $tprojectID)
     }
 
     // now the actual replacing
-    $patterns2search = array();
+    $patterns2search = [];
     $patterns2search['req'] = "#\[req(.*)\](.*)\[/req\]#iU";
     $patterns2search['req_spec'] = "#\[req_spec(.*)\](.*)\[/req_spec\]#iU";
-    $patternPositions = array(
+    $patternPositions = [
         'complete_string' => 0,
         'attributes' => 1,
         'doc_id' => 2
-    );
+    ];
 
-    $items2search['req'] = array(
+    $items2search['req'] = [
         'tproj',
         'anchor',
         'version'
-    );
-    $items2search['req_spec'] = array(
+    ];
+    $items2search['req_spec'] = [
         'tproj',
         'anchor'
-    );
-    $itemPositions = array(
+    ];
+    $itemPositions = [
         'item' => 0,
         'item_value' => 1
-    );
+    ];
 
-    $sql2exec = array();
+    $sql2exec = [];
     $sql2exec['req'] = " SELECT id, req_doc_id AS doc_id " .
         " FROM {$tables['requirements']} WHERE req_doc_id=";
 
@@ -908,7 +908,7 @@ function req_link_replace($dbHandler, $scope, $tprojectID)
 
     foreach ($patterns2search as $accessKey => $pattern) {
 
-        $matches = array();
+        $matches = [];
         preg_match_all($pattern, $scope, $matches);
 
         // if no req_doc_id is set skip loop
@@ -918,7 +918,7 @@ function req_link_replace($dbHandler, $scope, $tprojectID)
 
         foreach ($matches[$patternPositions['complete_string']] as $key => $matched_string) {
 
-            $matched = array();
+            $matched = [];
             $matched['tproj'] = '';
             $matched['anchor'] = '';
             $matched['version'] = '';
@@ -926,7 +926,7 @@ function req_link_replace($dbHandler, $scope, $tprojectID)
             // only look for attributes if any found
             if ($matches[$patternPositions['attributes']][$key] != '') {
                 foreach ($items2search[$accessKey] as $item) {
-                    $matched_item = array();
+                    $matched_item = [];
                     preg_match('/' . $item . '=([\w]+)/', $matched_string,
                         $matched_item);
                     $matched[$item] = (isset(

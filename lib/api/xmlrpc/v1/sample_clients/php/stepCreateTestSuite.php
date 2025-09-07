@@ -15,7 +15,7 @@ $unitTestDescription = "";
 
 $devKey = isset($_REQUEST['apiKey']) ? $_REQUEST['apiKey'] : $tlDevKey;
 
-$args = array();
+$args = [];
 $args["devKey"] = $devKey;
 $args["testprojectid"] = $env->tlProjectID;
 $args["testsuitename"] = 'TS API 100';

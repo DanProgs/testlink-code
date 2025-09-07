@@ -28,7 +28,7 @@ checkRights($db, $_SESSION['currentUser'], $context);
 $gui = new stdClass();
 $gui->can_manage_testplans = $_SESSION['currentUser']->hasRight($db,
     "mgt_testplan_create", $context->tproject_id);
-$gui->tplans = array();
+$gui->tplans = [];
 $gui->show_details = 0;
 $gui->user_feedback = '';
 $gui->tcasePrefix = $tcaseMgr->tproject_mgr->getTestCasePrefix(

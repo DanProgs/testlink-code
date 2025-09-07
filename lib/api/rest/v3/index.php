@@ -84,11 +84,11 @@ $routes = require_once './core/routes.php';
 $routes($app);
 
 // Middleware
-$app->add(array($app->restApi,'authenticate'));
+$app->add([$app->restApi,'authenticate']);
 
 // https://stackoverflow.com/questions/37255635/
 // php-slim-framework-v3-set-
 //     global-content-type-for-responses/37255946
-$app->add(array($app->restApi,'setContentTypeJSON'));
+$app->add([$app->restApi,'setContentTypeJSON']);
 
 $app->run();

@@ -15,14 +15,14 @@ require_once 'common.php';
 require_once 'exttable.class.php';
 $templateCfg = templateConfiguration();
 
-list ($args, $gui) = initEnv($db);
+[$args, $gui] = initEnv($db);
 
 $result_cfg = config_get('results');
 $show_all_status_details = config_get('metrics_dashboard')->show_test_plan_status;
 $round_precision = config_get('dashboard_precision');
 
 $labels = init_labels(
-    array(
+    [
         'overall_progress' => null,
         'test_plan' => null,
         'progress' => null,
@@ -33,9 +33,9 @@ $labels = init_labels(
         'platform' => null,
         'th_active_tc' => null,
         'in_percent' => null
-    ));
+    ]);
 
-list ($gui->tplan_metrics, $gui->show_platforms, $platforms) = getMetrics($db,
+[$gui->tplan_metrics, $gui->show_platforms, $platforms] = getMetrics($db,
     $_SESSION['currentUser'], $args, $result_cfg, $labels);
 
 if (! empty($gui->tplan_metrics)) {
@@ -44,11 +44,11 @@ if (! empty($gui->tplan_metrics)) {
     $columns = getColumnsDefinition($gui->show_platforms, $statusSetForDisplay,
         $labels, $platforms);
 
-    $matrixData = array();
+    $matrixData = [];
     if (isset($gui->tplan_metrics['testplans'])) {
         foreach ($gui->tplan_metrics['testplans'] as $tplan_metrics) {
             foreach ($tplan_metrics['platforms'] as $platform_metric) {
-                $rowData = array();
+                $rowData = [];
 
                 // if test plan does not use platforms a overall status is not necessary
                 $tplan_string = strip_tags($platform_metric['tplan_name']);
@@ -121,16 +121,16 @@ if (! empty($gui->tplan_metrics)) {
     $table->title = $labels['href_metrics_dashboard'];
     $table->showGroupItemsCount = true;
 
-    $gui->tableSet = array(
+    $gui->tableSet = [
         $table
-    );
+    ];
 
     // get overall progress, collect test project metrics
     $gui->project_metrics = collectTestProjectMetrics($gui->tplan_metrics,
-        array(
+        [
             'statusSetForDisplay' => $statusSetForDisplay,
             'round_precision' => $round_precision
-        ));
+        ]);
 }
 
 $smarty = new TLSmarty();
@@ -151,15 +151,15 @@ $smarty->display($templateCfg->template_dir . $templateCfg->default_template);
 function getMetrics(&$db, $userObj, $args, $result_cfg, $labels)
 {
     $tproject_id = $args->tproject_id;
-    $metrics = array();
+    $metrics = [];
     $tplan_mgr = new testplan($db);
     $show_platforms = false;
-    $platforms = array();
+    $platforms = [];
 
     // get all tesplans accessibles for user, for $tproject_id
-    $options = array(
+    $options = [
         'output' => 'map'
-    );
+    ];
     $options['active'] = $args->show_only_active ? ACTIVE : TP_ALL_STATUS;
     $test_plans = $userObj->getAccessibleTestPlans($db, $tproject_id, null,
         $options);
@@ -167,16 +167,16 @@ function getMetrics(&$db, $userObj, $args, $result_cfg, $labels)
     $metricsMgr = new tlTestPlanMetrics($db);
     $show_platforms = false;
 
-    $metrics = array(
+    $metrics = [
         'testplans' => null,
         'total' => null
-    );
+    ];
     $mm = &$metrics['testplans'];
-    $metrics['total'] = array(
+    $metrics['total'] = [
         'active' => 0,
         'total' => 0,
         'executed' => 0
-    );
+    ];
     foreach ($result_cfg['status_label_for_exec_ui'] as $status_code => &$dummy) {
         $metrics['total'][$status_code] = 0;
     }
@@ -201,10 +201,10 @@ function getMetrics(&$db, $userObj, $args, $result_cfg, $labels)
         if (! is_null($platformSet)) {
             $neurus = $metricsMgr->getExecCountersByPlatformExecStatus($key,
                 null,
-                array(
+                [
                     'getPlatformSet' => true,
                     'getOnlyActiveTCVersions' => true
-                ));
+                ]);
 
             $mm[$key]['overall']['active'] = $mm[$key]['overall']['executed'] = 0;
             foreach ($neurus['with_tester'] as $platform_id => &$pinfo) {
@@ -234,9 +234,9 @@ function getMetrics(&$db, $userObj, $args, $result_cfg, $labels)
             $metrics['total']['active'] += $mm[$key]['overall']['active'];
         } else {
             $mm[$key]['overall'] = $metricsMgr->getExecCountersByExecStatus(
-                $key, null, array(
+                $key, null, [
                     'getOnlyActiveTCVersions' => true
-                ));
+                ]);
 
             $mm[$key]['overall']['active'] = $mm[$key]['overall']['total'];
 
@@ -265,18 +265,18 @@ function getMetrics(&$db, $userObj, $args, $result_cfg, $labels)
     }
 
     // remove duplicate platform names
-    $platformsUnique = array();
+    $platformsUnique = [];
     foreach ($platforms as $platform) {
         if (! in_array($platform['name'], $platformsUnique)) {
             $platformsUnique[] = $platform['name'];
         }
     }
 
-    return array(
+    return [
         $metrics,
         $show_platforms,
         $platformsUnique
-    );
+    ];
 }
 
 /**
@@ -303,60 +303,60 @@ function getPercentage($denominator, $numerator, $round_precision)
  */
 function getColumnsDefinition($showPlatforms, $statusLbl, $labels, $platforms)
 {
-    $colDef = array();
+    $colDef = [];
 
-    $colDef[] = array(
+    $colDef[] = [
         'title_key' => 'test_plan',
         'width' => 60,
         'type' => 'text',
         'sortType' => 'asText',
         'filter' => 'string'
-    );
+    ];
 
     if ($showPlatforms) {
-        $colDef[] = array(
+        $colDef[] = [
             'title_key' => 'platform',
             'width' => 60,
             'sortType' => 'asText',
             'filter' => 'list',
             'filterOptions' => $platforms
-        );
+        ];
     }
 
-    $colDef[] = array(
+    $colDef[] = [
         'title_key' => 'th_active_tc',
         'width' => 40,
         'sortType' => 'asInt',
         'filter' => 'numeric'
-    );
+    ];
 
     // create 2 columns for each defined status
     foreach ($statusLbl as $lbl) {
-        $colDef[] = array(
+        $colDef[] = [
             'title_key' => $lbl,
             'width' => 40,
             'hidden' => true,
             'type' => 'int',
             'sortType' => 'asInt',
             'filter' => 'numeric'
-        );
+        ];
 
-        $colDef[] = array(
+        $colDef[] = [
             'title' => lang_get($lbl) . " " . $labels['in_percent'],
             'width' => 40,
             'col_id' => 'id_' . $lbl . '_percent',
             'type' => 'float',
             'sortType' => 'asFloat',
             'filter' => 'numeric'
-        );
+        ];
     }
 
-    $colDef[] = array(
+    $colDef[] = [
         'title_key' => 'progress',
         'width' => 40,
         'sortType' => 'asFloat',
         'filter' => 'numeric'
-    );
+    ];
 
     return $colDef;
 }
@@ -371,25 +371,25 @@ function initEnv(&$dbHandler)
     $args = new stdClass();
     $gui = new stdClass();
 
-    $iParams = array(
-        "apikey" => array(
+    $iParams = [
+        "apikey" => [
             tlInputParameter::STRING_N,
             32,
             64
-        ),
-        "tproject_id" => array(
+        ],
+        "tproject_id" => [
             tlInputParameter::INT_N
-        ),
-        "tplan_id" => array(
+        ],
+        "tplan_id" => [
             tlInputParameter::INT_N
-        ),
-        "show_only_active" => array(
+        ],
+        "show_only_active" => [
             tlInputParameter::CB_BOOL
-        ),
-        "show_only_active_hidden" => array(
+        ],
+        "show_only_active_hidden" => [
             tlInputParameter::CB_BOOL
-        )
-    );
+        ]
+    ];
 
     R_PARAMS($iParams, $args);
 
@@ -460,10 +460,10 @@ function initEnv(&$dbHandler)
     $gui->direct_link_ok = $args->direct_link_ok;
     $gui->warning_msg = lang_get('no_testplans_available');
 
-    return array(
+    return [
         $args,
         $gui
-    );
+    ];
 }
 
 /**
@@ -474,7 +474,7 @@ function initEnv(&$dbHandler)
  */
 function collectTestProjectMetrics($tplanMetrics, $cfg)
 {
-    $mm = array();
+    $mm = [];
     $mm['executed']['value'] = getPercentage($tplanMetrics['total']['executed'],
         $tplanMetrics['total']['active'], $cfg['round_precision']);
     $mm['executed']['label_key'] = 'progress_absolute';
@@ -502,10 +502,10 @@ function checkRights(&$db, &$user, $context = null)
         $context->tproject_id = $context->tplan_id = null;
         $context->getAccessAttr = false;
     }
-    $checkOrMode = array(
+    $checkOrMode = [
         'testplan_metrics',
         'testplan_execute'
-    );
+    ];
     foreach ($checkOrMode as $right) {
         if ($user->hasRightOnProj($db, $right, $context->tproject_id,
             $context->tplan_id, $context->getAccessAttr)) {

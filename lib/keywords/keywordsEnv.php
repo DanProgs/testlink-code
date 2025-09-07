@@ -13,7 +13,7 @@
 function getKeywordsEnv(&$dbHandler,&$user,$tproject_id,$opt=null) {
   $kwEnv = new stdClass();
 
-  $options = array('usage' => null);
+  $options = ['usage' => null];
   $options = array_merge($options,(array)$opt);
 
   $tproject = new testproject($dbHandler);
@@ -24,9 +24,9 @@ function getKeywordsEnv(&$dbHandler,&$user,$tproject_id,$opt=null) {
   $kwEnv->kwOnTCV = null;
 
   if( null != $kwEnv->keywords ) {
-    $kws = array();
-    $kwNames = array();
-    $kwNotes = array();
+    $kws = [];
+    $kwNames = [];
+    $kwNotes = [];
     $more = ($options['usage'] == 'csvExport');
 
     foreach( $kwEnv->keywords as $kwo ) {
@@ -39,7 +39,7 @@ function getKeywordsEnv(&$dbHandler,&$user,$tproject_id,$opt=null) {
 
     // Count how many times the keyword has been used
     $kwEnv->kwOnTCV = (array)$tproject->countKeywordUsageInTCVersions($tproject_id);
-    if( $more && count($kwEnv->kwOnTCV) > 0) {
+    if( $more && $kwEnv->kwOnTCV !== []) {
       foreach($kwEnv->kwOnTCV as $kk => $dummy) {
         $kwEnv->kwOnTCV[$kk]['keyword'] = $kwNames[$kk];
         $kwEnv->kwOnTCV[$kk]['notes'] = $kwNotes[$kk];

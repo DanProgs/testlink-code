@@ -19,7 +19,7 @@ $method = 'checkDevKey';
 $test_num = 1;
 $unitTestDescription = "Test {$test_num} - {$method}";
 
-$args = array();
+$args = [];
 $args["devKey"] = DEV_KEY;
 
 $additionalInfo = '<br>must finish OK<br>';
@@ -37,7 +37,7 @@ runTest($client, $method, $args);
 $test_num ++;
 $unitTestDescription = "Test {$test_num} - {$method}";
 
-$args = array();
+$args = [];
 $args["devKey"] = DEV_KEY . 'UUUU';
 
 $additionalInfo = '<br>Must Fail<br>';

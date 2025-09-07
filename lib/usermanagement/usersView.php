@@ -20,7 +20,7 @@ testlinkInitPage($db, false, false, "checkRights");
 
 $smarty = new TLSmarty();
 
-list ($args, $gui) = initEnv($db);
+[$args, $gui] = initEnv($db);
 
 switch ($args->operation) {
     case 'disable':
@@ -82,16 +82,16 @@ function initEnv(&$dbHandler)
     // normalization: done via normFunction() which replaces ',' with '.'
     // "HelloString3" => array("GET",tlInputParameter::STRING_N,1,15,'checkFooOrBar','normFunction'),
     //
-    $iParams = array(
-        "operation" => array(
+    $iParams = [
+        "operation" => [
             tlInputParameter::STRING_N,
             0,
             50
-        ),
-        "user" => array(
+        ],
+        "user" => [
             tlInputParameter::INT_N
-        )
-    );
+        ]
+    ];
 
     $pParams = R_PARAMS($iParams);
     $args = new stdClass();
@@ -116,10 +116,10 @@ function initEnv(&$dbHandler)
     $gui->highlight = initializeTabsmenu();
     $gui->highlight->view_users = 1;
 
-    return array(
+    return [
         $args,
         $gui
-    );
+    ];
 }
 
 /**
@@ -167,76 +167,76 @@ function buildMatrix(&$guiObj, &$argsObj)
     //
     // 'tlType' => TestLinkType: will be analized and mapped accordingly on tlExtTable::buildColumns()
     //
-    $columns = array(
-        array(
+    $columns = [
+        [
             'title_key' => 'th_login',
             'col_id' => 'handle',
             'width' => 100
-        ),
-        array(
+        ],
+        [
             'title_key' => 'th_first_name',
             'width' => 150
-        ),
-        array(
+        ],
+        [
             'title_key' => 'th_last_name',
             'width' => 150
-        ),
-        array(
+        ],
+        [
             'title_key' => 'th_email',
             'width' => 150
-        ),
-        array(
+        ],
+        [
             'title_key' => 'th_role',
             'width' => 150
-        ),
-        array(
+        ],
+        [
             'title_key' => 'th_locale',
             'width' => 150
-        ),
-        array(
+        ],
+        [
             'title_key' => 'th_active',
             'type' => 'oneZeroImage',
             'width' => 50
-        ),
-        array(
+        ],
+        [
             'title_key' => 'expiration_date',
             'width' => 50
-        ),
-        array(
+        ],
+        [
             'title' => 'disableUser',
             'tlType' => 'disableUser',
             'width' => 150
-        ),
-        array(
+        ],
+        [
             'hidden' => true,
             'title' => 'hidden_role_id',
             'col_id' => 'role_id'
-        ),
-        array(
+        ],
+        [
             'hidden' => true,
             'title' => 'hidden_user_id',
             'col_id' => 'user_id'
-        ),
-        array(
+        ],
+        [
             'hidden' => true,
             'title' => 'hidden_login',
             'col_id' => 'login'
-        ),
-        array(
+        ],
+        [
             'hidden' => true,
             'title' => 'hidden_is_special',
             'col_id' => 'is_special'
-        )
-    );
+        ]
+    ];
 
     init_labels(
-        array(
+        [
             'th_login' => null,
             'th_first_name' => null,
             'th_last_name' => null,
             'expiration' => null,
             'th_email' => null
-        ));
+        ]);
 
     $loop2do = count($guiObj->matrix);
 
@@ -256,9 +256,9 @@ function buildMatrix(&$guiObj, &$argsObj)
 
     // => addCustomBehaviour(columnType, );
     $matrix->addCustomBehaviour('oneZeroImage',
-        array(
+        [
             'render' => 'oneZeroImageRenderer'
-        ));
+        ]);
     $matrix->moreViewConfig = " ,getRowClass: function(record, index) {" .
         " var x = record.get('role_id');" . " return('roleCode'+x); " . " } ";
 
@@ -281,10 +281,10 @@ function buildMatrix(&$guiObj, &$argsObj)
  */
 function checkUserOrderBy($input)
 {
-    $domain = array_flip(array(
+    $domain = array_flip([
         'order_by_role',
         'order_by_login'
-    ));
+    ]);
     return isset($domain[$input]) ? true : false;
 }
 
@@ -295,10 +295,10 @@ function checkUserOrderBy($input)
  */
 function getAllUsersForGrid(&$dbHandler)
 {
-    $tables = tlObject::getDBTables(array(
+    $tables = tlObject::getDBTables([
         'users',
         'roles'
-    ));
+    ]);
 
     // Column extraction order is CRITIC for correct behaviour of Ext-JS
     $sql = " SELECT '' AS handle,U.first,U.last,U.email,R.description," .
@@ -331,9 +331,9 @@ function getAllUsersForGrid(&$dbHandler)
     // example 0,handle,1,first, and so on.
     // This drives crazy EXT-JS grid
     if (! is_null($users) && $dbHandler->dbType == 'mssql') {
-        $clean = array();
+        $clean = [];
         foreach ($users as $row) {
-            $cr = array();
+            $cr = [];
             $elem = array_keys($row);
             foreach ($elem as $accessKey) {
                 if (! is_numeric($accessKey)) {

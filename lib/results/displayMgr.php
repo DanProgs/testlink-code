@@ -14,49 +14,49 @@ require_once 'reports.cfg.php';
 function initArgsForReports(&$dbHandler)
 {
     $tplanMgr = null;
-    $iParams = array(
-        "apikey" => array(
+    $iParams = [
+        "apikey" => [
             tlInputParameter::STRING_N,
             32,
             64
-        ),
-        "tproject_id" => array(
+        ],
+        "tproject_id" => [
             tlInputParameter::INT_N
-        ),
-        "tplan_id" => array(
+        ],
+        "tplan_id" => [
             tlInputParameter::INT_N
-        ),
-        "format" => array(
+        ],
+        "format" => [
             tlInputParameter::INT_N
-        ),
-        "type" => array(
+        ],
+        "type" => [
             tlInputParameter::STRING_N,
             0,
             1
-        ),
-        "sendByMail" => array(
+        ],
+        "sendByMail" => [
             tlInputParameter::INT_N
-        ),
-        "spreadsheet" => array(
+        ],
+        "spreadsheet" => [
             tlInputParameter::INT_N
-        ),
-        "doAction" => array(
+        ],
+        "doAction" => [
             tlInputParameter::STRING_N,
             5,
             15
-        ),
-        "platSet" => array(
+        ],
+        "platSet" => [
             tlInputParameter::ARRAY_INT
-        ),
-        "build_set" => array(
+        ],
+        "build_set" => [
             tlInputParameter::ARRAY_INT
-        ),
-        "buildListForExcel" => array(
+        ],
+        "buildListForExcel" => [
             tlInputParameter::STRING_N,
             0,
             100
-        )
-    );
+        ]
+    ];
 
     $args = new stdClass();
     R_PARAMS($iParams, $args);
@@ -124,10 +124,10 @@ function initArgsForReports(&$dbHandler)
     $args->user = $_SESSION['currentUser'];
     $args->basehref = $_SESSION['basehref'];
 
-    return array(
+    return [
         $tplanMgr,
         $args
-    );
+    ];
 }
 
 /**
@@ -155,9 +155,9 @@ function generateHtmlEmail(&$smarty, $template_file, $mailCfg)
         // Link to test case is still raw link (no title) in email(HTML) type of test report
         $op = email_send($mailCfg->from, $mailCfg->to, $mailCfg->subject,
             $html_report, $mailCfg->cc, null, false, true,
-            array(
+            [
                 'strip_email_links' => false
-            ));
+            ]);
 
         if ($op->status_ok) {
             $op->msg = sprintf(lang_get('mail_sent_to'), $mailCfg->to);
@@ -261,7 +261,7 @@ function flushHttpHeader($format, $doc_kind = 0)
         "Content-Description: TestLink - Generated Document (see " . __FUNCTION__ .
         ")");
     if ((! is_null($format) && $format != '') && $format != FORMAT_HTML) {
-        header("Content-Disposition: attachment; filename=$filename");
+        header("Content-Disposition: attachment; filename={$filename}");
     }
     flush();
 }

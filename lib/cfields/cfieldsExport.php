@@ -26,9 +26,9 @@ $gui->do_it = 1;
 $gui->nothing_todo_msg = '';
 $gui->goback_url = ! is_null($args->goback_url) ? $args->goback_url : '';
 $gui->export_filename = is_null($args->export_filename) ? 'customFields.xml' : $args->export_filename;
-$gui->exportTypes = array(
+$gui->exportTypes = [
     'XML' => 'XML'
-);
+];
 
 switch ($args->doAction) {
     case 'doExport':
@@ -52,18 +52,18 @@ function initArgs()
     $args = new stdClass();
     $_REQUEST = strings_stripSlashes($_REQUEST);
 
-    $iParams = array(
-        "doAction" => array(
+    $iParams = [
+        "doAction" => [
             tlInputParameter::STRING_N,
             0,
             50
-        ),
-        "export_filename" => array(
+        ],
+        "export_filename" => [
             tlInputParameter::STRING_N,
             0,
             100
-        )
-    );
+        ]
+    ];
 
     R_PARAMS($iParams, $args);
     $args->userID = $_SESSION['userID'];
@@ -81,10 +81,10 @@ function initArgs()
 function doExport(&$dbHandler, $filename)
 {
     $tables = tlObjectWithDB::getDBTables(
-        array(
+        [
             'custom_fields',
             'cfield_node_types'
-        ));
+        ]);
 
     // To solve issues with MAC OS
     $tmp = (PHP_OS == 'Darwin') ? config_get('temp_dir') : null;

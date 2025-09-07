@@ -35,10 +35,10 @@ $templateCfg = templateConfiguration('tcEdit');
 $commandMgr = new testcaseCommands($db, $args->user, $args->tproject_id);
 $commandMgr->setTemplateCfg(templateConfiguration());
 
-$testCaseEditorKeys = array(
+$testCaseEditorKeys = [
     'summary' => 'summary',
     'preconditions' => 'preconditions'
-);
+];
 $init_inputs = true;
 $opt_cfg = initializeOptionTransferCfg($optionTransferName, $args, $tproject_mgr);
 $gui = initializeGui($db, $args, $cfg, $tcaseMgr, $tproject_mgr);
@@ -54,10 +54,10 @@ switch ($args->doAction) {
     case "create":
     case "edit":
     case "doCreate":
-        $testCaseEditorKeys = array(
+        $testCaseEditorKeys = [
             'summary' => 'summary',
             'preconditions' => 'preconditions'
-        );
+        ];
         break;
 
     case "createStep":
@@ -73,10 +73,10 @@ switch ($args->doAction) {
     case "doInsertStep":
     case "doResequenceSteps":
     case "doStepOperationExit":
-        $testCaseEditorKeys = array(
+        $testCaseEditorKeys = [
             'steps' => 'steps',
             'expected_results' => 'expected_results'
-        );
+        ];
         break;
 }
 
@@ -129,9 +129,9 @@ switch ($args->doAction) {
     case "fileUpload":
         $args->uploadOp = fileUploadManagement($db, $args->tcversion_id,
             $args->fileTitle, $tcaseMgr->getAttachmentTableName());
-        $commandMgr->show($args, $_REQUEST, array(
+        $commandMgr->show($args, $_REQUEST, [
             'status_ok' => true
-        ), [
+        ], [
             'updateCFOnDB' => false
         ]);
         break;
@@ -141,9 +141,9 @@ switch ($args->doAction) {
         if ($args->tcversion_id == 0 && null != $fileInfo) {
             $args->tcversion_id = $fileInfo['fk_id'];
         }
-        $commandMgr->show($args, $_REQUEST, array(
+        $commandMgr->show($args, $_REQUEST, [
             'status_ok' => true
-        ), [
+        ], [
             'updateCFOnDB' => false
         ]);
         break;
@@ -165,9 +165,9 @@ if ($args->delete_tc_version) {
     $sq = null;
     if (! is_null($exec_status_quo) &&
         isset($exec_status_quo[$args->tcversion_id])) {
-        $sq = array(
+        $sq = [
             $args->tcversion_id => $exec_status_quo[$args->tcversion_id]
-        );
+        ];
     }
 
     if (intval($status_quo_map[$args->tcversion_id]['executed'])) {
@@ -236,14 +236,14 @@ if ($args->delete_tc_version) {
     $user_feedback = '';
     $msg = '';
     $action_result = 'copied';
-    $options = array(
+    $options = [
         'check_duplicate_name' => config_get('check_names_for_duplicates'),
         'action_on_duplicate_name' => config_get('action_on_duplicate_name'),
         'copy_also' => $args->copy,
         'stepAsGhost' => $args->do_copy_ghost_zone,
         'use_this_name' => $args->name,
         'copyOnlyLatest' => $args->copyOnlyLatestVersion
-    );
+    ];
 
     $result = $tcaseMgr->copy_to($args->tcase_id, $args->new_container_id,
         $args->user_id, $options);
@@ -351,13 +351,13 @@ function initArgs(&$cfgObj, $otName, &$tcaseMgr)
 
     $args->doAction = isset($_REQUEST['doAction']) ? $_REQUEST['doAction'] : '';
 
-    $key2loop = array(
+    $key2loop = [
         'edit_tc' => 'edit',
         'delete_tc' => 'delete',
         'do_delete' => 'doDelete',
         'create_tc' => 'create',
         'do_create' => 'doCreate'
-    );
+    ];
 
     foreach ($key2loop as $key => $action) {
         if (isset($_REQUEST[$key])) {
@@ -366,7 +366,7 @@ function initArgs(&$cfgObj, $otName, &$tcaseMgr)
         }
     }
 
-    $key2loop = array(
+    $key2loop = [
         'move_copy_tc',
         'delete_tc_version',
         'do_move',
@@ -375,7 +375,7 @@ function initArgs(&$cfgObj, $otName, &$tcaseMgr)
         'do_delete_tc_version',
         'do_create_new_version',
         'do_create_new_version_from_latest'
-    );
+    ];
     foreach ($key2loop as $key) {
         $args->$key = isset($_REQUEST[$key]) ? 1 : 0;
     }
@@ -389,10 +389,10 @@ function initArgs(&$cfgObj, $otName, &$tcaseMgr)
 
     $args->target_position = isset($_REQUEST['target_position']) ? $_REQUEST['target_position'] : 'bottom';
 
-    $key2loop = array(
+    $key2loop = [
         "keyword_assignments",
         "requirement_assignments"
-    );
+    ];
     foreach ($key2loop as $key) {
         $args->copy[$key] = isset($_REQUEST[$key]) ? true : false;
     }
@@ -427,7 +427,7 @@ function initArgs(&$cfgObj, $otName, &$tcaseMgr)
     $args->goback_url = isset($_REQUEST['goback_url']) ? $_REQUEST['goback_url'] : null;
 
     // Specialized webEditorConfiguration
-    $action2check = array(
+    $action2check = [
         "editStep" => true,
         "createStep" => true,
         "doCreateStep" => true,
@@ -435,7 +435,7 @@ function initArgs(&$cfgObj, $otName, &$tcaseMgr)
         "doInsertStep" => true,
         "doCopyStep" => true,
         "doUpdateStepAndInsert" => true
-    );
+    ];
     if (isset($action2check[$args->doAction])) {
         $cfgObj->webEditorCfg = getWebEditorCfg('steps_design');
     }
@@ -462,10 +462,10 @@ function initArgs(&$cfgObj, $otName, &$tcaseMgr)
 
     $args->relation_destination_tcase = str_replace(' ', '',
         $args->relation_destination_tcase);
-    $getOpt = array(
+    $getOpt = [
         'tproject_id' => null,
         'output' => 'map'
-    );
+    ];
     if (is_numeric($args->relation_destination_tcase)) {
         $getOpt['tproject_id'] = $args->tproject_id;
     }
@@ -490,10 +490,10 @@ function initArgs(&$cfgObj, $otName, &$tcaseMgr)
     $cbk = 'changeExecTypeOnSteps';
     $args->applyExecTypeChangeToAllSteps = isset($_REQUEST[$cbk]);
 
-    $k2c = array(
+    $k2c = [
         'free_keywords',
         'free_platforms'
-    );
+    ];
     foreach ($k2c as $kv) {
         $args->$kv = isset($_REQUEST[$kv]) ? $_REQUEST[$kv] : null;
     }
@@ -554,16 +554,16 @@ function createWebEditors($basehref, $editorCfg, $editorSet = null)
     // Rows and Cols configuration
     $owe = new stdClass();
 
-    $cols = array(
-        'steps' => array(
+    $cols = [
+        'steps' => [
             'horizontal' => 38,
             'vertical' => 44
-        ),
-        'expected_results' => array(
+        ],
+        'expected_results' => [
             'horizontal' => 38,
             'vertical' => 44
-        )
-    );
+        ]
+    ];
 
     $editorsCfg = config_get('gui')->text_editor;
     $owe->cfg = [
@@ -583,7 +583,7 @@ function createWebEditors($basehref, $editorCfg, $editorSet = null)
         ]
     ];
 
-    $owe->editor = array();
+    $owe->editor = [];
     $force_create = is_null($editorSet);
     foreach ($owe->cfg as $key => $value) {
         if ($force_create || isset($editorSet[$key])) {
@@ -607,23 +607,23 @@ function getCfg()
     $cfg->treemenu_default_testcase_order = config_get(
         'treemenu_default_testcase_order');
     $cfg->spec = config_get('spec_cfg');
-    $cfg->exclude_node_types = array(
+    $cfg->exclude_node_types = [
         'testplan' => 1,
         'requirement' => 1,
         'requirement_spec' => 1
-    );
+    ];
     $cfg->tcase_template = config_get('testcase_template');
     $cfg->webEditorCfg = getWebEditorCfg('design');
 
     $cfg->editorKeys = new stdClass();
-    $cfg->editorKeys->testcase = array(
+    $cfg->editorKeys->testcase = [
         'summary' => true,
         'preconditions' => true
-    );
-    $cfg->editorKeys->step = array(
+    ];
+    $cfg->editorKeys->step = [
         'steps' => true,
         'expected_results' => true
-    );
+    ];
 
     return $cfg;
 }
@@ -695,7 +695,7 @@ function initializeGui(&$dbHandler, &$argsObj, $cfgObj, &$tcaseMgr, &$tprojMgr)
 
     $guiObj->domainTCStatus = $argsObj->tcStatusCfg['code_label'];
 
-    $grant2check = array(
+    $grant2check = [
         'mgt_modify_tc',
         'mgt_view_req',
         'testplan_planning',
@@ -704,7 +704,7 @@ function initializeGui(&$dbHandler, &$argsObj, $cfgObj, &$tcaseMgr, &$tprojMgr)
         'req_tcase_link_management',
         'testproject_edit_executed_testcases',
         'testproject_delete_executed_testcases'
-    );
+    ];
     $guiObj->grants = new stdClass();
     foreach ($grant2check as $right) {
         $guiObj->$right = $guiObj->grants->$right = $argsObj->user->hasRight(
@@ -747,7 +747,7 @@ function renderGui(&$argsObj, $guiObj, $opObj, $templateCfg, $cfgObj,
     //
     // used to set value of: $guiObj->operation
     //
-    $actionOperation = array(
+    $actionOperation = [
         'create' => 'doCreate',
         'doCreate' => 'doCreate',
         'edit' => 'doUpdate',
@@ -759,9 +759,9 @@ function renderGui(&$argsObj, $guiObj, $opObj, $templateCfg, $cfgObj,
         'doUpdateStep' => 'doUpdateStep',
         'doInsertStep' => 'doUpdateStep',
         'doUpdateStepAndInsert' => 'doUpdateStep'
-    );
+    ];
 
-    $nak = array(
+    $nak = [
         'doDelete',
         'doDeleteStep',
         'doReorderSteps',
@@ -778,7 +778,7 @@ function renderGui(&$argsObj, $guiObj, $opObj, $templateCfg, $cfgObj,
         'addKeyword',
         'removePlatform',
         'addPlatform'
-    );
+    ];
 
     foreach ($nak as $ak) {
         $actionOperation[$ak] = '';
@@ -944,8 +944,8 @@ function createNewVersion(&$tplEng, &$argsObj, &$guiObj, &$tcaseMgr,
         "&show_mode={$argsObj->show_mode}";
 
     $tcaseMgr->show($tplEng, $guiObj, $identity, $guiObj->grants,
-        array(
+        [
             'getAttachments' => true
-        ));
+        ]);
     exit();
 }

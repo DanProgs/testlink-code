@@ -26,30 +26,30 @@ class bugzilladbInterface extends issueTrackerInterface
         if ($this->connected) {
             // For bugzilla status code is not important.
             // Design Choice make it equal to verbose. Important bugzilla uses UPPERCASE
-            $this->defaultResolvedStatus = array();
-            $this->defaultResolvedStatus[] = array(
+            $this->defaultResolvedStatus = [];
+            $this->defaultResolvedStatus[] = [
                 'code' => 'RESOLVED',
                 'verbose' => 'RESOLVED'
-            );
-            $this->defaultResolvedStatus[] = array(
+            ];
+            $this->defaultResolvedStatus[] = [
                 'code' => 'VERIFIED',
                 'verbose' => 'VERIFIED'
-            );
-            $this->defaultResolvedStatus[] = array(
+            ];
+            $this->defaultResolvedStatus[] = [
                 'code' => 'CLOSED',
                 'verbose' => 'CLOSED'
-            );
+            ];
 
             $this->setResolvedStatusCfg();
 
             $this->interfaceViaDB = true;
-            $this->guiCfg = array(
+            $this->guiCfg = [
                 'use_decoration' => true
-            ); // add [] on summary
-            $this->methodOpt['buildViewBugLink'] = array(
+            ]; // add [] on summary
+            $this->methodOpt['buildViewBugLink'] = [
                 'addSummary' => true,
                 'colorByStatus' => false
-            );
+            ];
         }
     }
 

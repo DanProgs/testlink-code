@@ -41,9 +41,9 @@ function initArgs(&$dbHandler)
     $env['tplan_id'] = 0;
 
     $check = new stdClass();
-    $check->items = array(
+    $check->items = [
         'mgt_view_key'
-    );
+    ];
     $check->mode = 'and';
     checkAccess($dbHandler, $user, $env, $check);
 

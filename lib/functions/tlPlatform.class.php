@@ -68,18 +68,18 @@ class tlPlatform extends tlObjectWithDB
      */
     public function create($platform)
     {
-        $op = array(
+        $op = [
             'status' => self::E_DBERROR,
             'id' => - 1
-        );
+        ];
         $safeName = $this->throwIfEmptyName($platform->name);
         $alreadyExists = $this->getID($safeName);
 
         if ($alreadyExists) {
-            $op = array(
+            $op = [
                 'status' => self::E_NAMEALREADYEXISTS,
                 'id' => - 1
-            );
+            ];
         } else {
             $sql = "INSERT INTO {$this->tables['platforms']}
               (name, testproject_id, notes,
@@ -115,15 +115,15 @@ class tlPlatform extends tlObjectWithDB
     public function getByID($id, $opt = null)
     {
         $idSet = implode(',', (array) $id);
-        $options = array(
+        $options = [
             'fields' => $this->stdFields,
             'accessKey' => null
-        );
+        ];
         $options = array_merge($options, (array) $opt);
 
         $sql = " SELECT {$options['fields']}
               FROM {$this->tables['platforms']}
-              WHERE id IN ($idSet) ";
+              WHERE id IN ({$idSet}) ";
 
         switch ($options['accessKey']) {
             case 'id':
@@ -240,7 +240,7 @@ class tlPlatform extends tlObjectWithDB
             foreach ($idSet as $platform_id) {
                 $sql = " INSERT INTO {$this->tables['testplan_platforms']} " .
                     " (testplan_id, platform_id) " .
-                    " VALUES ($testplan_id, $platform_id)";
+                    " VALUES ({$testplan_id}, {$platform_id})";
                 $result = $this->db->exec_query($sql);
                 if (! $result) {
                     break;
@@ -302,28 +302,28 @@ class tlPlatform extends tlObjectWithDB
      */
     public function getAll($options = null)
     {
-        $default = array(
+        $default = [
             'include_linked_count' => false,
             'enable_on_design' => false,
             'enable_on_execution' => true,
             'is_open' => true
-        );
+        ];
         $options = array_merge($default, (array) $options);
 
         $tproject_filter = " WHERE PLAT.testproject_id = {$this->tproject_id} ";
 
         $filterEnableOn = "";
-        $enaSet = array(
+        $enaSet = [
             'enable_on_design',
             'enable_on_execution',
             'is_open'
-        );
+        ];
         foreach ($enaSet as $ena) {
             if (null == $options[$ena]) {
                 continue;
             }
             if (is_bool($options[$ena]) || is_int($options[$ena])) {
-                $filterEnableOn .= " AND $ena = " . ($options[$ena] ? 1 : 0);
+                $filterEnableOn .= " AND {$ena} = " . ($options[$ena] ? 1 : 0);
             }
         }
 
@@ -369,14 +369,14 @@ class tlPlatform extends tlObjectWithDB
      */
     public function getAllAsMap($opt = null)
     {
-        $options = array(
+        $options = [
             'accessKey' => 'id',
             'output' => 'columns',
             'orderBy' => ' ORDER BY name ',
             'enable_on_design' => true,
             'enable_on_execution' => true,
             'is_open' => true
-        );
+        ];
 
         $options = array_merge($options, (array) $opt);
         $accessKey = $options['accessKey'];
@@ -395,12 +395,12 @@ class tlPlatform extends tlObjectWithDB
                 continue;
             }
             if (is_bool($options[$ena]) || is_int($options[$ena])) {
-                $filterEnableOn .= " AND $ena = " . ($options[$ena] ? 1 : 0);
+                $filterEnableOn .= " AND {$ena} = " . ($options[$ena] ? 1 : 0);
             }
         }
 
         $debugMsg = 'Class:' . __CLASS__ . ' - Method: ' . __FUNCTION__;
-        $sql = "/* $debugMsg */
+        $sql = "/* {$debugMsg} */
              SELECT {$this->stdFields}
              FROM {$this->tables['platforms']}
              WHERE testproject_id = {$this->tproject_id}
@@ -423,7 +423,7 @@ class tlPlatform extends tlObjectWithDB
     public function platformsActiveForTestplan($testplan_id)
     {
         $debugMsg = 'Class:' . __CLASS__ . ' - Method: ' . __FUNCTION__;
-        $sql = "/* $debugMsg */ SELECT COUNT(0) AS num " .
+        $sql = "/* {$debugMsg} */ SELECT COUNT(0) AS num " .
             " FROM {$this->tables['testplan_platforms']} " .
             " WHERE testplan_id = {$testplan_id}";
         $num_tplans = $this->db->fetchOneValue($sql);
@@ -445,15 +445,15 @@ class tlPlatform extends tlObjectWithDB
         // array => indexed array
         // mapAccessByID => map access key: id
         // mapAccessByName => map access key: name
-        $my['options'] = array(
+        $my['options'] = [
             'outputFormat' => 'array',
             'orderBy' => ' ORDER BY name '
-        );
+        ];
         $my['options'] = array_merge($my['options'], (array) $options);
 
         $debugMsg = 'Class:' . __CLASS__ . ' - Method: ' . __FUNCTION__;
         $rs = null;
-        $sql = "/* $debugMsg */
+        $sql = "/* {$debugMsg} */
             SELECT P.id, P.name, P.notes,
                    P.enable_on_design,
                    P.enable_on_execution,
@@ -490,21 +490,21 @@ class tlPlatform extends tlObjectWithDB
     public function getLinkedToTestplanAsMap($testplanID, $opt = null)
     {
         // null -> any
-        $options = array(
+        $options = [
             'orderBy' => ' ORDER BY name ',
             'enable_on_design' => null,
             'enable_on_execution' => true
-        );
+        ];
 
         $options = array_merge($options, (array) $opt);
 
         $orderBy = $options['orderBy'];
 
         $filterEnableOn = "";
-        $enaSet = array(
+        $enaSet = [
             'enable_on_design',
             'enable_on_execution'
-        );
+        ];
         foreach ($enaSet as $ena) {
             if ($options[$ena] == null) {
                 // do not filter
@@ -512,12 +512,12 @@ class tlPlatform extends tlObjectWithDB
             }
 
             if (is_bool($options[$ena]) || is_int($options[$ena])) {
-                $filterEnableOn .= " AND $ena = " . ($options[$ena] ? 1 : 0);
+                $filterEnableOn .= " AND {$ena} = " . ($options[$ena] ? 1 : 0);
             }
         }
 
         $debugMsg = 'Class:' . __CLASS__ . ' - Method: ' . __FUNCTION__;
-        $sql = "/* $debugMsg */ SELECT P.id, P.name, P.is_open " .
+        $sql = "/* {$debugMsg} */ SELECT P.id, P.name, P.is_open " .
             " FROM {$this->tables['platforms']} P " .
             " JOIN {$this->tables['testplan_platforms']} TP " .
             " ON P.id = TP.platform_id " .
@@ -571,9 +571,9 @@ class tlPlatform extends tlObjectWithDB
     {
         $debugMsg = '/* Class:' . __CLASS__ . ' - Method: ' . __FUNCTION__ .
             '*/ ';
-        $my['opt'] = array(
+        $my['opt'] = [
             'range' => 'tproject'
-        );
+        ];
         $my['opt'] = array_merge($my['opt'], (array) $opt);
 
         // HINT: COALESCE(COUNT(PLAT.id),0)
@@ -626,23 +626,23 @@ class tlPlatform extends tlObjectWithDB
         $cfg = getWebEditorCfg('platform');
         $gaga->editorType = $cfg['type'];
         $gaga->user_feedback = null;
-        $gaga->user_feedback = array(
+        $gaga->user_feedback = [
             'type' => 'INFO',
             'message' => ''
-        );
+        ];
 
-        $opx = array(
+        $opx = [
             'include_linked_count' => true,
             'enable_on_design' => null,
             'enable_on_execution' => null,
             'is_open' => null
-        );
+        ];
         $gaga->platforms = $this->getAll($opx);
 
-        $rx = array(
+        $rx = [
             'canManage' => 'platform_management',
             'mgt_view_events' => 'mgt_view_events'
-        );
+        ];
         foreach ($rx as $prop => $right) {
             $gaga->$prop = $userObj->hasRight($this->db->db, $right,
                 $this->tproject_id);
@@ -657,7 +657,7 @@ class tlPlatform extends tlObjectWithDB
     {
         $sql = "UPDATE {$this->tables['platforms']}
             SET enable_on_design = 1
-            WHERE id = $id";
+            WHERE id = {$id}";
         $this->db->exec_query($sql);
     }
 
@@ -667,7 +667,7 @@ class tlPlatform extends tlObjectWithDB
     {
         $sql = "UPDATE {$this->tables['platforms']}
             SET enable_on_design = 0
-            WHERE id = $id";
+            WHERE id = {$id}";
         $this->db->exec_query($sql);
     }
 
@@ -677,7 +677,7 @@ class tlPlatform extends tlObjectWithDB
     {
         $sql = "UPDATE {$this->tables['platforms']}
             SET enable_on_execution = 1
-            WHERE id = $id";
+            WHERE id = {$id}";
         $this->db->exec_query($sql);
     }
 
@@ -687,7 +687,7 @@ class tlPlatform extends tlObjectWithDB
     {
         $sql = "UPDATE {$this->tables['platforms']}
             SET enable_on_execution = 0
-            WHERE id = $id";
+            WHERE id = {$id}";
         $this->db->exec_query($sql);
     }
 
@@ -697,7 +697,7 @@ class tlPlatform extends tlObjectWithDB
     {
         $sql = "UPDATE {$this->tables['platforms']}
             SET is_open = 1
-            WHERE id = $id";
+            WHERE id = {$id}";
         $this->db->exec_query($sql);
     }
 
@@ -707,19 +707,19 @@ class tlPlatform extends tlObjectWithDB
     {
         $sql = "UPDATE {$this->tables['platforms']}
             SET is_open = 0
-            WHERE id = $id";
+            WHERE id = {$id}";
         $this->db->exec_query($sql);
     }
 
     private function getAsXMLString($tproject_id)
     {
         $debugMsg = 'Class:' . __CLASS__ . ' - Method: ' . __FUNCTION__;
-        $tables = tlObjectWithDB::getDBTables(array(
+        $tables = tlObjectWithDB::getDBTables([
             'platforms'
-        ));
+        ]);
         $adodbXML = new ADODB_XML("1.0", "UTF-8");
 
-        $sql = "/* $debugMsg */
+        $sql = "/* {$debugMsg} */
             SELECT name,notes,enable_on_design,
             enable_on_execution
             FROM {$tables['platforms']} PLAT

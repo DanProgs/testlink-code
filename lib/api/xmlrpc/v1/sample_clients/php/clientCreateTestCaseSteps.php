@@ -18,16 +18,16 @@ $tcCounter ++;
 $method = 'createTestCaseSteps';
 $unitTestDescription = "Test #{$tcCounter}- {$method}";
 
-$args = array();
+$args = [];
 $args["devKey"] = DEV_KEY;
 $args["testcaseexternalid"] = 'MKO-1';
 $args["version"] = 1;
 $args["action"] = 'push'; // 'update', 'push','create'
-$args["steps"][] = array(
+$args["steps"][] = [
     'step_number' => 12,
     'actions' => 'SKIP !!!!Start Server Ubuntu 11.04',
     'expected_results' => 'green light' . ' ' . $args["action"]
-);
+];
 
 $debug = true;
 echo $unitTestDescription;
@@ -41,14 +41,14 @@ $tcCounter ++;
 $method = 'createTestCaseSteps';
 $unitTestDescription = "Test #{$tcCounter}- {$method}";
 
-$args = array();
+$args = [];
 $args["devKey"] = DEV_KEY;
 $args["testcaseexternalid"] = 'MKO-1';
-$args["steps"][] = array(
+$args["steps"][] = [
     'step_number' => 1,
     'actions' => 'Start Server',
     'expected_results' => 'green light'
-);
+];
 $args["authorlogin"] = 'admin';
 
 $debug = true;
@@ -62,15 +62,15 @@ $tcCounter ++;
 $method = 'createTestCaseSteps';
 $unitTestDescription = "Test #{$tcCounter}- {$method}";
 
-$args = array();
+$args = [];
 $args["devKey"] = DEV_KEY;
 $args["testcaseexternalid"] = 'MKO-1';
 $args["version"] = 100;
-$args["steps"][] = array(
+$args["steps"][] = [
     'step_number' => 1,
     'actions' => 'Start Server VERSION DOES NOT EXIST',
     'expected_results' => 'green light'
-);
+];
 $args["authorlogin"] = 'admin';
 
 $debug = true;

@@ -29,7 +29,7 @@ require_once 'exec.inc.php'; // used for bug string lookup
 
 $tplCfg = templateConfiguration();
 
-list ($tplan_mgr, $args) = initArgsForReports($db);
+[$tplan_mgr, $args] = initArgsForReports($db);
 $statusCode = $args->statusCode;
 
 $tplan_mgr = new testplan($db);
@@ -54,11 +54,11 @@ if (! is_null($metrics) && ! empty($metrics)) {
     $userAccessKey = $gui->userAccessKey;
     $notesAccessKey = $gui->notesAccessKey;
 
-    $urlSafeString = array();
+    $urlSafeString = [];
     $urlSafeString['tprojectPrefix'] = urlencode($gui->tproject_info['prefix']);
     $urlSafeString['basehref'] = str_replace(" ", "%20", $args->basehref);
 
-    $out = array();
+    $out = [];
     $users = getUsersForHtmlOptions($db);
     $pathCache = null;
     $nameCache = initNameCache($gui);
@@ -80,9 +80,9 @@ if (! is_null($metrics) && ! empty($metrics)) {
         // ---------------------------------------------------------------------
         // do some decode work, using caches
         if (! isset($pathCache[$exec['tcase_id']])) {
-            $dummy = $tcaseMgr->getPathLayered(array(
+            $dummy = $tcaseMgr->getPathLayered([
                 $exec['tcase_id']
-            ));
+            ]);
             $pathCache[$exec['tcase_id']] = $dummy[$exec['tsuite_id']]['value'];
             $levelCache[$exec['tcase_id']] = $dummy[$exec['tsuite_id']]['level'];
             $ky = current(array_keys($dummy));
@@ -172,7 +172,7 @@ if (! is_null($metrics) && ! empty($metrics)) {
         // verbose user
         if ($args->type == $statusCode['not_run']) {
             natsort($exec[$userAccessKey]);
-            $zux = array();
+            $zux = [];
             foreach ($exec[$userAccessKey] as $vux) {
                 if (isset($users, $vux)) {
                     $zux[] = htmlspecialchars($users[$vux]);
@@ -228,10 +228,10 @@ if (! is_null($metrics) && ! empty($metrics)) {
             $bugString = '';
             if ($gui->bugInterfaceOn && $exec['status'] != $statusCode['not_run']) {
                 $bugSet = get_bugs_for_exec($db, $its, $exec['executions_id'],
-                    array(
+                    [
                         'id',
                         'summary'
-                    ));
+                    ]);
                 if (count($bugSet) == 0) {
                     $gui->without_bugs_counter += 1;
                 }
@@ -293,27 +293,27 @@ displayReport($tplCfg->template_dir . $tplCfg->default_template, $smarty,
  */
 function initArgs(&$dbHandler)
 {
-    $iParams = array(
-        "apikey" => array(
+    $iParams = [
+        "apikey" => [
             tlInputParameter::STRING_N,
             32,
             64
-        ),
-        "tproject_id" => array(
+        ],
+        "tproject_id" => [
             tlInputParameter::INT_N
-        ),
-        "tplan_id" => array(
+        ],
+        "tplan_id" => [
             tlInputParameter::INT_N
-        ),
-        "format" => array(
+        ],
+        "format" => [
             tlInputParameter::INT_N
-        ),
-        "type" => array(
+        ],
+        "type" => [
             tlInputParameter::STRING_N,
             0,
             1
-        )
-    );
+        ]
+    ];
 
     $args = new stdClass();
     R_PARAMS($iParams, $args);
@@ -364,7 +364,7 @@ function initializeGui(&$dbh, &$argsObj, &$tplanMgr)
     $guiObj = new stdClass();
 
     $guiObj->labels = init_labels(
-        array(
+        [
             'deleted_user' => null,
             'design' => null,
             'execution' => null,
@@ -374,7 +374,7 @@ function initializeGui(&$dbh, &$argsObj, &$tplanMgr)
             'th_bugs_not_linked' => null,
             'info_notrun_tc_report' => null,
             'info_xls_report_results_by_status' => null
-        ));
+        ]);
 
     $guiObj->report_context = $guiObj->labels['info_only_with_tester_assignment'];
     $guiObj->info_xls_report = $guiObj->labels['info_xls_report_results_by_status'];
@@ -483,10 +483,10 @@ function checkRights(&$db, &$user, $context = null)
  */
 function buildMailCfg(&$guiObj)
 {
-    $labels = array(
+    $labels = [
         'testplan' => lang_get('testplan'),
         'testproject' => lang_get('testproject')
-    );
+    ];
     $cfg = new stdClass();
     $cfg->cc = '';
     $cfg->subject = $guiObj->title . ' : ' . $labels['testproject'] . ' : ' .
@@ -638,7 +638,7 @@ function buildMatrix($dataSet, &$args, $options = [], $platforms = null,
  */
 function featureLinks($lbl, $img)
 {
-    $links = array();
+    $links = [];
 
     // %s => test case id
     $links['exec_history'] = '<a href="javascript:openExecHistoryWindow(%s);" >' .
@@ -667,10 +667,10 @@ function featureLinks($lbl, $img)
  */
 function initNameCache($guiObj)
 {
-    $safeItems = array(
+    $safeItems = [
         'build' => null,
         'platform' => null
-    );
+    ];
 
     foreach ($guiObj->buildSet as $id => $name) {
         $safeItems['build'][$id] = htmlspecialchars($name);
@@ -694,11 +694,11 @@ function initNameCache($guiObj)
 function getWarning($targetStatus, $statusCfg)
 {
     $msg = '';
-    $key2check = array(
+    $key2check = [
         'not_run',
         'failed',
         'blocked'
-    );
+    ];
     foreach ($key2check as $statusVerbose) {
         if ($targetStatus == $statusCfg[$statusVerbose]) {
             $msg = lang_get('no_' . $statusVerbose . '_with_tester');
@@ -755,12 +755,12 @@ function createSpreadsheet($gui, $args, $customFieldColumns = null)
     // bugString [empty string]
 
     //
-    $dataHeader = array(
+    $dataHeader = [
         $lbl['title_test_suite_name'],
         $lbl['title_test_case_title'],
         $lbl['version'],
         $lbl['summary']
-    );
+    ];
 
     // if( $showPlatforms = ( property_exists($gui,'platformSet') && !is_null($gui->platformSet) && !isset($gui->platformSet[0])) )
     if (property_exists($gui, 'platformSet') && ! is_null($gui->platformSet) &&
@@ -849,14 +849,14 @@ function createSpreadsheet($gui, $args, $customFieldColumns = null)
         $ema->message = $gui->mailCfg->subject;
 
         $dum = uniqid("resultsByStatus_") . '.xls';
-        $oops = array(
-            'attachment' => array(
+        $oops = [
+            'attachment' => [
                 'file' => $tmpfname,
                 'newname' => $dum
-            ),
+            ],
             'exit_on_error' => true,
             'htmlFormat' => true
-        );
+        ];
         $email_op = email_send_wrapper($ema, $oops);
         unlink($tmpfname);
         exit();
@@ -879,9 +879,9 @@ function getMetrics(&$dbh, &$args, &$gui)
     $metricsMgr = new tlTestPlanMetrics($dbh);
 
     if ($args->type == $statusCode['not_run']) {
-        $opt = array(
+        $opt = [
             'output' => 'array'
-        );
+        ];
         if ($args->format == FORMAT_XLS) {
             $opt['add2fields'] = 'TCV.summary';
         }
@@ -894,10 +894,10 @@ function getMetrics(&$dbh, &$args, &$gui)
         $gui->notesAccessKey = 'summary';
         $gui->userAccessKey = 'user_id';
     } else {
-        $opt = array(
+        $opt = [
             'output' => 'mapByExecID',
             'getOnlyAssigned' => true
-        );
+        ];
         if ($args->format == FORMAT_XLS) {
             $opt['add2fields'] = 'TCV.summary';
         }
@@ -923,7 +923,7 @@ function getMetrics(&$dbh, &$args, &$gui)
 function initLblSpreadsheet()
 {
     return init_labels(
-        array(
+        [
             'title_test_suite_name' => null,
             'platform' => null,
             'build' => null,
@@ -938,7 +938,7 @@ function initLblSpreadsheet()
             'th_run_by' => null,
             'assigned_to' => null,
             'summary' => null
-        ));
+        ]);
 }
 
 /**
@@ -947,31 +947,31 @@ function initLblSpreadsheet()
  */
 function initStyleSpreadsheet()
 {
-    $sty = array();
-    $sty['ReportContext'] = array(
-        'font' => array(
+    $sty = [];
+    $sty['ReportContext'] = [
+        'font' => [
             'bold' => true
-        )
-    );
-    $sty['DataHeader'] = array(
-        'font' => array(
+        ]
+    ];
+    $sty['DataHeader'] = [
+        'font' => [
             'bold' => true
-        ),
-        'borders' => array(
-            'outline' => array(
+        ],
+        'borders' => [
+            'outline' => [
                 'style' => PHPExcel_Style_Border::BORDER_MEDIUM
-            ),
-            'vertical' => array(
+            ],
+            'vertical' => [
                 'style' => PHPExcel_Style_Border::BORDER_THIN
-            )
-        ),
-        'fill' => array(
+            ]
+        ],
+        'fill' => [
             'type' => PHPExcel_Style_Fill::FILL_SOLID,
-            'startcolor' => array(
+            'startcolor' => [
                 'argb' => 'FF9999FF'
-            )
-        )
-    );
+            ]
+        ]
+    ];
 
     return $sty;
 }
@@ -987,28 +987,28 @@ function initStyleSpreadsheet()
 function xlsStepOne($oj, $style, $lbl, $gui)
 {
     $dummy = '';
-    $lines2write = array(
-        array(
+    $lines2write = [
+        [
             $gui->title,
             ''
-        ),
-        array(
+        ],
+        [
             $lbl['testproject'],
             $gui->tproject_name
-        ),
-        array(
+        ],
+        [
             $lbl['testplan'],
             $gui->tplan_name
-        ),
-        array(
+        ],
+        [
             $lbl['generated_by_TestLink_on'],
             localize_dateOrTimeStamp(null, $dummy, 'timestamp_format', time())
-        ),
-        array(
+        ],
+        [
             $gui->report_context,
             ''
-        )
-    );
+        ]
+    ];
 
     $cellArea = "A1:";
     foreach ($lines2write as $zdx => $fields) {
@@ -1017,7 +1017,7 @@ function xlsStepOne($oj, $style, $lbl, $gui)
             ->setCellValue("A{$cdx}", current($fields))
             ->setCellValue("B{$cdx}", end($fields));
     }
-    $cellArea .= "A[$cdx]";
+    $cellArea .= "A[{$cdx}]";
     $oj->getActiveSheet()
         ->getStyle($cellArea)
         ->applyFromArray($style['ReportContext']);

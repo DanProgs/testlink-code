@@ -355,11 +355,11 @@ function checkForRepositoryDir($the_dir)
  */
 function checkSchemaVersion(&$db)
 {
-    $result = array(
+    $result = [
         'status' => tl::ERROR,
         'msg' => null,
         'kill_session' => true
-    );
+    ];
     $latest_version = TL_LATEST_DB_VERSION;
     $db_version_table = DB_TABLE_PREFIX . 'db_version';
 
@@ -456,12 +456,12 @@ function checkEmailConfig()
     $common[] = lang_get('check_email_config');
     $msg = null;
     $idx = 1;
-    $key2get = array(
+    $key2get = [
         'tl_admin_email',
         'from_email',
         'return_path_email',
         'smtp_host'
-    );
+    ];
 
     foreach ($key2get as $cfg_key) {
         $cfg_param = config_get($cfg_key);
@@ -497,7 +497,7 @@ function check_php_settings(&$errCounter)
     }
     $final_msg .= "<tr><td>Checking maximal allowed memory (Parameter memory_limit)</td>";
     if ($memory_limit < $memory_limit_recommended) {
-        $final_msg .= "<td><span class='tab-warning'>$memory_limit MegaBytes - " .
+        $final_msg .= "<td><span class='tab-warning'>{$memory_limit} MegaBytes - " .
             "We suggest {$memory_limit_recommended} MB" .
             " in order to manage hundred of test cases</span></td></tr>";
     } else {
@@ -530,30 +530,30 @@ function checkPhpExtensions(&$errCounter)
     $td_failed = '<td><span class="tab-warning">Failed! %s %s.</span></td></tr>';
 
     $msg_support = '<tr><td>Checking %s </td>';
-    $checks = array();
+    $checks = [];
 
     // Database extensions
-    $checks[] = array(
+    $checks[] = [
         'extension' => 'pgsql',
-        'msg' => array(
+        'msg' => [
             'feedback' => 'Postgres Database',
             'ok' => $td_ok,
             'ko' => 'cannot be used'
-        )
-    );
+        ]
+    ];
 
     $mysqlExt = 'mysql';
     if (version_compare(phpversion(), "7.4.2", ">=")) {
         $mysqlExt = 'mysqli';
     }
-    $checks[] = array(
+    $checks[] = [
         'extension' => $mysqlExt,
-        'msg' => array(
+        'msg' => [
             'feedback' => 'MySQL Database',
             'ok' => $td_ok,
             'ko' => 'cannot be used'
-        )
-    );
+        ]
+    ];
 
     // ----------------------------------------------------------------------------
     // special check for MSSQL
@@ -585,53 +585,53 @@ function checkPhpExtensions(&$errCounter)
             $extid = 'sqlsrv';
         }
     }
-    $checks[] = array(
+    $checks[] = [
         'extension' => $extid,
-        'msg' => array(
+        'msg' => [
             'feedback' => 'MSSQL Database',
             'ok' => $td_ok,
             'ko' => 'cannot be used'
-        )
-    );
+        ]
+    ];
     // ---------------------------------------------------------------------------------------------------------
 
-    $checks[] = array(
+    $checks[] = [
         'extension' => 'gd',
-        'msg' => array(
+        'msg' => [
             'feedback' => 'GD Graphic library',
             'ok' => $td_ok,
             'ko' => " not enabled.<br>Graph rendering requires it. This feature will be disabled." .
             " It's recommended to install it."
-        )
-    );
+        ]
+    ];
 
-    $checks[] = array(
+    $checks[] = [
         'extension' => 'ldap',
-        'msg' => array(
+        'msg' => [
             'feedback' => 'LDAP library',
             'ok' => $td_ok,
             'ko' => " not enabled. LDAP authentication cannot be used. " .
             "(default internal authentication will works)"
-        )
-    );
+        ]
+    ];
 
-    $checks[] = array(
+    $checks[] = [
         'extension' => 'json',
-        'msg' => array(
+        'msg' => [
             'feedback' => 'JSON library',
             'ok' => $td_ok,
             'ko' => " not enabled. You MUST install it to use EXT-JS tree component. "
-        )
-    );
+        ]
+    ];
 
-    $checks[] = array(
+    $checks[] = [
         'extension' => 'curl',
-        'msg' => array(
+        'msg' => [
             'feedback' => 'cURL library',
             'ok' => $td_ok,
             'ko' => " not enabled. You MUST install it to use REST Integration with issue trackers. "
-        )
-    );
+        ]
+    ];
 
     $out = '';
     foreach ($checks as $test) {
@@ -672,7 +672,7 @@ function check_session(&$errCounter)
         $errCounter ++;
     }
 
-    $out .= "<td><span class='tab-$color'>$msg</span></td></tr>\n";
+    $out .= "<td><span class='tab-{$color}'>{$msg}</span></td></tr>\n";
     return $out;
 }
 
@@ -704,8 +704,8 @@ function check_timeout(&$errCounter)
         $res = 'Too short. It must be extended!';
         $errCounter ++;
     }
-    $out .= "<td><span class='tab-$color'>" . $gc_maxlifetime_min .
-        " minutes and $gc_maxlifetime_sec seconds - ($res)</span></td></tr>\n";
+    $out .= "<td><span class='tab-{$color}'>" . $gc_maxlifetime_min .
+        " minutes and {$gc_maxlifetime_sec} seconds - ({$res})</span></td></tr>\n";
 
     return $out;
 }

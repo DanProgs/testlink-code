@@ -20,10 +20,10 @@ class SampleXMLRPCServer extends TestlinkXMLRPCServer
     public function __construct()
     {
         openlog("testlink", LOG_ODELAY, LOG_LOCAL1);
-        $callbacks = array(
+        $callbacks = [
             'tl.getTestSuiteIDByName' => 'this:getTestSuiteIDByName',
             'tl.uploadStats' => 'this:uploadStats'
-        );
+        ];
         parent::__construct($callbacks);
     }
 
@@ -73,17 +73,17 @@ class SampleXMLRPCServer extends TestlinkXMLRPCServer
         $status_ok = true;
         $this->_setArgs($args);
 
-        $checkFunctions = array(
+        $checkFunctions = [
             'authenticate',
             'checkTestSuiteName'
-        );
+        ];
         $status_ok = $this->_runChecks($checkFunctions, $msg_prefix) &&
             $this->userHasRight("mgt_view_tc");
 
         if ($status_ok) {
-            $keys2check = array(
+            $keys2check = [
                 self::$testSuiteNameParamName
-            );
+            ];
 
             foreach ($keys2check as $key) {
                 if (! $this->_isParamPresent($key)) {

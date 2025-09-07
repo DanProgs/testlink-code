@@ -35,20 +35,20 @@ function initArgs()
 {
     $args = new stdClass();
 
-    $key2loop = array(
+    $key2loop = [
         'nodeid',
         'newparentid',
         'nodeorder'
-    );
+    ];
     foreach ($key2loop as $key) {
         $args->$key = isset($_REQUEST[$key]) ? intval($_REQUEST[$key]) : null;
     }
 
-    $key2loop = array(
+    $key2loop = [
         'doAction',
         'top_or_bottom',
         'nodelist'
-    );
+    ];
     foreach ($key2loop as $key) {
         $args->$key = isset($_REQUEST[$key]) ? $_REQUEST[$key] : null;
     }
