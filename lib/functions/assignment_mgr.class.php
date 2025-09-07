@@ -327,7 +327,7 @@ class assignment_mgr extends tlObjectWithDB
             " WHERE UA.build_id = {$build_id} AND E.status IS NULL {$type_sql} {$user_sql} ";
 
         if (isset($build_id) && is_numeric($build_id)) {
-            $count = count($this->db->fetchRowsIntoMap($sql, 'assignment_id'));
+            return count($this->db->fetchRowsIntoMap($sql, 'assignment_id'));
         }
 
         return $count;

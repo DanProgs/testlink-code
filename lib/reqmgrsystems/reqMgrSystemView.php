@@ -73,7 +73,9 @@ function initArgs()
 
 function checkRights(&$db, &$user)
 {
-    return $user->hasRight($db, "reqmgrsystem_view") ||
-        $user->hasRight($db, "reqmgrsystem_management");
+    if ($user->hasRight($db, "reqmgrsystem_view")) {
+        return true;
+    }
+    return (bool) $user->hasRight($db, "reqmgrsystem_management");
 }
 ?>

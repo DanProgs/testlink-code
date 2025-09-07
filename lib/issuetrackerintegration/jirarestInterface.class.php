@@ -142,9 +142,9 @@ class jirarestInterface extends issueTrackerInterface
             // $this->cfg is a simpleXML Object, then seems very conservative and safe
             // to cast properties BEFORE using it.
             $this->jiraCfg = [
-                'username' => (string) trim($this->cfg->username),
-                'password' => (string) trim($this->cfg->password),
-                'host' => (string) trim($this->cfg->uriapi)
+                'username' => trim($this->cfg->username),
+                'password' => trim($this->cfg->password),
+                'host' => trim($this->cfg->uriapi)
             ];
 
             $this->jiraCfg['proxy'] = config_get('proxy');
@@ -630,7 +630,7 @@ class jirarestInterface extends issueTrackerInterface
         }
 
         if ($status_ok && $this->cfg->userinteraction == 0) {
-            $status_ok = property_exists($this->cfg, 'issuetype');
+            return property_exists($this->cfg, 'issuetype');
         }
 
         return $status_ok;
@@ -642,7 +642,7 @@ class jirarestInterface extends issueTrackerInterface
     {
         $attr = get_object_vars($this->cfg->attributes);
         foreach ($attr as $name => $elem) {
-            $name = (string) $name;
+            $name = $name;
             switch ($name) {
                 case 'customFieldValues':
                     $this->getCustomFieldsAttribute($name, $elem);

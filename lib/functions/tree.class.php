@@ -412,7 +412,7 @@ class tree extends tlObject
         $the_path = [];
         $this->_get_path($node_id, $the_path, $to_node_id, $format);
         if (! is_null($the_path) && count($the_path) > 0) {
-            $the_path = array_reverse($the_path);
+            return array_reverse($the_path);
         }
         return $the_path;
     }

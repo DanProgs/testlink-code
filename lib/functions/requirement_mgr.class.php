@@ -2014,7 +2014,7 @@ class requirement_mgr extends tlObjectWithAttachments
         $xml = null;
         $cfMap = $this->get_linked_cfields($id, $version_id, $tproject_id);
         if (! empty($cfMap)) {
-            $xml = $this->cfield_mgr->exportValueAsXML($cfMap);
+            return $this->cfield_mgr->exportValueAsXML($cfMap);
         }
         return $xml;
     }

@@ -436,7 +436,7 @@ function sanitizeDates(&$obj)
     // [./-]
     // . russian,pl
     // - nl
-    $validFormat = '#^\d{1,2}[./-][[0-9]{1,2}[./-][[0-9]{4}$#';
+    $validFormat = '#^\d{1,2}[./-][\d{1,2}[./-][\d{4}$#';
 
     $p2check = [
         'selected_end_date',

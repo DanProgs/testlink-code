@@ -172,12 +172,11 @@ class testplan extends tlObjectWithAttachments
             "'," . "'" . $this->db->prepare_string($api_key) . "'," .
             $testproject_id . "," . $active_status . "," . $public_status . ")";
         $result = $this->db->exec_query($sql);
-        $id = 0;
         if ($result) {
-            $id = $tplan_id;
+            return $tplan_id;
         }
 
-        return $id;
+        return 0;
     }
 
     /**
@@ -2010,11 +2009,10 @@ class testplan extends tlObjectWithAttachments
         }
 
         $recordset = $this->db->get_recordset($sql);
-        $maxBuildID = 0;
         if ($recordset) {
-            $maxBuildID = intval($recordset[0]['maxbuildid']);
+            return intval($recordset[0]['maxbuildid']);
         }
-        return $maxBuildID;
+        return 0;
     }
 
     /*
@@ -2190,7 +2188,7 @@ class testplan extends tlObjectWithAttachments
         // _natsort_builds() has to be used ONLY if name is used on ORDER BY
         if (! is_null($rs) && $doOrderBy &&
             strpos($my['opt']['orderBy'], 'name') !== false) {
-            $rs = $this->natsortBuilds($rs);
+            return $this->natsortBuilds($rs);
         }
 
         return $rs;
@@ -2216,11 +2214,10 @@ class testplan extends tlObjectWithAttachments
             " WHERE testplan_id = {$id} AND name='{$safe_build_name}'";
 
         $recordset = $this->db->get_recordset($sql);
-        $rs = null;
         if (! is_null($recordset)) {
-            $rs = $recordset[0];
+            return $recordset[0];
         }
-        return $rs;
+        return null;
     }
 
     /**
@@ -2241,11 +2238,10 @@ class testplan extends tlObjectWithAttachments
             " WHERE testplan_id = {$id} AND BUILDS.id={$build_id}";
 
         $recordset = $this->db->get_recordset($sql);
-        $rs = null;
         if (! is_null($recordset)) {
-            $rs = $recordset[0];
+            return $recordset[0];
         }
-        return $rs;
+        return null;
     }
 
     /**
@@ -2475,7 +2471,7 @@ class testplan extends tlObjectWithAttachments
         $cf_map = $this->$method_name($id, $parent_id);
 
         if (! is_null($cf_map)) {
-            $cf_smarty = $this->cfield_mgr->html_table_inputs($cf_map,
+            return $this->cfield_mgr->html_table_inputs($cf_map,
                 $name_suffix, $input_values);
         }
         return $cf_smarty;
@@ -2548,7 +2544,7 @@ class testplan extends tlObjectWithAttachments
         }
 
         if ($cf_smarty != '' && $add_table) {
-            $cf_smarty = "<table {$table_style}>" . $cf_smarty . "</table>";
+            return "<table {$table_style}>" . $cf_smarty . "</table>";
         }
         return $cf_smarty;
     }
@@ -3464,7 +3460,7 @@ class testplan extends tlObjectWithAttachments
 
         $sibling_tcversion = $pos < $elemQty ? $tcversionSet[$pos] : 0;
         if ($sibling_tcversion > 0) {
-            $sibling = [
+            return [
                 'tcase_id' => $sib[$sibling_tcversion]['testcase_id'],
                 'tcversion_id' => $sibling_tcversion
             ];
@@ -4934,7 +4930,7 @@ class testplan extends tlObjectWithAttachments
         $hits = is_null($recordset) ? $recordset : array_flip(
             array_keys($recordset));
 
-        $items = (array) $hits + (array) $notRunHits;
+        $items = $hits + (array) $notRunHits;
         return $items !== [] ? $items : null;
     }
 
@@ -4996,7 +4992,7 @@ class testplan extends tlObjectWithAttachments
         $hits = is_null($recordset) ? $recordset : array_flip(
             array_keys($recordset));
 
-        $items = (array) $hits + (array) $notRunHits;
+        $items = $hits + (array) $notRunHits;
         return $items !== [] ? $items : null;
     }
 
@@ -5730,7 +5726,7 @@ class testplan extends tlObjectWithAttachments
             'any' => null
         ];
         if (! is_null($domain[$options['build_active_status']])) {
-            $activeStatus = intval($domain[$options['build_active_status']]);
+            return intval($domain[$options['build_active_status']]);
         }
 
         return $activeStatus;
@@ -6377,7 +6373,7 @@ class testplan extends tlObjectWithAttachments
 
         $rs = $this->db->get_recordset($sql);
         if (! is_null($rs)) {
-            $rs = $my['opt']['collapse'] ? $rs[0] : $rs;
+            return $my['opt']['collapse'] ? $rs[0] : $rs;
         }
         return $rs;
     }
@@ -7953,7 +7949,7 @@ class build_mgr extends tlObject
         $id = 0;
         $result = $this->db->exec_query($sql);
         if ($result) {
-            $id = $this->db->insert_id($this->tables['builds']);
+            return $this->db->insert_id($this->tables['builds']);
         }
 
         return $id;
@@ -7997,7 +7993,7 @@ class build_mgr extends tlObject
         $id = 0;
         $result = $this->db->exec_query($sql);
         if ($result) {
-            $id = $this->db->insert_id($this->tables['builds']);
+            return $this->db->insert_id($this->tables['builds']);
         }
 
         return $id;
@@ -8300,7 +8296,7 @@ class build_mgr extends tlObject
         $method_name = "get_linked_cfields_at_{$method_suffix}";
         $cf_map = $this->$method_name($id, $tproject_id);
         if (! is_null($cf_map)) {
-            $cf_smarty = $this->cfield_mgr->html_table_inputs($cf_map,
+            return $this->cfield_mgr->html_table_inputs($cf_map,
                 $name_suffix, $input_values);
         }
         return $cf_smarty;
@@ -8327,7 +8323,7 @@ class build_mgr extends tlObject
         $method_name = "get_linked_cfields_at_{$method_suffix}";
         $cf_map = $this->$method_name($id, $tproject_id);
         if (! is_null($cf_map)) {
-            $itemSet = $this->cfield_mgr->html_inputs($cf_map, $name_suffix,
+            return $this->cfield_mgr->html_inputs($cf_map, $name_suffix,
                 $input_values);
         }
         return $itemSet;
@@ -8390,7 +8386,7 @@ class build_mgr extends tlObject
         }
 
         if ($cf_smarty != '' && $add_table) {
-            $cf_smarty = "<table {$table_style}>" . $cf_smarty . "</table>";
+            return "<table {$table_style}>" . $cf_smarty . "</table>";
         }
 
         return $cf_smarty;
@@ -8512,7 +8508,7 @@ class milestone_mgr extends tlObject
         $result = $this->db->exec_query($sql);
 
         if ($result) {
-            $item_id = $this->db->insert_id($this->tables['milestones']);
+            return $this->db->insert_id($this->tables['milestones']);
         }
 
         return $item_id;

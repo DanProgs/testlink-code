@@ -590,7 +590,7 @@ function renderReqSpecTreeForPrinting(&$db, &$node, &$options, $tocPrefix,
     }
 
     if ($verbose_node_type == 'testproject' && $options['toc']) {
-        $code = str_replace("{{INSERT_TOC}}", $options['tocCode'], $code);
+        return str_replace("{{INSERT_TOC}}", $options['tocCode'], $code);
     }
 
     return $code;
@@ -845,7 +845,7 @@ function renderTestSpecTreeForPrinting(&$db, &$node, &$options, $env, $context,
     }
 
     if ($node_type == 'testproject' && $options['toc']) {
-        $code = str_replace("{{INSERT_TOC}}", $options['tocCode'], $code);
+        return str_replace("{{INSERT_TOC}}", $options['tocCode'], $code);
     }
 
     return $code;
@@ -1903,7 +1903,7 @@ function renderTestDuration($statistics, $platform_id = 0)
     }
 
     if ($output != '') {
-        $output = "<div>\n" . $output . "</div>\n";
+        return "<div>\n" . $output . "</div>\n";
     }
 
     return $output;
@@ -1934,7 +1934,7 @@ function buildTestPlanMetrics($statistics, $platform_id = 0)
     $output = '';
     $dummy = renderTestDuration($statistics, $platform_id);
     if ($dummy != '') {
-        $output = '<h1 class="doclevel">' . $lbl . "</h1>\n" . $dummy;
+        return '<h1 class="doclevel">' . $lbl . "</h1>\n" . $dummy;
     }
     return $output;
 }

@@ -1385,7 +1385,7 @@ class cfield_mgr extends tlObject
         }
 
         if ($result) {
-            $ret = [
+            return [
                 'status_ok' => 1,
                 'id' => $field_id,
                 'msg' => 'ok'
@@ -1511,11 +1511,10 @@ class cfield_mgr extends tlObject
     public function name_is_unique($id, $name)
     {
         $cf = $this->get_by_name($name);
-        $status = 0;
         if (is_null($cf) || isset($cf[$id])) {
-            $status = 1;
+            return 1;
         }
-        return $status;
+        return 0;
     }
 
     # --------------------

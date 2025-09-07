@@ -318,7 +318,7 @@ class tlInventory extends tlObjectWithDB
         $this->initInventoryData($data);
         $result = $this->checkInventoryData();
         if ($result == tl::OK) {
-            $result = $this->writeToDB($this->db);
+            return $this->writeToDB($this->db);
         }
         return $result;
     }

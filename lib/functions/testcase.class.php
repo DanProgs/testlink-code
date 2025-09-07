@@ -919,7 +919,7 @@ class testcase extends tlObjectWithAttachments
         $rs = $this->db->fetchRowsIntoMap($sql, $my['options']['access_key']);
 
         if (is_null($rs) || count($rs) == 0) {
-            $rs = null;
+            return null;
         }
         return $rs;
     }
@@ -3748,7 +3748,7 @@ class testcase extends tlObjectWithAttachments
     {
         $result = $this->deleteKeywords($id, $version_id);
         if ($result && count((array) $kw_ids)) {
-            $result = $this->addKeywords($id, $version_id, $kw_ids);
+            return $this->addKeywords($id, $version_id, $kw_ids);
         }
         return $result;
     }
@@ -5181,7 +5181,7 @@ class testcase extends tlObjectWithAttachments
         }
 
         if (! is_null($cf_map)) {
-            $cf_smarty = $this->cfield_mgr->html_table_inputs($cf_map,
+            return $this->cfield_mgr->html_table_inputs($cf_map,
                 $name_suffix, $input_values);
         }
         return $cf_smarty;
@@ -8408,7 +8408,7 @@ class testcase extends tlObjectWithAttachments
     {
         $s = trim($s);
         if (tlStringLen($s) > $len) {
-            $s = tlSubStr($s, 0, $len);
+            return tlSubStr($s, 0, $len);
         }
 
         return $s;
@@ -8669,7 +8669,7 @@ class testcase extends tlObjectWithAttachments
         }
 
         if (empty($script_list)) {
-            $script_list = null;
+            return null;
         }
         return $script_list;
     }
@@ -8808,7 +8808,7 @@ class testcase extends tlObjectWithAttachments
         $where['close'] = strpos($str, self::NAME_PHCLOSE);
 
         if (false !== $where['open']) {
-            $juice = substr($str, $where['open'] + $taglen,
+            return substr($str, $where['open'] + $taglen,
                 ($where['close'] - $where['open'] - $taglen));
         }
         return $juice;
@@ -9318,7 +9318,7 @@ class testcase extends tlObjectWithAttachments
 
         $rs = $this->db->get_recordset($sql);
         if (null != $rs) {
-            $id = intval($rs[0]['id']);
+            return intval($rs[0]['id']);
         }
 
         return $id;

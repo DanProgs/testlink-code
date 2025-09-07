@@ -248,7 +248,7 @@ class tlKeyword extends tlDBObject implements iSerialization,
         $result = $op['status'];
         $this->dbID = $op['kwID'];
         if ($result >= tl::OK) {
-            $result = tlKeyword::checkKeywordName($this->name);
+            return tlKeyword::checkKeywordName($this->name);
         }
 
         return $result;

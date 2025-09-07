@@ -483,7 +483,7 @@ function string_prepare_header($p_string)
 
     $t_truncate_pos = strpos($p_string, "\r");
     if ($t_truncate_pos !== false) {
-        $t_string = substr($t_string, 0, $t_truncate_pos);
+        return substr($t_string, 0, $t_truncate_pos);
     }
 
     return $t_string;

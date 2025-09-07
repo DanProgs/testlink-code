@@ -242,7 +242,7 @@ class tlRole extends tlDBObject
         }
 
         if ($result >= tl::OK) {
-            $result = self::doesRoleExist($db, $this->name, $this->dbID) ? self::E_NAMEALREADYEXISTS : tl::OK;
+            return self::doesRoleExist($db, $this->name, $this->dbID) ? self::E_NAMEALREADYEXISTS : tl::OK;
         }
 
         return $result;

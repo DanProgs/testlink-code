@@ -138,7 +138,7 @@ function langGetFormated($text_key, $modifier)
 {
     $text_localized = lang_get($text_key);
     if (strpos($text_localized, TL_LOCALIZE_TAG) == 0) {
-        $text_localized = sprintf($text_localized, $modifier);
+        return sprintf($text_localized, $modifier);
     }
 
     return $text_localized;

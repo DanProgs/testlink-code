@@ -939,7 +939,7 @@ function getTestsuiteNameDetails(&$db, $tcase_id)
     }
 
     if ($do_query) {
-        $rs = $db->fetchRowsIntoMap($sql, 'tc_id');
+        return $db->fetchRowsIntoMap($sql, 'tc_id');
     }
     return $rs;
 }
@@ -1880,7 +1880,7 @@ function getLatestExec(&$dbHandler, $tcase_id, $tcversion_id, $guiObj, $argsObj,
 
     // Reorder executions to mantaing correct visualization order.
     if (is_array($tcversion_id)) {
-        $last_exec = reorderExecutions($tcversion_id, $last_exec);
+        return reorderExecutions($tcversion_id, $last_exec);
     }
 
     return $last_exec;

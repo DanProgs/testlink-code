@@ -237,7 +237,7 @@ class tracxmlrpcInterface extends issueTrackerInterface
         $issue = $this->getIssue($issueID);
         $str = $issue->summaryHTMLString;
         if ($this->guiCfg['use_decoration']) {
-            $str = "[" . $str . "] ";
+            return "[" . $str . "] ";
         }
         return $str;
     }

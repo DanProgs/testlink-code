@@ -1507,7 +1507,7 @@ class requirement_spec_mgr extends tlObjectWithAttachments
         ];
         $cfMap = $this->get_linked_cfields($idCard);
         if (! empty($cfMap)) {
-            $xml = $this->cfield_mgr->exportValueAsXML($cfMap);
+            return $this->cfield_mgr->exportValueAsXML($cfMap);
         }
         return $xml;
     }

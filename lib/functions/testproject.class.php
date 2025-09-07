@@ -978,7 +978,7 @@ class testproject extends tlObjectWithAttachments
             ]);
 
         if (count($test_spec) > 0) {
-            $ret = $this->_createHierarchyMap($test_spec, $mode);
+            return $this->_createHierarchyMap($test_spec, $mode);
         }
         return $ret;
     }
@@ -1100,7 +1100,7 @@ class testproject extends tlObjectWithAttachments
 
         // limit tcasePrefix len.
         if (tlStringLen($fstr) > self::TESTCASE_PREFIX_MAXLEN) {
-            $fstr = substr($fstr, 0, self::TESTCASE_PREFIX_MAXLEN);
+            return substr($fstr, 0, self::TESTCASE_PREFIX_MAXLEN);
         }
         return $fstr;
     }
@@ -1629,7 +1629,7 @@ class testproject extends tlObjectWithAttachments
         $subtree = $this->tree_manager->get_subtree($id, $my['filters'],
             $my['options']);
         if (count($subtree) > 0) {
-            $ret = $this->_createHierarchyMap($subtree, $mode, $dot, 'doc_id');
+            return $this->_createHierarchyMap($subtree, $mode, $dot, 'doc_id');
         }
         return $ret;
     }

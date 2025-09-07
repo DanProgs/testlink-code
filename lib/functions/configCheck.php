@@ -194,7 +194,7 @@ function checkForAdminDefaultPwd(&$db)
     $user->login = "admin";
     if ($user->readFromDB($db, tlUser::USER_O_SEARCH_BYLOGIN) >= tl::OK &&
         $user->comparePassword($db, "admin") >= tl::OK) {
-        $passwordHasDefaultValue = true;
+        return true;
     }
     return $passwordHasDefaultValue;
 }
@@ -300,11 +300,10 @@ function getSecurityNotes(&$db)
 function checkForBTSConnection()
 {
     global $g_bugInterface;
-    $status_ok = true;
     if ($g_bugInterface && ! $g_bugInterface->connect()) {
-        $status_ok = false;
+        return false;
     }
-    return $status_ok;
+    return true;
 }
 
 /**

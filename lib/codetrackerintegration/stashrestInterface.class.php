@@ -94,9 +94,9 @@ class stashrestInterface extends codeTrackerInterface
             // $this->cfg is a simpleXML Object, then seems very conservative and safe
             // to cast properties BEFORE using it.
             $this->stashCfg = [
-                'username' => (string) trim($this->cfg->username),
-                'password' => (string) trim($this->cfg->password),
-                'host' => (string) trim($this->cfg->uriapi)
+                'username' => trim($this->cfg->username),
+                'password' => trim($this->cfg->password),
+                'host' => trim($this->cfg->uriapi)
             ];
 
             $this->stashCfg['proxy'] = config_get('proxy');
@@ -157,7 +157,7 @@ class stashrestInterface extends codeTrackerInterface
         $ret = null;
         $projList = $this->getProjects();
         if (property_exists($projList, 'values')) {
-            $ret = $this->objectAttrToKeyName($projList->values);
+            return $this->objectAttrToKeyName($projList->values);
         }
         return $ret;
     }
@@ -180,7 +180,7 @@ class stashrestInterface extends codeTrackerInterface
         $ret = null;
         $repoList = $this->getRepos($projectKey);
         if (property_exists($repoList, 'values')) {
-            $ret = $this->objectAttrToIDName($repoList->values, 'slug', 'name');
+            return $this->objectAttrToIDName($repoList->values, 'slug', 'name');
         }
         return $ret;
     }
@@ -244,7 +244,7 @@ class stashrestInterface extends codeTrackerInterface
         $ret = null;
         $branchList = $this->getBranches($projectKey, $repoName);
         if (property_exists($branchList, 'values')) {
-            $ret = $this->objectAttrToIDName($branchList->values, 'displayId',
+            return $this->objectAttrToIDName($branchList->values, 'displayId',
                 'displayId');
         }
         return $ret;

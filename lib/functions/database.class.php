@@ -553,7 +553,7 @@ class database
 
         // BUGID 1318
         if ($row && array_key_exists($column, $row)) {
-            $value = $row[$column];
+            return $row[$column];
         }
         return $value;
     }

@@ -71,7 +71,7 @@ class APIKey extends tlObjectWithDB
         $key_map = $this->getAPIKeys($userID);
 
         if (! is_null($key_map)) {
-            $key = $key_map[$userID];
+            return $key_map[$userID];
         }
 
         return $key;

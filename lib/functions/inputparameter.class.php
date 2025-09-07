@@ -361,7 +361,7 @@ class tlStringValidationInfo
                 break;
         }
         if ($this->maxLen) {
-            $value = tlSubStr($value, 0, $this->maxLen);
+            return tlSubStr($value, 0, $this->maxLen);
         }
         return $value;
     }

@@ -228,7 +228,7 @@ function email_append_domain($p_email)
 {
     $t_limit_email_domain = config_get('limit_email_domain');
     if ($t_limit_email_domain && ! isBlank($p_email)) {
-        $p_email = "{$p_email}@{$t_limit_email_domain}";
+        return "{$p_email}@{$t_limit_email_domain}";
     }
 
     return $p_email;

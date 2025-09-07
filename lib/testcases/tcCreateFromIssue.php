@@ -708,7 +708,7 @@ function importTestCasesFromSimpleXML(&$db, &$simpleXMLObj, $parentID,
     $xmlTCs = $simpleXMLObj->xpath('//testcase');
     $tcData = getTestCaseSetFromSimpleXMLObj($xmlTCs);
     if ($tcData) {
-        $resultMap = saveImportedTCData($db, $tcData, $tproject_id, $parentID,
+        return saveImportedTCData($db, $tcData, $tproject_id, $parentID,
             $userID, $kwMap, $duplicateLogic);
     }
     return $resultMap;

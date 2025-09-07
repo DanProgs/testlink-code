@@ -321,8 +321,8 @@ function getAllUsersRoles(&$db, $order_by = null)
     $specialK = array_flip((array) config_get('demoSpecialUsers'));
     $demoModeEnabled = config_get('demoMode');
     for ($idx = 0; $idx < $loop2do; $idx ++) {
-        $users[$idx]->isDemoSpecial = $demoModeEnabled ? isset(
-            $specialK[$users[$idx]->login]) : false;
+        $users[$idx]->isDemoSpecial = $demoModeEnabled && isset(
+            $specialK[$users[$idx]->login]);
     }
     return $users;
 }

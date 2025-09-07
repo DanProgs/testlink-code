@@ -247,12 +247,10 @@ class tlUser extends tlDBObject
         if (is_null($target) || $target == '') {
             $target = $authCfg['method'];
         }
-
-        $ret = true;
         if (isset($authCfg['domain'][$target])) {
-            $ret = ! $authCfg['domain'][$target]['allowPasswordManagement'];
+            return ! $authCfg['domain'][$target]['allowPasswordManagement'];
         }
-        return $ret;
+        return true;
     }
 
     /**
@@ -531,7 +529,7 @@ class tlUser extends tlDBObject
         }
 
         if ($result == tl::OK) {
-            $result = $this->deleteTestProjectRoles($db);
+            return $this->deleteTestProjectRoles($db);
         }
         return $result;
     }
@@ -679,7 +677,7 @@ class tlUser extends tlDBObject
             $result = self::checkFirstName($this->firstName);
         }
         if ($result >= tl::OK) {
-            $result = self::checkLastName($this->lastName);
+            return self::checkLastName($this->lastName);
         }
         return $result;
     }
@@ -1104,7 +1102,7 @@ class tlUser extends tlDBObject
             $testPlanSet = $dummy;
         }
         if ($doReindex && $numericIndex) {
-            $testPlanSet = array_values($testPlanSet);
+            return array_values($testPlanSet);
         }
         return $testPlanSet;
     }
@@ -1478,7 +1476,7 @@ class tlUser extends tlDBObject
             return $ret; // >>---> Bye!
         }
 
-        $regexp['number'] = "#[0-9]+#";
+        $regexp['number'] = "#\\d+#";
         $regexp['letter'] = "#[a-z]+#";
         $regexp['capital'] = "#[A-Z]+#";
         $regexp['symbol'] = "#\W+#";

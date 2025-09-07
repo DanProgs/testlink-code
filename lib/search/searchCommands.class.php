@@ -605,7 +605,7 @@ class searchCommands
 
         $sql .= $otherFRS;
         if ($doFilter) {
-            $mapRSpec = $db->fetchRowsIntoMap($sql, 'req_spec_id');
+            return $db->fetchRowsIntoMap($sql, 'req_spec_id');
         }
         return $mapRSpec;
     }
@@ -755,7 +755,7 @@ class searchCommands
             $sql .= $xfil . $otherFRQ;
             if ($doFilter) {
                 // DEBUGecho __FUNCTION__ . ' SQL Line:' . __LINE__ . $sql .'<br>';
-                $mapRQ = $db->fetchRowsIntoMap($sql, 'req_id');
+                return $db->fetchRowsIntoMap($sql, 'req_id');
             }
 
             return $mapRQ;

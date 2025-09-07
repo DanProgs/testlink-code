@@ -1430,7 +1430,7 @@ class testsuite extends tlObjectWithAttachments
         $cf_map = $this->$method_name($id, $parent_id);
 
         if (! is_null($cf_map)) {
-            $cf_smarty = $this->cfield_mgr->html_table_inputs($cf_map,
+            return $this->cfield_mgr->html_table_inputs($cf_map,
                 $name_suffix, $input_values);
         }
         return $cf_smarty;
@@ -1502,7 +1502,7 @@ class testsuite extends tlObjectWithAttachments
             }
         }
         if ((trim($cf_smarty) != "") && $add_table) {
-            $cf_smarty = "<table {$table_style}>" . $cf_smarty . "</table>";
+            return "<table {$table_style}>" . $cf_smarty . "</table>";
         }
         return $cf_smarty;
     }

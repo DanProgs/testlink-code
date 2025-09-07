@@ -635,13 +635,11 @@ function to_boolean($alt_boolean)
  */
 function checkString($str2check, $regexp_forbidden_chars)
 {
-    $status_ok = 1;
-
     if (! empty($regexp_forbidden_chars) &&
         preg_match($regexp_forbidden_chars, $str2check)) {
-        $status_ok = 0;
+        return 0;
     }
-    return $status_ok;
+    return 1;
 }
 
 /**
@@ -784,7 +782,7 @@ function ini_get_bool($p_name)
                 break;
         }
     } else {
-        return (bool) $result;
+        return $result;
     }
 }
 
@@ -803,7 +801,7 @@ function trimAndLimit($s, $len = 100)
 {
     $s = trim($s);
     if (tlStringLen($s) > $len) {
-        $s = tlSubStr($s, 0, $len);
+        return tlSubStr($s, 0, $len);
     }
 
     return $s;
@@ -927,14 +925,13 @@ function isValidISODateTime($isoDateTime)
     ];
 
     $matches = null;
-    $status_ok = false;
     if (preg_match(
         "/^(\d{4})-(\d{2})-(\d{2}) ([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$/",
         $isoDateTime, $matches)) {
-        $status_ok = checkdate($matches[$dateParts['MONTH']],
+        return checkdate($matches[$dateParts['MONTH']],
             $matches[$dateParts['DAY']], $matches[$dateParts['YEAR']]);
     }
-    return $status_ok;
+    return false;
 }
 
 /**
@@ -944,14 +941,12 @@ function isValidISODateTime($isoDateTime)
 function is_valid_date($timestamp, $dateFormat)
 {
     $date_array = split_localized_date($timestamp, $dateFormat);
-
-    $status_ok = false;
     if ($date_array != null) {
-        $status_ok = checkdate($date_array['month'], $date_array['day'],
+        return checkdate($date_array['month'], $date_array['day'],
             $date_array['year']);
     }
 
-    return $status_ok;
+    return false;
 }
 
 /**

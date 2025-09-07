@@ -429,7 +429,7 @@ function importTestCasesFromIssueSimpleXML(&$db, &$simpleXMLObj, $parentID,
     $resultMap = null;
     $tcData = getTestCaseSetFromIssueSimpleXMLObj($simpleXMLObj);
     if ($tcData) {
-        $resultMap = saveImportedTCData($db, $tcData, $tproject_id, $parentID,
+        return saveImportedTCData($db, $tcData, $tproject_id, $parentID,
             $userID, $kwMap, $duplicateLogic);
     }
     return $resultMap;

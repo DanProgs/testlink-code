@@ -71,6 +71,8 @@ function initArgs()
 
 function checkRights(&$db, &$user)
 {
-    return $user->hasRight($db, "codetracker_view") ||
-        $user->hasRight($db, "codetracker_management");
+    if ($user->hasRight($db, "codetracker_view")) {
+        return true;
+    }
+    return (bool) $user->hasRight($db, "codetracker_management");
 }

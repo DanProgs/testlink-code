@@ -1709,7 +1709,7 @@ class RestApi
 
         if (! $this->user->hasRight($this->db, $rightToCheck, $tproject_id,
             $tplan_id, $checkPublicPrivateAttr)) {
-            $status_ok = false;
+            return false;
         }
         return $status_ok;
     }

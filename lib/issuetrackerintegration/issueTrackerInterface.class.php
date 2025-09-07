@@ -305,7 +305,7 @@ abstract class issueTrackerInterface
     {
         $status_ok = (trim($issueID) != "");
         if ($status_ok && preg_match($this->forbidden_chars, $issueID)) {
-            $status_ok = false;
+            return false;
         }
         return $status_ok;
     }
@@ -582,7 +582,7 @@ abstract class issueTrackerInterface
     {
         $str = $statusCode;
         if ($this->guiCfg['use_decoration']) {
-            $str = "[" . $str . "] ";
+            return "[" . $str . "] ";
         }
         return $str;
     }

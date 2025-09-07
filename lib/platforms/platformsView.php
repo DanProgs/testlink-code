@@ -43,6 +43,8 @@ function initArgs()
  */
 function checkRights(&$db, &$user)
 {
-    return $user->hasRightOnProj($db, 'platform_management') ||
-        $user->hasRightOnProj($db, 'platform_view');
+    if ($user->hasRightOnProj($db, 'platform_management')) {
+        return true;
+    }
+    return (bool) $user->hasRightOnProj($db, 'platform_view');
 }

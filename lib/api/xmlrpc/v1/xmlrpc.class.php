@@ -1632,7 +1632,7 @@ class TestlinkXMLRPCServer extends IXR_Server
         ];
         $status_ok = $this->_runChecks($checkFunctions, $messagePrefix);
         if ($status_ok) {
-            $status_ok = $this->_isParamPresent(self::$buildNameParamName,
+            return $this->_isParamPresent(self::$buildNameParamName,
                 $messagePrefix, self::SET_ERROR);
         }
 
@@ -2317,7 +2317,7 @@ class TestlinkXMLRPCServer extends IXR_Server
             $testProjectID = $this->args[self::$testProjectIDParamName];
             $info = $this->tprojectMgr->get_all_testplans($testProjectID);
             if (! empty($info)) {
-                $info = array_values($info);
+                return array_values($info);
             }
             return $info;
         } else {
@@ -3680,7 +3680,7 @@ class TestlinkXMLRPCServer extends IXR_Server
         }
 
         if (! is_null($kMethod)) {
-            $keywordSet = $this->$kMethod($tproject_id, $this->args[$accessKey]);
+            return $this->$kMethod($tproject_id, $this->args[$accessKey]);
         }
 
         return $keywordSet;
@@ -4437,7 +4437,7 @@ class TestlinkXMLRPCServer extends IXR_Server
         }
 
         if ($status) {
-            $status = $this->checkReqID($messagePrefix);
+            return $this->checkReqID($messagePrefix);
         }
 
         return $status;
@@ -4528,7 +4528,7 @@ class TestlinkXMLRPCServer extends IXR_Server
         }
 
         if (! $status_ok) {
-            $ret = [
+            return [
                 'status_ok' => false,
                 'error_msg' => $msg,
                 'error_code' => $error_code
@@ -9259,7 +9259,7 @@ class TestlinkXMLRPCServer extends IXR_Server
         }
 
         if ($extCall && ! $status_ok) {
-            $ret = $this->errors;
+            return $this->errors;
         }
         return $ret;
     }

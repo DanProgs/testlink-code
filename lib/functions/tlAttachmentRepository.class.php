@@ -545,12 +545,11 @@ class tlAttachmentRepository extends tlObjectWithDB
      */
     public function getAttachmentInfo($id)
     {
-        $info = null;
         $this->attmObj->setID($id);
         if ($this->attmObj->readFromDB($this->db)) {
-            $info = $this->attmObj->getInfo();
+            return $this->attmObj->getInfo();
         }
-        return $info;
+        return null;
     }
 
     /**

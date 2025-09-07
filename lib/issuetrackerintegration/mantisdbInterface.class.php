@@ -157,7 +157,7 @@ class mantisdbInterface extends issueTrackerInterface
         $query = "SELECT status FROM mantis_bug_table WHERE id='" . $id . "'";
         $result = $this->dbConnection->exec_query($query);
         if ($result && ($this->dbConnection->num_rows($result) == 1)) {
-            $status_ok = 1;
+            return 1;
         }
         return $status_ok;
     }

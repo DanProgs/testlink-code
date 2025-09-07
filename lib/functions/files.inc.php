@@ -79,7 +79,7 @@ function gzip_compress_file($srcName, $dstName)
     $success = false;
     $data = getFileContents($srcName);
     if ($data != "") {
-        $success = gzip_writeToFile($dstName, $data);
+        return gzip_writeToFile($dstName, $data);
     }
     return $success;
 }

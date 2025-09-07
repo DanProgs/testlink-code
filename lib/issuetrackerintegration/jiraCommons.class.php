@@ -62,7 +62,7 @@ class jiraCommons
     {
         $str = $statusCode;
         if ($this->guiCfg['use_decoration']) {
-            $str = "[" . $str . "] ";
+            return "[" . $str . "] ";
         }
         return $str;
     }

@@ -1087,13 +1087,11 @@ function completeIssueForStep(&$execContext, $execSigfrid, $exData, $stepID)
             $execContext->$to = $ref[$stepID];
         }
     }
-
-    $addLink = false;
     if (property_exists($execSigfrid, 'addLinkToTLForStep')) {
-        $addLink = isset($execSigfrid->addLinkToTLForStep[$stepID]);
+        return isset($execSigfrid->addLinkToTLForStep[$stepID]);
     }
 
-    return $addLink;
+    return false;
 }
 
 /**
@@ -1154,7 +1152,7 @@ function addAttachmentsToExec($execID, &$docRepo)
     }
 
     if ($op->msg == '') {
-        $op = null;
+        return null;
     }
     return $op;
 }

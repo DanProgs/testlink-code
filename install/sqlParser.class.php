@@ -137,7 +137,7 @@ class SqlParser
 
         // Empty line must not be used
         if ($use_v && strlen($v_c) == 0) {
-            $use_v = false;
+            return false;
         }
 
         return $use_v;
