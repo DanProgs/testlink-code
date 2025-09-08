@@ -197,10 +197,6 @@ class testcase extends tlObjectWithAttachments
         $this->tproject_id = intval($tproject_id);
     }
 
-    /**
-     *
-     * @return array
-     */
     private static function getExecutionTypes(): array
     {
         $stdSet = [

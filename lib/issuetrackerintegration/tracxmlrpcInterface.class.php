@@ -52,7 +52,7 @@ class tracxmlrpcInterface extends issueTrackerInterface
         $this->interfaceViaDB = false;
 
         if (! $this->setCfg($config)) {
-            return false;
+            return;
         }
 
         $this->methodOpt['buildViewBugLink'] = [

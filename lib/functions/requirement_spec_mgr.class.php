@@ -1193,7 +1193,7 @@ class requirement_spec_mgr extends tlObjectWithAttachments
 
             case 'file':
                 $xml_file = $source->value;
-                (@$this->simplexml_load_file_helper($xml_file)) !== false;
+                @$this->simplexml_load_file_helper($xml_file);
                 break;
         }
 

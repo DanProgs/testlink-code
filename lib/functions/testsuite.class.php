@@ -2055,10 +2055,8 @@ class testsuite extends tlObjectWithAttachments
             // the new ones.
             foreach ($kwForTS as $tsk => $kwVenn) {
                 $kw2add = array_diff($kwSet, $kwVenn);
-                if (! empty($kw2add)) {
-                    foreach ($kw2add as $kaboom) {
-                        $vv[] = "({$tsk},'nodes_hierarchy',{$kaboom})";
-                    }
+                foreach ($kw2add as $kaboom) {
+                    $vv[] = "({$tsk},'nodes_hierarchy',{$kaboom})";
                 }
             }
         }

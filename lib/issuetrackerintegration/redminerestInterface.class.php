@@ -17,9 +17,9 @@ class redminerestInterface extends issueTrackerInterface
 
     private $issueDefaults;
 
-    private $issueOtherAttr = null;
+    private $issueOtherAttr;
 
-    private $translate = null;
+    private $translate;
 
     public $defaultResolvedStatus;
 
@@ -51,7 +51,7 @@ class redminerestInterface extends issueTrackerInterface
 
         $this->canSetReporter = true;
         if (! $this->setCfg($config)) {
-            return false;
+            return;
         }
 
         // http://www.redmine.org/issues/6843

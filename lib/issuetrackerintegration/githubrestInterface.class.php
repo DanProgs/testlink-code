@@ -19,9 +19,9 @@ class githubrestInterface extends issueTrackerInterface
 
     private $issueDefaults;
 
-    private $issueOtherAttr = null;
+    private $issueOtherAttr;
 
-    private $translate = null;
+    private $translate;
 
     public $defaultResolvedStatus;
 
@@ -52,7 +52,7 @@ class githubrestInterface extends issueTrackerInterface
         ];
 
         if (! $this->setCfg($config)) {
-            return false;
+            return;
         }
 
         // http://www.github.org/issues/6843

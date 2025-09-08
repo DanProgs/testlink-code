@@ -2671,10 +2671,9 @@ class testplan extends tlObjectWithAttachments
             ]);
         if (is_null($cf_info)) {
             return $this->getEstimatedExecutionTime($id, $itemSet, $platformID);
-        } else {
-            return $this->getEstimatedExecutionTimeFromCF($id, $itemSet,
-                $platformID);
         }
+        return $this->getEstimatedExecutionTimeFromCF($id, $itemSet,
+            $platformID);
     }
 
     /**
@@ -2865,10 +2864,9 @@ class testplan extends tlObjectWithAttachments
             ]);
         if (is_null($cf_info)) {
             return $this->getExecutionTime($context, $execIDSet);
-        } else {
-            return $this->getExecutionTimeFromCF($context->tplan_id, $execIDSet,
-                $context->platform_id);
         }
+        return $this->getExecutionTimeFromCF($context->tplan_id, $execIDSet,
+            $context->platform_id);
     }
 
     /**

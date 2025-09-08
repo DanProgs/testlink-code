@@ -1453,9 +1453,8 @@ class testproject extends tlObjectWithAttachments
             }
             fclose($handle);
             return self::OK;
-        } else {
-            return self::ERROR;
         }
+        return self::ERROR;
     }
 
     /**
@@ -3335,10 +3334,8 @@ class testproject extends tlObjectWithAttachments
             if ($filterOnTC) {
                 $ky = is_null($highlander) ? $tclist : array_diff_key($tclist,
                         $highlander);
-                if (! empty($ky)) {
-                    foreach ($ky as $tcase) {
-                        unset($rs[$tcase]);
-                    }
+                foreach ($ky as $tcase) {
+                    unset($rs[$tcase]);
                 }
             }
         }

@@ -50,7 +50,7 @@ class trellorestInterface extends issueTrackerInterface
 
         // @20201207 $this->canSetReporter = true;
         if (! $this->setCfg($config)) {
-            return false;
+            return;
         }
 
         $this->completeCfg();

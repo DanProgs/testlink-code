@@ -995,11 +995,9 @@ function getTestSpecFromNode(&$dbHandler, &$tcaseMgr, &$linkedItems,
                     }
 
                     $setToRemove = array_diff_key($tcversionSet, $allowedSet);
-                    if (! empty($setToRemove)) {
-                        foreach ($setToRemove as $value) {
-                            $tspecKey = $itemSet[$value['testcase_id']];
-                            $test_spec[$tspecKey] = null;
-                        }
+                    foreach ($setToRemove as $value) {
+                        $tspecKey = $itemSet[$value['testcase_id']];
+                        $test_spec[$tspecKey] = null;
                     }
                     break;
             }

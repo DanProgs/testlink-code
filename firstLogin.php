@@ -57,9 +57,8 @@ if (! is_null($args->doEditUser)) {
                 $url2go = "login.php?note=first";
                 redirect(TL_BASE_HREF . $url2go);
                 exit();
-            } else {
-                $message = getUserErrorMessage($result);
             }
+            $message = getUserErrorMessage($result);
         } else {
             $message = $rx['msg'];
         }
@@ -192,7 +191,10 @@ function notifyGlobalAdmins(&$dbHandler, &$userObj)
         $validator = new Zend_Validate_EmailAddress();
         foreach ($mail['to'] as $mm) {
             $ema = trim($mm);
-            if ($ema == '' || ! $validator->isValid($ema)) {
+            if ($ema == '') {
+                continue;
+            }
+            if (! $validator->isValid($ema)) {
                 continue;
             }
             $dest[] = $ema;

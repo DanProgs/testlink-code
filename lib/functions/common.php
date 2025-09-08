@@ -586,19 +586,16 @@ function strings_stripSlashes($parameter, $bGPC = true)
 
     if (is_array($parameter)) {
         $retParameter = null;
-        if ($parameter !== []) {
-            foreach ($parameter as $key => $value) {
-                if (is_array($value)) {
-                    $retParameter[$key] = strings_stripSlashes($value, $bGPC);
-                } else {
-                    $retParameter[$key] = stripslashes($value);
-                }
+        foreach ($parameter as $key => $value) {
+            if (is_array($value)) {
+                $retParameter[$key] = strings_stripSlashes($value, $bGPC);
+            } else {
+                $retParameter[$key] = stripslashes($value);
             }
         }
         return $retParameter;
-    } else {
-        return stripslashes($parameter);
     }
+    return stripslashes($parameter);
 }
 
 function to_boolean($alt_boolean)
@@ -745,14 +742,14 @@ function microtime_float()
 function priority_to_level($priority)
 {
     $urgencyImportance = config_get('urgencyImportance');
-
     if ($priority >= $urgencyImportance->threshold['high']) {
         return HIGH;
-    } elseif ($priority < $urgencyImportance->threshold['low']) {
-        return LOW;
-    } else {
-        return MEDIUM;
     }
+
+    if ($priority < $urgencyImportance->threshold['low']) {
+        return LOW;
+    }
+    return MEDIUM;
 }
 
 /**

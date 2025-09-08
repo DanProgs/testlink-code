@@ -48,7 +48,7 @@ class gforgesoapInterface extends issueTrackerInterface
         $this->name = $name;
         $this->interfaceViaDB = false;
         if (! $this->setCfg($config)) {
-            return false;
+            return;
         }
 
         $this->completeCfg();

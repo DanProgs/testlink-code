@@ -57,7 +57,7 @@ class kaitenrestInterface extends issueTrackerInterface
 
         $this->canSetReporter = true;
         if (! $this->setCfg($config)) {
-            return false;
+            return;
         }
 
         $this->completeCfg();

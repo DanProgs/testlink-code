@@ -241,7 +241,7 @@ class cfield_mgr extends tlObject
     //
     public $name_prefix = 'custom_field_';
 
-    private $sizes = null;
+    private $sizes;
 
     // must be equal to the lenght of:
     // value column on cfield_*_values tables
@@ -2550,10 +2550,8 @@ class cfield_mgr extends tlObject
         $locationMap = null;
         $dummy = $this->getLocations();
         $verboseLocationCode = array_flip($dummy[$nodeType]);
-        if (! empty($verboseLocationCode)) {
-            foreach ($verboseLocationCode as $key => $value) {
-                $locationMap[$key]['location'] = $value;
-            }
+        foreach ($verboseLocationCode as $key => $value) {
+            $locationMap[$key]['location'] = $value;
         }
         return $locationMap;
     }
@@ -2880,20 +2878,17 @@ class cfield_mgr extends tlObject
     {
         if (($value == 0) || ($value == '')) {
             return '';
-        } else {
-            $localesDateFormat = config_get('locales_date_format');
-            $locale = (isset($_SESSION['locale'])) ? $_SESSION['locale'] : 'en_GB';
-            $date_format = str_replace('%', '', $localesDateFormat[$locale]);
-
-            $pvalue = split_localized_date($value, $date_format);
-            if ($pvalue != null) {
-                $pvalue = mktime(0, 0, 0, $pvalue['month'], $pvalue['day'],
-                    $pvalue['year']);
-                return $pvalue;
-            } else {
-                return '';
-            }
         }
+        $localesDateFormat = config_get('locales_date_format');
+        $locale = (isset($_SESSION['locale'])) ? $_SESSION['locale'] : 'en_GB';
+        $date_format = str_replace('%', '', $localesDateFormat[$locale]);
+        $pvalue = split_localized_date($value, $date_format);
+        if ($pvalue != null) {
+            $pvalue = mktime(0, 0, 0, $pvalue['month'], $pvalue['day'],
+                $pvalue['year']);
+            return $pvalue;
+        }
+        return '';
     }
 
     /**

@@ -43,7 +43,7 @@ class fogbugzrestInterface extends issueTrackerInterface
         ];
 
         if (! $this->setCfg($config)) {
-            return false;
+            return;
         }
         $this->completeCfg();
         $this->connect();

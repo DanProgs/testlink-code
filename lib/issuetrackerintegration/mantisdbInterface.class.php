@@ -47,7 +47,7 @@ class mantisdbInterface extends issueTrackerInterface
     {
         parent::__construct($type, $config, $name);
         if (! $this->isConnected()) {
-            return false;
+            return;
         }
 
         $this->interfaceViaDB = true;

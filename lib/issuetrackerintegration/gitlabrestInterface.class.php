@@ -18,9 +18,9 @@ class gitlabrestInterface extends issueTrackerInterface
 
     private $issueDefaults;
 
-    private $issueOtherAttr = null;
+    private $issueOtherAttr;
 
-    private $translate = null;
+    private $translate;
 
     public $defaultResolvedStatus;
 
@@ -51,7 +51,7 @@ class gitlabrestInterface extends issueTrackerInterface
         ];
 
         if (! $this->setCfg($config)) {
-            return false;
+            return;
         }
 
         // http://www.gitlab.org/issues/6843
@@ -222,7 +222,7 @@ class gitlabrestInterface extends issueTrackerInterface
                     'id' => (int) $jsonObj->project_id
                 ];
 
-                $issue->isResolved = isset($this->state);
+                $issue->isResolved = property_exists($this, 'state') && $this->state !== null;
             }
         } catch (Exception $e) {
             tLog(__METHOD__ . '/' . $e->getMessage(), 'ERROR');

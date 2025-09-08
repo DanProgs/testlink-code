@@ -31,7 +31,7 @@ class jiradbInterface extends issueTrackerInterface
         parent::__construct($type, $config, $name);
 
         if (! $this->isConnected()) {
-            return false;
+            return;
         }
 
         $this->methodOpt['buildViewBugLink'] = [
@@ -59,10 +59,9 @@ class jiradbInterface extends issueTrackerInterface
         if (! property_exists($this->cfg, 'jiraversion')) {
             $msg = " - Issuetracker $this->name - jiraversion is MANDATORY - Unable to continue";
             tLog(__METHOD__ . $msg, 'ERROR');
-            return false;
-        } else {
-            $this->completeCfg();
+            return;
         }
+        $this->completeCfg();
 
         $this->defaultResolvedStatus = $this->support->initDefaultResolvedStatus(
             $this->statusDomain);

@@ -41,7 +41,7 @@ class bugzillaxmlrpcInterface extends issueTrackerInterface
 
         $this->name = $name;
         if (! $this->setCfg($config)) {
-            return false;
+            return;
         }
 
         $this->completeCfg();
