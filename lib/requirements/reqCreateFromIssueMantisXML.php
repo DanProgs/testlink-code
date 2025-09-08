@@ -51,20 +51,18 @@ $req_mgr = new requirement_mgr($db);
 $args = initArgs();
 $gui = initializeGui($db, $args);
 
-switch ($args->doAction) {
-    case 'uploadFile':
-        $dummy = doExecuteImport($gui->fileName, $args, $req_spec_mgr, $req_mgr);
-        $gui->items = $dummy->items;
-        $gui->file_check = $dummy->file_check;
-        $gui->userFeedback = (array) $dummy->userFeedback;
-        if (array_key_exists("syntaxError", $gui->userFeedback) &&
-            ! empty($gui->userFeedback['syntaxError'])) {
-            $gui->importResult = lang_get('import_syntax_error');
-        } else {
-            $gui->importResult = lang_get('import_done');
-        }
-        $gui->refreshTree = $args->refreshTree && $gui->file_check['status_ok'];
-        break;
+if ($args->doAction === 'uploadFile') {
+    $dummy = doExecuteImport($gui->fileName, $args, $req_spec_mgr, $req_mgr);
+    $gui->items = $dummy->items;
+    $gui->file_check = $dummy->file_check;
+    $gui->userFeedback = (array) $dummy->userFeedback;
+    if (array_key_exists("syntaxError", $gui->userFeedback) &&
+        ! empty($gui->userFeedback['syntaxError'])) {
+        $gui->importResult = lang_get('import_syntax_error');
+    } else {
+        $gui->importResult = lang_get('import_done');
+    }
+    $gui->refreshTree = $args->refreshTree && $gui->file_check['status_ok'];
 }
 $smarty = new TLSmarty();
 $smarty->assign('gui', $gui);

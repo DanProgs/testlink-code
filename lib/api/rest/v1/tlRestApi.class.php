@@ -395,7 +395,7 @@ class tlRestApi
             $tcaseIDSet = [];
             $this->tprojectMgr->get_all_testcases_id($tproject[0]['id'],
                 $tcaseIDSet);
-            if (! empty($tcaseIDSet)) {
+            if ($tcaseIDSet !== []) {
                 $op['items'] = [];
                 foreach ($tcaseIDSet as $tcaseID) {
                     $item = $this->tcaseMgr->getLastVersionInfo($tcaseID);

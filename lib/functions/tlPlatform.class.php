@@ -584,10 +584,8 @@ class tlPlatform extends tlObjectWithDB
             " FROM {$this->tables['testprojects']} TPROJ " .
             " LEFT OUTER JOIN {$this->tables['platforms']} PLAT ON PLAT.testproject_id = TPROJ.id ";
 
-        switch ($my['opt']['range']) {
-            case 'tproject':
-                $sql .= " WHERE TPROJ.id = " . $this->tproject_id;
-                break;
+        if ($my['opt']['range'] === 'tproject') {
+            $sql .= " WHERE TPROJ.id = " . $this->tproject_id;
         }
         $sql .= " GROUP BY TPROJ.id ";
         return $this->db->fetchRowsIntoMap($sql, 'tproject_id');

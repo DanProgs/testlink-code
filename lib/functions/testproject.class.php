@@ -737,7 +737,7 @@ class testproject extends tlObjectWithAttachments
             case 'map_with_inactive_mark':
             default:
                 $arrTemp = (array) $this->db->fetchRowsIntoMap($sql, 'id');
-                $do_post_process = ! empty($arrTemp);
+                $do_post_process = $arrTemp !== [];
                 break;
         }
 
@@ -1319,14 +1319,12 @@ class testproject extends tlObjectWithAttachments
 
         if ($result >= self::OK && $this->auditCfg->logEnabled) {
 
-            switch ($my['opt']['context']) {
-                case 'getTestProjectName':
-                    $dummy = $this->get_by_id($my['opt']['tproject_id'],
-                        [
-                            'output' => 'name'
-                        ]);
-                    $my['opt']['context'] = $dummy['name'];
-                    break;
+            if ($my['opt']['context'] === 'getTestProjectName') {
+                $dummy = $this->get_by_id($my['opt']['tproject_id'],
+                    [
+                        'output' => 'name'
+                    ]);
+                $my['opt']['context'] = $dummy['name'];
             }
 
             logAuditEvent(
@@ -3253,7 +3251,7 @@ class testproject extends tlObjectWithAttachments
 
         // Approach Change - get all
         $rs = (array) $this->db->fetchRowsIntoMap($sql, 'id');
-        if (empty($rs)) {
+        if ($rs === []) {
             return $qnum;
         }
 

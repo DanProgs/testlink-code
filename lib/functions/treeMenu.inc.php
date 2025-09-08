@@ -560,23 +560,21 @@ function prepareNode(&$db, &$node, &$map_node_tccount, $attr_map = null,
                 $target_id = $rs[0]['targetid'];
 
                 if ($filterOnTCVersionAttribute) {
-                    switch ($my['options']['viewType']) {
-                        case 'testSpecTreeForTestPlan':
-                            // Try to get info from linked tcversions
-                            // Platform is not needed
-                            $sql = " /* {$debugMsg} - line:" . __LINE__ . " */ " .
-                                " SELECT DISTINCT TPTCV.tcversion_id AS targetid " .
-                                " FROM {$tables['tcversions']} TCV " .
-                                " JOIN {$tables['nodes_hierarchy']} NH " .
-                                " ON NH.id = TCV.id {$activeVersionClause} " .
-                                " AND NH.parent_id={$node['id']} " .
-                                " JOIN {$tables['testplan_tcversions']} TPTCV " .
-                                " ON TPTCV.tcversion_id = TCV.id " .
-                                " AND TPTCV.testplan_id = " .
-                                " {$my['filters']['setting_testplan']}";
-                            $rs = $db->get_recordset($sql);
-                            $target_id = is_null($rs) ? $target_id : $rs[0]['targetid'];
-                            break;
+                    if ($my['options']['viewType'] === 'testSpecTreeForTestPlan') {
+                        // Try to get info from linked tcversions
+                        // Platform is not needed
+                        $sql = " /* {$debugMsg} - line:" . __LINE__ . " */ " .
+                            " SELECT DISTINCT TPTCV.tcversion_id AS targetid " .
+                            " FROM {$tables['tcversions']} TCV " .
+                            " JOIN {$tables['nodes_hierarchy']} NH " .
+                            " ON NH.id = TCV.id {$activeVersionClause} " .
+                            " AND NH.parent_id={$node['id']} " .
+                            " JOIN {$tables['testplan_tcversions']} TPTCV " .
+                            " ON TPTCV.tcversion_id = TCV.id " .
+                            " AND TPTCV.testplan_id = " .
+                            " {$my['filters']['setting_testplan']}";
+                        $rs = $db->get_recordset($sql);
+                        $target_id = is_null($rs) ? $target_id : $rs[0]['targetid'];
                     }
 
                     $sql = " /* {$debugMsg} - line:" . __LINE__ . " */ " .

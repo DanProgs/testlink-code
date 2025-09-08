@@ -4088,7 +4088,7 @@ class requirement_mgr extends tlObjectWithAttachments
                         // Theorically can be just ONE, but it depends
                         // is user had not messed things.
                         $yy = explode($endTag, $xx[$xdx]);
-                        if (! empty($yy)) {
+                        if ($yy !== []) {
                             $atx = $yy[0];
                             try {
                                 if (isset($attSet[$id][$atx]) &&
@@ -4795,7 +4795,7 @@ class requirement_mgr extends tlObjectWithAttachments
                 }
             }
 
-            if (! empty($values)) {
+            if ($values !== []) {
                 $sql .= " VALUES " . implode(',', $values);
                 $this->db->exec_query($sql);
             }

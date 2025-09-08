@@ -197,13 +197,9 @@ function getCFDiff($cfields, &$itemMgr)
                     $type_code[$cfieldsLeft[$cf_key]['type']] == 'datetime') {
                     $t_date_format = str_replace("%", "", $formats['date']); // must remove %
                     foreach ($key2convert as $fx) {
-                        if ($doIt = ($cmp[$cf_key][$fx] != null)) {
-                            switch ($type_code[$cfieldsLeft[$cf_key]['type']]) {
-                                case 'datetime':
-                                    $t_date_format .= " " .
-                                        $cfg->custom_fields->time_format;
-                                    break;
-                            }
+                        if (($doIt = $cmp[$cf_key][$fx] != null) && $type_code[$cfieldsLeft[$cf_key]['type']] === 'datetime') {
+                            $t_date_format .= " " .
+                                $cfg->custom_fields->time_format;
                         }
                         if ($doIt) {
                             $cmp[$cf_key][$fx] = date($t_date_format,

@@ -829,10 +829,8 @@ function renderGui(&$argsObj, $guiObj, $opObj, $templateCfg, $cfgObj,
         $smartyObj->assign($key, $of->CreateHTML($oWebEditor->cfg[$key]));
     }
 
-    switch ($argsObj->doAction) {
-        case "doDelete":
-            $guiObj->refreshTree = $argsObj->refreshTree;
-            break;
+    if ($argsObj->doAction === "doDelete") {
+        $guiObj->refreshTree = $argsObj->refreshTree;
     }
 
     switch ($argsObj->doAction) {

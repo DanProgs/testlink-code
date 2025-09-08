@@ -74,12 +74,8 @@ if ($args->do_upload) {
     }
     if ($doIt) {
         $gui->file_check['status_ok'] = 1;
-        if (move_uploaded_file($source, $input_file)) {
-            switch ($args->importType) {
-                case 'XML':
-                    $pimport_fn = "importTestPlanLinksFromXML";
-                    break;
-            }
+        if (move_uploaded_file($source, $input_file) && $args->importType === 'XML') {
+            $pimport_fn = "importTestPlanLinksFromXML";
         }
         if ($gui->file_check['status_ok'] && $pimport_fn) {
             $context = new stdClass();

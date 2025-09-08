@@ -714,55 +714,51 @@ class tlTestCaseFilterByRequirementControl extends tlFilterControl
             $this->testproject_mgr = new testproject($this->db);
         }
 
-        switch ($this->mode) {
-            case 'plan_add_mode':
-                // improved cookiePrefix -
-                // tree in plan_add_mode is only used for add/removed test cases features
-                // and shows all test cases defined within test project,
-                // but as test cases are added to a specified test plan -> store state for each test plan
-                //
-                // usage of wrong values in $this->args->xyz for cookiePrefix instead of correct
-                // values in $filters->setting_xyz
-                $cookie_prefix = "add_remove_tc_tplan_id_{$filters['setting_testplan']}_";
+        if ($this->mode === 'plan_add_mode') {
+            // improved cookiePrefix -
+            // tree in plan_add_mode is only used for add/removed test cases features
+            // and shows all test cases defined within test project,
+            // but as test cases are added to a specified test plan -> store state for each test plan
+            //
+            // usage of wrong values in $this->args->xyz for cookiePrefix instead of correct
+            // values in $filters->setting_xyz
+            $cookie_prefix = "add_remove_tc_tplan_id_{$filters['setting_testplan']}_";
+            // get filter mode
+            $key = 'setting_testsgroupby';
+            $mode = $this->args->$key;
+            if ($this->do_filtering) {
+                if ($mode == 'mode_req_coverage') {
 
-                // get filter mode
-                $key = 'setting_testsgroupby';
-                $mode = $this->args->$key;
+                    $options = [
+                        'for_printing' => NOT_FOR_PRINTING,
+                        'exclude_branches' => null
+                    ];
 
-                if ($this->do_filtering) {
-                    if ($mode == 'mode_req_coverage') {
-
-                        $options = [
-                            'for_printing' => NOT_FOR_PRINTING,
-                            'exclude_branches' => null
-                        ];
-
-                        $tree_menu = generateTestReqCoverageTree($this->db,
-                            $this->args->testproject_id,
-                            $this->args->testproject_name, $filters, $options);
-                    }
-
-                    $root_node = $tree_menu->rootnode;
-                    $children = $tree_menu->menustring ? $tree_menu->menustring : "[]";
-                } else {
-                    if ($mode == 'mode_req_coverage') {
-                        $loader = $gui->basehref .
-                            'lib/ajax/getreqcoveragenodes.php?mode=reqspec&' .
-                            "root_node={$this->args->testproject_id}";
-
-                        $req_qty = count(
-                            $this->testproject_mgr->get_all_requirement_ids(
-                                $this->args->testproject_id));
-
-                        $root_node = new stdClass();
-                        $root_node->href = "javascript:EP({$this->args->testproject_id})";
-                        $root_node->id = $this->args->testproject_id;
-                        $root_node->name = $this->args->testproject_name .
-                            " ({$req_qty})";
-                        $root_node->testlink_node_type = 'testproject';
-                    }
+                    $tree_menu = generateTestReqCoverageTree($this->db,
+                        $this->args->testproject_id,
+                        $this->args->testproject_name, $filters, $options);
                 }
-                break;
+
+                $root_node = $tree_menu->rootnode;
+                $children = $tree_menu->menustring ? $tree_menu->menustring : "[]";
+            } else {
+                if ($mode == 'mode_req_coverage') {
+                    $loader = $gui->basehref .
+                        'lib/ajax/getreqcoveragenodes.php?mode=reqspec&' .
+                        "root_node={$this->args->testproject_id}";
+
+                    $req_qty = count(
+                        $this->testproject_mgr->get_all_requirement_ids(
+                            $this->args->testproject_id));
+
+                    $root_node = new stdClass();
+                    $root_node->href = "javascript:EP({$this->args->testproject_id})";
+                    $root_node->id = $this->args->testproject_id;
+                    $root_node->name = $this->args->testproject_name .
+                        " ({$req_qty})";
+                    $root_node->testlink_node_type = 'testproject';
+                }
+            }
         }
 
         $gui->tree = $tree_menu;

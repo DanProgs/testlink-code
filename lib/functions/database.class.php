@@ -416,15 +416,12 @@ class database
     # return current timestamp for DB
     public function db_now()
     {
-        switch ($this->db->databaseType) {
-            /*
-             * @todo: maybe we should use this?
-             * case 'odbc_mssql':
-             * return "GETDATE()";
-             */
-            default:
-                return $this->db->DBTimeStamp(time());
-        }
+        /*
+         * @todo: maybe we should use this?
+         * case 'odbc_mssql':
+         * return "GETDATE()";
+         */
+        return $this->db->DBTimeStamp(time());
     }
 
     # generate a unixtimestamp of a date
@@ -883,15 +880,10 @@ class database
     public function db_null_timestamp()
     {
         $db_type = $this->db->databaseType;
-        $nullValue = null;
-
-        switch ($db_type) {
-            case 'mysql':
-                // is not an error i put single quote on value
-                $nullValue = " '0000-00-00 00:00:00' ";
-                break;
+        if ($db_type === 'mysql') {
+            return " '0000-00-00 00:00:00' ";
         }
-        return $nullValue;
+        return null;
     }
 
     /**

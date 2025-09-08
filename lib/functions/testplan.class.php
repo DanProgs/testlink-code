@@ -889,12 +889,10 @@ class testplan extends tlObjectWithAttachments
             implode(',', array_keys($tlnodes)) . ")" .
             " ORDER BY node_order,name ";
         $xmen = $this->db->fetchRowsIntoMap($xsql, 'id');
-        switch ($my['opt']['output']) {
-            case 'std':
-                foreach ($xmen as $xid => $elem) {
-                    $xmen[$xid] = $elem['name'];
-                }
-                break;
+        if ($my['opt']['output'] === 'std') {
+            foreach ($xmen as $xid => $elem) {
+                $xmen[$xid] = $elem['name'];
+            }
         }
         unset($tlnodes);
         return $xmen;
@@ -2100,7 +2098,7 @@ class testplan extends tlObjectWithAttachments
 
         $recordset = (array) $this->db->get_recordset($sql);
         $myarray = [];
-        if (! empty($recordset)) {
+        if ($recordset !== []) {
             $myarray = [
                 $recordset[0]
             ];
@@ -3882,7 +3880,7 @@ class testplan extends tlObjectWithAttachments
                                 }
                             }
                         }
-                        (empty($userList)) ? $tcaseExportOptions['ASSIGNED_USER'] = null : $tcaseExportOptions['ASSIGNED_USER'] = $userList;
+                        ($userList === []) ? $tcaseExportOptions['ASSIGNED_USER'] = null : $tcaseExportOptions['ASSIGNED_USER'] = $userList;
 
                         $xmlTC .= $tcaseMgr->exportTestCaseDataToXML(
                             $cNode['id'], $cNode['tcversion_id'], $tproject_id,
@@ -6816,13 +6814,11 @@ class testplan extends tlObjectWithAttachments
         ];
         $my['opt'] = array_merge($my['opt'], (array) $options);
 
-        switch ($criteria) {
-            case 'maxID':
-                $sql = " /* {$debugMsg} */ " .
-                    " SELECT MAX(id) AS id,testplan_id, name, notes, active, is_open," .
-                    " release_date,closed_on_date " .
-                    " FROM {$this->tables['builds']} WHERE testplan_id = {$id} ";
-                break;
+        if ($criteria === 'maxID') {
+            $sql = " /* {$debugMsg} */ " .
+                " SELECT MAX(id) AS id,testplan_id, name, notes, active, is_open," .
+                " release_date,closed_on_date " .
+                " FROM {$this->tables['builds']} WHERE testplan_id = {$id} ";
         }
 
         if (! is_null($my['opt']['active'])) {

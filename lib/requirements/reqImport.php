@@ -30,19 +30,17 @@ $context = new stdClass();
 $context->tproject_id = $args->tproject_id;
 checkRights($db, $args->user, $context);
 
-switch ($args->doAction) {
-    case 'uploadFile':
-        $dummy = doExecuteImport($gui->fileName, $args, $req_spec_mgr, $req_mgr);
-        $gui->items = $dummy->items;
-        $gui->file_check = $dummy->file_check;
-        $gui->userFeedback = (array) $dummy->userFeedback;
-        $gui->importResult = lang_get('import_done');
-        if (array_key_exists("syntaxError", $gui->userFeedback) &&
-            count($gui->userFeedback['syntaxError']) > 0) {
-            $gui->importResult = lang_get('import_syntax_error');
-        }
-        $gui->refreshTree = $args->refreshTree && $gui->file_check['status_ok'];
-        break;
+if ($args->doAction === 'uploadFile') {
+    $dummy = doExecuteImport($gui->fileName, $args, $req_spec_mgr, $req_mgr);
+    $gui->items = $dummy->items;
+    $gui->file_check = $dummy->file_check;
+    $gui->userFeedback = (array) $dummy->userFeedback;
+    $gui->importResult = lang_get('import_done');
+    if (array_key_exists("syntaxError", $gui->userFeedback) &&
+        count($gui->userFeedback['syntaxError']) > 0) {
+        $gui->importResult = lang_get('import_syntax_error');
+    }
+    $gui->refreshTree = $args->refreshTree && $gui->file_check['status_ok'];
 }
 
 $smarty = new TLSmarty();

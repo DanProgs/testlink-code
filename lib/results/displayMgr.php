@@ -111,12 +111,8 @@ function initArgsForReports(&$dbHandler)
         exit();
     }
 
-    switch ($args->format) {
-        case FORMAT_XLS:
-            if ($args->buildListForExcel != '') {
-                $args->build_set = explode(',', $args->buildListForExcel);
-            }
-            break;
+    if ($args->format === FORMAT_XLS && $args->buildListForExcel != '') {
+        $args->build_set = explode(',', $args->buildListForExcel);
     }
 
     $args->format = $args->sendByMail ? FORMAT_MAIL_HTML : $args->format;

@@ -399,14 +399,12 @@ class testcaseCommands
         unset($cfPlaces['hide_because_is_used_as_variable']);
 
         foreach ($cfPlaces as $locationKey => $locationFilter) {
-            switch ($locationKey) {
-                case 'standard_location':
-                    $std = $locationFilter['location'];
-                    $locationFilter['location'] = [
-                        $std,
-                        $hideCode
-                    ];
-                    break;
+            if ($locationKey === 'standard_location') {
+                $std = $locationFilter['location'];
+                $locationFilter['location'] = [
+                    $std,
+                    $hideCode
+                ];
             }
 
             $cf_smarty[$locationKey] = $this->tcaseMgr->html_table_of_custom_field_inputs(

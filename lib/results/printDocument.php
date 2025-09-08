@@ -40,42 +40,33 @@ $doc_info->outputFormat = $printingOptions['outputFormat'] = $args->format;
 
 switch ($doc_info->type) {
     case DOC_REQ_SPEC:
-        switch ($doc_info->content_range) {
-            case 'reqspec':
-                $spec_mgr = new requirement_spec_mgr($db);
-                $spec = $spec_mgr->get_by_id($args->itemID);
-                unset($spec_mgr);
-
-                $spec['childNodes'] = isset($subtree['childNodes']) ? $subtree['childNodes'] : null;
-                $spec['node_type_id'] = $decode['node_descr_id']['requirement_spec'];
-
-                unset($treeForPlatform[0]['childNodes']);
-                $treeForPlatform[0]['childNodes'][0] = &$spec;
-
-                $doc_info->title = htmlspecialchars(
-                    $args->tproject_name . $tlCfg->gui_title_separator_2 .
-                    $spec['title']);
-                break;
+        if ($doc_info->content_range === 'reqspec') {
+            $spec_mgr = new requirement_spec_mgr($db);
+            $spec = $spec_mgr->get_by_id($args->itemID);
+            unset($spec_mgr);
+            $spec['childNodes'] = isset($subtree['childNodes']) ? $subtree['childNodes'] : null;
+            $spec['node_type_id'] = $decode['node_descr_id']['requirement_spec'];
+            unset($treeForPlatform[0]['childNodes']);
+            $treeForPlatform[0]['childNodes'][0] = &$spec;
+            $doc_info->title = htmlspecialchars(
+                $args->tproject_name . $tlCfg->gui_title_separator_2 .
+                $spec['title']);
         }
         break;
 
     case DOC_TEST_SPEC:
         $printingOptions['importance'] = $doc_info->test_priority_enabled;
 
-        switch ($doc_info->content_range) {
-            case 'testsuite':
-                $tsuite = new testsuite($db);
-                $tInfo = $tsuite->get_by_id($args->itemID);
-                $tInfo['childNodes'] = isset($subtree['childNodes']) ? $subtree['childNodes'] : null;
-
-                $treeForPlatform[0]['childNodes'] = [
-                    $tInfo
-                ];
-
-                $doc_info->title = htmlspecialchars(
-                    isset($tInfo['name']) ? $args->tproject_name .
-                    $tlCfg->gui_title_separator_2 . $tInfo['name'] : $args->tproject_name);
-                break;
+        if ($doc_info->content_range === 'testsuite') {
+            $tsuite = new testsuite($db);
+            $tInfo = $tsuite->get_by_id($args->itemID);
+            $tInfo['childNodes'] = isset($subtree['childNodes']) ? $subtree['childNodes'] : null;
+            $treeForPlatform[0]['childNodes'] = [
+                $tInfo
+            ];
+            $doc_info->title = htmlspecialchars(
+                isset($tInfo['name']) ? $args->tproject_name .
+                $tlCfg->gui_title_separator_2 . $tInfo['name'] : $args->tproject_name);
         }
         break;
 

@@ -221,12 +221,8 @@ function getCFDiff($cfields, &$reqMgr)
                 if ($type_code[$cfieldsLeft[$cf_key]['type']] == 'date' ||
                     $type_code[$cfieldsLeft[$cf_key]['type']] == 'datetime') {
                     foreach ($key2convert as $fx) {
-                        if ($doIt = ($cmp[$cf_key][$fx] != null)) {
-                            switch ($type_code[$cfieldsLeft[$cf_key]['type']]) {
-                                case 'datetime':
-                                    $dt_format = $t_datetime_format;
-                                    break;
-                            }
+                        if (($doIt = $cmp[$cf_key][$fx] != null) && $type_code[$cfieldsLeft[$cf_key]['type']] === 'datetime') {
+                            $dt_format = $t_datetime_format;
                         }
                         if ($doIt) {
                             $cmp[$cf_key][$fx] = date($dt_format,
@@ -238,7 +234,7 @@ function getCFDiff($cfields, &$reqMgr)
         }
     }
 
-    return (null != $cmp && ! empty($cmp)) ? $cmp : null;
+    return (null != $cmp && $cmp !== []) ? $cmp : null;
 }
 
 /**

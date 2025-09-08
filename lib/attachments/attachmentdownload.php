@@ -43,27 +43,25 @@ if ($args->id) {
                 // What kind of attachments I've got ?
                 $doIt = false;
                 $attContext = $attachInfo['fk_table'];
-                switch ($attContext) {
-                    case 'executions':
-                        // check apikey
-                        // 1. has to be a test plan key
-                        // 2. execution must belong to the test plan.
-                        $item = getEntityByAPIKey($db, $args->apikey, 'testplan');
-                        if (! is_null($item)) {
-                            $tables = tlObjectWithDB::getDBTables(
-                                [
-                                    'executions'
-                                ]);
-                            $sql = "SELECT testplan_id FROM {$tables['executions']} " .
-                                "WHERE id = " . intval($attachInfo['fk_id']);
+                if ($attContext === 'executions') {
+                    // check apikey
+                    // 1. has to be a test plan key
+                    // 2. execution must belong to the test plan.
+                    $item = getEntityByAPIKey($db, $args->apikey, 'testplan');
+                    if (! is_null($item)) {
+                        $tables = tlObjectWithDB::getDBTables(
+                            [
+                                'executions'
+                            ]);
+                        $sql = "SELECT testplan_id FROM {$tables['executions']} " .
+                            "WHERE id = " . intval($attachInfo['fk_id']);
 
-                            $rs = $db->get_recordset($sql);
-                            if (! is_null($rs) &&
-                                $rs['0']['testplan_id'] == $item['id']) {
-                                $doIt = true;
-                            }
+                        $rs = $db->get_recordset($sql);
+                        if (! is_null($rs) &&
+                            $rs['0']['testplan_id'] == $item['id']) {
+                            $doIt = true;
                         }
-                        break;
+                    }
                 }
                 break;
 

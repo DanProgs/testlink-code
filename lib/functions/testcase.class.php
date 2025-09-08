@@ -573,54 +573,51 @@ class testcase extends tlObjectWithAttachments
         //
         if (! is_null($my['options']['importLogic'])) {
             $doQuickReturn = false;
-            switch ($my['options']['importLogic']['hitCriteria']) {
-                case 'externalID':
-                    if (($sf = intval($my['options']['external_id'])) > 0) {
-                        // check if already exists a test case with this external id
-                        $info = $this->get_by_external($sf, $parent_id);
-                        if (! is_null($info)) {
-                            if (count($info) > 1) {
-                                // abort
-                                throw new Exception(
-                                    "More than one test case with same external ID");
-                            }
-
-                            $doQuickReturn = true;
-                            $ret['id'] = key($info);
-                            $ret['external_id'] = $sf;
-                            $ret['version_number'] = - 1;
-                            $ret['external_id_already_exists'] = true;
+            if ($my['options']['importLogic']['hitCriteria'] === 'externalID') {
+                if (($sf = intval($my['options']['external_id'])) > 0) {
+                    // check if already exists a test case with this external id
+                    $info = $this->get_by_external($sf, $parent_id);
+                    if (! is_null($info)) {
+                        if (count($info) > 1) {
+                            // abort
+                            throw new Exception(
+                                "More than one test case with same external ID");
                         }
-                    }
 
-                    switch ($my['options']['importLogic']['actionOnHit']) {
-                        case 'create_new_version':
-                            if ($doQuickReturn) {
-                                // I this situation we will need to also update test case name, if user
-                                // has provided one on import file.
-                                // Then we need to check that new name will not conflict with an existing one
-                                $doCreate = false;
-                                if (strcmp($info[key($info)]['name'], $name) != 0) {
-                                    $itemSet = $this->getDuplicatesByName($name,
-                                        $parent_id, $getDupOptions);
-                                    if (is_null($itemSet)) {
-                                        $ret['name'] = $name;
-                                        $ret['update_name'] = true;
-                                    }
+                        $doQuickReturn = true;
+                        $ret['id'] = key($info);
+                        $ret['external_id'] = $sf;
+                        $ret['version_number'] = - 1;
+                        $ret['external_id_already_exists'] = true;
+                    }
+                }
+                switch ($my['options']['importLogic']['actionOnHit']) {
+                    case 'create_new_version':
+                        if ($doQuickReturn) {
+                            // I this situation we will need to also update test case name, if user
+                            // has provided one on import file.
+                            // Then we need to check that new name will not conflict with an existing one
+                            $doCreate = false;
+                            if (strcmp($info[key($info)]['name'], $name) != 0) {
+                                $itemSet = $this->getDuplicatesByName($name,
+                                    $parent_id, $getDupOptions);
+                                if (is_null($itemSet)) {
+                                    $ret['name'] = $name;
+                                    $ret['update_name'] = true;
                                 }
-                                return $ret;
                             }
-                            break;
+                            return $ret;
+                        }
+                        break;
 
-                        case 'generate_new':
-                            // on GUI => create a new test case with a different title
-                            // IMPORTANT:
-                            // if name provided on import file does not hit an existent one
-                            // then I'm going to use it, instead of generating a NEW NAME
-                            $forceGenerateExternalID = true;
-                            break;
-                    }
-                    break;
+                    case 'generate_new':
+                        // on GUI => create a new test case with a different title
+                        // IMPORTANT:
+                        // if name provided on import file does not hit an existent one
+                        // then I'm going to use it, instead of generating a NEW NAME
+                        $forceGenerateExternalID = true;
+                        break;
+                }
             }
         }
 
@@ -3701,7 +3698,7 @@ class testcase extends tlObjectWithAttachments
             }
         }
 
-        if (empty($dummy)) {
+        if ($dummy === []) {
             return;
         }
 
@@ -4764,49 +4761,39 @@ class testcase extends tlObjectWithAttachments
         $rs = $this->db->fetchMapRowsIntoMap($sql, $access_key[0],
             $access_key[1], database::CUMULATIVE);
 
-        if (! is_null($rs) && ! is_null($my['opt']['mode'])) {
-            switch ($my['opt']['mode']) {
-                case 'full_path':
-                    if ($my['opt']['access_keys'] == 'testplan_testcase') {
-                        $tcaseSet = null;
-                        $main_keys = array_keys($rs);
-
-                        foreach ($main_keys as $maccess_key) {
-                            $sec_keys = array_keys($rs[$maccess_key]);
-                            foreach ($sec_keys as $saccess_key) {
-                                // is enough I process first element
-                                $item = $rs[$maccess_key][$saccess_key][0];
-                                if (! isset($tcaseSet[$item['testcase_id']])) {
-                                    $tcaseSet[$item['testcase_id']] = $item['testcase_id'];
-                                }
-                            }
-                        }
-
-                        $path_info = $this->tree_manager->get_full_path_verbose(
-                            $tcaseSet);
-
-                        // Remove test project piece and convert to string
-                        $flat_path = null;
-                        foreach ($path_info as $tcase_id => $pieces) {
-                            unset($pieces[0]);
-                            // 20100813 - asimon - deactivated last slash on path
-                            // to remove it from test suite name in "tc assigned to user" tables
-                            $flat_path[$tcase_id] = implode('/', $pieces);
-                        }
-                        $main_keys = array_keys($rs);
-
-                        foreach ($main_keys as $idx) {
-                            $sec_keys = array_keys($rs[$idx]);
-                            foreach ($sec_keys as $jdx) {
-                                $third_keys = array_keys($rs[$idx][$jdx]);
-                                foreach ($third_keys as $tdx) {
-                                    $fdx = $rs[$idx][$jdx][$tdx]['testcase_id'];
-                                    $rs[$idx][$jdx][$tdx]['tcase_full_path'] = $flat_path[$fdx];
-                                }
-                            }
-                        }
+        if (! is_null($rs) && !is_null($my['opt']['mode']) && $my['opt']['mode'] === 'full_path' && $my['opt']['access_keys'] == 'testplan_testcase') {
+            $tcaseSet = null;
+            $main_keys = array_keys($rs);
+            foreach ($main_keys as $maccess_key) {
+                $sec_keys = array_keys($rs[$maccess_key]);
+                foreach ($sec_keys as $saccess_key) {
+                    // is enough I process first element
+                    $item = $rs[$maccess_key][$saccess_key][0];
+                    if (! isset($tcaseSet[$item['testcase_id']])) {
+                        $tcaseSet[$item['testcase_id']] = $item['testcase_id'];
                     }
-                    break;
+                }
+            }
+            $path_info = $this->tree_manager->get_full_path_verbose(
+                $tcaseSet);
+            // Remove test project piece and convert to string
+            $flat_path = null;
+            foreach ($path_info as $tcase_id => $pieces) {
+                unset($pieces[0]);
+                // 20100813 - asimon - deactivated last slash on path
+                // to remove it from test suite name in "tc assigned to user" tables
+                $flat_path[$tcase_id] = implode('/', $pieces);
+            }
+            $main_keys = array_keys($rs);
+            foreach ($main_keys as $idx) {
+                $sec_keys = array_keys($rs[$idx]);
+                foreach ($sec_keys as $jdx) {
+                    $third_keys = array_keys($rs[$idx][$jdx]);
+                    foreach ($third_keys as $tdx) {
+                        $fdx = $rs[$idx][$jdx][$tdx]['testcase_id'];
+                        $rs[$idx][$jdx][$tdx]['tcase_full_path'] = $flat_path[$fdx];
+                    }
+                }
             }
         }
 
@@ -6074,11 +6061,8 @@ class testcase extends tlObjectWithAttachments
 
         $add_filters = ' ';
         foreach ($my['filters'] as $value) {
-            switch ($my['filters']) {
-                case 'version':
-                    if (! is_null($value)) {
-                        $add_filters .= ' AND TCV.version = intval($value) ';
-                    }
+            if ($my['filters'] === 'version' && ! is_null($value)) {
+                $add_filters .= ' AND TCV.version = intval($value) ';
             }
         }
 
@@ -6296,7 +6280,7 @@ class testcase extends tlObjectWithAttachments
                 'fields2get' => 'id',
                 'accessKey' => 'id'
             ]);
-        if (! empty($stepSet)) {
+        if ($stepSet !== []) {
             $this->delete_step_by_id(array_keys($stepSet));
         }
 
@@ -8578,7 +8562,7 @@ class testcase extends tlObjectWithAttachments
                         // Theorically can be just ONE, but it depends
                         // is user had not messed things.
                         $yy = explode($tlEndTag, $xx[$xdx]);
-                        if (! empty($yy)) {
+                        if ($yy !== []) {
                             $variableName = trim($yy[0]);
 
                             try {
@@ -8673,7 +8657,7 @@ class testcase extends tlObjectWithAttachments
             }
         }
 
-        if (empty($script_list)) {
+        if ($script_list === []) {
             return null;
         }
         return $script_list;
@@ -8747,7 +8731,7 @@ class testcase extends tlObjectWithAttachments
             $name = $whoami['l'] . self::NAME_PHOPEN;
 
             $juice = $this->orangeJuice($text2scan);
-            $name .= (empty($dm)) ? $meat : $dm[0];
+            $name .= ($dm === []) ? $meat : $dm[0];
             $name .= self::NAME_DIVIDE . $juice . self::NAME_PHCLOSE .
                 $whoami['r'];
         }
@@ -8793,7 +8777,7 @@ class testcase extends tlObjectWithAttachments
             }
 
             $dm = explode(self::NAME_DIVIDE, $needle);
-            $target = $side['l'] . ((empty($dm)) ? $needle : $dm[0]);
+            $target = $side['l'] . (($dm === []) ? $needle : $dm[0]);
 
             $juice = $this->orangeJuice($scan4values);
             $target .= self::NAME_DIVIDE . $juice . $side['r'];
@@ -8932,7 +8916,7 @@ class testcase extends tlObjectWithAttachments
             }
         }
 
-        if (! empty($values)) {
+        if ($values !== []) {
             $sql = 'INSERT INTO ' . $this->tables['testcase_relations'] . $ins .
                 ' VALUES ' . implode(',', $values);
 
@@ -9947,7 +9931,7 @@ class testcase extends tlObjectWithAttachments
             }
         }
 
-        if (empty($dummy)) {
+        if ($dummy === []) {
             return;
         }
 

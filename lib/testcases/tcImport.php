@@ -44,11 +44,9 @@ if ($args->do_upload) {
         $gui->file_check['status_ok'] = 1;
         if (move_uploaded_file($source, $gui->dest)) {
             tLog('Renamed uploaded file: ' . $source);
-            switch ($args->importType) {
-                case 'XML':
-                    $pcheck_fn = "check_xml_tc_tsuite";
-                    $pimport_fn = "importTestCaseDataFromXML";
-                    break;
+            if ($args->importType === 'XML') {
+                $pcheck_fn = "check_xml_tc_tsuite";
+                $pimport_fn = "importTestCaseDataFromXML";
             }
 
             if (! is_null($pcheck_fn)) {

@@ -261,10 +261,8 @@ class tlExtTable extends tlTable
             }
 
             if (isset($column['tlType'])) {
-                switch ($column['tlType']) {
-                    case 'disableUser':
-                        $s .= $this->getDisableUserJS();
-                        break;
+                if ($column['tlType'] === 'disableUser') {
+                    $s .= $this->getDisableUserJS();
                 }
                 continue; // Bye!!
             }

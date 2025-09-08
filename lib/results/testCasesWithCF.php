@@ -111,7 +111,7 @@ if ($args->doIt) {
         }
     }
 
-    if (! empty($matrixData)) {
+    if ($matrixData !== []) {
         $table = new tlExtTable($columns, $matrixData, 'tl_table_tc_with_cf');
         $table->addCustomBehaviour('text', [
             'render' => 'columnWrap'

@@ -20,10 +20,8 @@ $templateCfg = templateConfiguration();
 $args = initArgs($db);
 $gui = initializeGui($args);
 
-switch ($args->doAction) {
-    case "do_export":
-        do_export($db, $smarty, $args);
-        break;
+if ($args->doAction === "do_export") {
+    do_export($db, $smarty, $args);
 }
 
 $smarty = new TLSmarty();

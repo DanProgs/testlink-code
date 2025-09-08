@@ -90,13 +90,11 @@ if ($args->doExport || ($args->doExportSkel && ! $gui->oneTestCaseExport)) {
     $tsuite_mgr = new testsuite($db);
 
     $pfn = null;
-    switch ($args->exportType) {
-        case 'XML':
-            $pfn = 'exportTestSuiteDataToXML';
-            if ($gui->oneTestCaseExport) {
-                $pfn = 'exportTestCaseDataToXML';
-            }
-            break;
+    if ($args->exportType === 'XML') {
+        $pfn = 'exportTestSuiteDataToXML';
+        if ($gui->oneTestCaseExport) {
+            $pfn = 'exportTestCaseDataToXML';
+        }
     }
 
     if ($pfn) {

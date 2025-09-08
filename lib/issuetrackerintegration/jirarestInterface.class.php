@@ -642,11 +642,8 @@ class jirarestInterface extends issueTrackerInterface
     {
         $attr = get_object_vars($this->cfg->attributes);
         foreach ($attr as $name => $elem) {
-            $name = $name;
-            switch ($name) {
-                case 'customFieldValues':
-                    $this->getCustomFieldsAttribute($name, $elem);
-                    break;
+            if ($name === 'customFieldValues') {
+                $this->getCustomFieldsAttribute($name, $elem);
             }
         }
     }

@@ -474,10 +474,8 @@ class tlTestCaseFilterControl extends tlFilterControl
         // Do first get, to have info that can change config
         I_PARAMS($params, $this->args);
 
-        switch ($this->mode) {
-            case 'edit_mode':
-                $this->args->advanced_filter_mode = true;
-                break;
+        if ($this->mode === 'edit_mode') {
+            $this->args->advanced_filter_mode = true;
         }
 
         if ($this->args->advanced_filter_mode) {
@@ -2114,7 +2112,7 @@ class tlTestCaseFilterControl extends tlFilterControl
         // for CF types that present a domain like LIST, then if the blank option is
         // not present will be added as FIRST OPTION
 
-        if (! empty($cf)) {
+        if ($cf !== []) {
             $cfTypes = array_flip($this->cfield_mgr->get_available_types());
             $key2loop = array_keys($cf);
             foreach ($key2loop as $cfID) {

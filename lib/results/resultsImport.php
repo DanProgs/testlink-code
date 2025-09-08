@@ -36,11 +36,9 @@ if ($args->doUpload) {
     if (($source != 'none') && ($source != '')) {
         $gui->file_check['status_ok'] = 1;
         if ($gui->file_check['status_ok'] && move_uploaded_file($source, $dest)) {
-            switch ($args->importType) {
-                case 'XML':
-                    $pcheck_fn = "check_xml_execution_results";
-                    $pimport_fn = "importExecutionResultsFromXML";
-                    break;
+            if ($args->importType === 'XML') {
+                $pcheck_fn = "check_xml_execution_results";
+                $pimport_fn = "importExecutionResultsFromXML";
             }
 
             if ($pcheck_fn) {
