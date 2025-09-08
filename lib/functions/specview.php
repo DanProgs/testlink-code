@@ -224,8 +224,12 @@ function gen_spec_view(&$db, $specViewType, $tobj_id, $id, $name, &$linked_items
         // key: test case version id
         // value: index inside $out, where parent test suite of test case version id is located.
         //
-        [$a_tcid, $a_tsuite_idx, $tsuite_tcqty, $out] = buildSkeleton($id,
-            $name, $cfg, $test_spec, $platforms);
+        [
+            $a_tcid,
+            $a_tsuite_idx,
+            $tsuite_tcqty,
+            $out
+        ] = buildSkeleton($id, $name, $cfg, $test_spec, $platforms);
     }
 
     // This code has been replace (see below on Remove empty branches)
@@ -397,8 +401,12 @@ function gen_coverage_view(&$db, $specViewType, $tobj_id, $id, $name,
         // key: test case version id
         // value: index inside $out, where parent test suite of test case version id is located.
         //
-        [$a_tcid, $a_tsuite_idx, , $out] = buildSkeleton($id, $name, $cfg,
-            $test_spec, $platforms);
+        [
+            $a_tcid,
+            $a_tsuite_idx,
+            ,
+            $out
+        ] = buildSkeleton($id, $name, $cfg, $test_spec, $platforms);
     }
 
     // This code has been replace (see below on Remove empty branches)
@@ -660,7 +668,7 @@ function getFilteredSpecView(&$dbHandler, &$argsObj, &$tplanMgr, &$tcaseMgr,
     // applied filters => we do not need to call other
     // method because we know we are going to get NOTHING
     $testCaseSet = is_null($testCaseSet) ? null : array_combine($testCaseSet,
-            $testCaseSet);
+        $testCaseSet);
     if ($filterApplied && is_null($testCaseSet)) {
         return null;
     }
@@ -851,7 +859,7 @@ function getTestSpecFromNode(&$dbHandler, &$tcaseMgr, &$linkedItems,
             // case insensitive search
             if (($useFilter['keyword_id'] &&
                 ! isset($tck_map[$test_spec[$tspecKey]['id']])) ||
-                ($useFilter['platforms'] &&
+                (! empty($useFilter['platforms']) &&
                 ! isset($tcpl_map[$test_spec[$tspecKey]['id']])) ||
                 ($useFilter['tcase_id'] &&
                 ! in_array($test_spec[$tspecKey]['id'], $testCaseSet)) ||
@@ -956,7 +964,7 @@ function getTestSpecFromNode(&$dbHandler, &$tcaseMgr, &$linkedItems,
                         // $tcversionSet = $tcaseMgr->get_last_active_version()
                         if ($useFilter['cfields']) {
                             $filteredSet = (empty($allowedSet)) ? $tcvidSet : array_keys(
-                                    $allowedSet);
+                                $allowedSet);
                             $dummySet = $tcaseMgr->filter_tcversions_by_cfields(
                                 $filteredSet, $filters['cfields'], $options);
 
@@ -1220,12 +1228,13 @@ function buildSkeleton($id, $name, $config, &$test_spec, &$platforms)
             // |
             // |__ TCZ1
             //
-            if ($tcase_memory['parent_id'] != $current['parent_id']) {
-                if (! is_null($tcase_memory)) {
+            if (! empty($tcase_memory['parent_id'])) {
+                if ($tcase_memory['parent_id'] != $current['parent_id']) {
                     $pidx = $hash_id_pos[$tcase_memory['parent_id']];
                     $xdx = $out[$pidx]['testsuite']['id'];
                     $tsuite_tcqty[$xdx] = $out[$pidx]['testcase_qty'];
                 }
+            } else {
                 $tcase_memory = $current;
             }
         } else {
@@ -1518,7 +1527,7 @@ function getFilteredSpecViewFlat(&$dbHandler, &$argsObj, &$tplanMgr, &$tcaseMgr,
     // => we do not need to call other
     // method because we know we are going to get NOTHING
     $testCaseSet = is_null($testCaseSet) ? null : array_combine($testCaseSet,
-            $testCaseSet);
+        $testCaseSet);
     if ($filterApplied && is_null($testCaseSet)) {
         return null;
     }
@@ -1624,8 +1633,12 @@ function genSpecViewFlat(&$db, $specViewType, $tobj_id, $id, $name,
         // key: test case version id
         // value: index inside $out, where parent test suite of test case version id is located.
         //
-        [$a_tcid, $a_tsuite_idx, , $out] = buildSkeletonFlat($id, $name,
-            $cfg, $test_spec, $platforms);
+        [
+            $a_tcid,
+            $a_tsuite_idx,
+            ,
+            $out
+        ] = buildSkeletonFlat($id, $name, $cfg, $test_spec, $platforms);
     }
 
     // Collect information related to linked testcase versions
@@ -1809,16 +1822,17 @@ function buildSkeletonFlat($branchRootID, $name, $config, &$test_spec,
             // |__ TCZ1
             //
             //
-            if ($tcase_memory['parent_id'] != $current['parent_id']) {
-                if (! is_null($tcase_memory)) {
+            if (! empty($tcase_memory)) {
+                if ($tcase_memory['parent_id'] != $current['parent_id']) {
                     $pidx = $hash_id_pos[$tcase_memory['parent_id']];
                     $xdx = $out[$pidx]['testsuite']['id'];
                     $tsuite_tcqty[$xdx] = $out[$pidx]['testcase_qty'];
                 }
+            } else {
                 $tcase_memory = $current;
             }
         }
-    } // foreach
+    }
 
     // Update after finished loop
     if ($parent_idx >= 0) {

@@ -143,7 +143,10 @@ function initializeGuiForResult(&$dbHandler, $argsObj, &$guiObj)
     if (! is_null($guiObj->resultSet)) {
         // test case can exist multiple times, due to versions
         $rows = [];
-        [$columns, $sortByColumn] = getColumnsDefinition();
+        [
+            $columns,
+            $sortByColumn
+        ] = getColumnsDefinition();
         foreach ($guiObj->resultSet as $itemInfo) {
             foreach ($itemInfo as $tcase) {
                 $cuRow = [];
@@ -157,8 +160,8 @@ function initializeGuiForResult(&$dbHandler, $argsObj, &$guiObj)
                     "<img title=\"{$guiObj->l18n['design']}\" src=\"{$guiObj->images['edit']}\" /></a> ";
 
                 $cuRow[] = "<!-- " . sprintf("%010d", $tcase['external_id']) .
-                    " -->" . $edit_link .
-                    htmlspecialchars($tcase['external_id']) . " : " .
+                    " -->" . $edit_link . htmlspecialchars(
+                        $tcase['external_id']) . " : " .
                     htmlspecialchars($tcase['tcase_name']) .
                     sprintf($guiObj->l18n['tcversion_indicator'],
                         $tcase['version']);
@@ -433,10 +436,10 @@ function sanitizeDates(&$obj)
 {
     $validLenght = strlen('MM/DD/YYYY');
 
-    // [./-]
-    // . russian,pl
-    // - nl
-    $validFormat = '#^\d{1,2}[./-][\d{1,2}[./-][\d{4}$#';
+    // '.' russian,pl
+    // '-' nl
+    // [.] match any character except newline (by default)
+    $validFormat = '/^\d{1,2}[.]\d{1,2}[.]\d{4}$/';
 
     $p2check = [
         'selected_end_date',
@@ -457,7 +460,7 @@ function sanitizeDates(&$obj)
                 }
             }
         }
-    } // foreach
+    }
 }
 
 /**

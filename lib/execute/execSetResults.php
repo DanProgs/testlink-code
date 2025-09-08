@@ -47,7 +47,11 @@ $templateCfg = templateConfiguration();
 
 $tcversion_id = null;
 $submitResult = null;
-[$args, $its, $cts] = initArgs($db, $cfg);
+[
+    $args,
+    $its,
+    $cts
+] = initArgs($db, $cfg);
 
 // the default -1 create an out of range error on TC execution without platform
 if ($args->platform_id == - 1) {
@@ -95,8 +99,10 @@ if ($args->linkLatestVersion && $args->level == 'testcase') {
 }
 
 // LOAD What To Display
-[$linked_tcversions, $itemSet] = getLinkedItems($args, $gui->history_on,
-    $cfg, $tcaseMgr, $tplan_mgr);
+[
+    $linked_tcversions,
+    $itemSet
+] = getLinkedItems($args, $gui->history_on, $cfg, $tcaseMgr, $tplan_mgr);
 
 $tcase_id = 0;
 $userid_array = null;
@@ -108,9 +114,13 @@ if (! is_null($linked_tcversions)) {
         // passed by reference to be updated inside function
         // $gui, $args
         $tcase = null;
-        [$tcase_id, $tcversion_id, $latestExecIDInContext, $hasCFOnExec] = processTestCase(
-            $tcase, $gui, $args, $cfg, $linked_tcversions, $tree_mgr, $tcaseMgr,
-            $fileRepo);
+        [
+            $tcase_id,
+            $tcversion_id,
+            $latestExecIDInContext,
+            $hasCFOnExec
+        ] = processTestCase($tcase, $gui, $args, $cfg, $linked_tcversions,
+            $tree_mgr, $tcaseMgr, $fileRepo);
     } else {
         processTestSuite($db, $gui, $args, $itemSet, $tree_mgr, $tcaseMgr,
             $fileRepo);
@@ -169,8 +179,11 @@ if (! is_null($linked_tcversions)) {
                     array_keys($_REQUEST['step_notes']), $ctx);
             }
 
-            [$execSet, $gui->addIssueOp, $gui->uploadOp] = write_execution(
-                $db, $args, $_REQUEST, $its);
+            [
+                $execSet,
+                $gui->addIssueOp,
+                $gui->uploadOp
+            ] = write_execution($db, $args, $_REQUEST, $its);
 
             // Copy Attachments from latest exec ?
             // we have got Latest Execution on Context on processTestCase()
@@ -352,8 +365,11 @@ if (! is_null($linked_tcversions)) {
                     'id' => $nextItem['tcase_id'],
                     'version_id' => $nextItem['tcversion_id']
                 ];
-                [$lt, $xdm] = getLinkedItems($args, $gui->history_on, $cfg,
-                    $tcaseMgr, $tplan_mgr, $identity);
+                [
+                    $lt,
+                    $xdm
+                ] = getLinkedItems($args, $gui->history_on, $cfg, $tcaseMgr,
+                    $tplan_mgr, $identity);
                 processTestCase($nextItem, $gui, $args, $cfg, $lt, $tree_mgr,
                     $tcaseMgr, $fileRepo);
             }
@@ -552,9 +568,13 @@ if ($args->reload_caller) {
     if (! $gui->can_use_bulk_op &&
         $cfg->exec_cfg->exec_mode->new_exec == 'latest') {
 
-        [$tcase_id, $tcversion_id, $latestExecIDInContext, $hasCFOnExec] = processTestCase(
-            $tcase, $gui, $args, $cfg, $linked_tcversions, $tree_mgr, $tcaseMgr,
-            $fileRepo);
+        [
+            $tcase_id,
+            $tcversion_id,
+            $latestExecIDInContext,
+            $hasCFOnExec
+        ] = processTestCase($tcase, $gui, $args, $cfg, $linked_tcversions,
+            $tree_mgr, $tcaseMgr, $fileRepo);
 
         if ($latestExecIDInContext > 0) {
             $tbl = DB_TABLE_PREFIX . 'executions';
@@ -705,10 +725,9 @@ function initArgs(&$dbHandler, $cfgObj)
         // THIS COLLECT ONLY FIRST LEVEL UNDER test suite, do not do deep search
         // Need to understand is still needed
         $tsuite_mgr = new testsuite($dbHandler);
-        $xx = $tsuite_mgr->get_children($args->tsuite_id,
-            [
-                'details' => 'id'
-            ]);
+        $xx = $tsuite_mgr->get_children($args->tsuite_id, [
+            'details' => 'id'
+        ]);
         $ldx = count($xx);
         $xx[$ldx] = $args->tsuite_id;
         $args->tsuitesInBranch = $xx;
@@ -1520,8 +1539,10 @@ function initializeGui(&$dbHandler, &$argsObj, &$cfgObj, &$tplanMgr, &$tcaseMgr,
     $gui->execStatusIcons = getResultsIcons();
     $gui->execStatusIconsNext = getResultsIconsNext();
 
-    [$gui->execStatusValues, $gui->execStepStatusValues] = initExecValuesMenus(
-        $cfgObj->tc_status, $cfgObj->execStatusToExclude);
+    [
+        $gui->execStatusValues,
+        $gui->execStepStatusValues
+    ] = initExecValuesMenus($cfgObj->tc_status, $cfgObj->execStatusToExclude);
 
     $gui->can_use_bulk_op = 0;
     $gui->exec_notes_editors = null;
@@ -1663,8 +1684,8 @@ function initializeGui(&$dbHandler, &$argsObj, &$cfgObj, &$tplanMgr, &$tcaseMgr,
             $gui->issueTrackerCfg->bugSummaryMaxLength = $issueTracker->getBugSummaryMaxLength();
             $gui->issueTrackerCfg->editIssueAttr = (intval(
                 $itsCfg->userinteraction) > 0);
-            $gui->issueTrackerCfg->crudIssueViaAPI = (intval(
-                $itsCfg->createissueviaapi) > 0) ?? false;
+            $gui->issueTrackerCfg->crudIssueViaAPI = ! empty(
+                $itsCfg->createissueviaapi) ? intval($itsCfg->createissueviaapi) : false;
 
             $gui->issueTrackerIntegrationOn = true;
             $gui->accessToIssueTracker = lang_get('link_bts_create_bug') .
@@ -1834,8 +1855,10 @@ function processTestCase($tcase, &$guiObj, &$argsObj, &$cfgObj, $tcv, &$treeMgr,
     $signature->tcpathname = $tcaseMgr->getPathName($tcase_id);
     $signature->tcversion_id = $tcversion_id;
 
-    [$guiObj->bug_summary, $guiObj->issueSummaryForStep] = genIssueSummary(
-        $tcaseMgr, $signature, $guiObj->executionContext);
+    [
+        $guiObj->bug_summary,
+        $guiObj->issueSummaryForStep
+    ] = genIssueSummary($tcaseMgr, $signature, $guiObj->executionContext);
 
     // return more data eid, has cf on exec
     return [

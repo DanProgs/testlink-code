@@ -794,11 +794,10 @@ class testcase extends tlObjectWithAttachments
         $tcase_version_id = $this->tree_manager->new_node($item->id,
             $this->node_types_descr_id['testcase_version']);
 
-        $this->ckEditorCopyAndPasteCleanUp($item,
-            [
-                'summary',
-                'preconditions'
-            ]);
+        $this->ckEditorCopyAndPasteCleanUp($item, [
+            'summary',
+            'preconditions'
+        ]);
 
         $sql = "/* {$debugMsg} */ INSERT INTO {$this->tables['tcversions']} " .
             " (id,tc_external_id,version,summary,preconditions," .
@@ -968,8 +967,9 @@ class testcase extends tlObjectWithAttachments
         }
         $recordset = $this->db->get_recordset($sql);
         if (count($recordset) && $tproject_name != "") {
-            [$tproject_info] = $this->tproject_mgr->get_by_name(
-                $tproject_name);
+            [
+                $tproject_info
+            ] = $this->tproject_mgr->get_by_name($tproject_name);
             foreach ($recordset as $idx => $tcase_info) {
                 if ($this->get_testproject($tcase_info['id']) !=
                     $tproject_info['id']) {
@@ -2627,7 +2627,8 @@ class testcase extends tlObjectWithAttachments
     {
         $debugMsg = $this->debugMsg . __FUNCTION__;
         $now = $this->db->db_now();
-        $sql = "/* {$debugMsg} */ " . " INSERT INTO {$this->tables['tcversions']} " .
+        $sql = "/* {$debugMsg} */ " .
+            " INSERT INTO {$this->tables['tcversions']} " .
             " (id,version,tc_external_id,author_id,creation_ts,summary, " .
             "  importance,execution_type,preconditions,estimated_exec_duration) " .
             " SELECT {$to_tcversion_id} AS id, {$as_version_number} AS version, " .
@@ -5181,8 +5182,8 @@ class testcase extends tlObjectWithAttachments
         }
 
         if (! is_null($cf_map)) {
-            return $this->cfield_mgr->html_table_inputs($cf_map,
-                $name_suffix, $input_values);
+            return $this->cfield_mgr->html_table_inputs($cf_map, $name_suffix,
+                $input_values);
         }
         return $cf_smarty;
     }
@@ -5660,7 +5661,12 @@ class testcase extends tlObjectWithAttachments
      */
     public function buildDirectWebLink($base_href, $id, $tproject_id = null)
     {
-        [$external_id, $prefix, , ] = $this->getExternalID($id, $tproject_id);
+        static $external_id;
+        static $prefix;
+        [
+            $external_id,
+            $prefix
+        ] = $this->getExternalID($id, $tproject_id);
 
         return $base_href . 'linkto.php?tprojectPrefix=' . urlencode($prefix) .
             '&item=testcase&id=' . urlencode($external_id);
@@ -5675,7 +5681,10 @@ class testcase extends tlObjectWithAttachments
 
         if (is_null($prefix)) {
             if (is_null($root) || ($root != $tproject_id)) {
-                [$tcase_prefix, $root] = $this->getPrefix($id, $tproject_id);
+                [
+                    $tcase_prefix,
+                    $root
+                ] = $this->getPrefix($id, $tproject_id);
             }
         } else {
             $tcase_prefix = $prefix;
@@ -6641,8 +6650,7 @@ class testcase extends tlObjectWithAttachments
                                             if (is_null($yy)) {
                                                 // seems all versions are inactive, in this situation will get latest
                                                 $yy = $this->getLastVersionInfo(
-                                                    $xid,
-                                                    [
+                                                    $xid, [
                                                         'output' => 'full'
                                                     ]);
                                             }
@@ -7530,8 +7538,7 @@ class testcase extends tlObjectWithAttachments
                                         if (is_null($zorro)) {
                                             // seems all versions are inactive, in this situation will get latest
                                             $zorro = $this->getLastVersionInfo(
-                                                $xid,
-                                                [
+                                                $xid, [
                                                     'output' => 'full'
                                                 ]);
                                             $addInfo = " - All versions are inactive!!";
@@ -8331,73 +8338,75 @@ class testcase extends tlObjectWithAttachments
 
         $rse = &$item2render;
         foreach ($key2check as $item_key) {
-            $start = strpos($rse[$item_key], $beginTag);
-            $ghost = $rse[$item_key];
+            if (! empty($rse[$item_key])) {
+                $start = strpos($rse[$item_key], $beginTag);
+                $ghost = $rse[$item_key];
+                // There is at least one request to replace ?
+                if ($start !== false) {
+                    $xx = explode($beginTag, $rse[$item_key]);
 
-            // There is at least one request to replace ?
-            if ($start !== false) {
-                $xx = explode($beginTag, $rse[$item_key]);
+                    // How many requests to replace ?
+                    $xx2do = count($xx);
+                    $ghost = '';
+                    for ($xdx = 0; $xdx < $xx2do; $xdx ++) {
+                        // Hope was not a false request.
+                        if (strpos($xx[$xdx], $endTag) !== false) {
+                            // Separate command string from other text
+                            // Theorically can be just ONE, but it depends
+                            // is user had not messed things.
+                            $yy = explode($endTag, $xx[$xdx]);
+                            if (($elc = count($yy)) > 0) {
 
-                // How many requests to replace ?
-                $xx2do = count($xx);
-                $ghost = '';
-                for ($xdx = 0; $xdx < $xx2do; $xdx ++) {
-                    // Hope was not a false request.
-                    if (strpos($xx[$xdx], $endTag) !== false) {
-                        // Separate command string from other text
-                        // Theorically can be just ONE, but it depends
-                        // is user had not messed things.
-                        $yy = explode($endTag, $xx[$xdx]);
-                        if (($elc = count($yy)) > 0) {
+                                $atx = $yy[0];
+                                if (intval($atx) == 0) {
+                                    $atx = $this->getTCVersionAttachIDFromTitle(
+                                        $id, $atx);
+                                }
 
-                            $atx = $yy[0];
-                            if (intval($atx) == 0) {
-                                $atx = $this->getTCVersionAttachIDFromTitle($id,
-                                    $atx);
-                            }
+                                try {
+                                    if (isset($attSet[$id][$atx]) &&
+                                        $attSet[$id][$atx]['is_image']) {
+                                        $sec = hash('sha256',
+                                            $attSet[$id][$atx]['file_name']);
 
-                            try {
-                                if (isset($attSet[$id][$atx]) &&
-                                    $attSet[$id][$atx]['is_image']) {
-                                    $sec = hash('sha256',
-                                        $attSet[$id][$atx]['file_name']);
-
-                                    // Need file dimension!!!
-                                    $pathname = $repoDir .
-                                        $attSet[$id][$atx]['file_path'];
-                                    [$iWidth, $iHeight, , ] = getimagesize(
-                                        $pathname);
-
-                                    $iDim = ' width=' . $iWidth . ' height=' .
-                                        $iHeight;
-                                    $icarus = str_replace(
+                                        // Need file dimension!!!
+                                        $pathname = $repoDir .
+                                            $attSet[$id][$atx]['file_path'];
                                         [
-                                            '%id%',
-                                            '%sec%'
-                                        ], [
-                                            $atx,
-                                            $sec
-                                        ], $img);
-                                    $ghost .= sprintf($icarus, $iDim);
+                                            $iWidth,
+                                            $iHeight
+                                        ] = getimagesize($pathname);
+
+                                        $iDim = ' width=' . $iWidth . ' height=' .
+                                            $iHeight;
+                                        $icarus = str_replace(
+                                            [
+                                                '%id%',
+                                                '%sec%'
+                                            ], [
+                                                $atx,
+                                                $sec
+                                            ], $img);
+                                        $ghost .= sprintf($icarus, $iDim);
+                                    }
+                                    $lim = $elc - 1;
+                                    for ($cpx = 1; $cpx <= $lim; $cpx ++) {
+                                        $ghost .= $yy[$cpx];
+                                    }
+                                } catch (Exception $e) {
+                                    $ghost .= $rse[$item_key];
                                 }
-                                $lim = $elc - 1;
-                                for ($cpx = 1; $cpx <= $lim; $cpx ++) {
-                                    $ghost .= $yy[$cpx];
-                                }
-                            } catch (Exception $e) {
-                                $ghost .= $rse[$item_key];
                             }
+                        } else {
+                            // nothing to do
+                            $ghost .= $xx[$xdx];
                         }
-                    } else {
-                        // nothing to do
-                        $ghost .= $xx[$xdx];
                     }
                 }
-            }
-
-            // reconstruct field contents
-            if ($ghost != '') {
-                $rse[$item_key] = $ghost;
+                // reconstruct field contents
+                if (! empty($ghost)) {
+                    $rse[$item_key] = $ghost;
+                }
             }
         }
     }
@@ -8704,10 +8713,9 @@ class testcase extends tlObjectWithAttachments
 
         $pfx = $this->tproject_mgr->getTestCasePrefix($pathInfo['node_id'][0]);
 
-        $info = $this->getLastVersionInfo($tcase_id,
-            [
-                'output' => 'medium'
-            ]);
+        $info = $this->getLastVersionInfo($tcase_id, [
+            'output' => 'medium'
+        ]);
 
         $path .= $pfx . $this->cfg->testcase->glue_character .
             $info['tc_external_id'] . ':' . $info['name'];
@@ -8902,10 +8910,9 @@ class testcase extends tlObjectWithAttachments
             [
                 'side' => 'source'
             ]);
-        $relDest = $this->getTCVRelationsRaw($source_id,
-            [
-                'side' => 'dest'
-            ]);
+        $relDest = $this->getTCVRelationsRaw($source_id, [
+            'side' => 'dest'
+        ]);
 
         $ins = "(source_id,destination_id,relation_type," .
             " link_status,author_id) ";

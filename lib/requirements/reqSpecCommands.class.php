@@ -209,7 +209,9 @@ class reqSpecCommands
         $siblings = $this->treeMgr->get_children($argsObj->parentID, $nt2exclude);
         if (! is_null($siblings)) {
             $dummy = end($siblings);
-            $order = $dummy['node_order'] + 1;
+            if (! empty($dummy['node_order'])) {
+                $order = $dummy['node_order'] + 1;
+            }
         }
 
         $ret = $this->reqSpecMgr->create($argsObj->tproject_id,
@@ -463,8 +465,7 @@ class reqSpecCommands
             $my['filters'], $my['options']);
         if (count($subtree) > 0) {
             $obj->containers = $this->reqMgr->tree_mgr->createHierarchyMap(
-                $subtree, 'dotted',
-                [
+                $subtree, 'dotted', [
                     'field' => 'doc_id',
                     'format' => '%s:'
                 ]);

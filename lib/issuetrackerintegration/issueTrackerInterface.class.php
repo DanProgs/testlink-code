@@ -379,7 +379,8 @@ abstract class issueTrackerInterface
             }
         }
 
-        if ($my['opt']['addReporter'] && property_exists($issue, 'reportedBy')) {
+        if (! empty($my['opt']['addReporter']) &&
+            property_exists($issue, 'reportedBy')) {
             $link .= "";
             $who = trim((string) $issue->reportedBy);
             if ('' != $who) {
@@ -394,7 +395,8 @@ abstract class issueTrackerInterface
             }
         }
 
-        if ($my['opt']['addHandler'] && property_exists($issue, 'handledBy')) {
+        if (! empty($my['opt']['addHandler']) &&
+            property_exists($issue, 'handledBy')) {
             $link .= "";
             $who = trim((string) $issue->handledBy);
             if ('' != $who) {

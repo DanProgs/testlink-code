@@ -284,8 +284,8 @@ function initArgs()
     }
 
     $args->userSet = null;
-    $target = $_REQUEST['bulk_tester_div'];
-    if (isset($target) && count($target) > 0) {
+    if (! empty($_REQUEST['bulk_tester_div'])) {
+        $target = $_REQUEST['bulk_tester_div'];
         foreach ($target as $uid) {
             if ($uid > 0) {
                 $args->userSet[$uid] = $uid;
