@@ -45,7 +45,7 @@ class RestApiCustomExample extends RestApi
    */
   public function whoAmI(Request $request, Response $response, $args)
   {
-    $msg = json_encode(array('name' => __CLASS__ . ' : You have called Get Route /whoAmI'));
+    $msg = json_encode(['name' => __CLASS__ . ' : You have called Get Route /whoAmI']);
     $response->getBody()->write($msg);
     return $response;
   }

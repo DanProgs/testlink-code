@@ -16,7 +16,7 @@ $devKey = 'to be changed';
 
 // Get all Test Cases linked with a Requirement
 
-$args=array();
+$args=[];
 $args["devKey"]=isset($_REQUEST['apiKey']) ? $_REQUEST['apiKey'] : $devKey;
 $args["testprojectid"] = 10;
 $args["requirementversionid"] = 123;

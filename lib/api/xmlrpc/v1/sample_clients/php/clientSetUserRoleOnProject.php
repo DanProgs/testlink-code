@@ -22,7 +22,7 @@ $tlDevKey = isset($_REQUEST['apiKey']) ? $_REQUEST['apiKey'] : $tlDevKey;
 $test_num++;
 $unitTestDescription="Test {$test_num} - {$method}";
 
-$args=array();
+$args=[];
 $args["devKey"]=$tlDevKey;
 $args["userid"] = 59;
 $args["rolename"] = 'leader';

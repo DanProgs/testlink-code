@@ -16,7 +16,7 @@ $devKey = 'admin';
 
 // Get all requirements linked with a Test Case
 
-$args=array();
+$args=[];
 $args["devKey"]=isset($_REQUEST['apiKey']) ? $_REQUEST['apiKey'] : $devKey;
 $args["testcaseid"] = 1;
 

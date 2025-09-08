@@ -16,7 +16,7 @@ $devKey = 'to be changed';
 
 // Get all requirements linked with a TestPlan
 
-$args=array();
+$args=[];
 $args["devKey"]=isset($_REQUEST['apiKey']) ? $_REQUEST['apiKey'] : $devKey;
 $args["testprojectid"] = 10;
 $args["testplanid"] = 11;

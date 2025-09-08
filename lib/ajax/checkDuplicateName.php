@@ -19,12 +19,12 @@
 require_once '../../config.inc.php';
 require_once 'common.php';
 testlinkInitPage($db);
-$data = array('success' => true, 'message' => '');
+$data = ['success' => true, 'message' => ''];
 
-$iParams = array(
-	"name" => array(tlInputParameter::STRING_N,0,100),
-	"testcase_id" => array(tlInputParameter::INT),
-);
+$iParams = [
+	"name" => [tlInputParameter::STRING_N,0,100],
+	"testcase_id" => [tlInputParameter::INT],
+];
 $args = G_PARAMS($iParams);
 
 if (has_rights($db, 'mgt_view_tc'))

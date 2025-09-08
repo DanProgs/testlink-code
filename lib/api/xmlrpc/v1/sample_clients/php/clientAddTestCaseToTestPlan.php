@@ -17,7 +17,7 @@ $method="addTestCaseToTestPlan";
 
 $unitTestDescription="Test - {$method} - Test Plan WITHOUT Platforms";
 
-$args=array();
+$args=[];
 $args["devKey"]=isset($_REQUEST['apiKey']) ? $_REQUEST['apiKey'] : DEV_KEY;
 $args["devKey"]='985978c915f50e47a4b1a54a943d1b76';
 $args["testprojectid"] = 1; //188;
@@ -39,7 +39,7 @@ $answer = runTest($client,$method,$args);
 // ---------------------------------------------------------------------------------------
 $unitTestDescription="Test - {$method} - Test Plan WITH Platforms";
 
-$args=array();
+$args=[];
 $args["devKey"]=isset($_REQUEST['apiKey']) ? $_REQUEST['apiKey'] : DEV_KEY;
 $args["testprojectid"] = 521; // 188;
 $args["testcaseexternalid"]='SPP-1';

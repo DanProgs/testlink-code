@@ -9,8 +9,8 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\App;
 
 
-return function (App $app) {
+return function (App $app): void {
   $app->get('/CustomExample/whoAmI',
-            array($app->restApiCustomExample,'whoAmI'));
+            [$app->restApiCustomExample,'whoAmI']);
 
 };

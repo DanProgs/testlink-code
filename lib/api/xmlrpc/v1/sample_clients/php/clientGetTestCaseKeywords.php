@@ -15,7 +15,7 @@ show_api_db_sample_msg();
 $method='getTestCaseKeywords';
 $unitTestDescription="Test - {$method} - using testcaseid";
 
-$args=array();
+$args=[];
 $args["devKey"]='admin';
 $args["testcaseid"]=41;
 
@@ -29,7 +29,7 @@ runTest($client,$method,$args);
 // ---
 $unitTestDescription="Test - {$method} - using testcaseexternalid";
 
-$args=array();
+$args=[];
 $args["devKey"]='admin';
 $args["testcaseexternalid"]="TCS-1";
 
@@ -43,9 +43,9 @@ runTest($client,$method,$args);
 $method='getTestCaseKeywords';
 $unitTestDescription="Test - {$method} - using array of testcaseid";
 
-$args=array();
+$args=[];
 $args["devKey"]='admin';
-$args["testcaseid"]=array(41);
+$args["testcaseid"]=[41];
 
 $debug=true;
 echo $unitTestDescription . '<br>';
@@ -56,9 +56,9 @@ runTest($client,$method,$args);
 // ---
 $unitTestDescription="Test - {$method} - using array of testcaseexternalid";
 
-$args=array();
+$args=[];
 $args["devKey"]='admin';
-$args["testcaseexternalid"] = array("TCS-1","TCS-2","TCS-3");
+$args["testcaseexternalid"] = ["TCS-1","TCS-2","TCS-3"];
 
 $debug=true;
 echo $unitTestDescription . '<br>';

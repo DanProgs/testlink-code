@@ -24,7 +24,7 @@ $step = 0;
 // ------------------------------------------------------------
 // Clean Up Before START
 $step++;
-$args = array();
+$args = [];
 $args['devKey'] = $devKey;
 $args['prefix'] = $prefix;
 $method='deleteTestProject';
@@ -34,7 +34,7 @@ $answer = runTest($client,$method,$args,$step);
 $step++;
 $method='createTestProject';
 
-$args = array();
+$args = [];
 $arg['prefix'] = $prefix;
 $args["devKey"] = $devKey;
 $args["testcaseprefix"] = $prefix;
@@ -53,7 +53,7 @@ $answer = runTest($client,$method,$args,$step);
 $step++;
 $method = 'createTestSuite';
 
-$args = array();
+$args = [];
 $arg['prefix'] = $prefix;
 $args["devKey"] = $devKey;
 $args["testprojectid"] = $answer[0]['id'];
@@ -71,7 +71,7 @@ $answer = runTest($client,$method,$args,$step);
 $step++;
 $method = 'createTestPlan';
 
-$args = array();
+$args = [];
 $args['prefix'] = $prefix;
 $args["devKey"] = $devKey;
 $args["testplanname"] = 'TPLAN A';

@@ -15,7 +15,7 @@ $item_id = isset($_REQUEST['item_id']) ? intval($_REQUEST['item_id']): null;
 $info = '';
 if( !is_null($item_id) )
 {
-	$tables = tlObjectWithDB::getDBTables(array('req_specs_revisions'));
+	$tables = tlObjectWithDB::getDBTables(['req_specs_revisions']);
 	$target_table = 'req_specs_revisions';
 	$sql = "SELECT log_message FROM {$tables[$target_table]} WHERE id=" . intval($item_id);
 	$info = $db->get_recordset($sql);
