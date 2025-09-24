@@ -19,6 +19,8 @@
 class tree extends tlObject
 {
 
+    public $object_table;
+
     // ORDER IS CRITIC
     // configurable values - pseudoconstants
     // VERBOSE description do not map 100% contents of node_types table
@@ -539,7 +541,7 @@ class tree extends tlObject
         $debugMsg = 'Class:' . __CLASS__ . ' - Method:' . __FUNCTION__ . ' :: ';
 
         if (is_array($node_id)) {
-            $safeSet = array_map('intval', $node_id);
+            $safeSet = array_map(intval(...), $node_id);
             $id_list = implode(",", $safeSet);
             $where_clause = " WHERE id IN ({$id_list}) ";
         } else {
@@ -1422,12 +1424,10 @@ class tree extends tlObject
                         $this->delete_subtree_objects($root_id, $rowID,
                             $additionalWhereClause, $exclude_children_of,
                             $exclude_branches);
-                    } else {
+                    } elseif (! is_null($nodeClassName)) {
                         // For us in this method context this node is a leaf => just delete
-                        if (! is_null($nodeClassName)) {
-                            $item_mgr = new $nodeClassName($this->db);
-                            $item_mgr->delete($rowID);
-                        }
+                        $item_mgr = new $nodeClassName($this->db);
+                        $item_mgr->delete($rowID);
                     }
                 }
             }

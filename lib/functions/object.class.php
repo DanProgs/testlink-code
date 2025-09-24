@@ -329,7 +329,7 @@ abstract class tlObject implements iSerialization
             $tableNames = (array) $tableNames;
             $tableNames = array_flip($tableNames);
             $tables = array_intersect_key($tables, $tableNames);
-            if (count($tables) != count($tableNames)) {
+            if (count($tables) !== count($tableNames)) {
                 throw new Exception(
                     "Wrong table name(s) for getDBTables() detected!");
             }
@@ -359,7 +359,7 @@ abstract class tlObject implements iSerialization
             'exec_daily_stats' => null
         ];
 
-        foreach ($items as $key => $value) {
+        foreach (array_keys($items) as $key) {
             $items[$key] = DB_TABLE_PREFIX . $key;
         }
 

@@ -403,8 +403,8 @@ function initArgs(&$tproject_mgr)
     $args = new stdClass();
     $args->user = isset($_SESSION['currentUser']) ? $_SESSION['currentUser'] : null;
 
-    $all_versions = isset($_REQUEST['all_versions']) ? true : false;
-    $all_versions_hidden = isset($_REQUEST['all_versions_hidden']) ? true : false;
+    $all_versions = isset($_REQUEST['all_versions']);
+    $all_versions_hidden = isset($_REQUEST['all_versions_hidden']);
     if ($all_versions) {
         $selection = true;
     } elseif ($all_versions_hidden) {

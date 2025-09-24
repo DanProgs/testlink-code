@@ -144,7 +144,7 @@ abstract class reqMgrSystemInterface
         $this->lastproject = null;
         $this->lastbaseline = null;
 
-        if (count($this->projects) == 0) {
+        if ($this->projects === []) {
             // No projects were found.
             return false;
         }

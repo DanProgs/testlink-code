@@ -184,12 +184,8 @@ class tlInputParameter extends tlObject
     protected function normalize()
     {
         if ($this->isFetched()) {
-            if ($this->validationInfo) {
-                $this->normalizedValue = $this->validationInfo->normalize(
-                    $this->taintValue);
-            } else {
-                $this->normalizedValue = $this->taintValue;
-            }
+            $this->normalizedValue = $this->validationInfo ? $this->validationInfo->normalize(
+                $this->taintValue) : $this->taintValue;
         }
     }
 
@@ -555,7 +551,7 @@ class tlCheckBoxValidationInfo
     {
         if (! is_null($value)) {
             $value = strtolower(trim($value));
-            if ($value == "on") {
+            if ($value === "on") {
                 $value = true;
             }
         } else {

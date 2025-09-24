@@ -54,7 +54,7 @@ $gui->execSet = $tcaseMgr->getExecutionSet($args->tcase_id, null, $filters);
 
 $gui->warning_msg = (is_null($gui->execSet)) ? lang_get(
     'tcase_never_executed') : '';
-$gui->user_is_admin = ($args->user->globalRole->name == 'admin') ? true : false;
+$gui->user_is_admin = $args->user->globalRole->name == 'admin';
 
 $gui->execPlatformSet = null;
 $gui->cfexec = null;

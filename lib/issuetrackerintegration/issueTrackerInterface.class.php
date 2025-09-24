@@ -233,7 +233,7 @@ abstract class issueTrackerInterface
              - User: {$this->cfg->dbuser}) ";
             $msg = sprintf(lang_get('BTS_connect_to_database_fails'), $cnn);
             tLog($msg . $result['dbms_msg'], 'ERROR');
-        } elseif ($this->cfg->dbtype == 'mysql') {
+        } elseif ($this->cfg->dbtype === 'mysql') {
             if ($this->cfg->dbcharset == 'UTF-8') {
                 $this->dbConnection->exec_query("SET CHARACTER SET utf8");
                 $this->dbConnection->exec_query("SET NAMES utf8");
@@ -247,7 +247,7 @@ abstract class issueTrackerInterface
             }
         }
 
-        $this->connected = $result['status'] ? true : false;
+        $this->connected = (bool) $result['status'];
 
         return $this->connected;
     }
@@ -285,11 +285,7 @@ abstract class issueTrackerInterface
     {
         $valid = true;
         $blackList = '/\D/i';
-        if (preg_match($blackList, $issueID)) {
-            $valid = false;
-        } else {
-            $valid = (intval($issueID) > 0);
-        }
+        $valid = preg_match($blackList, $issueID) ? false : intval($issueID) > 0;
         return $valid;
     }
 
@@ -303,7 +299,7 @@ abstract class issueTrackerInterface
      */
     public function checkBugIDSyntaxString($issueID)
     {
-        $status_ok = (trim($issueID) != "");
+        $status_ok = (trim($issueID) !== "");
         if ($status_ok && preg_match($this->forbidden_chars, $issueID)) {
             return false;
         }
@@ -383,7 +379,7 @@ abstract class issueTrackerInterface
             property_exists($issue, 'reportedBy')) {
             $link .= "";
             $who = trim((string) $issue->reportedBy);
-            if ('' != $who) {
+            if ('' !== $who) {
 
                 $link .= '<br>' . $l10n['issueReporter'] . ':&nbsp;';
                 if ($useIconv) {
@@ -399,7 +395,7 @@ abstract class issueTrackerInterface
             property_exists($issue, 'handledBy')) {
             $link .= "";
             $who = trim((string) $issue->handledBy);
-            if ('' != $who) {
+            if ('' !== $who) {
 
                 $link .= '<br>' . $l10n['issueHandler'] . ':&nbsp;';
                 if ($useIconv) {

@@ -66,7 +66,7 @@ $whatWillBeDone = '<h2>Steps that will be done (in this order) </h2>';
 $actions = [];
 foreach ($phpSteps as $xx) {
     foreach ($xx as $key => $val) {
-        if ($key == 'f2i') {
+        if ($key === 'f2i') {
             $actions[] = $val;
         }
     }

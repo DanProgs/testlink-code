@@ -118,7 +118,7 @@ function executeTestCase($tcaseInfo, $serverCfg, $context)
 
             if (! is_null($response['result'])) {
                 $code = trim($response['result']);
-                if ($code != '') {
+                if ($code !== '') {
                     $resultsCfg = config_get('results');
                     $codeStatus = array_flip($resultsCfg['status_code']);
                     $dummy = trim($codeStatus[$code]);

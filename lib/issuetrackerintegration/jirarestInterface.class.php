@@ -16,6 +16,16 @@ require_once TL_ABS_PATH . '/third_party/fayp-jira-rest/Jira.php';
 class jirarestInterface extends issueTrackerInterface
 {
 
+    private $name;
+
+    private array $guiCfg;
+
+    /**
+     *
+     * @var mixed[]
+     */
+    public $statusDomain;
+
     const NOPROJECTKEY = 'e18b741e13b2b1b09f2ac85615e37bae';
 
     private $APIClient;
@@ -782,7 +792,7 @@ class jirarestInterface extends issueTrackerInterface
         $status_ok = true;
         if (property_exists($this->cfg, 'projectkey')) {
             $pk = trim((string) ($this->cfg->projectkey));
-            if ($pk == '') {
+            if ($pk === '') {
                 $status_ok = false;
                 $msg = __CLASS__ . ' - Empty configuration: <projectKey>';
             }

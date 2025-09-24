@@ -195,7 +195,7 @@ function initializeGui(&$argsObj, &$tplanMgr)
 
     // TICKET 4996: Ignores change of XML export file name
     $guiObj->export_filename = $argsObj->export_filename;
-    if (trim($argsObj->export_filename) == '') {
+    if (trim($argsObj->export_filename) === '') {
         $guiObj->export_filename = $argsObj->exportContent . '_' .
             str_replace(' ', '_', $info['name']) . $add2name . '.xml';
     }

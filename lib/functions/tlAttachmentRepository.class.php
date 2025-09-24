@@ -150,7 +150,7 @@ class tlAttachmentRepository extends tlObjectWithDB
         // Process filename against XSS
         // Thanks to http://owasp.org/index.php/Unrestricted_File_Upload
         $pattern = trim($this->attachmentCfg->allowed_filenames_regexp);
-        if ('' != $pattern && ! preg_match($pattern, $fName)) {
+        if ('' !== $pattern && ! preg_match($pattern, $fName)) {
             $op->statusCode = 'allowed_filenames_regexp';
             $op->msg = str_replace('%filename%', $fName,
                 lang_get('FILE_UPLOAD_' . $op->statusCode));
@@ -378,7 +378,7 @@ class tlAttachmentRepository extends tlObjectWithDB
         }
         if ($attachmentInfo) {
             $bResult = tl::OK;
-            if (trim($attachmentInfo['file_path']) != "") {
+            if (trim($attachmentInfo['file_path']) !== "") {
                 $bResult = $this->deleteAttachmentFromFS($id, $attachmentInfo);
             }
             $bResult = $this->deleteAttachmentFromDB($id, null) && $bResult;

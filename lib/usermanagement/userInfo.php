@@ -230,5 +230,5 @@ function checkDoAction($input)
         'changePassword',
         'genAPIKey'
     ]);
-    return isset($domain[$input]) ? true : false;
+    return isset($domain[$input]);
 }

@@ -805,9 +805,7 @@ function doProcess(&$dbH, &$args, &$gui, &$metricsMgr)
         $args->tplan_id, $args->platform_id, $opt);
 
     $allExec = [];
-    foreach ($neverRunOnPP as $elem) {
-        $allExec[] = $elem;
-    }
+    $allExec = $neverRunOnPP;
     foreach ($execStatus as $elem) {
         $allExec[] = $elem;
     }

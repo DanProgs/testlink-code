@@ -778,7 +778,7 @@ function addTestSuite(&$tsuiteMgr, &$argsObj, $container, &$hash)
             $op['messages']['user_feedback'] = $op['messages']['msg'];
         }
 
-        if (trim($argsObj->assigned_keyword_list) != "") {
+        if (trim($argsObj->assigned_keyword_list) !== "") {
             $tsuiteMgr->addKeywords($ret['id'],
                 explode(",", $argsObj->assigned_keyword_list));
         }
@@ -878,7 +878,7 @@ function updateTestSuite(&$tsuiteMgr, &$argsObj, $container, &$hash)
         $container['container_name'], $container['details']);
     if ($ret['status_ok']) {
         $tsuiteMgr->deleteKeywords($argsObj->testsuiteID);
-        if (trim($argsObj->assigned_keyword_list) != "") {
+        if (trim($argsObj->assigned_keyword_list) !== "") {
             $tsuiteMgr->addKeywords($argsObj->testsuiteID,
                 explode(",", $argsObj->assigned_keyword_list));
         }

@@ -419,7 +419,7 @@ function initArgs($request_hash)
         $args->$key = isset($request_hash[$key]) ? intval($request_hash[$key]) : $value;
     }
     $args->source_tplanid = $args->copy_from_tplan_id;
-    $args->copy = ($args->copy_from_tplan_id > 0) ? true : false;
+    $args->copy = $args->copy_from_tplan_id > 0;
 
     $args->copy_options = [];
     $boolean_keys = [
@@ -432,7 +432,7 @@ function initArgs($request_hash)
         'copyAttachments' => 0
     ];
 
-    foreach ($boolean_keys as $key => $value) {
+    foreach (array_keys($boolean_keys) as $key) {
         $args->copy_options[$key] = isset($request_hash[$key]) ? 1 : 0;
     }
 

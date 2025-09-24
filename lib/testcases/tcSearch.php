@@ -195,7 +195,7 @@ if ($args->tprojectID && $args->doAction == 'doSearch') {
 
     $args->created_by = trim($args->created_by);
     $from['users'] = '';
-    if ($args->created_by != '') {
+    if ($args->created_by !== '') {
         $from['users'] .= " JOIN {$tables['users']} AUTHOR ON AUTHOR.id = TCV.author_id ";
         $filter['author'] = " AND ( AUTHOR.login LIKE '%{$args->created_by}%' OR " .
             "       AUTHOR.first LIKE '%{$args->created_by}%' OR " .
@@ -203,7 +203,7 @@ if ($args->tprojectID && $args->doAction == 'doSearch') {
     }
 
     $args->edited_by = trim($args->edited_by);
-    if ($args->edited_by != '') {
+    if ($args->edited_by !== '') {
         $from['users'] .= " JOIN {$tables['users']} UPDATER ON UPDATER.id = TCV.updater_id ";
         $filter['modifier'] = " AND ( UPDATER.login LIKE '%{$args->edited_by}%' OR " .
             "         UPDATER.first LIKE '%{$args->edited_by}%' OR " .

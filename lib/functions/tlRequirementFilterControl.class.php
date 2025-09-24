@@ -184,11 +184,7 @@ class tlRequirementFilterControl extends tlFilterControl
 
         // add the important settings to active filter array
         foreach ($this->all_settings as $name => $info) {
-            if ($this->settings[$name]) {
-                $this->active_filters[$name] = $this->settings[$name]['selected'];
-            } else {
-                $this->active_filters[$name] = null;
-            }
+            $this->active_filters[$name] = $this->settings[$name] ? $this->settings[$name]['selected'] : null;
         }
     }
 

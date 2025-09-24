@@ -187,7 +187,7 @@ function resetPassword(&$db, $userID,
         // Reset can be done ONLY if user authentication method allows it.
         $systemCfg = config_get('authentication');
         $userAuthMethod = trim($user->authentication);
-        if ($userAuthMethod == '' || is_null($userAuthMethod)) {
+        if ($userAuthMethod === '' || is_null($userAuthMethod)) {
             $userAuthMethod = $systemCfg['method'];
         }
 
@@ -199,7 +199,7 @@ function resetPassword(&$db, $userID,
     if ($doIt) {
         $retval['status'] = tlUser::E_EMAILLENGTH;
 
-        if (trim($user->emailAddress) != "") {
+        if (trim($user->emailAddress) !== "") {
             $newPassword = tlUser::generatePassword(8, 4);
             $retval['status'] = $user->setPassword($newPassword, $userAuthMethod);
             if ($retval['status'] >= tl::OK) {

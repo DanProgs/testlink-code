@@ -60,7 +60,7 @@ if ($args->doCompare) {
     $gui->diff = [
         "scope" => []
     ];
-    foreach ($gui->diff as $key => $val) {
+    foreach (array_keys($gui->diff) as $key) {
         if ($args->useDaisyDiff) {
             $diff = new HTMLDiffer();
             [$differences, $diffcount] = $diff->htmlDiff(
@@ -222,7 +222,7 @@ function initArgs()
     $args = new stdClass();
     $args->req_spec_id = isset($_REQUEST['req_spec_id']) ? intval(
         $_REQUEST['req_spec_id']) : 0;
-    $args->doCompare = isset($_REQUEST['doCompare']) ? true : false;
+    $args->doCompare = isset($_REQUEST['doCompare']);
     $args->left_item_id = isset($_REQUEST['left_item_id']) ? intval(
         $_REQUEST['left_item_id']) : - 1;
     $args->right_item_id = isset($_REQUEST['right_item_id']) ? intval(

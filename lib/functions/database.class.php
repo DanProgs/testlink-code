@@ -113,7 +113,7 @@ class database
             // http://msdn.microsoft.com/en-us/sqlserver/ff657782.aspx.
             //
             // PHP_VERSION_ID is available as of PHP 5.2.7
-            if (PHP_OS == 'WINNT' && defined('PHP_VERSION_ID') &&
+            if (PHP_OS === 'WINNT' && defined('PHP_VERSION_ID') &&
                 PHP_VERSION_ID >= 50300) {
                 $adodb_driver = 'mssqlnative';
             }
@@ -431,21 +431,13 @@ class database
     # -> 875996580
     private function db_timestamp($p_date = null)
     {
-        if (null !== $p_date) {
-            $p_timestamp = $this->db->UnixTimeStamp($p_date);
-        } else {
-            $p_timestamp = time();
-        }
+        $p_timestamp = null !== $p_date ? $this->db->UnixTimeStamp($p_date) : time();
         return $this->db->DBTimeStamp($p_timestamp);
     }
 
     public function db_unixtimestamp($p_date = null)
     {
-        if (null !== $p_date) {
-            $p_timestamp = $this->db->UnixTimeStamp($p_date);
-        } else {
-            $p_timestamp = time();
-        }
+        $p_timestamp = null !== $p_date ? $this->db->UnixTimeStamp($p_date) : time();
         return $p_timestamp;
     }
 
@@ -658,7 +650,7 @@ class database
         if ($result) {
             // Error management Code
             $errorMsg = __CLASS__ . '/' . __FUNCTION__ . ' - ';
-            if (trim($column) == '') {
+            if (trim($column) === '') {
                 $errorMsg .= 'empty column - SQL:' . $sql;
                 trigger_error($errorMsg, E_USER_NOTICE);
                 return null;
@@ -1004,7 +996,7 @@ class database
         $result = $this->exec_query($sql, $limit);
         if ($result) {
             $errorMsg = __CLASS__ . '/' . __FUNCTION__ . ' - ';
-            if (trim($column) == '') {
+            if (trim($column) === '') {
                 $errorMsg .= 'empty column - SQL:' . $sql;
                 trigger_error($errorMsg, E_USER_NOTICE);
                 return null;
@@ -1017,11 +1009,7 @@ class database
                     trigger_error($errorMsg, E_USER_NOTICE);
                     return null;
                 }
-                if (! isset($items[$row[$column]])) {
-                    $row['recordcount'] = 0;
-                } else {
-                    $row['recordcount'] = $items[$row[$column]]['recordcount'];
-                }
+                $row['recordcount'] = isset($items[$row[$column]]) ? $items[$row[$column]]['recordcount'] : 0;
                 $row['recordcount'] ++;
                 $items[$row[$column]] = $row;
             }

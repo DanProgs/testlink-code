@@ -176,7 +176,7 @@ function saveImportedResultData(&$db, $resultData, $context, $options)
         'import_results_skipped' => ''
     ];
 
-    foreach ($l10n as $key => $value) {
+    foreach (array_keys($l10n) as $key) {
         $l10n[$key] = lang_get($key);
     }
 
@@ -353,7 +353,7 @@ function saveImportedResultData(&$db, $resultData, $context, $options)
             $tester_id = $checks['tester_id'];
 
             // external_id has precedence over internal id
-            $using_external_id = ($tcase_external_id != "");
+            $using_external_id = ($tcase_external_id !== "");
         } else {
             foreach ($checks['msg'] as $warning) {
                 $resultMap[] = [
@@ -366,7 +366,7 @@ function saveImportedResultData(&$db, $resultData, $context, $options)
             $tcase_identity = $using_external_id ? $tcase_external_id : $tcase_id;
             $result_code = strtolower($tcase_exec['result']);
             $result_is_acceptable = isset(
-                $resultsCfg['code_status'][$result_code]) ? true : false;
+                $resultsCfg['code_status'][$result_code]);
             $notes = $tcase_exec['notes'];
             $message = null;
 
@@ -461,8 +461,7 @@ function saveImportedResultData(&$db, $resultData, $context, $options)
 
                                 $doIt = (! is_null(
                                     $tcase_exec['steps'][$sx]['result']) &&
-                                    trim($tcase_exec['steps'][$sx]['result']) !=
-                                    '') ||
+                                    trim($tcase_exec['steps'][$sx]['result']) !== '') ||
                                     $tcase_exec['steps'][$sx]['result'] !=
                                     $resultsCfg['status_code']['not_run'];
 
@@ -756,12 +755,12 @@ function checkExecValues(&$db, &$tcaseMgr, &$user_mgr, $tcaseCfg, &$execValues,
     ];
     $tcase_id = $execValues['tcase_id'];
     $tcase_external_id = trim($execValues['tcase_external_id']);
-    $using_external_id = ($tcase_external_id != ""); // external_id has precedence over internal id
+    $using_external_id = ($tcase_external_id !== ""); // external_id has precedence over internal id
 
     if ($using_external_id) {
         // need to get internal id
         $checks['tcase_id'] = $tcaseMgr->getInternalID($tcase_external_id);
-        $checks['status_ok'] = intval($checks['tcase_id']) > 0 ? true : false;
+        $checks['status_ok'] = intval($checks['tcase_id']) > 0;
         if (! $checks['status_ok']) {
             $checks['msg'][] = sprintf(
                 lang_get('tcase_external_id_do_not_exists'), $tcase_external_id);
@@ -769,7 +768,7 @@ function checkExecValues(&$db, &$tcaseMgr, &$user_mgr, $tcaseCfg, &$execValues,
     } else {
         // before using internal id, I want to check it's a number
         $checks['tcase_id'] = $tcase_id;
-        $checks['status_ok'] = intval($checks['tcase_id']) > 0 ? true : false;
+        $checks['status_ok'] = intval($checks['tcase_id']) > 0;
         if (! $checks['status_ok']) {
             $checks['msg'][] = sprintf(lang_get('tcase_id_is_not_number'),
                 $tcase_id);

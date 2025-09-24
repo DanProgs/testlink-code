@@ -13,6 +13,8 @@
 class mantisdbInterface extends issueTrackerInterface
 {
 
+    public $guiCfg;
+
     private $code_status = [
         10 => 'new',
         20 => 'feedback',

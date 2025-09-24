@@ -29,6 +29,8 @@ require_once dirname(__FILE__) . '/attachments.inc.php';
 class testplan extends tlObjectWithAttachments
 {
 
+    public $platform_mgr;
+
     /**
      * query options
      */
@@ -293,7 +295,7 @@ class testplan extends tlObjectWithAttachments
             }
 
             if (property_exists($item, 'notes')) {
-                $upd .= ($upd != '' ? ',' : '') . " notes = '" .
+                $upd .= ($upd !== '' ? ',' : '') . " notes = '" .
                     $this->db->prepare_string($item->notes) . "' ";
             }
 
@@ -303,12 +305,12 @@ class testplan extends tlObjectWithAttachments
             ];
             foreach ($intAttr as $key) {
                 if (property_exists($item, $key)) {
-                    $upd .= ($upd != '' ? ',' : '') . $key . ' = ' .
+                    $upd .= ($upd !== '' ? ',' : '') . $key . ' = ' .
                         (intval($item->$key) > 0 ? 1 : 0);
                 }
             }
 
-            if ($upd != '') {
+            if ($upd !== '') {
                 $sql = " UPDATE {$this->tables['testplans']} " .
                     " SET {$upd} WHERE id=" . $safeID;
                 $this->db->exec_query($sql);
@@ -643,7 +645,9 @@ class testplan extends tlObjectWithAttachments
         $ret = [];
         $dummy = reset($items);
 
-        [$ret['tcasePrefix'], ] = $this->tcaseMgr->getPrefix($dummy);
+        [
+            $ret['tcasePrefix']
+        ] = $this->tcaseMgr->getPrefix($dummy);
         $ret['tcasePrefix'] .= $this->tcaseCfg->glue_character;
 
         $sql = "/* {$debugMsg} */ " .
@@ -1008,13 +1012,13 @@ class testplan extends tlObjectWithAttachments
         }
 
         if (! is_null($notRunFilter)) {
-            if ($execFilter != "") {
+            if ($execFilter !== "") {
                 $execFilter .= " OR ";
             }
             $execFilter .= $notRunFilter;
         }
 
-        if ($execFilter != "") {
+        if ($execFilter !== "") {
             // Just add the AND
             $execFilter = " AND ({$execFilter} )";
         }
@@ -1036,7 +1040,7 @@ class testplan extends tlObjectWithAttachments
         $items = null;
         foreach ($dummy as $v) {
             $x = trim($v);
-            if ($x != '') {
+            if ($x !== '') {
                 $items[] = $x;
             }
         }
@@ -1703,9 +1707,8 @@ class testplan extends tlObjectWithAttachments
                 }
 
                 $sql = "INSERT INTO {$this->tables['milestones']} (name,a,b,c,target_date,{$add2fields} testplan_id)";
-                $sql .= " VALUES ('" .
-                    $this->db->prepare_string($mstone['name']) . "'," .
-                    $mstone['high_percentage'] . "," .
+                $sql .= " VALUES ('" . $this->db->prepare_string(
+                    $mstone['name']) . "'," . $mstone['high_percentage'] . "," .
                     $mstone['medium_percentage'] . "," .
                     $mstone['low_percentage'] . ",'" . $mstone['target_date'] .
                     "', {$add2values}{$new_tplan_id})";
@@ -2280,7 +2283,7 @@ class testplan extends tlObjectWithAttachments
         }
 
         natsort($build_names);
-        foreach ($build_names as $key => $value) {
+        foreach (array_keys($build_names) as $key) {
             $dummy[$key] = $builds_map[$key];
         }
         return $dummy;
@@ -2469,8 +2472,8 @@ class testplan extends tlObjectWithAttachments
         $cf_map = $this->$method_name($id, $parent_id);
 
         if (! is_null($cf_map)) {
-            return $this->cfield_mgr->html_table_inputs($cf_map,
-                $name_suffix, $input_values);
+            return $this->cfield_mgr->html_table_inputs($cf_map, $name_suffix,
+                $input_values);
         }
         return $cf_smarty;
     }
@@ -2541,7 +2544,7 @@ class testplan extends tlObjectWithAttachments
             }
         }
 
-        if ($cf_smarty != '' && $add_table) {
+        if ($cf_smarty !== '' && $add_table) {
             return "<table {$table_style}>" . $cf_smarty . "</table>";
         }
         return $cf_smarty;
@@ -2591,23 +2594,21 @@ class testplan extends tlObjectWithAttachments
                         $cf_query .= " ( CFD.value LIKE '%{$value}%' AND CFD.field_id = {$cf_id} )";
                         $count ++;
                     }
-                } else {
+                } elseif (trim($cf_value) !== '') {
                     // Because cf value can NOT exists on DB depending on system config.
-                    if (trim($cf_value) != '') {
-                        $cf_query .= $or_clause;
-                        $cf_query .= " ( CFD.value LIKE '%{$cf_value}%' AND CFD.field_id = {$cf_id} ) ";
-                    } else {
-                        $ignored ++;
-                    }
+                    $cf_query .= $or_clause;
+                    $cf_query .= " ( CFD.value LIKE '%{$cf_value}%' AND CFD.field_id = {$cf_id} ) ";
+                } else {
+                    $ignored ++;
                 }
 
-                if ($or_clause == '') {
+                if ($or_clause === '') {
                     $or_clause = ' OR ';
                 }
             }
 
             // grand finale
-            if ($cf_query != '') {
+            if ($cf_query !== '') {
                 $cf_query = " AND ({$cf_query}) ";
                 $doFilter = true;
             }
@@ -2670,8 +2671,7 @@ class testplan extends tlObjectWithAttachments
         if (is_null($cf_info)) {
             return $this->getEstimatedExecutionTime($id, $itemSet, $platformID);
         }
-        return $this->getEstimatedExecutionTimeFromCF($id, $itemSet,
-            $platformID);
+        return $this->getEstimatedExecutionTimeFromCF($id, $itemSet, $platformID);
     }
 
     /**
@@ -2769,7 +2769,7 @@ class testplan extends tlObjectWithAttachments
             $platformSet = array_keys($this->getPlatforms($id, $getOpt));
 
             $sql = " /* {$debugMsg} */ ";
-            if (DB_TYPE == 'mysql') {
+            if (DB_TYPE === 'mysql') {
                 $sql .= " SELECT SUM(value) ";
             } elseif (DB_TYPE == 'postgres' || DB_TYPE == 'mssql') {
                 $sql .= " SELECT SUM(CAST(value AS NUMERIC)) ";
@@ -2963,7 +2963,7 @@ class testplan extends tlObjectWithAttachments
 
         if ($status_ok) {
             $sql = "SELECT SUM(CAST(value AS NUMERIC)) ";
-            if (DB_TYPE == 'mysql') {
+            if (DB_TYPE === 'mysql') {
                 $sql = "SELECT SUM(value) ";
             } elseif (DB_TYPE == 'postgres' || DB_TYPE == 'mssql') {
                 $sql = "SELECT SUM(CAST(value AS NUMERIC)) ";
@@ -4177,8 +4177,10 @@ class testplan extends tlObjectWithAttachments
         // An output column’s name can be used to refer to the column’s value in ORDER BY and GROUP BY clauses,
         // but not in the WHERE or HAVING clauses; there you must write out the expression instead.
         $debugMsg = 'Class:' . __CLASS__ . ' - Method: ' . __FUNCTION__;
-        [$safe_id, $buildsCfg, ] = $this->helperGetHits($id, $platformID,
-            $buildSet);
+        [
+            $safe_id,
+            $buildsCfg
+        ] = $this->helperGetHits($id, $platformID, $buildSet);
 
         $sql = "/* {$debugMsg} */ " .
             " SELECT count(0) AS COUNTER ,NHTCV.parent_id AS tcase_id  " .
@@ -4196,7 +4198,7 @@ class testplan extends tlObjectWithAttachments
             " AND E.status IS NULL ";
 
         $groupBy = ' GROUP BY ' .
-            ((DB_TYPE == 'mssql') ? 'parent_id ' : 'tcase_id');
+            ((DB_TYPE === 'mssql') ? 'parent_id ' : 'tcase_id');
         $sql .= $groupBy . " HAVING COUNT(0) = " . intval($buildsCfg['count']);
 
         return $this->db->fetchRowsIntoMap($sql, 'tcase_id');
@@ -4249,7 +4251,9 @@ class testplan extends tlObjectWithAttachments
         $buildSet = null)
     {
         $debugMsg = 'Class:' . __CLASS__ . ' - Method: ' . __FUNCTION__;
-        [, $buildsCfg, ] = $this->helperGetHits($id, $platformID, $buildSet);
+        [
+            $buildsCfg
+        ] = $this->helperGetHits($id, $platformID, $buildSet);
 
         $sql = "/* {$debugMsg} */ " .
             " SELECT DISTINCT NHTCV.parent_id AS tcase_id, E.status " .
@@ -4294,8 +4298,11 @@ class testplan extends tlObjectWithAttachments
         // An output column’s name can be used to refer to the column’s value in ORDER BY and GROUP BY clauses,
         // but not in the WHERE or HAVING clauses; there you must write out the expression instead.
         $debugMsg = 'Class:' . __CLASS__ . ' - Method: ' . __FUNCTION__;
-        [$safe_id, $buildsCfg, $sqlLEBBP] = $this->helperGetHits($id,
-            $platformID, $buildSet);
+        [
+            $safe_id,
+            $buildsCfg,
+            $sqlLEBBP
+        ] = $this->helperGetHits($id, $platformID, $buildSet);
 
         $sql = " /* {$debugMsg} */ " . " /* Count() to be used on HAVING */ " .
             " SELECT COUNT(0) AS COUNTER ,NHTCV.parent_id AS tcase_id" .
@@ -4320,7 +4327,7 @@ class testplan extends tlObjectWithAttachments
             $this->db->prepare_string($status) . "'";
 
         $groupBy = ' GROUP BY ' .
-            ((DB_TYPE == 'mssql') ? 'parent_id ' : 'tcase_id');
+            ((DB_TYPE === 'mssql') ? 'parent_id ' : 'tcase_id');
         $sql .= $groupBy . " HAVING COUNT(0) = " . intval($buildsCfg['count']);
 
         unset($safe_id, $buildsCfg, $sqlLEBBP);
@@ -4349,8 +4356,10 @@ class testplan extends tlObjectWithAttachments
         // An output column’s name can be used to refer to the column’s value in ORDER BY and GROUP BY clauses,
         // but not in the WHERE or HAVING clauses; there you must write out the expression instead.
         $debugMsg = 'Class:' . __CLASS__ . ' - Method: ' . __FUNCTION__;
-        [$safe_id, $buildsCfg, ] = $this->helperGetHits($id, $platformID,
-            $buildSet);
+        [
+            $safe_id,
+            $buildsCfg
+        ] = $this->helperGetHits($id, $platformID, $buildSet);
 
         $sql = " /* {$debugMsg} */ " . " /* Count() to be used on HAVING */ " .
             " SELECT COUNT(0) AS COUNTER ,NHTCV.parent_id AS tcase_id" .
@@ -4368,7 +4377,7 @@ class testplan extends tlObjectWithAttachments
             " AND E.status IS NULL ";
 
         $groupBy = ' GROUP BY ' .
-            ((DB_TYPE == 'mssql') ? 'parent_id ' : 'tcase_id');
+            ((DB_TYPE === 'mssql') ? 'parent_id ' : 'tcase_id');
         $sql .= $groupBy . " HAVING COUNT(0) = " . intval($buildsCfg['count']);
 
         return $this->db->fetchRowsIntoMap($sql, 'tcase_id');
@@ -4440,8 +4449,11 @@ class testplan extends tlObjectWithAttachments
         // but not in the WHERE or HAVING clauses; there you must write out the expression instead.
         $debugMsg = 'Class:' . __CLASS__ . ' - Method: ' . __FUNCTION__;
 
-        [$safe_id, $buildsCfg, $sqlLEBBP] = $this->helperGetHits($id,
-            $platformID, $buildSet);
+        [
+            $safe_id,
+            $buildsCfg,
+            $sqlLEBBP
+        ] = $this->helperGetHits($id, $platformID, $buildSet);
 
         $dummy = $this->sanitizeExecStatus((array) $statusSet);
         $statusInClause = implode("','", $dummy);
@@ -4458,7 +4470,7 @@ class testplan extends tlObjectWithAttachments
         $countTarget = intval($buildsCfg['count']);
 
         $groupBy = ' GROUP BY ' .
-            ((DB_TYPE == 'mssql') ? 'parent_id ' : 'tcase_id');
+            ((DB_TYPE === 'mssql') ? 'parent_id ' : 'tcase_id');
         $sql = " /* {$debugMsg} */ " . " /* Count() to be used on HAVING */ " .
             " SELECT COUNT(0) AS COUNTER ,NHTCV.parent_id AS tcase_id" .
             " FROM {$this->tables['testplan_tcversions']} TPTCV " .
@@ -4532,8 +4544,10 @@ class testplan extends tlObjectWithAttachments
         $buildSet = null)
     {
         $debugMsg = 'Class:' . __CLASS__ . ' - Method: ' . __FUNCTION__;
-        [$safe_id, $buildsCfg, ] = $this->helperGetHits($id, $platformID,
-            $buildSet);
+        [
+            $safe_id,
+            $buildsCfg
+        ] = $this->helperGetHits($id, $platformID, $buildSet);
 
         $sql = " /* {$debugMsg} */ " .
             " SELECT DISTINCT NHTCV.parent_id AS tcase_id" .
@@ -4614,8 +4628,11 @@ class testplan extends tlObjectWithAttachments
 
         $statusSet = $this->sanitizeExecStatus($statusSet);
         $statusInClause = implode("','", $statusSet);
-        [$safe_id, $buildsCfg, $sqlLEBBP] = $this->helperGetHits($id,
-            $platformID, $buildSet);
+        [
+            $safe_id,
+            $buildsCfg,
+            $sqlLEBBP
+        ] = $this->helperGetHits($id, $platformID, $buildSet);
 
         $sql = " /* {$debugMsg} */ " .
             " SELECT DISTINCT NHTCV.parent_id AS tcase_id" .
@@ -4640,7 +4657,7 @@ class testplan extends tlObjectWithAttachments
             " AND E.status IN('{$statusInClause}') ";
 
         $groupBy = ' GROUP BY ' .
-            ((DB_TYPE == 'mssql') ? 'parent_id ' : 'tcase_id');
+            ((DB_TYPE === 'mssql') ? 'parent_id ' : 'tcase_id');
         $sql .= $groupBy;
 
         unset($safe_id, $buildsCfg, $sqlLEBBP);
@@ -4688,8 +4705,12 @@ class testplan extends tlObjectWithAttachments
 
         $debugMsg = 'Class:' . __CLASS__ . ' - Method: ' . __FUNCTION__;
 
-        [$safe_id, $buildsCfg, $sqlLEX] = $this->helperGetHits($id, null,
-            $buildSet, [
+        [
+            $safe_id,
+            $buildsCfg,
+            $sqlLEX
+        ] = $this->helperGetHits($id, null, $buildSet,
+            [
                 'ignorePlatform' => true
             ]);
         if ($options['onlyActiveBuilds']) {
@@ -4729,7 +4750,7 @@ class testplan extends tlObjectWithAttachments
                 " AND E.status IS NULL ";
 
             $groupBy = ' GROUP BY ' .
-                ((DB_TYPE == 'mssql') ? 'parent_id ' : 'tcase_id');
+                ((DB_TYPE === 'mssql') ? 'parent_id ' : 'tcase_id');
             $notRunSQL .= $groupBy . " HAVING COUNT(0) = " .
                 intval($buildsCfg['count']);
 
@@ -4777,7 +4798,7 @@ class testplan extends tlObjectWithAttachments
                 " AND E.status IN ('{$statusInClause}')" . " ) SQX ";
 
             $groupBy = ' GROUP BY ' .
-                ((DB_TYPE == 'mssql') ? 'parent_id ' : 'tcase_id');
+                ((DB_TYPE === 'mssql') ? 'parent_id ' : 'tcase_id');
             $otherStatusSQL .= $groupBy . " HAVING COUNT(0) = " . $countTarget;
 
             $hits['otherStatus'] = $this->db->fetchRowsIntoMap($otherStatusSQL,
@@ -4883,8 +4904,12 @@ class testplan extends tlObjectWithAttachments
     {
         $debugMsg = 'Class:' . __CLASS__ . ' - Method: ' . __FUNCTION__;
 
-        [$safe_id, , $sqlLEBBP] = $this->helperGetHits($id, $platformID,
-            null, [
+        [
+            $safe_id,
+            ,
+            $sqlLEBBP
+        ] = $this->helperGetHits($id, $platformID, null,
+            [
                 'buildID' => $buildID
             ]);
 
@@ -4947,7 +4972,11 @@ class testplan extends tlObjectWithAttachments
     {
         $debugMsg = 'Class:' . __CLASS__ . ' - Method: ' . __FUNCTION__;
 
-        [$safe_id, , $sqlLEX] = $this->helperGetHits($id, null, null,
+        [
+            $safe_id,
+            ,
+            $sqlLEX
+        ] = $this->helperGetHits($id, null, null,
             [
                 'buildID' => $buildID,
                 'ignorePlatform' => true
@@ -5018,8 +5047,12 @@ class testplan extends tlObjectWithAttachments
     {
         $debugMsg = 'Class:' . __CLASS__ . ' - Method: ' . __FUNCTION__;
 
-        [$safe_id, $buildsCfg, $sqlLEX] = $this->helperGetHits($id, null,
-            $buildSet, [
+        [
+            $safe_id,
+            $buildsCfg,
+            $sqlLEX
+        ] = $this->helperGetHits($id, null, $buildSet,
+            [
                 'ignorePlatform' => true,
                 'ignoreBuild' => true
             ]);
@@ -5052,7 +5085,7 @@ class testplan extends tlObjectWithAttachments
             " AND E.status IN('{$statusInClause}') ";
 
         $groupBy = ' GROUP BY ' .
-            ((DB_TYPE == 'mssql') ? 'parent_id ' : 'tcase_id');
+            ((DB_TYPE === 'mssql') ? 'parent_id ' : 'tcase_id');
         $sql .= $groupBy;
 
         unset($safe_id, $buildsCfg, $sqlLEX);
@@ -5087,8 +5120,12 @@ class testplan extends tlObjectWithAttachments
     {
         $debugMsg = 'Class:' . __CLASS__ . ' - Method: ' . __FUNCTION__;
 
-        [$safe_id, $buildsCfg, $sqlLEBP] = $this->helperGetHits($id,
-            $platformID, $buildSet, [
+        [
+            $safe_id,
+            $buildsCfg,
+            $sqlLEBP
+        ] = $this->helperGetHits($id, $platformID, $buildSet,
+            [
                 'ignoreBuild' => true
             ]);
 
@@ -5127,7 +5164,7 @@ class testplan extends tlObjectWithAttachments
             " AND E.status IN ('{$statusInClause}') ";
 
         $groupBy = ' GROUP BY ' .
-            ((DB_TYPE == 'mssql') ? 'parent_id ' : 'tcase_id');
+            ((DB_TYPE === 'mssql') ? 'parent_id ' : 'tcase_id');
         $sql .= $groupBy;
 
         unset($safe_id, $buildsCfg, $sqlLEBP);
@@ -5195,7 +5232,8 @@ class testplan extends tlObjectWithAttachments
         }
 
         if ($get['otherStatus'] = (! empty($statusSetLocal))) {
-            tLog(__METHOD__ . ":: \$tplan_mgr->{$getHitsStatusSetMethod}", 'DEBUG');
+            tLog(__METHOD__ . ":: \$tplan_mgr->{$getHitsStatusSetMethod}",
+                'DEBUG');
             $hits['otherStatus'] = (array) $this->$getHitsStatusSetMethod($id,
                 $statusSetLocal, $buildSet);
         }
@@ -5235,8 +5273,12 @@ class testplan extends tlObjectWithAttachments
 
         $statusSet = $this->sanitizeExecStatus($statusSet);
         $statusInClause = implode("','", $statusSet);
-        [$safe_id, $buildsCfg, $sqlLEX] = $this->helperGetHits($id, null,
-            $buildSet, [
+        [
+            $safe_id,
+            $buildsCfg,
+            $sqlLEX
+        ] = $this->helperGetHits($id, null, $buildSet,
+            [
                 'ignorePlatform' => true
             ]);
 
@@ -5323,7 +5365,10 @@ class testplan extends tlObjectWithAttachments
     public function getHitsNotRunPartialALOP($id, $buildSet = null)
     {
         $debugMsg = 'Class:' . __CLASS__ . ' - Method: ' . __FUNCTION__;
-        [$safe_id, $buildsCfg, ] = $this->helperGetHits($id, null, $buildSet,
+        [
+            $safe_id,
+            $buildsCfg
+        ] = $this->helperGetHits($id, null, $buildSet,
             [
                 'ignorePlatform' => true
             ]);
@@ -5509,8 +5554,10 @@ class testplan extends tlObjectWithAttachments
         // $debugMsg = 'Class:' . __CLASS__ . ' - Method: ' . __FUNCTION__;
         $io = $this->tree_manager->get_node_hierarchy_info($id);
 
-        [$prefix, $garbage] = $this->tcaseMgr->getPrefix(null,
-            $io['parent_id']);
+        [
+            $prefix,
+            $garbage
+        ] = $this->tcaseMgr->getPrefix(null, $io['parent_id']);
         $prefix .= $this->tcaseCfg->glue_character;
         $concat = $this->db->db->concat("'{$prefix}'", 'TCV.tc_external_id');
 
@@ -5989,8 +6036,11 @@ class testplan extends tlObjectWithAttachments
 
         if (! is_null($ic['filters']['keyword_id'])) {
 
-            [$ic['join']['keywords'], $ic['where']['keywords']] = $this->helper_keywords_sql(
-                $ic['filters']['keyword_id'], [
+            [
+                $ic['join']['keywords'],
+                $ic['where']['keywords']
+            ] = $this->helper_keywords_sql($ic['filters']['keyword_id'],
+                [
                     'output' => 'array'
                 ]);
 
@@ -6002,9 +6052,11 @@ class testplan extends tlObjectWithAttachments
         // we will DO NOT FILTER by user ID
         if (! is_null($ic['filters']['assigned_to']) &&
             ! in_array(TL_USER_ANYBODY, (array) $ic['filters']['assigned_to'])) {
-            [$ic['join']['ua'], $ic['where']['ua']] = $this->helperAssignedToSQL(
-                $ic['filters']['assigned_to'], $ic['options'],
-                $ic['filters']['build_id']);
+            [
+                $ic['join']['ua'],
+                $ic['where']['ua']
+            ] = $this->helperAssignedToSQL($ic['filters']['assigned_to'],
+                $ic['options'], $ic['filters']['build_id']);
 
             $ic['where']['where'] .= $ic['where']['ua'];
         }
@@ -6018,7 +6070,7 @@ class testplan extends tlObjectWithAttachments
         }
 
         if (! is_null($ic['filters']['tcase_name']) &&
-            ($dummy = trim($ic['filters']['tcase_name'])) != '') {
+            $dummy = trim($ic['filters']['tcase_name']) !== '') {
             $ic['where']['where'] .= " AND NH_TCASE.name LIKE '%{$dummy}%' ";
         }
 
@@ -6027,7 +6079,10 @@ class testplan extends tlObjectWithAttachments
             ! is_null($ic['filters']['cf_hash'])) {
             $ic['where']['cf'] = '';
 
-            [$ic['filters']['cf_hash'], $cf_sql] = $this->helperTestPlanDesignCustomFields(
+            [
+                $ic['filters']['cf_hash'],
+                $cf_sql
+            ] = $this->helperTestPlanDesignCustomFields(
                 $ic['filters']['cf_hash']);
 
             if (strlen(trim($cf_sql)) > 0) {
@@ -6073,8 +6128,10 @@ class testplan extends tlObjectWithAttachments
         // bug_id => will be a list to create an IN() clause
         if (isset($ic['filters']['bug_id']) &&
             ! is_null($ic['filters']['bug_id'])) {
-            [$ic['join']['bugs'], $ic['where']['bugs']] = $this->helperBugsSQL(
-                $ic['filters']['bug_id']);
+            [
+                $ic['join']['bugs'],
+                $ic['where']['bugs']
+            ] = $this->helperBugsSQL($ic['filters']['bug_id']);
             $ic['where']['where'] .= $ic['where']['bugs'];
         }
 
@@ -6405,7 +6462,9 @@ class testplan extends tlObjectWithAttachments
 
         $safe['tplan'] = intval($id);
         $io = $this->tree_manager->get_node_hierarchy_info($safe['tplan']);
-        [$prefix, ] = $this->tcaseMgr->getPrefix(null, $io['parent_id']);
+        [
+            $prefix
+        ] = $this->tcaseMgr->getPrefix(null, $io['parent_id']);
         unset($io);
         $prefix .= $this->tcaseCfg->glue_character;
         $feid = $this->db->db->concat("'{$prefix}'", 'TCV.tc_external_id');
@@ -6419,7 +6478,7 @@ class testplan extends tlObjectWithAttachments
         $platQty = 0;
         if (! is_null($my['filters']['platform_id'])) {
             $dummy = (array) $my['filters']['platform_id'];
-            array_walk($dummy, 'intval');
+            array_walk($dummy, intval(...));
             $addWhere['platform'] = 'AND TPTCV.platform_id IN (' .
                 implode(',', $dummy) . ')';
             $platQty = count((array) $my['filters']['platform_id']);
@@ -6427,14 +6486,14 @@ class testplan extends tlObjectWithAttachments
 
         if (! is_null($my['filters']['tsuites_id'])) {
             $dummy = (array) $my['filters']['tsuites_id'];
-            array_walk($dummy, 'intval');
+            array_walk($dummy, intval(...));
             $addWhere['tsuite'] = 'AND NH_TCASE.parent_id IN (' .
                 implode(',', $dummy) . ')';
         }
 
         if (! is_null($my['filters']['tcaseSet'])) {
             $dummy = (array) $my['filters']['tcaseSet'];
-            array_walk($dummy, 'intval');
+            array_walk($dummy, intval(...));
             $addWhere['tsuite'] = 'AND NH_TCASE.id IN (' . implode(',', $dummy) .
                 ')';
         }
@@ -6838,11 +6897,8 @@ class testplan extends tlObjectWithAttachments
         $debugMsg = 'Class:' . __CLASS__ . ' - Method: ' . __FUNCTION__;
 
         $execNotes = $this->db->prepare_string($ex->notes);
-        if (property_exists($ex, 'executionTimeStampISO')) {
-            $execTS = "'" . $ex->executionTimeStampISO . "'";
-        } else {
-            $execTS = $this->db->db_now();
-        }
+        $execTS = property_exists($ex, 'executionTimeStampISO') ? "'" .
+            $ex->executionTimeStampISO . "'" : $this->db->db_now();
 
         $sql = "/* {$debugMsg} */ " .
             "INSERT INTO {$this->tables['executions']} " .
@@ -6949,8 +7005,8 @@ class testplan extends tlObjectWithAttachments
         // get target platform (if exists)
         if ($context['platform_id'] > 0) {
             $info = $this->platform_mgr->getByID($context['platform_id']);
-            $xmlString .= "\t<platform name=\"" .
-                htmlspecialchars($info['name']) . "\" />\n";
+            $xmlString .= "\t<platform name=\"" . htmlspecialchars(
+                $info['name']) . "\" />\n";
             $my['filters']['platform_id'] = $context['platform_id'];
         }
 
@@ -7902,7 +7958,7 @@ class build_mgr extends tlObject
             if (property_exists($item, $nu)) {
                 switch ($nu) {
                     case 'creation_ts':
-                        if (null != $item->$nu && '' == trim($item->$nu)) {
+                        if (null != $item->$nu && '' === trim($item->$nu)) {
                             $build->$nu = $item->$nu;
                         }
                         break;
@@ -7934,7 +7990,7 @@ class build_mgr extends tlObject
 
         $sql .= "{$build->is_active},{$build->is_open},{$build->creation_ts}";
 
-        if ($build->release_date == '') {
+        if ($build->release_date === '') {
             $sql .= ",NULL)";
         } else {
             $sql .= ",'" . $this->db->$ps($build->release_date) . "')";
@@ -7976,7 +8032,7 @@ class build_mgr extends tlObject
             " VALUES ('" . $tplan_id . "','" . $this->db->prepare_string($name) .
             "','" . $this->db->prepare_string($notes) . "',";
 
-        if ($targetDate == '') {
+        if ($targetDate === '') {
             $sql .= "NULL,";
         } else {
             $sql .= "'" . $this->db->prepare_string($targetDate) . "',";
@@ -8030,7 +8086,7 @@ class build_mgr extends tlObject
             $this->db->prepare_string($name) . "'," . "     notes='" .
             $this->db->prepare_string($notes) . "'";
 
-        if ($targetDate == '') {
+        if ($targetDate === '') {
             $sql .= ",release_date=NULL";
         } else {
             $sql .= ",release_date='" . $this->db->prepare_string($targetDate) .
@@ -8062,7 +8118,7 @@ class build_mgr extends tlObject
             $sql .= ", {$fi}='" . $this->db->$ps($members[$fi]) . "'";
         }
 
-        if ($closure_date == '') {
+        if ($closure_date === '') {
             $sql .= ",closed_on_date=NULL";
         } else {
             // may be will be useful validate date format
@@ -8290,8 +8346,8 @@ class build_mgr extends tlObject
         $method_name = "get_linked_cfields_at_{$method_suffix}";
         $cf_map = $this->$method_name($id, $tproject_id);
         if (! is_null($cf_map)) {
-            return $this->cfield_mgr->html_table_inputs($cf_map,
-                $name_suffix, $input_values);
+            return $this->cfield_mgr->html_table_inputs($cf_map, $name_suffix,
+                $input_values);
         }
         return $cf_smarty;
     }
@@ -8379,7 +8435,7 @@ class build_mgr extends tlObject
             }
         }
 
-        if ($cf_smarty != '' && $add_table) {
+        if ($cf_smarty !== '' && $add_table) {
             return "<table {$table_style}>" . $cf_smarty . "</table>";
         }
 
@@ -8469,7 +8525,7 @@ class milestone_mgr extends tlObject
         // check dates
         foreach ($dateKeys as $varname) {
             $value = trim($mi->$varname);
-            if ($value != '') {
+            if ($value !== '') {
                 if (($time = strtotime($value)) == - 1 || $time === false) {
                     die(__FUNCTION__ . ' Abort - Invalid date');
                 }

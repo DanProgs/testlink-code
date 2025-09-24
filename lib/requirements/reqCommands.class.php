@@ -12,6 +12,8 @@
 class reqCommands
 {
 
+    private array $reqRelationTypeDescr;
+
     private $db;
 
     private $reqSpecMgr;
@@ -567,8 +569,7 @@ class reqCommands
             $my['filters'], $my['options']);
         if (count($subtree) > 0) {
             $obj->containers = $this->reqMgr->tree_mgr->createHierarchyMap(
-                $subtree, 'dotted',
-                [
+                $subtree, 'dotted', [
                     'field' => 'doc_id',
                     'format' => '%s:'
                 ]);

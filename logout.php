@@ -28,7 +28,7 @@ if (isset($authCfg['SSO_enabled']) && $authCfg['SSO_enabled'] &&
     $std .= $args->ssodisable ? "&ssodisable" : '';
 
     $xx = config_get('logoutUrl');
-    $lo = is_null($xx) || trim($xx) == '' ? $std : $xx;
+    $lo = is_null($xx) || trim($xx) === '' ? $std : $xx;
     redirect($lo);
 }
 exit();

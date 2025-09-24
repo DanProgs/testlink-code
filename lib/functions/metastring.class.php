@@ -39,7 +39,7 @@ function TLS($label, $params = null)
 function _TLS($label, $params = null)
 {
     $args = func_get_args();
-    $mString = call_user_func_array("TLS", $args);
+    $mString = call_user_func_array(TLS(...), $args);
     $mString->helper->bDontFireEvent = true;
     return $mString;
 }

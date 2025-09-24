@@ -24,6 +24,8 @@ require_once 'event_api.php';
 class testproject extends tlObjectWithAttachments
 {
 
+    public $object_table;
+
     const RECURSIVE_MODE = true;
 
     const EXCLUDE_TESTCASES = true;
@@ -701,7 +703,7 @@ class testproject extends tlObjectWithAttachments
                 $safe = $this->db->$sm($fspec['value']);
                 switch ($fspec['op']) {
                     case '=':
-                        if ($sm == 'prepare_string') {
+                        if ($sm === 'prepare_string') {
                             $sql .= "='" . $safe . "'";
                         } else {
                             $sql .= "=" . $safe;
@@ -886,7 +888,8 @@ class testproject extends tlObjectWithAttachments
             'testplan' => 'me',
             'requirement_spec' => 'me'
         ];
-        $gui->canDoExport = (array) $this->tree_manager->get_children($safeID, $exclusion) !== [];
+        $gui->canDoExport = (array) $this->tree_manager->get_children($safeID,
+            $exclusion) !== [];
         if ($modded_item_id) {
             $gui->moddedItem = $this->get_by_id(intval($modded_item_id));
         }
@@ -1883,7 +1886,7 @@ class testproject extends tlObjectWithAttachments
 
         $title = trim($title);
 
-        if ($title == "") {
+        if ($title === "") {
             $ret['status_ok'] = 0;
             $ret['msg'] = lang_get("warning_empty_req_title");
         }
@@ -2469,11 +2472,8 @@ class testproject extends tlObjectWithAttachments
         }
 
         $sql .= $where . " ORDER BY name";
-        if ($forHMLSelect) {
-            $map = $this->db->fetchColumnsIntoMap($sql, 'id', 'name');
-        } else {
-            $map = $this->db->fetchRowsIntoMap($sql, 'id');
-        }
+        $map = $forHMLSelect ? $this->db->fetchColumnsIntoMap($sql, 'id', 'name') : $this->db->fetchRowsIntoMap(
+            $sql, 'id');
 
         return $map;
     }
@@ -2752,8 +2752,10 @@ class testproject extends tlObjectWithAttachments
 
         // Requirements
         if ($my['options']['copy_requirements']) {
-            [$oldNewMappings['requirements'], $onReqSet] = $this->copyRequirements(
-                $id, $new_id, $user_id);
+            [
+                $oldNewMappings['requirements'],
+                $onReqSet
+            ] = $this->copyRequirements($id, $new_id, $user_id);
 
             // need to copy relations between requirements
             $rel = null;
@@ -3215,7 +3217,7 @@ class testproject extends tlObjectWithAttachments
                 'importance' => ' '
             ];
 
-            foreach ($inClause as $tgf => $dummy) {
+            foreach (array_keys($inClause) as $tgf) {
                 if ($tcversionFilter[$tgf]) {
                     $inClause[$tgf] = " TCV.{$tgf} IN (" .
                         implode(',', $my['filters'][$tgf]) . ')';
@@ -3331,7 +3333,7 @@ class testproject extends tlObjectWithAttachments
             $highlander = $this->db->fetchRowsIntoMap($ssx, 'tc_id');
             if ($filterOnTC) {
                 $ky = is_null($highlander) ? $tclist : array_diff_key($tclist,
-                        $highlander);
+                    $highlander);
                 foreach ($ky as $tcase) {
                     unset($rs[$tcase]);
                 }
@@ -3407,8 +3409,8 @@ class testproject extends tlObjectWithAttachments
                 $this->db->exec_query($sql);
                 $a4ins = array_chunk($tcaseSet, 2000); // MAGIC
                 foreach ($a4ins as $chu) {
-                    $sql = "INSERT INTO {$tt} (id) VALUES (" . implode('),(', $chu) .
-                        ")";
+                    $sql = "INSERT INTO {$tt} (id) VALUES (" .
+                        implode('),(', $chu) . ")";
                     $this->db->exec_query($sql);
                 }
             }
@@ -3475,7 +3477,7 @@ class testproject extends tlObjectWithAttachments
         }
 
         $hits = is_null($sql) ? null : $this->db->fetchRowsIntoMap($sql,
-                'testcase_id');
+            'testcase_id');
 
         // clean up
         if ($delTT) {
@@ -4142,8 +4144,8 @@ class testproject extends tlObjectWithAttachments
                 $this->db->exec_query($sql);
                 $a4ins = array_chunk($tcaseSet, 2000); // MAGIC
                 foreach ($a4ins as $chu) {
-                    $sql = "INSERT INTO {$tt} (id) VALUES (" . implode('),(', $chu) .
-                        ")";
+                    $sql = "INSERT INTO {$tt} (id) VALUES (" .
+                        implode('),(', $chu) . ")";
                     $this->db->exec_query($sql);
                 }
             }
@@ -4211,7 +4213,7 @@ class testproject extends tlObjectWithAttachments
         }
 
         $hits = is_null($sql) ? null : $this->db->fetchRowsIntoMap($sql,
-                'testcase_id');
+            'testcase_id');
 
         // clean up
         if ($delTT) {
@@ -4226,11 +4228,10 @@ class testproject extends tlObjectWithAttachments
      */
     public static function getName(&$dbh, $id)
     {
-        $sch = tlDBObject::getDBTables(
-            [
-                'nodes_hierarchy',
-                'testprojects'
-            ]);
+        $sch = tlDBObject::getDBTables([
+            'nodes_hierarchy',
+            'testprojects'
+        ]);
         $sql = "SELECT name FROM {$sch['nodes_hierarchy']} NH
             JOIN {$sch['testprojects']} TPRJ
             ON TPRJ.id = NH.id

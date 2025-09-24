@@ -24,11 +24,7 @@ $users = $tlUser->getNames($db);
 // fill login instead of user ID
 if (! is_null($data)) {
     foreach ($data as $k => $v) {
-        if ($v['owner_id'] != '0') {
-            $data[$k]['owner'] = $users[$v['owner_id']]['login'];
-        } else {
-            $data[$k]['owner'] = '';
-        }
+        $data[$k]['owner'] = $v['owner_id'] != '0' ? $users[$v['owner_id']]['login'] : '';
     }
 }
 echo json_encode($data);

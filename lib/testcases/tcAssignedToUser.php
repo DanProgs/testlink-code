@@ -304,7 +304,7 @@ function initArgs(&$dbHandler)
     $args->build_id = isset($_REQUEST['build_id']) &&
         is_numeric($_REQUEST['build_id']) ? intval($_REQUEST['build_id']) : 0;
 
-    $args->show_inactive_tplans = isset($_REQUEST['show_inactive_tplans']) ? true : false;
+    $args->show_inactive_tplans = isset($_REQUEST['show_inactive_tplans']);
 
     $args->show_all_users = false;
     if (isset($_REQUEST['show_all_users'])) {
@@ -312,8 +312,8 @@ function initArgs(&$dbHandler)
     }
     $args->show_user_column = $args->show_all_users;
 
-    $show_closed_builds = isset($_REQUEST['show_closed_builds']) ? true : false;
-    $show_closed_builds_hidden = isset($_REQUEST['show_closed_builds_hidden']) ? true : false;
+    $show_closed_builds = isset($_REQUEST['show_closed_builds']);
+    $show_closed_builds_hidden = isset($_REQUEST['show_closed_builds_hidden']);
     if ($show_closed_builds) {
         $selection = true;
     } elseif ($show_closed_builds_hidden) {
@@ -335,7 +335,7 @@ function initArgs(&$dbHandler)
             $_REQUEST['show_inactive_and_closed']) != 0);
     }
 
-    $args->priority_enabled = $_SESSION['testprojectOptions']->testPriorityEnabled ? true : false;
+    $args->priority_enabled = (bool) $_SESSION['testprojectOptions']->testPriorityEnabled;
 
     // quick & dirty execution
     $args->tpx = isset($_REQUEST['tpx']) ? intval($_REQUEST['tpx']) : 0;

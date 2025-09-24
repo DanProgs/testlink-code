@@ -64,5 +64,5 @@ function initArgs()
  */
 function checkRights(&$db, &$user)
 {
-    return ($user->hasRight($db, "mgt_view_events")) ? true : false;
+    return (bool) $user->hasRight($db, "mgt_view_events");
 }

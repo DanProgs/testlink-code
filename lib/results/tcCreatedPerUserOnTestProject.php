@@ -451,13 +451,11 @@ function sanitizeDates(&$obj)
             $val = $obj->$prop;
             $val = $val[0];
 
-            if (strlen($val) != $validLenght) {
+            if (strlen($val) !== $validLenght) {
                 $obj->$prop = null;
-            } else {
+            } elseif (preg_match($validFormat, $val) === 0) {
                 // check if format is valid
-                if (preg_match($validFormat, $val) === 0) {
-                    $obj->$prop = null;
-                }
+                $obj->$prop = null;
             }
         }
     }

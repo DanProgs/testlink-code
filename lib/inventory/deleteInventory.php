@@ -21,7 +21,7 @@ $args = initArgs();
 if ($_SESSION['currentUser']->hasRight($db, "project_inventory_management")) {
     $tlIs = new tlInventory($args->testprojectId, $db);
     $data['success'] = $tlIs->deleteInventory($args->machineID);
-    $data['success'] = ($data['success'] == 1 /* $tlIs->OK */) ? true : false;
+    $data['success'] = $data['success'] == 1;
     $data['userfeedback'] = $tlIs->getUserFeedback();
 } else {
     tLog('User has not rights to set a device!', 'ERROR');

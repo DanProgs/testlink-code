@@ -20,6 +20,8 @@ require_once dirname(__FILE__) . '/attachments.inc.php';
 class requirement_mgr extends tlObjectWithAttachments
 {
 
+    public $object_table;
+
     protected $db;
 
     public $cfield_mgr;
@@ -207,16 +209,12 @@ class requirement_mgr extends tlObjectWithAttachments
         if (is_array($version_id)) {
             $versionid_list = implode(",", $version_id);
             $where_clause .= " AND REQV.id IN ({$versionid_list}) ";
-        } else {
-            if (is_null($version_id)) {
-                // search by "human" version number
-                $where_clause .= " AND REQV.version = {$version_number} ";
-            } else {
-                if ($version_id != self::ALL_VERSIONS &&
-                    $version_id != self::LATEST_VERSION) {
-                    $where_clause .= " AND REQV.id = {$version_id} ";
-                }
-            }
+        } elseif (is_null($version_id)) {
+            // search by "human" version number
+            $where_clause .= " AND REQV.version = {$version_number} ";
+        } elseif ($version_id != self::ALL_VERSIONS &&
+            $version_id != self::LATEST_VERSION) {
+            $where_clause .= " AND REQV.id = {$version_id} ";
         }
 
         // added -1 AS revision_id to make some process easier
@@ -261,21 +259,19 @@ class requirement_mgr extends tlObjectWithAttachments
                     $recordset = $this->db->get_recordset($sql);
                     break;
             }
-        } else {
+        } elseif (! $id_is_array) {
             // But, how performance wise can be do this,
             // instead of using MAX(version) and a group by?
             //
             // if $id was a list then this will return something USELESS
             //
-            if (! $id_is_array) {
-                $recordset = [
-                    $this->db->fetchFirstRow($sql)
-                ];
-            } else {
-                // Write to event viewer ???
-                // Developer Needs to user
-                die('use getByIDBulkLatestVersionRevision()');
-            }
+            $recordset = [
+                $this->db->fetchFirstRow($sql)
+            ];
+        } else {
+            // Write to event viewer ???
+            // Developer Needs to user
+            die('use getByIDBulkLatestVersionRevision()');
         }
 
         $rs = null;
@@ -298,7 +294,7 @@ class requirement_mgr extends tlObjectWithAttachments
                         foreach ($key2loop as $key) {
                             foreach ($user_keys as $ukey => $userid_field) {
                                 $rs[$flk][$key][$ukey] = '';
-                                if (trim($rs[$flk][$key][$userid_field]) != "") {
+                                if (trim($rs[$flk][$key][$userid_field]) !== "") {
                                     if (! isset(
                                         $userCache[$rs[$flk][$key][$userid_field]])) {
                                         $user = tlUser::getByID($this->db,
@@ -321,7 +317,7 @@ class requirement_mgr extends tlObjectWithAttachments
                     foreach ($key2loop as $key) {
                         foreach ($user_keys as $ukey => $userid_field) {
                             $rs[$key][$ukey] = '';
-                            if (trim($rs[$key][$userid_field]) != "") {
+                            if (trim($rs[$key][$userid_field]) !== "") {
                                 if (! isset(
                                     $userCache[$rs[$key][$userid_field]])) {
                                     $user = tlUser::getByID($this->db,
@@ -619,7 +615,7 @@ class requirement_mgr extends tlObjectWithAttachments
             if (! is_null($set2del)) {
                 foreach ($set2del as $rk => $r2d) {
                     $this->notifyMonitors($rk, $action4notify, $user_id);
-                    if ($action4notify == 'delete') {
+                    if ($action4notify === 'delete') {
                         $this->monitorOff($rk);
                     }
                 }
@@ -876,13 +872,13 @@ class requirement_mgr extends tlObjectWithAttachments
         $title = trim($title);
         $reqdoc_id = trim($reqdoc_id);
 
-        if ($title == "") {
+        if ($title === "") {
             $ret['status_ok'] = 0;
             $ret['msg'] = lang_get("warning_empty_req_title");
             $ret['failure_reason'] = 'empty_req_title';
         }
 
-        if ($reqdoc_id == "") {
+        if ($reqdoc_id === "") {
             $ret['status_ok'] = 0;
             $ret['msg'] .= " " . lang_get("warning_empty_reqdoc_id");
             $ret['failure_reason'] = 'empty_reqdoc_id';
@@ -1015,9 +1011,9 @@ class requirement_mgr extends tlObjectWithAttachments
             // Warning:
             // We are not maintaining hierarchy !!!
             $sql = " SELECT id FROM {$this->tables['nodes_hierarchy']} NH " .
-                " WHERE name='" . $this->db->prepare_string(
-                    $auto_testsuite_name) . "' " . " AND parent_id=" .
-                $tproject_id . " " . " AND node_type_id=" .
+                " WHERE name='" .
+                $this->db->prepare_string($auto_testsuite_name) . "' " .
+                " AND parent_id=" . $tproject_id . " " . " AND node_type_id=" .
                 $node_descr_type['testsuite'];
 
             $result = $this->db->exec_query($sql);
@@ -1545,7 +1541,7 @@ class requirement_mgr extends tlObjectWithAttachments
                 'req_title_lenght_exceeded' => '',
                 'req_docid_lenght_exceeded' => ''
             ];
-            foreach ($labels as $key => $dummy) {
+            foreach (array_keys($labels) as $key) {
                 $labels[$key] = lang_get($key);
             }
             $getByAttributeOpt = [
@@ -1671,11 +1667,7 @@ class requirement_mgr extends tlObjectWithAttachments
                             $req['expected_coverage'], $req['node_order']);
                         $fk_id = $last_version['id']; // for attachment management
                         $status_ok = ($result['status_ok'] == 1);
-                        if ($status_ok) {
-                            $msgID = 'import_req_updated';
-                        } else {
-                            $msgID = 'import_req_update_last_version_failed';
-                        }
+                        $msgID = $status_ok ? 'import_req_updated' : 'import_req_update_last_version_failed';
                         break;
 
                     case 'create_new_version':
@@ -1788,11 +1780,10 @@ class requirement_mgr extends tlObjectWithAttachments
      */
     private function processAttachments($importMode, $srs_id, $attachments)
     {
-        $tables = tlObjectWithDB::getDBTables(
-            [
-                'req_versions',
-                'attachments'
-            ]);
+        $tables = tlObjectWithDB::getDBTables([
+            'req_versions',
+            'attachments'
+        ]);
 
         $knownAttachments = [];
         foreach ($attachments as $attachment) {
@@ -1958,7 +1949,7 @@ class requirement_mgr extends tlObjectWithAttachments
                 }
             }
 
-            if (trim($cf_smarty) != "") {
+            if (trim($cf_smarty) !== "") {
                 $cf_smarty = "<table>" . $cf_smarty . "</table>";
             }
         }
@@ -2537,14 +2528,13 @@ class requirement_mgr extends tlObjectWithAttachments
             intval($from_version_id);
         $this->db->exec_query($sql);
 
-        $this->copy_cfields(
-            [
-                'id' => $id,
-                'version_id' => $from_version_id
-            ], [
-                'id' => $id,
-                'version_id' => $to_version_id
-            ]);
+        $this->copy_cfields([
+            'id' => $id,
+            'version_id' => $from_version_id
+        ], [
+            'id' => $id,
+            'version_id' => $to_version_id
+        ]);
 
         $this->copyAttachments($from_version_id, $to_version_id);
 
@@ -2633,7 +2623,8 @@ class requirement_mgr extends tlObjectWithAttachments
 
         $sql = "/* {$debugMsg} */ SELECT id, source_id, destination_id, relation_type, author_id, creation_ts " .
             " FROM {$this->tables['req_relations']} " .
-            " WHERE source_id={$id} OR destination_id={$id} " . " ORDER BY id ASC ";
+            " WHERE source_id={$id} OR destination_id={$id} " .
+            " ORDER BY id ASC ";
 
         $relations['relations'] = $this->db->get_recordset($sql);
         if (! empty($relations['relations'])) {
@@ -3112,7 +3103,8 @@ class requirement_mgr extends tlObjectWithAttachments
 
         $rs = $this->db->get_recordset($sql);
 
-        $sql = "/* {$debugMsg} */" . " SELECT REQV.id AS version_id, REQV.version," .
+        $sql = "/* {$debugMsg} */" .
+            " SELECT REQV.id AS version_id, REQV.version," .
             "     REQV.creation_ts, REQV.author_id, " .
             "     REQV.modification_ts, REQV.modifier_id, " . self::NO_REVISION .
             " AS revision_id, " . "      REQV.revision, REQV.scope, " .
@@ -3383,7 +3375,7 @@ class requirement_mgr extends tlObjectWithAttachments
         foreach ($key2loop as $key) {
             foreach ($user_keys as $ukey => $userid_field) {
                 $rs[$key][$ukey] = '';
-                if (trim($rs[$key][$userid_field]) != "") {
+                if (trim($rs[$key][$userid_field]) !== "") {
                     if (! isset($userCache[$rs[$key][$userid_field]])) {
                         $user = tlUser::getByID($this->db,
                             $rs[$key][$userid_field]);
@@ -3772,8 +3764,7 @@ class requirement_mgr extends tlObjectWithAttachments
         $rel_types_desc = config_get('req_cfg')->rel_type_description;
 
         // check if given type is a valid one for rel_type_description defined in config
-        $type_desc = array_key_exists(intval($rel['type']), $rel_types_desc) ? $rel_types_desc[intval(
-            $rel['type'])] : null;
+        $type_desc = $rel_types_desc[intval($rel['type'])] ?? null;
         $user_feedback = [
             'doc_id' => $source_doc_id . ' - ' . $destination_doc_id,
             'title' => lang_get('relation_type') . ' : ' .
@@ -3924,7 +3915,7 @@ class requirement_mgr extends tlObjectWithAttachments
                     foreach ($key2loop as $key) {
                         foreach ($user_keys as $ukey => $userid_field) {
                             $rs[$flk][$key][$ukey] = '';
-                            if (trim($rs[$flk][$key][$userid_field]) != "") {
+                            if (trim($rs[$flk][$key][$userid_field]) !== "") {
                                 if (! isset(
                                     $userCache[$rs[$flk][$key][$userid_field]])) {
                                     $user = tlUser::getByID($this->db,
@@ -3945,7 +3936,7 @@ class requirement_mgr extends tlObjectWithAttachments
                 foreach ($key2loop as $key) {
                     foreach ($user_keys as $ukey => $userid_field) {
                         $rs[$key][$ukey] = '';
-                        if (trim($rs[$key][$userid_field]) != "") {
+                        if (trim($rs[$key][$userid_field]) !== "") {
                             if (! isset($userCache[$rs[$key][$userid_field]])) {
                                 $user = tlUser::getByID($this->db,
                                     $rs[$key][$userid_field]);
@@ -4015,12 +4006,12 @@ class requirement_mgr extends tlObjectWithAttachments
         $sqlS = "/* {$debugMsg} */ SELECT COUNT(*) AS qty, source_id AS req_id " .
             " FROM {$this->tables['req_relations']} " .
             " WHERE source_id IN ({$inSet}) ";
-        $sqlS .= (DB_TYPE == 'mssql') ? ' GROUP BY source_id ' : ' GROUP BY req_id ';
+        $sqlS .= (DB_TYPE === 'mssql') ? ' GROUP BY source_id ' : ' GROUP BY req_id ';
 
         $sqlD = "/* {$debugMsg} */ SELECT COUNT(*) AS qty, destination_id AS req_id " .
             " FROM {$this->tables['req_relations']} " .
             " WHERE destination_id IN ({$inSet}) ";
-        $sqlD .= (DB_TYPE == 'mssql') ? ' GROUP BY destination_id ' : ' GROUP BY req_id ';
+        $sqlD .= (DB_TYPE === 'mssql') ? ' GROUP BY destination_id ' : ' GROUP BY req_id ';
 
         $sqlT = " SELECT SUM(qty) AS qty, req_id " .
             " FROM ({$sqlS} UNION ALL {$sqlD}) D " . ' GROUP BY req_id ';

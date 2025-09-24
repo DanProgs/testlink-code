@@ -43,7 +43,7 @@ function doAuthorize(&$db, $login, $pwd, $options = null)
     $login = trim($login);
     $pwd = trim($pwd);
     $doChecks = true;
-    if ($login == '') {
+    if ($login === '') {
         $doChecks = false;
         $result['msg'] = ' ';
     }
@@ -71,7 +71,7 @@ function doAuthorize(&$db, $login, $pwd, $options = null)
     if ($loginExists) {
         $loginExpired = false;
         $checkDate = ! is_null($user->expiration_date);
-        $checkDate = $checkDate && (trim($user->expiration_date) != '');
+        $checkDate = $checkDate && (trim($user->expiration_date) !== '');
 
         if ($checkDate) {
             $now = strtotime(date_format(date_create(), 'Y-m-d'));
@@ -120,20 +120,18 @@ function doAuthorize(&$db, $login, $pwd, $options = null)
             $user->emailAddress = $login;
             $user->firstName = $options->givenName;
             $user->lastName = $options->familyName;
-        } else {
-            if ($authCfg['ldap_automatic_user_creation']) {
-                $user->authentication = 'LDAP'; // force for auth_does_password_match
-                $check = auth_does_password_match($db, $user, $pwd);
+        } elseif ($authCfg['ldap_automatic_user_creation']) {
+            $user->authentication = 'LDAP';
+            // force for auth_does_password_match
+            $check = auth_does_password_match($db, $user, $pwd);
+            if ($check->status_ok) {
+                $forceUserCreation = true;
+                $uf = getUserFieldsFromLDAP($user->login,
+                    $authCfg['ldap'][$check->ldap_index]);
 
-                if ($check->status_ok) {
-                    $forceUserCreation = true;
-                    $uf = getUserFieldsFromLDAP($user->login,
-                        $authCfg['ldap'][$check->ldap_index]);
-
-                    $user->emailAddress = $uf->emailAddress;
-                    $user->firstName = $uf->firstName;
-                    $user->lastName = $uf->lastName;
-                }
+                $user->emailAddress = $uf->emailAddress;
+                $user->firstName = $uf->firstName;
+                $user->lastName = $uf->lastName;
             }
         }
 
@@ -143,10 +141,10 @@ function doAuthorize(&$db, $login, $pwd, $options = null)
             $user->lastName = trim($user->lastName);
             $porsi = explode('@', $user->emailAddress);
 
-            if ($user->firstName == '') {
+            if ($user->firstName === '') {
                 $user->firstName = 'DynGen ' . trim($porsi[0]);
             }
-            if ($user->lastName == '') {
+            if ($user->lastName === '') {
                 $user->lastName = 'DynGen ' . trim($porsi[1]);
             }
 
@@ -385,7 +383,7 @@ function doSSOWebServerVar(&$dbHandler, $authCfg = null)
         $userIdentity = trim($_SERVER[$authCfg['SSO_uid_field']]);
     }
 
-    if (! is_null($userIdentity) && $userIdentity != '') {
+    if (! is_null($userIdentity) && $userIdentity !== '') {
         $tables = tlObject::getDBTables([
             'users'
         ]);

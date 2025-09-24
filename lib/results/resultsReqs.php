@@ -445,7 +445,7 @@ function evaluateReq(&$status_code, &$algorithm_cfg, &$counters)
 {
     // init
     $evaluation = null;
-    $is_fully_covered = ($counters['total'] >= $counters['expected_coverage']) ? true : false;
+    $is_fully_covered = $counters['total'] >= $counters['expected_coverage'];
 
     if (! isset($counters[$status_code['not_run']])) {
         $counters[$status_code['not_run']] = 0;
@@ -761,7 +761,7 @@ function setUpReqStatusCfg()
     ];
 
     // add count for each status to show test progress
-    foreach ($eva as $key => $status) {
+    foreach (array_keys($eva) as $key) {
         $eva[$key]['count'] = 0;
     }
 
@@ -901,11 +901,9 @@ function doNotRunAnalysis($tcaseQty, $execStatusCounter, $notRunCode)
             $evaluation = $notRunCode;
             $doIt = false;
         }
-    } else {
-        if ($execStatusCounter['totalTPTCV'] == $execStatusCounter[$notRunCode]) {
-            $evaluation = $notRunCode;
-            $doIt = false;
-        }
+    } elseif ($execStatusCounter['totalTPTCV'] == $execStatusCounter[$notRunCode]) {
+        $evaluation = $notRunCode;
+        $doIt = false;
     }
     return [
         $evaluation,

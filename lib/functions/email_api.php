@@ -135,7 +135,7 @@ function email_send($p_from, $p_recipient, $p_subject, $p_message, $p_cc = '',
             // is not a lot clear why this is useful (franciscom)
             // need to use sometime to understand .
             if (is_null($g_phpMailer)) {
-                register_shutdown_function('email_smtp_close');
+                register_shutdown_function(email_smtp_close(...));
             } else {
                 $mail = $g_phpMailer;
             }

@@ -14,6 +14,14 @@ require_once TL_ABS_PATH . '/third_party/tuleap-php-api/lib/tuleap-rest-api.php'
 class tuleaprestInterface extends issueTrackerInterface
 {
 
+    private $name;
+
+    /**
+     *
+     * @var string[]
+     */
+    public $defaultResolvedStatus;
+
     private $APIClient;
 
     private $trackerID;
@@ -86,11 +94,8 @@ class tuleaprestInterface extends issueTrackerInterface
     {
         $valid = true;
         $blackList = '/\D/i';
-        if (preg_match($blackList, $trackerID)) {
-            $valid = false;
-        } else {
-            $valid = (intval($trackerID) > 0);
-        }
+        $valid = preg_match($blackList, $trackerID) ? false : intval($trackerID) >
+            0;
 
         return $valid;
     }
@@ -264,8 +269,7 @@ class tuleaprestInterface extends issueTrackerInterface
         try {
 
             $this->APIClient = new tuleap(trim($this->cfg->uriapi),
-                trim($this->cfg->username),
-                trim($this->cfg->password));
+                trim($this->cfg->username), trim($this->cfg->password));
 
             try {
                 $this->connected = $this->APIClient->Connect();
@@ -301,12 +305,8 @@ class tuleaprestInterface extends issueTrackerInterface
      */
     private function buildStatusHTMLString($status)
     {
-        if (in_array($status, $this->resolvedStatus->byName)) // Closed type status
-        {
-            $str = "<del>" . $status . "</del>";
-        } else {
-            $str = $status;
-        }
+        $str = in_array($status, $this->resolvedStatus->byName) ? "<del>" .
+            $status . "</del>" : $status;
         return "[{$str}] ";
     }
 

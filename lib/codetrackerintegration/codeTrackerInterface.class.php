@@ -181,7 +181,7 @@ abstract class codeTrackerInterface
             $msg = sprintf(lang_get('CTS_connect_to_database_fails'),
                 $connection_args);
             tLog($msg . $result['dbms_msg'], 'ERROR');
-        } elseif ($this->cfg->dbtype == 'mysql') {
+        } elseif ($this->cfg->dbtype === 'mysql') {
             if ($this->cfg->dbcharset == 'UTF-8') {
                 $this->dbConnection->exec_query("SET CHARACTER SET utf8");
                 $this->dbConnection->exec_query("SET NAMES utf8");
@@ -195,7 +195,7 @@ abstract class codeTrackerInterface
             }
         }
 
-        $this->connected = $result['status'] ? true : false;
+        $this->connected = (bool) $result['status'];
 
         return $this->connected;
     }

@@ -511,11 +511,7 @@ function doCreate(&$argsObj, &$buildMgr, &$tplanMgr, $dateFormat)
             $buildMgr->cfield_mgr->design_values_to_db($_REQUEST, $buildID,
                 $cf_map, null, 'build');
 
-            if ($argsObj->is_open == 1) {
-                $targetDate = null;
-            } else {
-                $targetDate = date("Y-m-d", $argsObj->closed_on_date);
-            }
+            $targetDate = $argsObj->is_open == 1 ? null : date("Y-m-d", $argsObj->closed_on_date);
             $buildMgr->setClosedOnDate($buildID, $targetDate);
 
             if ($argsObj->copy_tester_assignments && $argsObj->source_build_id) {
@@ -648,11 +644,7 @@ function doUpdate(&$argsObj, &$buildMgr, &$tplanMgr, $dateFormat)
                     date("Y"));
             }
 
-            if ($argsObj->is_open == 1) {
-                $targetDate = null;
-            } else {
-                $targetDate = date("Y-m-d", $argsObj->closed_on_date);
-            }
+            $targetDate = $argsObj->is_open == 1 ? null : date("Y-m-d", $argsObj->closed_on_date);
             $buildMgr->setClosedOnDate($argsObj->build_id, $targetDate);
 
             $op->user_feedback = '';
@@ -720,7 +712,7 @@ function crossChecks($argsObj, &$tplanMgr, $dateFormat)
         }
 
         // release date is optional
-        if ($rdate == "") {
+        if ($rdate === "") {
             $op->status_ok = 1;
         }
 

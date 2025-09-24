@@ -510,8 +510,8 @@ function getFilteredLinkedVersions(&$dbHandler, &$argsObj, &$tplanMgr,
     &$tcaseMgr, $options = null, $isTestSuite = true)
 {
     static $tsuite_mgr;
-    $doFilterByKeyword = (! is_null($argsObj->keyword_id) &&
-        $argsObj->keyword_id > 0) ? true : false;
+    $doFilterByKeyword = ! is_null($argsObj->keyword_id) &&
+        $argsObj->keyword_id > 0;
 
     // Multiple step algoritm to apply keyword filter on type=AND
     // get_*_tcversions filters by keyword ALWAYS in OR mode.
@@ -902,15 +902,13 @@ function getTestSpecFromNode(&$dbHandler, &$tcaseMgr, &$linkedItems,
                         if (is_null($targetTestCase)) {
                             $test_spec[$itemSet[$key]] = null;
                             $item = null;
+                        } elseif (isset($linkedItems[$targetTestCase])) {
+                            $item = current($linkedItems[$targetTestCase]);
                         } else {
-                            if (isset($linkedItems[$targetTestCase])) {
-                                $item = current($linkedItems[$targetTestCase]);
-                            } else {
-                                // hmmm, does not understand this logic.
-                                $item = null;
-                                if (isset($test_spec[$itemSet[$targetTestCase]])) {
-                                    $item = $tcversionSet[$targetTestCase];
-                                }
+                            // hmmm, does not understand this logic.
+                            $item = null;
+                            if (isset($test_spec[$itemSet[$targetTestCase]])) {
+                                $item = $tcversionSet[$targetTestCase];
                             }
                         }
 
@@ -1034,14 +1032,12 @@ function removeEmptyTestSuites(&$testSuiteSet, &$treeMgr,
             if (isset($value['linked_testcase_qty']) &&
                 $value['linked_testcase_qty'] == 0) {
                 unset($testSuiteSet[$key]);
-            } else {
+            } elseif (! empty($value['testcases'])) {
                 // Only if test suite has children test cases we need to understand
                 // if they are linked or not
-                if (! empty($value['testcases'])) {
-                    foreach ($value['testcases'] as $skey => $svalue) {
-                        if ($svalue['linked_version_id'] == 0) {
-                            unset($testSuiteSet[$key]['testcases'][$skey]);
-                        }
+                foreach ($value['testcases'] as $skey => $svalue) {
+                    if ($svalue['linked_version_id'] == 0) {
+                        unset($testSuiteSet[$key]['testcases'][$skey]);
                     }
                 }
             }
@@ -1247,10 +1243,8 @@ function buildSkeleton($id, $name, $config, &$test_spec, &$platforms)
                 if ($pivot_tsuite['id'] == $current['parent_id']) {
                     $the_level ++;
                     $level[$current['parent_id']] = $the_level;
-                } else {
-                    if (isset($level[$current['parent_id']])) {
-                        $the_level = $level[$current['parent_id']];
-                    }
+                } elseif (isset($level[$current['parent_id']])) {
+                    $the_level = $level[$current['parent_id']];
                 }
             }
             $out[$idx]['testsuite'] = [

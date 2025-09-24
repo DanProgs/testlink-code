@@ -36,7 +36,7 @@ function getDirSqlFiles($dirPath, $add_dirpath = 0)
                 // needed because is_dir() cached result. See PHP Manual
                 clearstatcache();
 
-                if ($file != "." && $file != ".." && ! $is_folder) {
+                if ($file !== "." && $file !== ".." && ! $is_folder) {
                     // use only if extension is sql
                     $file = trim($file);
                     $path_parts = pathinfo($file);
@@ -254,7 +254,7 @@ function create_user_for_db($db_type, $db_name, $db_server, $db_admin_name,
 
     if ($try_create_user == 1 && ! empty($user_list)) {
 
-        $user_list = array_map('strtolower', $user_list);
+        $user_list = array_map(strtolower(...), $user_list);
         $user_exists = in_array($login_lc, $user_list);
         if (! $user_exists) {
             $msg = '';
@@ -389,7 +389,7 @@ function check_db_loaded_extension($db_type)
     // keep in mind this constant will contain
     // the operating system PHP was built on
     //
-    if (PHP_OS == 'WINNT' || $isPHPGTE7) {
+    if (PHP_OS === 'WINNT' || $isPHPGTE7) {
 
         // First Time:
         //
@@ -677,7 +677,7 @@ function _mssql_make_user_with_grants($db, $the_host, $db_name, $login, $passwd)
 
     // Check if has been created, because I'm not able to get return code.
     $user_list = getUserList($db, 'mssql');
-    $user_list = array_map('strtolower', $user_list);
+    $user_list = array_map(strtolower(...), $user_list);
     $user_exists = in_array(trim($login), $user_list);
     if (! $user_exists) {
         $op->status_ok = false;

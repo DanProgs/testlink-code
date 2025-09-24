@@ -208,7 +208,7 @@ class stashrestInterface extends codeTrackerInterface
             $branch, '', $type);
         if (property_exists($contentList, 'children') &&
             property_exists($contentList->children, 'values')) {
-            if ($path != '' && substr($path, - 1) != "/") {
+            if ($path != '' && substr($path, - 1) !== "/") {
                 $path .= "/";
             }
             foreach ($contentList->children->values as $elem) {
@@ -349,7 +349,7 @@ class stashrestInterface extends codeTrackerInterface
         $status_ok = true;
         if (property_exists($this->cfg, 'projectkey')) {
             $pk = trim((string) ($this->cfg->projectkey));
-            if ($pk == '') {
+            if ($pk === '') {
                 $status_ok = false;
                 $msg = __CLASS__ . ' - Empty configuration: <projectKey>';
             }

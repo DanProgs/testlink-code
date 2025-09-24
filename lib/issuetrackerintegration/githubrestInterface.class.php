@@ -15,6 +15,10 @@ require_once TL_ABS_PATH . '/third_party/github-php-api/lib/github-rest-api.php'
 class githubrestInterface extends issueTrackerInterface
 {
 
+    private $name;
+
+    public $issueAttr;
+
     private $APIClient;
 
     private $issueDefaults;
@@ -153,7 +157,7 @@ class githubrestInterface extends issueTrackerInterface
             // I've tried to ask for users but get always ERROR from github (not able to understand why).
             try {
                 $items = $this->APIClient->getRepo();
-                $this->connected = count($items) > 0 ? true : false;
+                $this->connected = count($items) > 0;
                 unset($items);
             } catch (Exception $e) {
                 $processCatch = true;

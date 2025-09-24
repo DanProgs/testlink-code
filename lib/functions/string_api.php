@@ -31,8 +31,8 @@ function string_preserve_spaces_at_bol($p_string)
 
         $t_char = substr($lines[$i], $count, 1);
         $spaces = 0;
-        while (($t_char == ' ') || ($t_char == "\t")) {
-            if ($t_char == ' ') {
+        while (($t_char === ' ') || ($t_char === "\t")) {
+            if ($t_char === ' ') {
                 $spaces ++;
             } else {
                 $spaces += 4;
@@ -222,7 +222,7 @@ function string_sanitize_url($p_url)
         // url is ok if it begins with our path, if not, replace it
         $t_url = 'index.php';
     }
-    if ($t_url == '') {
+    if ($t_url === '') {
         $t_url = 'index.php';
     }
 
@@ -234,7 +234,7 @@ function string_sanitize_url($p_url)
             parse_str($t_param, $t_vals);
             $t_param = '';
             foreach ($t_vals as $k => $v) {
-                if ($t_param != '') {
+                if ($t_param !== '') {
                     $t_param .= '&';
                 }
                 $t_param .= "{$k}=" . urlencode(strip_tags(urldecode($v)));
@@ -297,13 +297,9 @@ function string_insert_hrefs($p_string)
     # Find any URL in a string and replace it with a clickable link
     # From MantisBT 2.25.2
     $p_string = preg_replace_callback($s_url_regex,
-        function ($p_match) {
+        static function ($p_match) {
             $t_url_href = 'href="' . rtrim($p_match[1], '.') . '"';
-            if (config_get('html_make_links') == LINKS_NEW_WINDOW) {
-                $t_url_target = ' target="_blank"';
-            } else {
-                $t_url_target = '';
-            }
+            $t_url_target = config_get('html_make_links') == LINKS_NEW_WINDOW ? ' target="_blank"' : '';
             return "<a {$t_url_href}{$t_url_target}>{$p_match[1]}</a>";
         }, $p_string);
 
@@ -493,11 +489,7 @@ function string_prepare_header($p_string)
  */
 function string_contains_scripting_chars($p_string)
 {
-    if ((strstr($p_string, '<') !== false) || (strstr($p_string, '>') !== false)) {
-        return true;
-    }
-
-    return false;
+    return (strstr($p_string, '<') !== false) || (strstr($p_string, '>') !== false);
 }
 
 /**

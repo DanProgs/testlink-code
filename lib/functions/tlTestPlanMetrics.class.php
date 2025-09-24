@@ -25,6 +25,10 @@
 class tlTestPlanMetrics extends testplan
 {
 
+    public $resultsCfg;
+
+    private mixed $testCaseCfg;
+
     /** @var resource references passed in by constructor */
     public $db;
 
@@ -71,7 +75,7 @@ class tlTestPlanMetrics extends testplan
 
         $this->statusCode = array_flip(
             array_keys($this->resultsCfg['status_label_for_exec_ui']));
-        foreach ($this->statusCode as $key => $dummy) {
+        foreach (array_keys($this->statusCode) as $key) {
             $this->statusCode[$key] = $this->resultsCfg['status_code'][$key];
         }
     }
@@ -233,7 +237,7 @@ class tlTestPlanMetrics extends testplan
             $item['percentage_completed'] = $this->get_percentage(
                 $item['tc_total'], $item['tc_completed']);
 
-            foreach ($checks as $key => $item_key) {
+            foreach (array_keys($checks) as $key) {
                 // add 1 decimal places to expected percentages
                 $item[$checks[$key]] = number_format($item[$checks[$key]], 1);
 
@@ -298,8 +302,11 @@ class tlTestPlanMetrics extends testplan
     {
         $debugMsg = 'Class:' . __CLASS__ . ' - Method: ' . __FUNCTION__;
         $safe_id = intval($id);
-        [$my, $builds, $sqlStm] = $this->helperGetExecCounters($safe_id,
-            $filters, $opt);
+        [
+            $my,
+            $builds,
+            $sqlStm
+        ] = $this->helperGetExecCounters($safe_id, $filters, $opt);
 
         $fields = "";
         if ($my['opt']['groupByPlatform']) {
@@ -570,8 +577,11 @@ class tlTestPlanMetrics extends testplan
     {
         $debugMsg = 'Class:' . __CLASS__ . ' - Method: ' . __FUNCTION__;
         $safe_id = intval($id);
-        [$my, $builds, $sqlStm] = $this->helperGetExecCounters($safe_id,
-            $filters, $opt);
+        [
+            $my,
+            $builds,
+            $sqlStm
+        ] = $this->helperGetExecCounters($safe_id, $filters, $opt);
 
         // may be too brute force but ...
         if (($tprojectID = $my['opt']['tprojectID']) == 0) {
@@ -741,8 +751,12 @@ class tlTestPlanMetrics extends testplan
     {
         $debugMsg = 'Class:' . __CLASS__ . ' - Method: ' . __FUNCTION__;
         $safe_id = intval($id);
-        [, , , $union, $platformSet] = $this->helperBuildSQLExecCounters(
-            $id, $filters, $opt);
+        [
+            ,
+            ,
+            $union,
+            $platformSet
+        ] = $this->helperBuildSQLExecCounters($id, $filters, $opt);
 
         $add2key = '';
         $addOnWhere = '';
@@ -766,7 +780,8 @@ class tlTestPlanMetrics extends testplan
         $this->helperCompleteStatusDomain($exec, 'platform_id');
 
         // get total test cases by Platform id ON TEST PLAN (With & WITHOUT tester assignment)
-        $sql = "/* {$debugMsg} */ " . " SELECT COUNT(0) AS qty, TPTCV.platform_id " .
+        $sql = "/* {$debugMsg} */ " .
+            " SELECT COUNT(0) AS qty, TPTCV.platform_id " .
             " FROM {$this->tables['testplan_tcversions']} TPTCV " . $addOnJoin .
             " WHERE TPTCV.testplan_id=" . $safe_id . $addOnWhere .
             " GROUP BY platform_id";
@@ -797,8 +812,11 @@ class tlTestPlanMetrics extends testplan
     {
         $debugMsg = 'Class:' . __CLASS__ . ' - Method: ' . __FUNCTION__;
         $safe_id = intval($id);
-        [$my, $builds, $sqlStm] = $this->helperGetExecCounters($safe_id,
-            $filters, $opt);
+        [
+            $my,
+            $builds,
+            $sqlStm
+        ] = $this->helperGetExecCounters($safe_id, $filters, $opt);
 
         // Due to PLATFORMS we will have MULTIPLIER EFFECT
         $fields = "";
@@ -915,39 +933,36 @@ class tlTestPlanMetrics extends testplan
                         }
                     }
                 }
-            } else {
+            } elseif (! is_null($rs)) {
                 // The OLD WAY
-                if (! is_null($rs)) {
-                    for ($jdx = 0; $jdx < $loop2do; $jdx ++) {
-                        if ($rs[$jdx]['urg_imp'] >=
-                            $priorityCfg->threshold['high']) {
-                            $rs[$jdx]['priority_level'] = HIGH;
-                            $hitOn = HIGH;
-                        } elseif ($rs[$jdx]['urg_imp'] <
-                            $priorityCfg->threshold['low']) {
-                            $rs[$jdx]['priority_level'] = LOW;
-                            $hitOn = LOW;
-                        } else {
-                            $rs[$jdx]['priority_level'] = MEDIUM;
-                            $hitOn = MEDIUM;
-                        }
-
-                        // to improve readability
-                        $status = $rs[$jdx]['status'];
-                        if (! isset($out[$hitOn][$status])) {
-                            $out[$hitOn][$status] = $rs[$jdx];
-                        } else {
-                            $out[$hitOn][$status]['exec_qty'] += $rs[$jdx]['exec_qty'];
-                        }
-
-                        if (! isset($totals[$hitOn])) {
-                            $totals[$hitOn] = [
-                                'priority_level' => $hitOn,
-                                'qty' => 0
-                            ];
-                        }
-                        $totals[$hitOn]['qty'] += $rs[$jdx]['exec_qty'];
+                for ($jdx = 0; $jdx < $loop2do; $jdx ++) {
+                    if ($rs[$jdx]['urg_imp'] >= $priorityCfg->threshold['high']) {
+                        $rs[$jdx]['priority_level'] = HIGH;
+                        $hitOn = HIGH;
+                    } elseif ($rs[$jdx]['urg_imp'] <
+                        $priorityCfg->threshold['low']) {
+                        $rs[$jdx]['priority_level'] = LOW;
+                        $hitOn = LOW;
+                    } else {
+                        $rs[$jdx]['priority_level'] = MEDIUM;
+                        $hitOn = MEDIUM;
                     }
+
+                    // to improve readability
+                    $status = $rs[$jdx]['status'];
+                    if (! isset($out[$hitOn][$status])) {
+                        $out[$hitOn][$status] = $rs[$jdx];
+                    } else {
+                        $out[$hitOn][$status]['exec_qty'] += $rs[$jdx]['exec_qty'];
+                    }
+
+                    if (! isset($totals[$hitOn])) {
+                        $totals[$hitOn] = [
+                            'priority_level' => $hitOn,
+                            'qty' => 0
+                        ];
+                    }
+                    $totals[$hitOn]['qty'] += $rs[$jdx]['exec_qty'];
                 }
             }
             $exec['with_tester'] = $out;
@@ -990,8 +1005,11 @@ class tlTestPlanMetrics extends testplan
         $opt = null)
     {
         $debugMsg = 'Class:' . __CLASS__ . ' - Method: ' . __FUNCTION__;
-        [, $builds, , $union, ] = $this->helperBuildSQLExecCounters($id,
-            $filters, $opt);
+        [
+            $builds,
+            ,
+            $union
+        ] = $this->helperBuildSQLExecCounters($id, $filters, $opt);
 
         if (is_null($builds) || empty($builds)) {
             return null; // >>---> Bye!
@@ -1038,8 +1056,10 @@ class tlTestPlanMetrics extends testplan
     {
         $debugMsg = 'Class:' . __CLASS__ . ' - Method: ' . __FUNCTION__;
         $safe_id = intval($id);
-        [, $builds, $sqlStm] = $this->helperGetExecCounters($safe_id,
-            $filters, $opt);
+        [
+            $builds,
+            $sqlStm
+        ] = $this->helperGetExecCounters($safe_id, $filters, $opt);
 
         // Last Executions By Build and Platform (LEBBP)
         // Please remember that Platforms (when exists) has Multiplier effect on test cases
@@ -1082,7 +1102,8 @@ class tlTestPlanMetrics extends testplan
 
         $sql = " /* {$debugMsg} */" .
             " SELECT user_id, build_id,status, count(0) AS exec_qty, SUM(execution_duration) AS total_time" .
-            " FROM ({$sqlUnionBU}) AS SQBU " . " GROUP BY user_id,build_id,status ";
+            " FROM ({$sqlUnionBU}) AS SQBU " .
+            " GROUP BY user_id,build_id,status ";
 
         $keyColumns = [
             'build_id',
@@ -1354,8 +1375,10 @@ class tlTestPlanMetrics extends testplan
     private function getStatusTotalsByTestSuiteForRender($id, $filters = null,
         $opt = null)
     {
-        [$renderObj, $staircase] = $this->getStatusTotalsByItemForRender(
-            $id, 'tsuite', $filters, $opt);
+        [
+            $renderObj,
+            $staircase
+        ] = $this->getStatusTotalsByItemForRender($id, 'tsuite', $filters, $opt);
         unset($staircase);
         return $renderObj;
     }
@@ -1369,8 +1392,10 @@ class tlTestPlanMetrics extends testplan
     public function getStatusTotalsByTopLevelTestSuiteForRender($id,
         $filters = null, $opt = null)
     {
-        [$rx, $staircase] = $this->getStatusTotalsByItemForRender($id,
-            'tsuite', $filters, $opt);
+        [
+            $rx,
+            $staircase
+        ] = $this->getStatusTotalsByItemForRender($id, 'tsuite', $filters, $opt);
 
         // ??? $key2loop = array_keys($rx->info);
         $template = [
@@ -1538,8 +1563,11 @@ class tlTestPlanMetrics extends testplan
     {
         $debugMsg = 'Class:' . __CLASS__ . ' - Method: ' . __FUNCTION__;
         $safe_id = intval($id);
-        [$my, $builds, $sqlStm] = $this->helperGetExecCounters($id,
-            $filters, $opt);
+        [
+            $my,
+            $builds,
+            $sqlStm
+        ] = $this->helperGetExecCounters($id, $filters, $opt);
 
         $fields = "";
         if ($my['opt']['groupByPlatform']) {
@@ -1656,8 +1684,12 @@ class tlTestPlanMetrics extends testplan
 
         $my['opt'] = array_merge($my['opt'], (array) $opt);
 
-        [$my, $builds, $sqlStm, $union] = $this->helperBuildSQLTestSuiteExecCounters(
-            $id, $filters, $my['opt']);
+        [
+            $my,
+            $builds,
+            $sqlStm,
+            $union
+        ] = $this->helperBuildSQLTestSuiteExecCounters($id, $filters, $my['opt']);
 
         $sql = " /* {$debugMsg} UNION WITH ALL CLAUSE */ " .
             " {$union['exec']} UNION ALL {$union['not_run']} ";
@@ -1911,8 +1943,11 @@ class tlTestPlanMetrics extends testplan
     {
         $debugMsg = 'Class:' . __CLASS__ . ' - Method: ' . __FUNCTION__;
         try {
-            [$my, $builds, $sqlStm] = $this->helperGetExecCounters($id,
-                $filters, $opt);
+            [
+                $my,
+                $builds,
+                $sqlStm
+            ] = $this->helperGetExecCounters($id, $filters, $opt);
         } catch (Exception $e) {
             return null;
         }
@@ -2035,8 +2070,11 @@ class tlTestPlanMetrics extends testplan
         ];
         $my['opt'] = array_merge($my['opt'], (array) $opt);
 
-        [$my, $builds, $sqlStm] = $this->helperGetExecCounters($id,
-            $filters, $opt);
+        [
+            $my,
+            $builds,
+            $sqlStm
+        ] = $this->helperGetExecCounters($id, $filters, $opt);
 
         $safe_id = intval($id);
 
@@ -2163,8 +2201,11 @@ class tlTestPlanMetrics extends testplan
         $opt = null)
     {
         $debugMsg = 'Class:' . __CLASS__ . ' - Method: ' . __FUNCTION__;
-        [$my, $builds, $sqlStm] = $this->helperGetExecCounters($id,
-            $filters, $opt);
+        [
+            $my,
+            $builds,
+            $sqlStm
+        ] = $this->helperGetExecCounters($id, $filters, $opt);
 
         // particular options
         $options = [
@@ -2271,7 +2312,10 @@ class tlTestPlanMetrics extends testplan
         $opt = null)
     {
         $debugMsg = 'Class:' . __CLASS__ . ' - Method: ' . __FUNCTION__;
-        [$my, $builds, ] = $this->helperGetExecCounters($id, $filters, $opt);
+        [
+            $my,
+            $builds
+        ] = $this->helperGetExecCounters($id, $filters, $opt);
 
         // particular options
         $my['opt'] = array_merge([
@@ -2389,17 +2433,21 @@ class tlTestPlanMetrics extends testplan
         $filters = null, $opt = null)
     {
         $debugMsg = 'Class:' . __CLASS__ . ' - Method: ' . __FUNCTION__;
-        [$my, $builds, ] = $this->helperGetExecCounters($id, $filters, $opt);
-        [, $buildsCfg, ] = $this->helperGetHits($id, null, $buildSet,
+        [
+            $my,
+            $builds
+        ] = $this->helperGetExecCounters($id, $filters, $opt);
+        [
+            $buildsCfg
+        ] = $this->helperGetHits($id, null, $buildSet,
             [
                 'ignorePlatform' => true
             ]);
         // particular options
-        $my['opt'] = array_merge(
-            [
-                'output' => 'map',
-                'ignoreBuild' => false
-            ], $my['opt']);
+        $my['opt'] = array_merge([
+            'output' => 'map',
+            'ignoreBuild' => false
+        ], $my['opt']);
         $safe_id = intval($id);
 
         $fullEID = $this->helperConcatTCasePrefix($safe_id);
@@ -2508,7 +2556,7 @@ class tlTestPlanMetrics extends testplan
 
         $inClause = '';
         if (! is_null($idSet) && ((array) $idSet > 0) &&
-            ($dummy = implode(',', (array) $idSet)) != '') {
+            $dummy = implode(',', (array) $idSet) !== '') {
             $inClause = " WHERE id IN ({$dummy}) ";
         }
 
@@ -2531,8 +2579,10 @@ class tlTestPlanMetrics extends testplan
         $safe['tplan_id'] = intval($id);
 
         $my = [];
-        [$my, $sqlLEX] = $this->initQueryMetrics($safe['tplan_id'],
-            $filters, $options);
+        [
+            $my,
+            $sqlLEX
+        ] = $this->initQueryMetrics($safe['tplan_id'], $filters, $options);
 
         // -------------------------------------------------------------------------------------------
         // We will work always using last execution result as filter criteria.
@@ -2659,8 +2709,11 @@ class tlTestPlanMetrics extends testplan
         $sqlLEX .= " GROUP BY EE.tcversion_id,EE.testplan_id,EE.platform_id,EE.build_id ";
 
         if (! is_null($ic['filters']['keywords'])) {
-            [$ic['join']['keywords'], $ic['where']['keywords']] = $this->helper_keywords_sql(
-                $ic['filters']['keywords'], [
+            [
+                $ic['join']['keywords'],
+                $ic['where']['keywords']
+            ] = $this->helper_keywords_sql($ic['filters']['keywords'],
+                [
                     'output' => 'array'
                 ]);
 
@@ -2691,8 +2744,12 @@ class tlTestPlanMetrics extends testplan
 
         $my['opt'] = array_merge($my['opt'], (array) $opt);
 
-        [$my, , , $union] = $this->helperBuildSQLTestSuiteExecCounters($id,
-            $filters, $my['opt']);
+        [
+            $my,
+            ,
+            ,
+            $union
+        ] = $this->helperBuildSQLTestSuiteExecCounters($id, $filters, $my['opt']);
 
         $sql = " /* {$debugMsg} UNION WITH ALL CLAUSE */ " .
             " {$union['exec']} UNION ALL {$union['not_run']} ";
@@ -2941,8 +2998,13 @@ class tlTestPlanMetrics extends testplan
         ];
 
         $my['opt'] = array_merge($my['opt'], (array) $opt);
-        [$my, $builds, $sqlStm, $union] = $this->buildSQLTSLatestExecOneSinglePlatform(
-            $id, $platform_id, $filters, $my['opt']);
+        [
+            $my,
+            $builds,
+            $sqlStm,
+            $union
+        ] = $this->buildSQLTSLatestExecOneSinglePlatform($id, $platform_id,
+            $filters, $my['opt']);
 
         $sql = " /* {$debugMsg} {$union['exec']} ";
 
@@ -3160,8 +3222,11 @@ class tlTestPlanMetrics extends testplan
         ];
         $my['opt'] = array_merge($my['opt'], (array) $opt);
 
-        [$my, $builds, $sqlStm] = $this->helperGetExecCounters($id,
-            $filters, $opt);
+        [
+            $my,
+            $builds,
+            $sqlStm
+        ] = $this->helperGetExecCounters($id, $filters, $opt);
 
         $safe_id = intval($id);
 
@@ -3238,8 +3303,10 @@ class tlTestPlanMetrics extends testplan
     public function getStatusTotalsTSuiteDepth2ForRender($id, $filters = null,
         $opt = null)
     {
-        [$rx, $staircase] = $this->getStatusTotalsByItemForRender($id,
-            'tsuite', $filters, $opt);
+        [
+            $rx,
+            $staircase
+        ] = $this->getStatusTotalsByItemForRender($id, 'tsuite', $filters, $opt);
 
         // ??? $key2loop = array_keys($rx->info);
         $template = [

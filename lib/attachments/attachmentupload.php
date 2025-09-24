@@ -28,7 +28,7 @@ if ($args->bPostBack) {
 
     if ($fInfo && $id && $gui->tableName != "") {
         $opt = null;
-        if (trim($gui->tableName) == 'executions') {
+        if (trim($gui->tableName) === 'executions') {
             $opt['allow_empty_title'] = true;
         }
 

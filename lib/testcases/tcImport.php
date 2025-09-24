@@ -405,11 +405,7 @@ function saveImportedTCData(&$db, $tcData, $tproject_id, $container_id, $userID,
                 $messages['end_warning'] . "\n";
             $tcCfg = getWebEditorCfg('design');
             $tcType = $tcCfg['type'];
-            if ($tcType == 'none') {
-                $summary = $xx . $summary;
-            } else {
-                $summary = nl2br($xx) . $summary;
-            }
+            $summary = $tcType == 'none' ? $xx . $summary : nl2br($xx) . $summary;
             $name = tlSubStr($name, 0, $safeSizeCfg->testcase_name);
         }
 
@@ -449,21 +445,19 @@ function saveImportedTCData(&$db, $tcData, $tproject_id, $container_id, $userID,
                             $name,
                             $messages['already_exists_updated']
                         ];
+                    } elseif ($ret['reason'] == '') {
+                        $resultMap[] = [
+                            $name,
+                            sprintf($messages['already_exists_not_updated'],
+                                $tcasePrefix . $glueChar . $externalid,
+                                $tcasePrefix . $glueChar .
+                                $ret['hit_on']['tc_external_id'])
+                        ];
                     } else {
-                        if ($ret['reason'] == '') {
-                            $resultMap[] = [
-                                $name,
-                                sprintf($messages['already_exists_not_updated'],
-                                    $tcasePrefix . $glueChar . $externalid,
-                                    $tcasePrefix . $glueChar .
-                                    $ret['hit_on']['tc_external_id'])
-                            ];
-                        } else {
-                            $resultMap[] = [
-                                $name,
-                                $ret['msg']
-                            ];
-                        }
+                        $resultMap[] = [
+                            $name,
+                            $ret['msg']
+                        ];
                     }
                     break;
 
@@ -645,13 +639,11 @@ function checkXMLTCTsuite($fileName, $recursiveMode)
                     'msg' => lang_get('wrong_xml_tsuite_file')
                 ];
             }
-        } else {
-            if ($elementName != 'testcases' && $elementName != 'testcase') {
-                $file_check = [
-                    'status_ok' => 0,
-                    'msg' => lang_get('wrong_xml_tcase_file')
-                ];
-            }
+        } elseif ($elementName != 'testcases' && $elementName != 'testcase') {
+            $file_check = [
+                'status_ok' => 0,
+                'msg' => lang_get('wrong_xml_tcase_file')
+            ];
         }
     }
     return $file_check;
@@ -801,7 +793,7 @@ function processRequirements(&$dbHandler, &$reqMgr, $tcaseName, $tcIDCard,
                     " AND REQ.srs_id={$req_spec_id} ";
 
                 $rsx = $dbHandler->get_recordset($sql);
-                if ($useit = (empty($rsx) ? false : true)) {
+                if ($useit = (!empty($rsx))) {
                     $cachedReqSpec[$value['req_spec_title']]['req'][$value['doc_id']] = $rsx[0]['id'];
                 }
             }
@@ -1246,7 +1238,7 @@ function importTestSuitesFromSimpleXML(&$dbHandler, &$xml, $parentID,
                     $tcData = getTestCaseSetFromSimpleXMLObj([
                         $target
                     ]);
-                    if (trim($tcData[0]['name']) == '') {
+                    if (trim($tcData[0]['name']) === '') {
                         $xx = [
                             lang_get('testcase_has_no_name'),
                             lang_get('testcase_has_no_name')

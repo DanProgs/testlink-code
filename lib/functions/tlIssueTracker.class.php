@@ -533,7 +533,7 @@ class tlIssueTracker extends tlObject
         foreach ($k2san as $key) {
             $value = trim($obj->$key);
             if ($key === 'name') {
-                $sobj->$key = ($value == '') ? null : $value;
+                $sobj->$key = ($value === '') ? null : $value;
             }
 
             if (! is_null($sobj->$key)) {

@@ -140,7 +140,7 @@ function compareImportedReqs(&$dbHandler, $arrImportSource, $tprojectID,
             'import_req_conflicts_other_branch' => '',
             'import_req_exists_here' => ''
         ];
-        foreach ($messages as $key => $dummy) {
+        foreach (array_keys($messages) as $key) {
             $messages[$key] = lang_get($key);
         }
 
@@ -590,7 +590,7 @@ function getReqCoverage(&$dbHandler, $reqs, &$execMap)
                 "req_doc_id" => $req_tcase_set[$first_key]["req_doc_id"]
             ];
 
-            foreach ($status_counters as $key => $value) {
+            foreach (array_keys($status_counters) as $key) {
                 $status_counters[$key] = 0;
             }
             if ($req_tcase_set[$first_key]['testcase_id'] > 0) {
@@ -615,7 +615,7 @@ function getReqCoverage(&$dbHandler, $reqs, &$execMap)
                         $execInfo = end($execMap[$item_info['testcase_id']]);
                         $tcase_path = $execInfo['tcase_path'];
                         if (isset($execInfo['status']) &&
-                            trim($execInfo['status']) != '') {
+                            trim($execInfo['status']) !== '') {
                             $exec_status = $execInfo['status'];
                         }
                     } else {
@@ -955,7 +955,7 @@ function req_link_replace($dbHandler, $scope, $tprojectID)
                     // if the requirement really belongs to the specified project (requirements
                     // with the same doc_id may exist within different projects)
                     if ($real_root == $matched_root_info['id']) {
-                        if ($accessKey == 'req') {
+                        if ($accessKey === 'req') {
                             // add version to link title if set
                             $version = '';
                             $req_version_id = 'null';

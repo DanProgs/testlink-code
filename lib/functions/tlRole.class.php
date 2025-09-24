@@ -316,7 +316,7 @@ class tlRole extends tlDBObject
         ];
         foreach ($tables as $table) {
             $sql = "UPDATE {$this->tables[$table]} SET role_id = {$newRole} WHERE role_id = {$this->dbID}";
-            $result = $result && ($db->exec_query($sql) ? true : false);
+            $result = $result && ((bool) $db->exec_query($sql));
         }
         return $result ? tl::OK : tl::ERROR;
     }

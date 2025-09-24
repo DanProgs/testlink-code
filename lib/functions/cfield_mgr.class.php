@@ -13,11 +13,6 @@
  *
  **/
 
-/**
- * load conversion functions
- */
-use function cfield_mgr\helper_get_tab_index_value;
-
 require_once dirname(__FILE__) . '/date_api.php';
 require_once dirname(__FILE__) . '/string_api.php';
 
@@ -37,6 +32,10 @@ if (! empty($cf_files)) {
  */
 class cfield_mgr extends tlObject
 {
+
+    public $object_table;
+
+    public $debugMsg;
 
     const DEFAULT_INPUT_SIZE = 50;
 
@@ -555,7 +554,7 @@ class cfield_mgr extends tlObject
 
             if (is_array($node_id)) {
                 $targetIsArray = true;
-                $sane = array_map('intval', $node_id);
+                $sane = array_map(intval(...), $node_id);
                 $inClause = implode(',', $sane);
             } else {
                 $inClause = $this->db->prepare_int($node_id);
@@ -699,7 +698,7 @@ class cfield_mgr extends tlObject
             case 'multiselection list':
                 $t_values = explode('|', $p_field_def['possible_values']);
 
-                if ($verbose_type == 'list') {
+                if ($verbose_type === 'list') {
                     // get maximum allowed window size for lists
                     // $window_size = intval($size) > 1 ? $size : self::LISTBOX_WINDOW_SIZE;
                     $t_multiple = ' ';
@@ -736,7 +735,8 @@ class cfield_mgr extends tlObject
                         $input_name . '[]"' . " id=\"{$input_name}\"";
 
                     // added check $t_option != '' to make check box start NOT CHECKED
-                    if ($t_option != '' && in_array($t_option, $t_checked_values)) {
+                    if ($t_option !== '' &&
+                        in_array($t_option, $t_checked_values)) {
                         $str_out .= ' value="' . $t_option .
                             '" checked="checked">&nbsp;' . $t_option .
                             '&nbsp;&nbsp;';
@@ -1651,39 +1651,30 @@ class cfield_mgr extends tlObject
             $additional_join .= " LEFT OUTER JOIN {$this->tables['cfield_execution_values']} CFEV ON CFEV.field_id=CF.id " .
                 " AND CFEV.execution_id IN (" . implode(',', $execution_id) .
                 ") ";
-        } else {
-            if (! is_null($testplan_id)) {
-                $base_values = '';
-
-                // MSSQL BLOCKING error on Report "Test Cases with Execution Details" due to reserved word EXEC
-                $additional_values .= ",CF.type,CF.name,CF.label,CF.id,CFEV.value AS value,CFEV.tcversion_id AS node_id," .
-                    "EXECU.id AS exec_id, EXECU.tcversion_id,EXECU.tcversion_number," .
-                    "EXECU.execution_ts,EXECU.status AS exec_status,EXECU.notes AS exec_notes, " .
-                    "NHB.id AS tcase_id, NHB.name AS tcase_name, TCV.tc_external_id, " .
-                    "B.id AS builds_id,B.name AS build_name, U.login AS tester, " .
-                    "PLAT.name AS platform_name, COALESCE(PLAT.id,0) AS platform_id";
-
-                $additional_join .= " JOIN {$this->tables['cfield_execution_values']} CFEV ON CFEV.field_id=CF.id " .
-                    " AND CFEV.testplan_id={$testplan_id} " .
-                    " JOIN {$this->tables['executions']} EXECU ON CFEV.tcversion_id = EXECU.tcversion_id " .
-                    " AND CFEV.execution_id = EXECU.id ";
-
-                $additional_join .= " JOIN {$this->tables['builds']} B ON B.id = EXECU.build_id " .
-                    " AND B.testplan_id = EXECU.testplan_id ";
-
-                $additional_join .= " JOIN {$this->tables['tcversions']} TCV ON TCV.version = EXECU.tcversion_number " .
-                    " AND TCV.id = EXECU.tcversion_id ";
-
-                $additional_join .= " JOIN {$this->tables['users']} U ON  U.id = EXECU.tester_id " .
-                    " JOIN {$this->tables['nodes_hierarchy']} NHA ON NHA.id = EXECU.tcversion_id " .
-                    " JOIN {$this->tables['nodes_hierarchy']} NHB ON NHB.id = NHA.parent_id  ";
-
-                // Use left join, if platforms is not used platform_name will become null
-                $additional_join .= " LEFT JOIN {$this->tables['platforms']} PLAT ON EXECU.platform_id = PLAT.id";
-                $order_clause = "ORDER BY EXECU.tcversion_id,exec_status,exec_id";
-
-                $fetchMethod = 'fetchArrayRowsIntoMap';
-            }
+        } elseif (! is_null($testplan_id)) {
+            $base_values = '';
+            // MSSQL BLOCKING error on Report "Test Cases with Execution Details" due to reserved word EXEC
+            $additional_values .= ",CF.type,CF.name,CF.label,CF.id,CFEV.value AS value,CFEV.tcversion_id AS node_id," .
+                "EXECU.id AS exec_id, EXECU.tcversion_id,EXECU.tcversion_number," .
+                "EXECU.execution_ts,EXECU.status AS exec_status,EXECU.notes AS exec_notes, " .
+                "NHB.id AS tcase_id, NHB.name AS tcase_name, TCV.tc_external_id, " .
+                "B.id AS builds_id,B.name AS build_name, U.login AS tester, " .
+                "PLAT.name AS platform_name, COALESCE(PLAT.id,0) AS platform_id";
+            $additional_join .= " JOIN {$this->tables['cfield_execution_values']} CFEV ON CFEV.field_id=CF.id " .
+                " AND CFEV.testplan_id={$testplan_id} " .
+                " JOIN {$this->tables['executions']} EXECU ON CFEV.tcversion_id = EXECU.tcversion_id " .
+                " AND CFEV.execution_id = EXECU.id ";
+            $additional_join .= " JOIN {$this->tables['builds']} B ON B.id = EXECU.build_id " .
+                " AND B.testplan_id = EXECU.testplan_id ";
+            $additional_join .= " JOIN {$this->tables['tcversions']} TCV ON TCV.version = EXECU.tcversion_number " .
+                " AND TCV.id = EXECU.tcversion_id ";
+            $additional_join .= " JOIN {$this->tables['users']} U ON  U.id = EXECU.tester_id " .
+                " JOIN {$this->tables['nodes_hierarchy']} NHA ON NHA.id = EXECU.tcversion_id " .
+                " JOIN {$this->tables['nodes_hierarchy']} NHB ON NHB.id = NHA.parent_id  ";
+            // Use left join, if platforms is not used platform_name will become null
+            $additional_join .= " LEFT JOIN {$this->tables['platforms']} PLAT ON EXECU.platform_id = PLAT.id";
+            $order_clause = "ORDER BY EXECU.tcversion_id,exec_status,exec_id";
+            $fetchMethod = 'fetchArrayRowsIntoMap';
         }
 
         if (! is_null($location)) {
@@ -2726,12 +2717,9 @@ class cfield_mgr extends tlObject
                         if (($value != 0) && ($value != '') &&
                             ! is_numeric($value)) {
                             $parsed = split_localized_date($value, $date_format);
-                            if ($parsed != null) {
-                                $value = mktime(0, 0, 0, $parsed['month'],
-                                    $parsed['day'], $parsed['year']);
-                            } else {
-                                $value = '';
-                            }
+                            $value = $parsed != null ? mktime(0, 0, 0,
+                                $parsed['month'], $parsed['day'],
+                                $parsed['year']) : '';
                         }
                         break;
 

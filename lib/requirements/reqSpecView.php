@@ -125,7 +125,7 @@ function initializeGui(&$dbHandler, &$argsObj)
     }
 
     $gui->uploadOp = null;
-    if (trim($argsObj->uploadOPStatusCode) != '') {
+    if (trim($argsObj->uploadOPStatusCode) !== '') {
         $gui->uploadOp = new stdClass();
         $gui->uploadOp->statusOK = false;
         $gui->uploadOp->statusCode = $argsObj->uploadOPStatusCode;

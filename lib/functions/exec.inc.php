@@ -140,7 +140,7 @@ function write_execution(&$db, &$execSign, &$exec_data, &$issueTracker)
         $current_status = $exec_data[$execStatusKey][$tcversion_id];
         $version_number = $exec_data['version_number'][$tcversion_id];
         $has_been_executed = ($current_status !=
-            $resultsCfg['status_code']['not_run'] ? true : false);
+            $resultsCfg['status_code']['not_run']);
 
         if ($has_been_executed) {
             $my_notes = $is_bulk_save !== 0 ? $bulk_notes : $db->prepare_string(
@@ -155,11 +155,7 @@ function write_execution(&$db, &$execSign, &$exec_data, &$issueTracker)
 
             $dura = 'NULL ';
             if (isset($exec_data['execution_duration'])) {
-                if (trim($exec_data['execution_duration']) == '') {
-                    $dura = 'NULL ';
-                } else {
-                    $dura = floatval($exec_data['execution_duration']);
-                }
+                $dura = trim($exec_data['execution_duration']) === '' ? 'NULL ' : floatval($exec_data['execution_duration']);
             }
 
             $sql .= ',' . $dura . ")";
@@ -236,7 +232,7 @@ function write_execution(&$db, &$execSign, &$exec_data, &$issueTracker)
 
                 foreach ($key2loop as $step_id) {
                     $doIt = (! is_null($exec_data['step_notes'][$step_id]) &&
-                        trim($exec_data['step_notes'][$step_id]) != '') ||
+                        trim($exec_data['step_notes'][$step_id]) !== '') ||
                         $exec_data['step_status'][$step_id] !=
                         $resultsCfg['status_code']['not_run'];
 
@@ -737,7 +733,7 @@ function addIssue($dbHandler, $argsObj, $itsObj, $opt = null)
     if ($setReporter) {
         $opt->reporter = $argsObj->user->login;
         $opt->reporter_email = trim($argsObj->user->emailAddress);
-        if ('' == $opt->reporter_email) {
+        if ('' === $opt->reporter_email) {
             $opt->reporter_email = $opt->reporter;
         }
 
@@ -1116,7 +1112,7 @@ function addAttachmentsToExec($execID, &$docRepo)
         'full_path' => null
     ];
 
-    foreach ($honeyPot as $bee => $nuu) {
+    foreach (array_keys($honeyPot) as $bee) {
         // 0 is magic!!, 0 is used in the smarty template
         // May be we have enabled MULTIPLE on file upload
         $honeyPot[$bee] = (array) $_FILES['uploadedFile'][$bee][0];
@@ -1141,7 +1137,7 @@ function addAttachmentsToExec($execID, &$docRepo)
             $uploadOp = $docRepo->insertAttachment($execID, $tableRef, '',
                 $fInfo, $repOpt);
 
-            if ($op->msg != '') {
+            if ($op->msg !== '') {
                 $op->msg .= '<br>';
             }
             if ($uploadOp->statusOK) {
@@ -1151,7 +1147,7 @@ function addAttachmentsToExec($execID, &$docRepo)
         }
     }
 
-    if ($op->msg == '') {
+    if ($op->msg === '') {
         return null;
     }
     return $op;

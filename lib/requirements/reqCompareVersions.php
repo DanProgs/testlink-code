@@ -58,7 +58,7 @@ if ($args->compare_selected_versions) {
     $gui->diff = [
         "scope" => []
     ];
-    foreach ($gui->diff as $key => $val) {
+    foreach (array_keys($gui->diff) as $key) {
         if ($args->use_daisydiff) {
             // using daisydiff as diffing engine
             $diff = new HTMLDiffer();

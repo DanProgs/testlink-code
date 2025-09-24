@@ -21,6 +21,8 @@
 class tlUser extends tlDBObject
 {
 
+    public $loginRegExp;
+
     /**
      *
      * @var string the name of the table the object is stored into
@@ -604,7 +606,7 @@ class tlUser extends tlDBObject
             return self::S_PWDMGTEXTERNAL;
         }
         $pwd = trim($pwd);
-        if ($pwd == "") {
+        if ($pwd === "") {
             return self::E_PWDEMPTY;
         }
         $this->password = $this->encryptPassword($pwd, $authentication);
@@ -687,7 +689,7 @@ class tlUser extends tlDBObject
         $result = tl::OK;
         $login = trim($login);
 
-        if ($login == "" || (tlStringLen($login) > $this->maxLoginLength)) {
+        if ($login === "" || (tlStringLen($login) > $this->maxLoginLength)) {
             $result = self::E_LOGINLENGTH;
         } elseif (! preg_match($this->loginRegExp, $login)) {
             // Only allow a basic set of characters
@@ -874,13 +876,11 @@ class tlUser extends tlDBObject
 
         if (isset($userTestProjectRoles[$testprojectID])) {
             $userTestProjectRights = (array) $userTestProjectRoles[$testprojectID]->rights;
-
             // Special situation => just one right
             $doMoreAnalysis = true;
             if (count($userTestProjectRights) == 1) {
                 $doMoreAnalysis = ! is_null($userTestProjectRights[0]->dbID);
             }
-
             $allRights = null;
             if ($doMoreAnalysis) {
                 $testProjectRights = [];
@@ -897,10 +897,8 @@ class tlUser extends tlDBObject
             } else {
                 return false;
             }
-        } else {
-            if (! is_null($accessPublic) && $accessPublic['tproject'] == 0) {
-                return false;
-            }
+        } elseif (! is_null($accessPublic) && $accessPublic['tproject'] == 0) {
+            return false;
         }
 
         if ($testPlanID > 0) {
@@ -910,18 +908,14 @@ class tlUser extends tlDBObject
                 foreach ($userTestPlanRights as $right) {
                     $testPlanRights[] = $right->name;
                 }
-
                 // subtract test projects rights
                 $testPlanRights = array_diff($testPlanRights,
                     array_keys($g_propRights_product));
-
                 propagateRights($allRights, $g_propRights_product,
                     $testPlanRights);
                 $allRights = $testPlanRights;
-            } else {
-                if (! is_null($accessPublic) && $accessPublic['tplan'] == 0) {
-                    return false;
-                }
+            } elseif (! is_null($accessPublic) && $accessPublic['tplan'] == 0) {
+                return false;
             }
         }
 
@@ -1350,13 +1344,13 @@ class tlUser extends tlDBObject
     private function auth_is_cookie_valid(&$db, $p_cookie_string)
     {
         # fail if cookie is blank
-        $status = ('' === $p_cookie_string) ? false : true;
+        $status = '' !== $p_cookie_string;
 
         if ($status) {
             # look up cookie in the database to see if it is valid
             $sql = "SELECT COUNT(0) AS hits FROM $this->object_table " .
-                "WHERE cookie_string = '" .
-                $db->prepare_string($p_cookie_string) . "'";
+                "WHERE cookie_string = '" . $db->prepare_string(
+                    $p_cookie_string) . "'";
             $rs = $db->fetchFirstRow($sql);
 
             if (! is_array($rs)) {
@@ -1527,7 +1521,7 @@ class tlUser extends tlDBObject
         ]);
 
         $setClause = " SET expiration_date = ";
-        if (is_null($isoDate) || trim($isoDate) == '') {
+        if (is_null($isoDate) || trim($isoDate) === '') {
             $setClause .= " NULL ";
         } else {
             // it's really a date?

@@ -96,7 +96,7 @@ class tlReports extends tlObjectWithDB
                 ];
 
                 if (isset($rptItem['directLink']) &&
-                    trim($rptItem['directLink']) != '') {
+                    trim($rptItem['directLink']) !== '') {
                     if ($apiKeyIsValid) {
                         $items[$xdx]['directLink'] = sprintf(
                             $rptItem['directLink'], $_SESSION['basehref'],

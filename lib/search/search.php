@@ -466,7 +466,7 @@ function cleanUpTarget(&$dbHandler, $target)
     $theSet = explode(' ', $s);
     $targetSet = [];
     foreach ($theSet as $val) {
-        if (trim($val) != '') {
+        if (trim($val) !== '') {
             $targetSet[] = $dbHandler->prepare_string($val);
         }
     }

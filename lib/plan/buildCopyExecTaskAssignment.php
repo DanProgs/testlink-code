@@ -95,7 +95,7 @@ function initArgs(&$buildMgr)
     $args->tproject_id = intval($info['testproject_id']);
 
     $args->confirmed = isset($_REQUEST['confirmed']) &&
-        $_REQUEST['confirmed'] == 'yes' ? true : false;
+        $_REQUEST['confirmed'] == 'yes';
 
     $args->refreshTree = false;
     $args->currentUser = $_SESSION['currentUser'];

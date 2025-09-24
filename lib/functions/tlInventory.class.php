@@ -152,11 +152,7 @@ class tlInventory extends tlObjectWithDB
 
         $clauses = null;
         if (! is_null($ids)) {
-            if (! is_array($ids)) {
-                $clauses[] = "id = {$ids}";
-            } else {
-                $clauses[] = "id IN (" . implode(",", $ids) . ")";
-            }
+            $clauses[] = is_array($ids) ? "id IN (" . implode(",", $ids) . ")" : "id = {$ids}";
         }
         if ($clauses) {
             $sql .= " AND " . implode(" AND ", $clauses);

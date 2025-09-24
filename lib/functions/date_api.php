@@ -136,11 +136,7 @@ function create_date_selection_set($p_name, $p_format, $p_date = 0,
 
     // PHP on 32bit systems, when passing mktime(0,0,0,-1,-1,-1) returns false.
     // PHP on 64bit systems it returns a long negative value which causes the error.
-    if ($m < 0 || $d < 0 || $y < 0) {
-        $time = 0;
-    } else {
-        $time = mktime(0, 0, 0, $m, $d, $y);
-    }
+    $time = $m < 0 || $d < 0 || $y < 0 ? 0 : mktime(0, 0, 0, $m, $d, $y);
 
     $formatted_date = $time != 0 ? strftime($date_format, $time) : '';
 

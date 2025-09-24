@@ -468,13 +468,9 @@ function processTestCase(&$dbHandler, $tplEngine, $args, &$gui, $grants, $cfg)
         // If nothing has been received on args, we will get latest active.
         //
         $latestTCVersionID = $identity->version_id;
-        if ($latestTCVersionID == 0) {
-            $tcvSet = $item_mgr->getAllVersionsID($args->id);
-        } else {
-            $tcvSet = [
-                $latestTCVersionID
-            ];
-        }
+        $tcvSet = $latestTCVersionID == 0 ? $item_mgr->getAllVersionsID($args->id) : [
+            $latestTCVersionID
+        ];
 
         foreach ($tcvSet as $tcvx) {
             $gui->attachments[$tcvx] = getAttachmentInfosFrom($item_mgr, $tcvx);

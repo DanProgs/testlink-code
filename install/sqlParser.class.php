@@ -42,7 +42,7 @@ class SqlParser
 
         // part of this logic has been copied from the setup of EVENTUM
         $contents = file($filename);
-        $do_replace = trim($this->db_table_prefix) != '';
+        $do_replace = trim($this->db_table_prefix) !== '';
 
         // From PHP Manual Notes on using a class function as Filter
         // This FAILS!!!
@@ -129,10 +129,8 @@ class SqlParser
 
         if ($pos === false) {
             $use_v = true;
-        } else {
-            if ($pos == 0) {
-                $use_v = false;
-            }
+        } elseif ($pos == 0) {
+            $use_v = false;
         }
 
         // Empty line must not be used

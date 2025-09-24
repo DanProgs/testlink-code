@@ -255,7 +255,7 @@ function initArgs($dateFormat)
         'modification_date_to' => ' 23:59:59'
     ];
     foreach ($dk as $tdk => $hhmmss) {
-        if (isset($args->$tdk) && trim($args->$tdk) != '') {
+        if (isset($args->$tdk) && trim($args->$tdk) !== '') {
             $l10ndate = split_localized_date($args->$tdk, $dateFormat);
             $args->$tdk = null;
             if ($l10ndate != null && is_array($l10ndate)) {
@@ -480,7 +480,7 @@ function build_search_sql(&$dbHandler, &$argsObj, &$guiObj)
     foreach ($map2use as $vv) {
         $ref = &$$vv;
         if (! is_null($ref['ver'])) {
-            $sql .= ($vv == 'filter') ? ' WHERE 1=1 ' : '';
+            $sql .= ($vv === 'filter') ? ' WHERE 1=1 ' : '';
             $sql .= implode("", $ref['ver']);
         }
     }
@@ -508,7 +508,7 @@ function build_search_sql(&$dbHandler, &$argsObj, &$guiObj)
     foreach ($map2use as $vv) {
         $ref = &$$vv;
         if (! is_null($ref['rev'])) {
-            $sql4Union .= ($vv == 'filter') ? ' WHERE 1=1 ' : '';
+            $sql4Union .= ($vv === 'filter') ? ' WHERE 1=1 ' : '';
             $sql4Union .= implode("", $ref['rev']);
         }
     }

@@ -199,7 +199,7 @@ class RestApi
             }
         }
 
-        if ($apiKey != null && $apiKey != '') {
+        if ($apiKey != null && $apiKey !== '') {
             $sql = "SELECT id FROM {$this->tables['users']} " .
                 "WHERE script_key='" . $this->db->prepare_string($apiKey) . "'";
 
@@ -835,7 +835,7 @@ class RestApi
                 if (property_exists($item, 'is_open')) {
                     $oio = intval($build['is_open']);
                     $nio = intval($item->is_open);
-                    if ($oio != $nio) {
+                    if ($oio !== $nio) {
                         if ($nio !== 0) {
                             $this->buildMgr->setOpen($id);
                         } else {
@@ -1389,7 +1389,7 @@ class RestApi
             ]
         ];
 
-        foreach ($ma as $key => $dummy) {
+        foreach (array_keys($ma) as $key) {
             if (! ($isOK = $isOK && property_exists($obj, $key))) {
                 throw new Exception("Missing Attribute: {$key} ");
             }
@@ -1465,7 +1465,7 @@ class RestApi
             'summary' => '',
             'preconditions' => ''
         ];
-        foreach ($sk2d as $key => $value) {
+        foreach (array_keys($sk2d) as $key) {
             if (is_array($tcase->$key)) {
                 $tcase->$key = "<pre>" . implode("\n", $tcase->$key) . "</pre>";
             }
@@ -1490,7 +1490,7 @@ class RestApi
                 'expected_results' => ''
             ];
             foreach ($obj->steps as $stepObj) {
-                foreach ($sk2d as $key => $value) {
+                foreach (array_keys($sk2d) as $key) {
                     if (is_array($stepObj->$key)) {
                         $stepObj->$key = "<pre>" . implode("\n", $stepObj->$key) .
                             "</pre>";

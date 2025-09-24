@@ -453,8 +453,8 @@ function sendMailToTesters(&$dbHandler, &$tcaseMgr, &$guiObj, &$argsObj,
         "<br /><br />";
     $mail_subject['new'] = lang_get('mail_subject_testcase_assigned');
     $mail_subject['old'] = lang_get('mail_subject_testcase_assignment_removed');
-    $use_testers['new'] = ($operation == 'del') ? false : true;
-    $use_testers['old'] = ($operation == 'ins') ? false : true;
+    $use_testers['new'] = $operation != 'del';
+    $use_testers['old'] = $operation != 'ins';
 
     $tcaseSet = null;
     $tcnames = null;

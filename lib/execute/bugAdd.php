@@ -90,7 +90,7 @@ if (($args->user_action == 'create' || $args->user_action == 'doCreate') &&
                                     $opt->reporter = $args->user->login;
                                     $opt->reporter_email = trim(
                                         $args->user->emailAddress);
-                                    if ('' == $opt->reporter_email) {
+                                    if ('' === $opt->reporter_email) {
                                         $opt->reporter_email = $opt->reporter;
                                     }
 
@@ -114,7 +114,7 @@ if (($args->user_action == 'create' || $args->user_action == 'doCreate') &&
                     $opt = new stdClass();
                     $opt->reporter = $args->user->login;
                     $opt->reporter_email = trim($args->user->emailAddress);
-                    if ('' == $opt->reporter_email) {
+                    if ('' === $opt->reporter_email) {
                         $opt->reporter_email = $opt->reporter;
                     }
 
@@ -308,7 +308,7 @@ function initEnv(&$dbHandler)
     switch ($args->user_action) {
         case 'create':
         case 'link':
-            if ($args->bug_id == '' && $args->exec_id > 0) {
+            if ($args->bug_id === '' && $args->exec_id > 0) {
                 $map = get_execution($dbHandler, $args->exec_id);
                 $args->bug_notes = $map[0]['notes'];
             }

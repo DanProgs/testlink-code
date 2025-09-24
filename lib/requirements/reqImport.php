@@ -68,7 +68,7 @@ function doExecuteImport($fileName, &$argsObj, &$reqSpecMgr, &$reqMgr)
     $context->importType = $argsObj->importType;
 
     $opts = [];
-    $opts['skipFrozenReq'] = ($argsObj->skip_frozen_req ? true : false);
+    $opts['skipFrozenReq'] = ((bool) $argsObj->skip_frozen_req);
     $opts['hitCriteria'] = $argsObj->hitCriteria;
     $opts['actionOnHit'] = $argsObj->actionOnHit;
 

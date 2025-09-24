@@ -511,13 +511,11 @@ function checkXMLTCTsuite($fileName, $recursiveMode)
                     'msg' => lang_get('wrong_xml_tsuite_file')
                 ];
             }
-        } else {
-            if ($elementName != 'testcases' && $elementName != 'testcase') {
-                $file_check = [
-                    'status_ok' => 0,
-                    'msg' => lang_get('wrong_xml_tcase_file')
-                ];
-            }
+        } elseif ($elementName != 'testcases' && $elementName != 'testcase') {
+            $file_check = [
+                'status_ok' => 0,
+                'msg' => lang_get('wrong_xml_tcase_file')
+            ];
         }
     }
     return $file_check;
@@ -660,7 +658,7 @@ function processRequirements(&$dbHandler, &$reqMgr, $tcaseName, $tcaseId, $tcReq
                     " AND REQ.srs_id={$req_spec_id} ";
 
                 $rsx = $dbHandler->get_recordset($sql);
-                if ($useit = ((empty($rsx)) ? false : true)) {
+                if ($useit = (!empty($rsx))) {
                     $cachedReqSpec[$value['req_spec_title']]['req'][$value['doc_id']] = $rsx[0]['id'];
                 }
             }

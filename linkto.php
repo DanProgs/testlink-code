@@ -252,7 +252,7 @@ function buildLink(&$argsObj)
             $value = $argsObj->$key;
         }
 
-        if ($key == "tprojectPrefix" || $key == "testcase" || $key == "id") {
+        if ($key === "tprojectPrefix" || $key === "testcase" || $key === "id") {
             $value = urlencode($value);
         }
         $lk .= "&" . $key . "=" . $value;

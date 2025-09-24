@@ -18,6 +18,8 @@ require_once 'common.php';
 class APIKey extends tlObjectWithDB
 {
 
+    public $dbID;
+
     private $object_table = "";
 
     public function __construct()
@@ -87,11 +89,8 @@ class APIKey extends tlObjectWithDB
     {
         $query = "SELECT id, script_key " . " FROM {$this->object_table} ";
 
-        if (is_null($userID)) {
-            $whereClause = " WHERE script_key IS NOT NULL";
-        } else {
-            $whereClause = " WHERE id=" . intval($userID);
-        }
+        $whereClause = is_null($userID) ? " WHERE script_key IS NOT NULL" : " WHERE id=" .
+            intval($userID);
         $query .= $whereClause;
 
         return $this->db->fetchColumnsIntoMap($query, 'id', 'script_key');

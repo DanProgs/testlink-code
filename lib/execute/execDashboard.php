@@ -256,7 +256,7 @@ function getContextFromGlobalScope(&$argsObj)
         isset($_SESSION['execution_mode'][$argsObj->form_token]) ? $_SESSION['execution_mode'][$argsObj->form_token] : null;
 
     if (is_null($sf)) {
-        foreach ($settings as $key => $sfKey) {
+        foreach (array_keys($settings) as $key) {
             $argsObj->$key = null;
         }
         return;

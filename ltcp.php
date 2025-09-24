@@ -79,7 +79,7 @@ function process(&$dbHandler)
     }
 
     $commonText = " - The call signature does not pass the system Checks - operation can not be fullfilled";
-    if ($args->light == 'red') {
+    if ($args->light === 'red') {
         echo "LTCP-01" . $commonText;
         die();
     }

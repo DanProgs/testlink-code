@@ -92,7 +92,7 @@ switch ($args->action) {
         $op = null;
 
         // unfortunatelly we use $args->note in order to do some logic.
-        if ((($args->note = trim($args->note)) == "") &&
+        if (($args->note = trim($args->note) === "") &&
             ($gui->authCfg['SSO_enabled'])) {
             doSessionStart(true);
             $doAuthPostProcess = true;
@@ -475,7 +475,7 @@ function authorizePostProcessing($argsObj, $op)
                 $dummy = explode('/', $basePieces[$howManyPieces - 1]);
                 $baseFolder = '/';
                 $compo = trim($dummy[1]);
-                if ($compo != '') {
+                if ($compo !== '') {
                     $baseFolder .= $compo . '/';
                 }
 

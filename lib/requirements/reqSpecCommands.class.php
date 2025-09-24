@@ -918,7 +918,7 @@ class reqSpecCommands
         $obj->enable_start_btn = false;
         $obj->enable_stop_btn = false;
         foreach ($obj->items as &$itx) {
-            $onOff = isset($monSet[$itx['id']]) ? true : false;
+            $onOff = isset($monSet[$itx['id']]);
             $itx['monitor'] = $onOff ? 'On' : 'Off';
             $obj->enable_start_btn |= ! $onOff;
             $obj->enable_stop_btn |= $onOff;

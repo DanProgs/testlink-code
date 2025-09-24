@@ -152,7 +152,7 @@ function buildExtTable($gui, $tcaseMgr, $labels, $edit_icon)
             foreach ($item['cfields'] as $cf_value) {
                 $rowData[] = preg_replace('!\s+!', ' ',
                     htmlentities($cf_value, ENT_QUOTES, $charset));
-                $hasValue = $cf_value ? true : false;
+                $hasValue = (bool) $cf_value;
             }
 
             if ($hasValue) {

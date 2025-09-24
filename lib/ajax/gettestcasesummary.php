@@ -38,10 +38,6 @@ if ($tcase_id > 0) {
     $info = str_replace("<p>", "", $info);
     $info = str_replace("</p>", "<br>", $info);
 
-    if ($info == "") {
-        $info = lang_get("empty_tc_summary");
-    } else {
-        $info = '<b>' . lang_get('summary') . '</b><br>' . $info;
-    }
+    $info = $info == "" ? lang_get("empty_tc_summary") : '<b>' . lang_get('summary') . '</b><br>' . $info;
 }
 echo $info;

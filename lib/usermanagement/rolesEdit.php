@@ -31,7 +31,7 @@ $op = initializeOp();
 $owebeditor = web_editor('notes', $args->basehref, $editorCfg);
 $owebeditor->Value = getItemTemplateContents('role_template',
     $owebeditor->InstanceName, null);
-$canManage = $args->user->hasRight($db, "role_management") ? true : false;
+$canManage = (bool) $args->user->hasRight($db, "role_management");
 
 switch ($args->doAction) {
     case 'create':

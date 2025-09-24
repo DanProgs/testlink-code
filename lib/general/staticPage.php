@@ -24,7 +24,7 @@ $gui->pageContent = '';
 $gui->refreshTree = $args->refreshTree;
 
 $pageKey = htmlspecialchars($args->key);
-if ($pageKey == "") {
+if ($pageKey === "") {
     exit("Error: Invalid page parameter.");
 }
 

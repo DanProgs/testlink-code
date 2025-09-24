@@ -446,7 +446,7 @@ function createSpreadsheet($gui, &$tplanMgr)
 
         $idr = '';
         foreach ($gui->platformSet as $platID => $platName) {
-            $idr = ('' == $idr || 'rowB' == $idr) ? 'rowA' : 'rowB';
+            $idr = ('' === $idr || 'rowB' === $idr) ? 'rowA' : 'rowB';
 
             $infoSet = isset($target['source'][$platID]) ? $target['source'][$platID] : [];
 

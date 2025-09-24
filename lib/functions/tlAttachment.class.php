@@ -195,7 +195,7 @@ class tlAttachment extends tlDBObject
 
         $title = trim($title);
         $config = $this->attachmentCfg;
-        if ($title == "") {
+        if ($title === "") {
             switch ($config->action_on_save_empty_title) {
                 case 'use_filename':
                     $title = $fName;

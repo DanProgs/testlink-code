@@ -40,6 +40,8 @@ require_once 'Slim/Slim.php';
 class tlRestApi
 {
 
+    public $app;
+
     public static $version = "2.1.1";
 
     /**
@@ -141,151 +143,62 @@ class tlRestApi
         // GET Routes
         // test route with anonymous function
         $this->app->get('/who',
-            function (): void {
+            static function (): void {
                 echo __CLASS__ . ' : You have called the Get Route /who';
             });
 
         // using middleware for authentication
         // https://docs.slimframework.com/routing/middleware/
         //
-        $this->app->get('/whoAmI', [
-            $this,
-            'authenticate'
-        ], [
-            $this,
-            'whoAmI'
-        ]);
+        $this->app->get('/whoAmI', $this->authenticate(...), $this->whoAmI(...));
 
-        $this->app->get('/superman', [
-            $this,
-            'authenticate'
-        ], [
-            $this,
-            'superman'
-        ]);
+        $this->app->get('/superman', $this->authenticate(...),
+            $this->superman(...));
 
-        $this->app->get('/testprojects', [
-            $this,
-            'authenticate'
-        ], [
-            $this,
-            'getProjects'
-        ]);
+        $this->app->get('/testprojects', $this->authenticate(...),
+            $this->getProjects(...));
 
-        $this->app->get('/testprojects/:id', [
-            $this,
-            'authenticate'
-        ], [
-            $this,
-            'getProjects'
-        ]);
-        $this->app->get('/testprojects/:id/testcases',
-            [
-                $this,
-                'authenticate'
-            ], [
-                $this,
-                'getProjectTestCases'
-            ]);
-        $this->app->get('/testprojects/:id/testplans',
-            [
-                $this,
-                'authenticate'
-            ], [
-                $this,
-                'getProjectTestPlans'
-            ]);
+        $this->app->get('/testprojects/:id', $this->authenticate(...),
+            $this->getProjects(...));
+        $this->app->get('/testprojects/:id/testcases', $this->authenticate(...),
+            $this->getProjectTestCases(...));
+        $this->app->get('/testprojects/:id/testplans', $this->authenticate(...),
+            $this->getProjectTestPlans(...));
 
-        $this->app->get('/testplans/:id/builds', [
-            $this,
-            'authenticate'
-        ], [
-            $this,
-            'getPlanBuilds'
-        ]);
+        $this->app->get('/testplans/:id/builds', $this->authenticate(...),
+            $this->getPlanBuilds(...));
 
         // POST Routes
-        $this->app->post('/builds', [
-            $this,
-            'authenticate'
-        ], [
-            $this,
-            'createBuild'
-        ]);
+        $this->app->post('/builds', $this->authenticate(...),
+            $this->createBuild(...));
 
-        $this->app->post('/testprojects', [
-            $this,
-            'authenticate'
-        ], [
-            $this,
-            'createTestProject'
-        ]);
+        $this->app->post('/testprojects', $this->authenticate(...),
+            $this->createTestProject(...));
 
-        $this->app->post('/executions', [
-            $this,
-            'authenticate'
-        ], [
-            $this,
-            'createTestCaseExecution'
-        ]);
+        $this->app->post('/executions', $this->authenticate(...),
+            $this->createTestCaseExecution(...));
 
-        $this->app->post('/testplans', [
-            $this,
-            'authenticate'
-        ], [
-            $this,
-            'createTestPlan'
-        ]);
+        $this->app->post('/testplans', $this->authenticate(...),
+            $this->createTestPlan(...));
 
-        $this->app->post('/testplans/:id', [
-            $this,
-            'authenticate'
-        ], [
-            $this,
-            'updateTestPlan'
-        ]);
+        $this->app->post('/testplans/:id', $this->authenticate(...),
+            $this->updateTestPlan(...));
 
-        $this->app->post('/testplans/:id/platforms',
-            [
-                $this,
-                'authenticate'
-            ], [
-                $this,
-                'addPlatformsToTestPlan'
-            ]);
+        $this->app->post('/testplans/:id/platforms', $this->authenticate(...),
+            $this->addPlatformsToTestPlan(...));
 
-        $this->app->post('/testsuites', [
-            $this,
-            'authenticate'
-        ], [
-            $this,
-            'createTestSuite'
-        ]);
+        $this->app->post('/testsuites', $this->authenticate(...),
+            $this->createTestSuite(...));
 
-        $this->app->post('/testcases', [
-            $this,
-            'authenticate'
-        ], [
-            $this,
-            'createTestCase'
-        ]);
+        $this->app->post('/testcases', $this->authenticate(...),
+            $this->createTestCase(...));
 
-        $this->app->post('/keywords', [
-            $this,
-            'authenticate'
-        ], [
-            $this,
-            'createKeyword'
-        ]);
+        $this->app->post('/keywords', $this->authenticate(...),
+            $this->createKeyword(...));
 
         // update routes
-        $this->app->post('/builds/:id', [
-            $this,
-            'authenticate'
-        ], [
-            $this,
-            'updateBuild'
-        ]);
+        $this->app->post('/builds/:id', $this->authenticate(...),
+            $this->updateBuild(...));
 
         $this->apiLogPathName = '/var/testlink/rest-api.log';
 
@@ -343,11 +256,7 @@ class tlRestApi
             $request = $this->app->request();
             $hh = $request->headers();
 
-            if (isset($hh['APIKEY'])) {
-                $apiKey = $hh['APIKEY'];
-            } else {
-                $apiKey = $hh['PHP_AUTH_USER'];
-            }
+            $apiKey = isset($hh['APIKEY']) ? $hh['APIKEY'] : $hh['PHP_AUTH_USER'];
         }
         $sql = "SELECT id FROM {$this->tables['users']} " . "WHERE script_key='" .
             $this->db->prepare_string($apiKey) . "'";
@@ -1242,7 +1151,7 @@ class tlRestApi
             ]
         ];
 
-        foreach ($ma as $key => $dummy) {
+        foreach (array_keys($ma) as $key) {
             if (! ($isOK = $isOK && property_exists($obj, $key))) {
                 throw new Exception("Missing Attribute: {$key} ");
             }
@@ -1328,7 +1237,7 @@ class tlRestApi
             'summary' => '',
             'preconditions' => ''
         ];
-        foreach ($sk2d as $key => $value) {
+        foreach (array_keys($sk2d) as $key) {
             if (is_array($tcase->$key)) {
                 $tcase->$key = "<pre>" . implode("\n", $tcase->$key) . "</pre>";
             }
@@ -1353,7 +1262,7 @@ class tlRestApi
                 'expected_results' => ''
             ];
             foreach ($obj->steps as $stepObj) {
-                foreach ($sk2d as $key => $value) {
+                foreach (array_keys($sk2d) as $key) {
                     if (is_array($stepObj->$key)) {
                         $stepObj->$key = "<pre>" . implode("\n", $stepObj->$key) .
                             "</pre>";
@@ -1691,7 +1600,7 @@ class tlRestApi
                 if (property_exists($item, 'is_open')) {
                     $oio = intval($build['is_open']);
                     $nio = intval($item->is_open);
-                    if ($oio != $nio) {
+                    if ($oio !== $nio) {
                         if ($nio !== 0) {
                             $this->buildMgr->setOpen($id);
                         } else {

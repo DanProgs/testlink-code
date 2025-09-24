@@ -81,11 +81,7 @@ function csrfguard_generate_token($unique_form_name)
         $token = null;
         for ($idx = 0; $idx < 128; ++ $idx) {
             $r = mt_rand(0, 35);
-            if ($r < 26) {
-                $c = chr(ord('a') + $r);
-            } else {
-                $c = chr(ord('0') + $r - 26);
-            }
+            $c = $r < 26 ? chr(ord('a') + $r) : chr(ord('0') + $r - 26);
             $token .= $c;
         }
     }
@@ -108,12 +104,7 @@ function csrfguard_validate_token($unique_form_name, $token_value)
     if ($token === false) {
         return true;
     }
-    if ($token == $token_value) {
-        $result = true;
-    }
-    else {
-        $result = false;
-    }
+    $result = $token == $token_value;
     unset_session($unique_form_name);
     return $result;
 }

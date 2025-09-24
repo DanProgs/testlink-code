@@ -17,6 +17,12 @@
 class testcaseCommands
 {
 
+    /**
+     *
+     * @var map
+     */
+    private $tables;
+
     private $db;
 
     private $tcaseMgr;
@@ -550,7 +556,9 @@ class testcaseCommands
         }
 
         $tcinfo = $this->tcaseMgr->get_by_id($argsObj->tcase_id);
-        [$prefix, ] = $this->tcaseMgr->getPrefix($argsObj->tcase_id,
+        [
+            $prefix
+        ] = $this->tcaseMgr->getPrefix($argsObj->tcase_id,
             $argsObj->testproject_id);
         $prefix .= $cfg->glue_character;
         $external_id = $prefix . $tcinfo[0]['tc_external_id'];
@@ -587,7 +595,9 @@ class testcaseCommands
 
         $tcinfo = $this->tcaseMgr->get_by_id($argsObj->tcase_id,
             $argsObj->tcversion_id);
-        [$prefix, ] = $this->tcaseMgr->getPrefix($argsObj->tcase_id,
+        [
+            $prefix
+        ] = $this->tcaseMgr->getPrefix($argsObj->tcase_id,
             $argsObj->testproject_id);
         $prefix .= $cfg->glue_character;
         $external_id = $prefix . $tcinfo[0]['tc_external_id'];
@@ -1330,7 +1340,7 @@ class testcaseCommands
             $guiObj->template .= "&tplan_id={$guiObj->tplan_id}";
         }
 
-        if ($guiObj->user_feedback != '') {
+        if ($guiObj->user_feedback !== '') {
             $guiObj->template .= "&add_relation_feedback_msg=" .
                 urlencode($guiObj->user_feedback);
         }
@@ -1524,12 +1534,8 @@ class testcaseCommands
                     $strToDel = isset($cfx[$info['prefix']]['prefix']) ? $cfx[$info['prefix']]['prefix'] : '';
                     $strToDel = trim($strToDel);
                     foreach ($argsObj->free_keywords as $kw) {
-                        if ('' == $strToDel) {
-                            $kwv = $kwSet[$kw]['keyword'];
-                        } else {
-                            $kwv = str_replace($strToDel, '',
-                                $kwSet[$kw]['keyword']);
-                        }
+                        $kwv = '' === $strToDel ? $kwSet[$kw]['keyword'] : str_replace(
+                            $strToDel, '', $kwSet[$kw]['keyword']);
                         try {
                             $its->addNote($kwv, $dl);
                         } catch (Exception $e) {

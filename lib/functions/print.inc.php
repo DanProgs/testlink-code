@@ -304,11 +304,7 @@ function renderReqForPrinting(&$db, $node, &$options, $reqLevel, $tprojectID)
 
                 // Sorry by MAGIC Numbers
                 if ($iWidth > 900 || $iHeight > 700) {
-                    if ($iWidth > $iHeight) {
-                        $imgDiff = round($iWidth / 600);
-                    } else {
-                        $imgDiff = round($iHeight / 450);
-                    }
+                    $imgDiff = $iWidth > $iHeight ? round($iWidth / 600) : round($iHeight / 450);
                     $iWidth /= $imgDiff;
                     $iHeight /= $imgDiff;
                 }
@@ -1197,11 +1193,10 @@ function renderTestCaseForPrinting(&$db, &$node, &$options, $env, $context,
 
         // Multiple Test Case Steps Feature
         foreach ($tcase_pieces as $key) {
-            if ($key == 'steps') {
+            if ($key === 'steps') {
                 if (isset($cfields['specScope']['before_steps_results'])) {
                     $code .= $cfields['specScope']['before_steps_results'];
                 }
-
                 if (! is_null($tcInfo[$key]) && $tcInfo[$key] != '') {
                     $td_colspan = 3;
                     $code .= '<tr>' . '<td><span class="label">' .
@@ -1306,11 +1301,7 @@ function renderTestCaseForPrinting(&$db, &$node, &$options, $env, $context,
 
                                         // Sorry by MAGIC Numbers
                                         if ($iWidth > 900 || $iHeight > 700) {
-                                            if ($iWidth > $iHeight) {
-                                                $imgDiff = round($iWidth / 600);
-                                            } else {
-                                                $imgDiff = round($iHeight / 450);
-                                            }
+                                            $imgDiff = $iWidth > $iHeight ? round($iWidth / 600) : round($iHeight / 450);
                                             $iWidth /= $imgDiff;
                                             $iHeight /= $imgDiff;
                                         }
@@ -1336,15 +1327,13 @@ function renderTestCaseForPrinting(&$db, &$node, &$options, $env, $context,
                         }
                     }
                 }
-            } else {
+            } elseif ($tcInfo[$key] != '') {
                 // disable the field if it's empty
-                if ($tcInfo[$key] != '') {
-                    $code .= '<tr><td colspan="' . $cfg['tableColspan'] .
-                        '"><span class="label">' . $labels[$key] .
-                        ':</span><br />' .
-                        ($designType == 'none' ? nl2br($tcInfo[$key]) : $tcInfo[$key]) .
-                        "</td></tr>";
-                }
+                $code .= '<tr><td colspan="' . $cfg['tableColspan'] .
+                    '"><span class="label">' . $labels[$key] .
+                    ':</span><br />' .
+                    ($designType == 'none' ? nl2br($tcInfo[$key]) : $tcInfo[$key]) .
+                    "</td></tr>";
             }
         }
     }
@@ -1428,11 +1417,7 @@ function renderTestCaseForPrinting(&$db, &$node, &$options, $env, $context,
 
         $code .= '<td>';
         for ($rdx = 0; $rdx < $relSet['num_relations']; $rdx ++) {
-            if ($relSet['relations'][$rdx]['source_id'] == $id) {
-                $ak = 'source_localized';
-            } else {
-                $ak = 'destination_localized';
-            }
+            $ak = $relSet['relations'][$rdx]['source_id'] == $id ? 'source_localized' : 'destination_localized';
 
             $code .= htmlspecialchars($relSet['relations'][$rdx][$ak]) . ' - ' .
                 htmlspecialchars(
@@ -1576,7 +1561,7 @@ function renderTestCaseForPrinting(&$db, &$node, &$options, $env, $context,
         }
 
         /* Build name */
-        if ($bn != '') {
+        if ($bn !== '') {
             $code .= '<tr><td width="' . $cfg['firstColWidth'] .
                 '" valign="top">' . $labels['build'] . '</td>' . '<td colspan="' .
                 $tsp . '">' . $bn . "</td></tr>\n";
@@ -1646,11 +1631,7 @@ function renderTestCaseForPrinting(&$db, &$node, &$options, $env, $context,
 
                         // Sorry by MAGIC Numbers
                         if ($iWidth > 900 || $iHeight > 700) {
-                            if ($iWidth > $iHeight) {
-                                $imgDiff = round($iWidth / 600);
-                            } else {
-                                $imgDiff = round($iHeight / 450);
-                            }
+                            $imgDiff = $iWidth > $iHeight ? round($iWidth / 600) : round($iHeight / 450);
                             $iWidth /= $imgDiff;
                             $iHeight /= $imgDiff;
                         }
@@ -1818,7 +1799,7 @@ function renderTestSuiteNodeForPrinting(&$db, &$node, $env, &$options, $context,
         // get Custom fields
         // Attention: for test suites custom fields can not be edited during execution,
         // then we need to get just custom fields with scope 'design'
-        foreach ($cfields as $key => $value) {
+        foreach (array_keys($cfields) as $key) {
             $cfields[$key] = $tsuite_mgr->html_table_of_custom_field_values(
                 $node['id'], $key, null, $context['tproject_id'],
                 $cfieldFormatting);
@@ -1905,7 +1886,7 @@ function renderTestDuration($statistics, $platform_id = 0)
         }
     }
 
-    if ($output != '') {
+    if ($output !== '') {
         return "<div>\n" . $output . "</div>\n";
     }
 

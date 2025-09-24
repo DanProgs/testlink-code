@@ -285,7 +285,7 @@ function checkUserOrderBy($input)
         'order_by_role',
         'order_by_login'
     ]);
-    return isset($domain[$input]) ? true : false;
+    return isset($domain[$input]);
 }
 
 /**
@@ -319,7 +319,7 @@ function getAllUsersForGrid(&$dbHandler)
 
         // localize dates
         $ed = trim($users[$idx]['expiration_date']);
-        if ($ed != '') {
+        if ($ed !== '') {
             $users[$idx]['expiration_date'] = localize_dateOrTimeStamp(null,
                 $dummy, 'date_format', $ed);
         }

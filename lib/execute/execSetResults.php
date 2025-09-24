@@ -519,7 +519,7 @@ if (! is_null($linked_tcversions)) {
 
                 // this piece of code is useful to avoid error on smarty template due to undefined value
                 if (is_array($tcversion_id) &&
-                    (count($gui->other_execs) != count($gui->map_last_exec))) {
+                    (count($gui->other_execs) !== count($gui->map_last_exec))) {
                     foreach ($tcversion_id as $version_id) {
                         if (! isset($gui->other_execs[$version_id])) {
                             $gui->other_execs[$version_id] = null;
@@ -669,9 +669,9 @@ function initArgs(&$dbHandler, $cfgObj)
 
     // See details on: "When nullify filter_status - 20080504" in this file
     if ($args->level == 'testcase' || is_null($args->filter_status) ||
-        (! is_array($args->filter_status) && trim($args->filter_status) == '')) {
+        (! is_array($args->filter_status) && trim($args->filter_status) === '')) {
         $args->filter_status = null;
-    } else {
+    } elseif (is_string($args->filter_status) && strlen($args->filter_status) > 1) {
         // 20130306 - franciscom
         // This (without the strlen() check) generated issue 5541: When "Result" filter is used ...
         // at least when result DIFFERENT that NOT RUN is used on filter
@@ -681,11 +681,8 @@ function initArgs(&$dbHandler, $cfgObj)
         // under the hood when getting data from $_REQUEST, then this piece
         // of code not only will be useless BUT WRONG, because will try
         // to unserialize something that IS NOT SERIALIZED!!!!
-
         // After TICKET 6651, may be need to limit size of $args->filter_status
-        if (is_string($args->filter_status) && strlen($args->filter_status) > 1) {
-            $args->filter_status = json_decode($args->filter_status);
-        }
+        $args->filter_status = json_decode($args->filter_status);
     }
 
     switch ($args->level) {
@@ -739,8 +736,8 @@ function initArgs(&$dbHandler, $cfgObj)
         $args->tproject_id = $dm['parent_id'];
     }
 
-    $args->addLinkToTL = isset($_REQUEST['addLinkToTL']) ? true : false;
-    $args->addLinkToTLPrintView = isset($_REQUEST['addLinkToTLPrintView']) ? true : false;
+    $args->addLinkToTL = isset($_REQUEST['addLinkToTL']);
+    $args->addLinkToTLPrintView = isset($_REQUEST['addLinkToTLPrintView']);
 
     // Do this only on single execution mode
     // get issue tracker config and object to manage TestLink - BTS integration
@@ -912,7 +909,7 @@ function manageHistoryOn($hash_REQUEST, $hash_SESSION, $exec_cfg, $btn_on_name,
         $history_on = $exec_cfg->history_on;
     }
 
-    return $history_on ? true : false;
+    return (bool) $history_on;
 }
 
 /*
@@ -1714,43 +1711,40 @@ function initializeGui(&$dbHandler, &$argsObj, &$cfgObj, &$tplanMgr, &$tcaseMgr,
             $kx = $kj . 'ForStep';
             $gui->$kx = $argsObj->$kx;
         }
-    } else {
-        if (null != $gui->issueTrackerMetaData) {
-            $singleVal = [
-                'issuetype' => 'issueType',
-                'issuepriority' => 'issuePriority'
-            ];
-            foreach ($singleVal as $kj => $attr) {
-                $gui->$attr = null;
-                if (property_exists($itsCfg, $kj)) {
-                    $gui->$attr = $itsCfg->$kj;
-                } else {
-                    /* Provide warning */
-                    tLog(
-                        "Issue Tracker Config Issue? - Attribute:{$kj} doesn't exist",
-                        "WARNING");
-                }
-                $forStep = $attr . 'ForStep';
-                $gui->$forStep = $gui->$attr;
+    } elseif (null != $gui->issueTrackerMetaData) {
+        $singleVal = [
+            'issuetype' => 'issueType',
+            'issuepriority' => 'issuePriority'
+        ];
+        foreach ($singleVal as $kj => $attr) {
+            $gui->$attr = null;
+            if (property_exists($itsCfg, $kj)) {
+                $gui->$attr = $itsCfg->$kj;
+            } else {
+                /* Provide warning */
+                tLog(
+                    "Issue Tracker Config Issue? - Attribute:{$kj} doesn't exist",
+                    "WARNING");
             }
-
-            $multiVal = [
-                'version' => 'artifactVersion',
-                'component' => 'artifactComponent'
-            ];
-            foreach ($multiVal as $kj => $attr) {
-                $gui->$attr = null;
-                if (property_exists($itsCfg, $kj)) {
-                    $gui->$attr = (array) $itsCfg->$kj;
-                } else {
-                    /* Provide warning */
-                    tLog(
-                        "Issue Tracker Config Issue? - Attribute:{$kj} doesn't exist",
-                        "WARNING");
-                }
-                $forStep = $attr . 'ForStep';
-                $gui->$forStep = $gui->$attr;
+            $forStep = $attr . 'ForStep';
+            $gui->$forStep = $gui->$attr;
+        }
+        $multiVal = [
+            'version' => 'artifactVersion',
+            'component' => 'artifactComponent'
+        ];
+        foreach ($multiVal as $kj => $attr) {
+            $gui->$attr = null;
+            if (property_exists($itsCfg, $kj)) {
+                $gui->$attr = (array) $itsCfg->$kj;
+            } else {
+                /* Provide warning */
+                tLog(
+                    "Issue Tracker Config Issue? - Attribute:{$kj} doesn't exist",
+                    "WARNING");
             }
+            $forStep = $attr . 'ForStep';
+            $gui->$forStep = $gui->$attr;
         }
     }
 
@@ -2077,7 +2071,7 @@ function buildExecContext(&$argsObj, $tcasePrefix, &$tplanMgr, &$tcaseMgr)
     ];
 
     foreach ($ret as &$value) {
-        foreach ($value as $key => $dummy) {
+        foreach (array_keys($value) as $key) {
             if (property_exists($argsObj, $key)) {
                 $value[$key] = $argsObj->$key;
             }

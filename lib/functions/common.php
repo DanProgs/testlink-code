@@ -62,7 +62,7 @@ require_once 'tlsmarty.inc.php';
 require_once 'event_api.php';
 
 // Needed to avoid problems with Smarty 3
-spl_autoload_register('tlAutoload');
+spl_autoload_register(tlAutoload(...));
 
 /**
  * CSRF security functions.
@@ -192,7 +192,6 @@ function doDBConnect(&$db, $onErrorExit = false)
         $logtext = ' Connect to database <b>' . DB_NAME . '</b> on Host <b>' .
             DB_HOST . '</b> fails <br>';
         $logtext .= 'DBMS Error Message: ' . $result['dbms_msg'];
-
         $logmsg = $logtext .
             ($onErrorExit ? '<br>Redirection to connection fail screen.' : '');
         tLog(str_replace($search, $replace, $logmsg), 'ERROR');
@@ -204,11 +203,9 @@ function doDBConnect(&$db, $onErrorExit = false)
             $smarty->display('workAreaSimple.tpl');
             exit();
         }
-    } else {
-        if ((DB_TYPE == 'mysql') && ($charSet == 'UTF-8')) {
-            $db->exec_query("SET CHARACTER SET utf8");
-            $db->exec_query("SET collation_connection = 'utf8_general_ci'");
-        }
+    } elseif ((DB_TYPE === 'mysql') && ($charSet == 'UTF-8')) {
+        $db->exec_query("SET CHARACTER SET utf8");
+        $db->exec_query("SET collation_connection = 'utf8_general_ci'");
     }
 
     // if we establish a DB connection, we reopen the session,
@@ -587,11 +584,7 @@ function strings_stripSlashes($parameter, $bGPC = true)
     if (is_array($parameter)) {
         $retParameter = null;
         foreach ($parameter as $key => $value) {
-            if (is_array($value)) {
-                $retParameter[$key] = strings_stripSlashes($value, $bGPC);
-            } else {
-                $retParameter[$key] = stripslashes($value);
-            }
+            $retParameter[$key] = is_array($value) ? strings_stripSlashes($value, $bGPC) : stripslashes($value);
         }
         return $retParameter;
     }
@@ -689,10 +682,7 @@ function isBlank($p_var)
 {
     $p_var = trim($p_var);
     $str_len = strlen($p_var);
-    if (0 == $str_len) {
-        return true;
-    }
-    return false;
+    return 0 == $str_len;
 }
 
 /**
@@ -1559,7 +1549,7 @@ function initUserEnv(&$dbH, $context, $opt = null)
             $optDeep['skip'] = array_merge($optDeep['skip'], $opt['skip']);
         }
 
-        foreach ($options as $key => $defa) {
+        foreach (array_keys($options) as $key) {
             if (isset($opt[$key])) {
                 $options[$key] = $opt[$key];
             }
@@ -1807,7 +1797,7 @@ function getActions(&$gui, $baseURL)
     $gui->workArea->searchReqSpec = "searchReqSpec&{$ctx}";
 
     $wprop = get_object_vars($gui->workArea);
-    foreach ($wprop as $wp => $wv) {
+    foreach (array_keys($wprop) as $wp) {
         if (null != $gui->workArea->$wp) {
             $gui->workArea->$wp = $launcher . $gui->workArea->$wp;
         }
@@ -1816,7 +1806,7 @@ function getActions(&$gui, $baseURL)
 
     $gui->uri = $actions;
     $p2l = get_object_vars($actions);
-    foreach ($p2l as $pp => $val) {
+    foreach (array_keys($p2l) as $pp) {
         $gui->$pp = $actions->$pp;
     }
 }
@@ -2105,7 +2095,7 @@ function initContext()
         if (is_numeric($defa)) {
             $context->$prop = intval($context->$prop);
         }
-        if ($env != '') {
+        if ($env !== '') {
             $env .= "&";
         }
         $env .= "{$prop}=" . $context->$prop;

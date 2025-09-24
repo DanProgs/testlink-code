@@ -334,7 +334,7 @@ if ($upgrade) {
         // have not returned prefix.
         //
         $dbVersionTable = $tables['db_version'];
-        if ($dbVersionTable == 'db_version' && trim($db_table_prefix) != '') {
+        if ($dbVersionTable == 'db_version' && trim($db_table_prefix) !== '') {
             $dbVersionTable = $db_table_prefix . $dbVersionTable;
         }
         $sql = "SELECT * FROM {$dbVersionTable} ORDER BY upgrade_ts DESC";
@@ -458,7 +458,7 @@ foreach ($a_sql_schema as $sql_schema) {
 }
 
 // Now data migration must be done if needed
-if ($migration_process != '') {
+if ($migration_process !== '') {
     require_once $migration_functions_file;
     $migration_process($db, $tables);
 }

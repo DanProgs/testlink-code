@@ -85,7 +85,7 @@ if ($args->user_action == 'expand') {
         $tmpFileArray = &$tmpFileArray[$item][0];
     }
 } elseif ($args->user_action == 'collapse') {
-    if (substr($args->collapse_item, - 1) == "/") {
+    if (substr($args->collapse_item, - 1) === "/") {
         $args->collapse_item = substr($args->collapse_item, 0, - 1);
     }
     $collapseArray = explode("/", $args->collapse_item);

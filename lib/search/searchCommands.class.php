@@ -17,6 +17,8 @@
 class searchCommands
 {
 
+    public $reqSpecMgr;
+
     private $db;
 
     private $tcaseMgr;
@@ -317,7 +319,7 @@ class searchCommands
 
         // At least one checkbox need to be checked
         $args->oneCheck = false;
-        foreach ($cb as $key => $vx) {
+        foreach (array_keys($cb) as $key) {
             $args->oneCheck = $args->$key;
             if ($args->oneCheck) {
                 break;
@@ -325,7 +327,7 @@ class searchCommands
         }
 
         $args->oneValueOK = false;
-        foreach ($numIn as $key => $vx) {
+        foreach (array_keys($numIn) as $key) {
             $args->oneValueOK = (intval($args->$key) > 0);
             if ($args->oneValueOK) {
                 break;
@@ -333,8 +335,8 @@ class searchCommands
         }
 
         if (! $args->oneValueOK) {
-            foreach ($strIn as $key => $vx) {
-                $args->oneValueOK = (trim($args->$key) != '');
+            foreach (array_keys($strIn) as $key) {
+                $args->oneValueOK = (trim($args->$key) !== '');
                 if ($args->oneValueOK) {
                     break;
                 }
@@ -663,7 +665,7 @@ class searchCommands
 
         $args->created_by = trim($args->created_by);
         $from['users'] = '';
-        if ($args->created_by != '') {
+        if ($args->created_by !== '') {
             $doFilter = true;
             $from['users'] .= " JOIN {$tables['users']} RQAUTHOR ON RQAUTHOR.id = RQV.author_id ";
             $fi['author'] = " AND ( RQAUTHOR.login $this->likeOp '%{$args->created_by}%' OR " .
@@ -672,7 +674,7 @@ class searchCommands
         }
 
         $args->edited_by = trim($args->edited_by);
-        if ($args->edited_by != '') {
+        if ($args->edited_by !== '') {
             $doFilter = true;
             $from['users'] .= " JOIN {$tables['users']} UPDATER ON UPDATER.id = RQV.modifier_id ";
             $fi['modifier'] = " AND ( UPDATER.login $this->likeOp '%{$args->edited_by}%' OR " .
@@ -886,8 +888,8 @@ class searchCommands
 
             $from['by_custom_field'] = " JOIN {$tables['cfield_design_values']} CFD " .
                 " ON CFD.node_id=NH_TCV.id ";
-            $filter['by_custom_field'] = " AND CFD.field_id=" . intval(
-                $tc_cf_id);
+            $filter['by_custom_field'] = " AND CFD.field_id=" .
+                intval($tc_cf_id);
 
             switch ($gui->cf_types[$cf_def['type']]) {
                 case 'date':
@@ -994,7 +996,7 @@ class searchCommands
             $created_by_on_tc = trim($args->created_by);
             $args->created_by = $created_by_on_tc;
             $from['users'] = '';
-            if ($created_by_on_tc != '') {
+            if ($created_by_on_tc !== '') {
                 $doFilter = true;
                 $from['users'] .= " JOIN {$tables['users']} AUTHOR ON AUTHOR.id = TCV.author_id ";
                 $filter['author'] = " AND ( AUTHOR.login $this->likeOp '%{$args->created_by}%' OR " .
@@ -1003,7 +1005,7 @@ class searchCommands
             }
             $edited_by_on_tc = trim($args->edited_by);
             $args->edited_by = $edited_by_on_tc;
-            if ($edited_by_on_tc != '') {
+            if ($edited_by_on_tc !== '') {
                 $doFilter = true;
                 $from['users'] .= " JOIN {$tables['users']} UPDATER ON UPDATER.id = TCV.updater_id ";
                 $filter['modifier'] = " AND ( UPDATER.login $this->likeOp '%{$args->edited_by}%' OR " .

@@ -15,6 +15,8 @@ require_once dirname(__FILE__) . '/requirements.inc.php';
 class requirement_spec_mgr extends tlObjectWithAttachments
 {
 
+    public $object_table;
+
     const CASE_SENSITIVE = 0;
 
     const CASE_INSENSITIVE = 1;
@@ -215,10 +217,9 @@ class requirement_spec_mgr extends tlObjectWithAttachments
         $my['options'] = array_merge($my['options'], (array) $options);
 
         // First Step get ID of LATEST revision
-        $info = $this->get_last_child_info($id,
-            [
-                'output' => 'credentials'
-            ]);
+        $info = $this->get_last_child_info($id, [
+            'output' => 'credentials'
+        ]);
         $childID = $info['id'];
 
         $sql = "/* {$debugMsg} */ SELECT RSPEC.id,RSPEC.doc_id, RSPEC.testproject_id, " .
@@ -253,7 +254,7 @@ class requirement_spec_mgr extends tlObjectWithAttachments
 
             if ($doUserDecode) {
                 $lbl_undef = lang_get('undefined');
-                if (trim($rs['author_id']) != "") {
+                if (trim($rs['author_id']) !== "") {
                     $user = tlUser::getByID($this->db, $rs['author_id']);
                     // need to manage deleted users
                     $rs['author'] = $lbl_undef;
@@ -262,7 +263,7 @@ class requirement_spec_mgr extends tlObjectWithAttachments
                     }
                 }
 
-                if (trim($rs['modifier_id']) != "") {
+                if (trim($rs['modifier_id']) !== "") {
                     $user = tlUser::getByID($this->db, $rs['modifier_id']);
                     // need to manage deleted users
                     $rs['modifier'] = $lbl_undef;
@@ -562,11 +563,7 @@ class requirement_spec_mgr extends tlObjectWithAttachments
         }
 
         // This is a poor implementation
-        if ($result) {
-            $result = 'ok';
-        } else {
-            $result = 'The DELETE SRS request fails.';
-        }
+        $result = $result ? 'ok' : 'The DELETE SRS request fails.';
 
         return $result;
     }
@@ -873,7 +870,7 @@ class requirement_spec_mgr extends tlObjectWithAttachments
 
         $title = trim($title);
 
-        if ($title == "") {
+        if ($title === "") {
             $ret['status_ok'] = 0;
             $ret['msg'] = lang_get("warning_empty_req_title");
         }
@@ -936,12 +933,12 @@ class requirement_spec_mgr extends tlObjectWithAttachments
         $title = trim($title);
         $doc_id = trim($doc_id);
 
-        if ($title == "") {
+        if ($title === "") {
             $ret['status_ok'] = 0;
             $ret['msg'] = lang_get("warning_empty_req_title");
         }
 
-        if ($doc_id == "") {
+        if ($doc_id === "") {
             $ret['status_ok'] = 0;
             $ret['msg'] = lang_get("warning_empty_doc_id");
         }
@@ -1058,8 +1055,7 @@ class requirement_spec_mgr extends tlObjectWithAttachments
      *
      * Developed using exportTestSuiteDataToXML() as model
      */
-    public function exportReqSpecToXML($id, $tproject_id,
-        $optForExport = [])
+    public function exportReqSpecToXML($id, $tproject_id, $optForExport = [])
     {
         // manage missing keys; recursive export by default
         if (! array_key_exists('RECURSIVE', $optForExport)) {
@@ -1447,7 +1443,7 @@ class requirement_spec_mgr extends tlObjectWithAttachments
                 }
             }
 
-            if (trim($cf_smarty) != "") {
+            if (trim($cf_smarty) !== "") {
                 $cf_smarty = "<table>" . $cf_smarty . "</table>";
             }
         }
@@ -1538,7 +1534,7 @@ class requirement_spec_mgr extends tlObjectWithAttachments
                 'import_req_skipped' => '',
                 'import_req_updated' => ''
             ];
-            foreach ($labels as $key => $dummy) {
+            foreach (array_keys($labels) as $key) {
                 $labels[$key] = lang_get($key);
             }
 
@@ -2012,11 +2008,10 @@ class requirement_spec_mgr extends tlObjectWithAttachments
     private function processAttachments($importMode, $rs_id, $attachments,
         $feedbackMsg)
     {
-        $tables = tlObjectWithDB::getDBTables(
-            [
-                'req_specs',
-                'attachments'
-            ]);
+        $tables = tlObjectWithDB::getDBTables([
+            'req_specs',
+            'attachments'
+        ]);
 
         $knownAttachments = [];
         foreach ($attachments as $attachment) {
@@ -2132,9 +2127,9 @@ class requirement_spec_mgr extends tlObjectWithAttachments
         }
 
         $sql = "/* {$debugMsg} */ INSERT INTO {$this->tables['req_specs_revisions']} " .
-            " ({$fields2insert}) " . " VALUES({$rspecID}" . "," . $ret['id'] . "," .
-            intval($item['revision']) . "," . intval($item['status']) . ",'" .
-            $this->db->prepare_string($item['doc_id']) . "','" .
+            " ({$fields2insert}) " . " VALUES({$rspecID}" . "," . $ret['id'] .
+            "," . intval($item['revision']) . "," . intval($item['status']) .
+            ",'" . $this->db->prepare_string($item['doc_id']) . "','" .
             $this->db->prepare_string($item['name']) . "','" .
             $this->db->prepare_string($item['scope']) . "','" .
             $this->db->prepare_string($item['type']) . "','" .
@@ -2341,7 +2336,7 @@ class requirement_spec_mgr extends tlObjectWithAttachments
         foreach ($key2loop as $key) {
             foreach ($user_keys as $ukey => $userid_field) {
                 $rs[$key][$ukey] = '';
-                if (trim($rs[$key][$userid_field]) != "") {
+                if (trim($rs[$key][$userid_field]) !== "") {
                     if (! isset($userCache[$rs[$key][$userid_field]])) {
                         $user = tlUser::getByID($this->db,
                             $rs[$key][$userid_field]);

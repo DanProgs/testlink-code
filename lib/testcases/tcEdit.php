@@ -394,7 +394,7 @@ function initArgs(&$cfgObj, $otName, &$tcaseMgr)
         "requirement_assignments"
     ];
     foreach ($key2loop as $key) {
-        $args->copy[$key] = isset($_REQUEST[$key]) ? true : false;
+        $args->copy[$key] = isset($_REQUEST[$key]);
     }
 
     $args->show_mode = (isset($_REQUEST['show_mode']) &&
@@ -585,7 +585,7 @@ function createWebEditors($basehref, $editorCfg, $editorSet = null)
 
     $owe->editor = [];
     $force_create = is_null($editorSet);
-    foreach ($owe->cfg as $key => $value) {
+    foreach (array_keys($owe->cfg) as $key) {
         if ($force_create || isset($editorSet[$key])) {
             $owe->editor[$key] = web_editor($key, $basehref, $editorCfg);
         } else {

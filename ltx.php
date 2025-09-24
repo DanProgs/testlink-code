@@ -153,7 +153,7 @@ function init_args(&$dbHandler)
             break;
     }
 
-    if ($args->status_ok && $cfn != '') {
+    if ($args->status_ok && $cfn !== '') {
         $cfn($dbHandler, $args);
     }
     return $args;

@@ -103,7 +103,7 @@ switch ($args->doc_type) {
         $gui->ajaxTree->root_node = $treeContents->rootnode;
         $gui->ajaxTree->children = trim($treeContents->menustring);
 
-        if ($gui->ajaxTree->children == '') {
+        if ($gui->ajaxTree->children === '') {
             $gui->ajaxTree->children = '{}'; // generate valid JSON
             $gui->ajaxTree->root_node->href = '';
         }

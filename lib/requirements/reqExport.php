@@ -106,7 +106,7 @@ function initializeGui(&$argsObj, &$req_spec_mgr)
     }
 
     $gui->export_filename = trim($argsObj->export_filename);
-    if ($gui->export_filename == "") {
+    if ($gui->export_filename === "") {
         $gui->export_filename = $exportFileName;
     }
     return $gui;
@@ -131,7 +131,7 @@ function doExport(&$argsObj, &$req_spec_mgr)
             $pfn = "exportReqSpecToXML";
             $fileName = 'reqs.xml';
             $content = TL_XMLEXPORT_HEADER;
-            $optionsForExport['RECURSIVE'] = $argsObj->scope == 'items' ? false : true;
+            $optionsForExport['RECURSIVE'] = $argsObj->scope != 'items';
             $optionsForExport['ATTACHMENTS'] = $argsObj->export_attachments;
 
             $openTag = $argsObj->scope == 'items' ? "requirements>" : 'requirement-specification>';

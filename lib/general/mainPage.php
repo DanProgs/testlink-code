@@ -113,10 +113,8 @@ if ($testplanID) {
         // Configured
         $role = $currentUser->tplanRoles[$testplanID];
         $rd = $role->getDisplayName();
-    } else {
-        if (config_get('testplan_role_inheritance_mode') == 'global') {
-            $rd = $currentUser->globalRole->name;
-        }
+    } elseif (config_get('testplan_role_inheritance_mode') == 'global') {
+        $rd = $currentUser->globalRole->name;
     }
 
     if (null != $rd) {
@@ -219,7 +217,7 @@ function getUserDocumentation()
     if ($handle = opendir($target_dir)) {
         while (false !== ($file = readdir($handle))) {
             clearstatcache();
-            if (($file != ".") && ($file != "..") &&
+            if (($file !== ".") && ($file !== "..") &&
                 is_file($target_dir . DIRECTORY_SEPARATOR . $file)) {
                 $documents[] = $file;
             }

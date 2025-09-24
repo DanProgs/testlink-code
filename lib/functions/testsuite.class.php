@@ -290,15 +290,13 @@ class testsuite extends tlObjectWithAttachments
             $ret['msg'] = 'ok';
             if (! $result) {
                 $ret['msg'] = $this->db->error_msg();
-            } else {
-                if (defined('TL_APICALL')) {
-                    $ctx = [
-                        'id' => $id,
-                        'name' => $name,
-                        'details' => $details
-                    ];
-                    event_signal('EVENT_TEST_SUITE_UPDATE', $ctx);
-                }
+            } elseif (defined('TL_APICALL')) {
+                $ctx = [
+                    'id' => $id,
+                    'name' => $name,
+                    'details' => $details
+                ];
+                event_signal('EVENT_TEST_SUITE_UPDATE', $ctx);
             }
         } else {
             $ret['msg'] = $check['msg'];
@@ -894,7 +892,7 @@ class testsuite extends tlObjectWithAttachments
         $opt = array_merge($opt, (array) $options);
 
         $subtree = $this->get_subtree($id);
-        $only_id = ($details == 'only_id') ? true : false;
+        $only_id = $details == 'only_id';
         $doit = ! is_null($subtree);
         $parentSet = null;
 
@@ -957,7 +955,7 @@ class testsuite extends tlObjectWithAttachments
         $options = null)
     {
         $testcases = null;
-        $only_id = ($details == 'only_id') ? true : false;
+        $only_id = $details == 'only_id';
         $subtree = $this->tree_manager->get_children($id,
             [
                 'testsuite' => 'exclude_me'
@@ -974,11 +972,7 @@ class testsuite extends tlObjectWithAttachments
             $tsuiteName = $tsuite['name'];
             $testcases = [];
             foreach ($subtree as $elem) {
-                if ($only_id) {
-                    $testcases[] = $elem['id'];
-                } else {
-                    $testcases[] = $elem;
-                }
+                $testcases[] = $only_id ? $elem['id'] : $elem;
             }
             $doit = $testcases !== [];
         }
@@ -1501,7 +1495,7 @@ class testsuite extends tlObjectWithAttachments
                 }
             }
         }
-        if ((trim($cf_smarty) != "") && $add_table) {
+        if ((trim($cf_smarty) !== "") && $add_table) {
             return "<table {$table_style}>" . $cf_smarty . "</table>";
         }
         return $cf_smarty;
@@ -2034,7 +2028,7 @@ class testsuite extends tlObjectWithAttachments
             $this->tree_manager->get_subtree_list($rootTestSuiteID,
                 $this->my_node_type));
 
-        if ('' != $tsSubList) {
+        if ('' !== $tsSubList) {
             $tsList .= ',' . $tsSubList;
         }
 

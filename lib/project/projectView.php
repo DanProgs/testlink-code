@@ -46,11 +46,7 @@ function initArgs()
 
     if (! is_null($args->name)) {
         $args->name = trim($args->name);
-        if (strlen($args->name) == 0) {
-            $args->name = null;
-        } else {
-            $args->name = substr($args->name, 0, 100);
-        }
+        $args->name = strlen($args->name) == 0 ? null : substr($args->name, 0, 100);
     }
     return $args;
 }

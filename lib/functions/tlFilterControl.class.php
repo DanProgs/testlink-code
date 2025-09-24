@@ -36,6 +36,14 @@
 abstract class tlFilterControl extends tlObjectWithDB
 {
 
+    private string $filter_mode_button_name;
+
+    /**
+     *
+     * @var mixed
+     */
+    public $user;
+
     /**
      * Label (and name) for the button to enable simple filter mode.
      *
@@ -353,9 +361,9 @@ abstract class tlFilterControl extends tlObjectWithDB
 
         // what filter mode has been chosen?
         $this->args->simple_filter_mode = isset(
-            $_REQUEST[self::SIMPLE_FILTER_BUTTON_LABEL]) ? true : false;
+            $_REQUEST[self::SIMPLE_FILTER_BUTTON_LABEL]);
         $this->args->advanced_filter_mode = isset(
-            $_REQUEST[self::ADVANCED_FILTER_BUTTON_LABEL]) ? true : false;
+            $_REQUEST[self::ADVANCED_FILTER_BUTTON_LABEL]);
 
         $this->args->loadExecDashboard = true;
         if (isset($_REQUEST['loadExecDashboard'])) {
@@ -405,8 +413,8 @@ abstract class tlFilterControl extends tlObjectWithDB
                 $cf_input_name = "{$cf_prefix}{$type}_{$id}";
 
                 // set special size for list inputs
-                if ($verbose_type == 'list' ||
-                    $verbose_type == 'multiselection list') {
+                if ($verbose_type === 'list' ||
+                    $verbose_type === 'multiselection list') {
                     $cfInputOpt['field_size'] = 3;
                 }
 
@@ -418,7 +426,7 @@ abstract class tlFilterControl extends tlObjectWithDB
                     $value = null;
                 } else {
                     // convert the three given values to unixtime format
-                    if ($verbose_type == 'datetime' &&
+                    if ($verbose_type === 'datetime' &&
                         isset($_REQUEST[$cf_input_name . '_input']) &&
                         $_REQUEST[$cf_input_name . '_input'] != '' &&
                         isset($_REQUEST[$cf_input_name . '_hour']) &&
@@ -439,7 +447,7 @@ abstract class tlFilterControl extends tlObjectWithDB
                     }
 
                     // convert the three given values to unixtime format, only set values if different from 0
-                    if ($verbose_type == 'date' &&
+                    if ($verbose_type === 'date' &&
                         isset($_REQUEST[$cf_input_name . '_input']) &&
                         $_REQUEST[$cf_input_name . '_input'] != '') {
                         $date = $_REQUEST[$cf_input_name . '_input'];
@@ -467,7 +475,7 @@ abstract class tlFilterControl extends tlObjectWithDB
                     lang_get($cf['label'], null, LANG_GET_NO_WARNING));
 
                 // don't show textarea inputs here, they are too large for filterpanel
-                if ($verbose_type != 'text area') {
+                if ($verbose_type !== 'text area') {
                     $cf_html_code .= '<tr class="cfRow"><td>' .
                         htmlspecialchars($label) . '</td><td>' .
                         $this->cfield_mgr->string_custom_field_input($cf,

@@ -180,11 +180,7 @@ class tlKeyword extends tlDBObject implements iSerialization,
 
         $clauses = null;
         if (($options & self::TLOBJ_O_SEARCH_BY_ID) !== 0) {
-            if (! is_array($ids)) {
-                $clauses[] = "id = {$ids}";
-            } else {
-                $clauses[] = "id IN (" . implode(",", $ids) . ")";
-            }
+            $clauses[] = is_array($ids) ? "id IN (" . implode(",", $ids) . ")" : "id = {$ids}";
         }
         if ($clauses) {
             $query .= " WHERE " . implode(" AND ", $clauses);
@@ -577,11 +573,7 @@ class tlKeyword extends tlDBObject implements iSerialization,
         }
 
         $sql .= $where;
-        if (is_null($options['accessKey'])) {
-            $rs = $db->get_recordset($sql);
-        } else {
-            $rs = $db->fetchRowsIntoMap($sql, $options['accessKey']);
-        }
+        $rs = is_null($options['accessKey']) ? $db->get_recordset($sql) : $db->fetchRowsIntoMap($sql, $options['accessKey']);
 
         return $rs;
     }

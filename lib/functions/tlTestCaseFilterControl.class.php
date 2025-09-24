@@ -162,6 +162,8 @@
 class tlTestCaseFilterControl extends tlFilterControl
 {
 
+    public $user;
+
     /**
      * Testcase manager object.
      * Initialized not in constructor, only on first use to save resources.
@@ -698,11 +700,7 @@ class tlTestCaseFilterControl extends tlFilterControl
 
         // add the important settings to active filter array
         foreach ($this->all_settings as $name => $info) {
-            if ($this->settings[$name]) {
-                $this->active_filters[$name] = $this->settings[$name]['selected'];
-            } else {
-                $this->active_filters[$name] = null;
-            }
+            $this->active_filters[$name] = $this->settings[$name] ? $this->settings[$name]['selected'] : null;
         }
     }
 
@@ -984,10 +982,13 @@ class tlTestCaseFilterControl extends tlFilterControl
                         $opt_etree->getTreeMethod = 'getLinkedForTesterAssignmentTree';
                         break;
                 }
-                [$tree_menu, $testcases_to_show] = testPlanTree($this->db,
-                    $gui->menuUrl, $this->args->testproject_id,
-                    $this->args->testproject_name, $this->args->testplan_id,
-                    $this->args->testplan_name, $filters, $opt_etree);
+                [
+                    $tree_menu,
+                    $testcases_to_show
+                ] = testPlanTree($this->db, $gui->menuUrl,
+                    $this->args->testproject_id, $this->args->testproject_name,
+                    $this->args->testplan_id, $this->args->testplan_name,
+                    $filters, $opt_etree);
                 $this->set_testcases_to_show($testcases_to_show);
 
                 $root_node = $tree_menu->rootnode;
@@ -1099,7 +1100,6 @@ class tlTestCaseFilterControl extends tlFilterControl
                     // need to be refactored
                     $ignore_inactive_testcases = DO_NOT_FILTER_INACTIVE_TESTCASES;
                     $ignore_active_testcases = DO_NOT_FILTER_INACTIVE_TESTCASES;
-
                     $options = [
                         'forPrinting' => NOT_FOR_PRINTING,
                         'hideTestCases' => HIDE_TESTCASES,
@@ -1108,38 +1108,33 @@ class tlTestCaseFilterControl extends tlFilterControl
                         'ignore_inactive_testcases' => $ignore_inactive_testcases,
                         'ignore_active_testcases' => $ignore_active_testcases
                     ];
-
                     if ($mode == 'mode_test_suite') {
                         $tree_menu = generateTestSpecTree($this->db,
                             $this->args->testproject_id,
                             $this->args->testproject_name, $gui->menuUrl,
                             $filters, $options);
                     }
-
                     $tree_menu = $tree_menu['menu'];
                     $root_node = $tree_menu->rootnode;
                     $children = $tree_menu->menustring ? $tree_menu->menustring : "[]";
-                } else {
-                    if ($mode == 'mode_test_suite') {
-                        $loader = $this->args->basehref .
-                            'lib/ajax/gettprojectnodes.php?' .
-                            "root_node={$this->args->testproject_id}&show_tcases=0" .
-                            "&" .
-                            http_build_query(
-                                [
-                                    'tsuiteHelp' => lang_get(
-                                        'display_tsuite_contents')
-                                ]);
-
-                        $root_node = new stdClass();
-                        $root_node->href = "javascript:EP({$this->args->testproject_id})";
-                        $root_node->id = $this->args->testproject_id;
-                        $root_node->name = $this->args->testproject_name;
-                        $root_node->wrapOpen = '<span title="' .
-                            lang_get('right_pane_test_plan_tree') . '">';
-                        $root_node->wrapClose = '</span>';
-                        $root_node->testlink_node_type = 'testproject';
-                    }
+                } elseif ($mode == 'mode_test_suite') {
+                    $loader = $this->args->basehref .
+                        'lib/ajax/gettprojectnodes.php?' .
+                        "root_node={$this->args->testproject_id}&show_tcases=0" .
+                        "&" .
+                        http_build_query(
+                            [
+                                'tsuiteHelp' => lang_get(
+                                    'display_tsuite_contents')
+                            ]);
+                    $root_node = new stdClass();
+                    $root_node->href = "javascript:EP({$this->args->testproject_id})";
+                    $root_node->id = $this->args->testproject_id;
+                    $root_node->name = $this->args->testproject_name;
+                    $root_node->wrapOpen = '<span title="' .
+                        lang_get('right_pane_test_plan_tree') . '">';
+                    $root_node->wrapClose = '</span>';
+                    $root_node->testlink_node_type = 'testproject';
                 }
                 break;
 
@@ -1165,8 +1160,10 @@ class tlTestCaseFilterControl extends tlFilterControl
                     $opt_etree->exec_tree_counters_logic = $this->args->setting_exec_tree_counters_logic;
                 }
 
-                [$tree_menu, $testcases_to_show] = execTree($this->db,
-                    $gui->menuUrl,
+                [
+                    $tree_menu,
+                    $testcases_to_show
+                ] = execTree($this->db, $gui->menuUrl,
                     [
                         'tproject_id' => $this->args->testproject_id,
                         'tproject_name' => $this->args->testproject_name,
@@ -1876,7 +1873,7 @@ class tlTestCaseFilterControl extends tlFilterControl
         if (is_array($selection)) {
             // get keys of the array as values
             $this->active_filters[$key] = array_flip($selection);
-            foreach ($this->active_filters[$key] as $user_key => $user_value) {
+            foreach (array_keys($this->active_filters[$key]) as $user_key) {
                 $this->active_filters[$key][$user_key] = $user_key;
             }
             $this->active_filters[$unassigned_key] = $this->filters[$key][$unassigned_key];
@@ -2124,7 +2121,7 @@ class tlTestCaseFilterControl extends tlFilterControl
                     $addBlank = true;
                     $vv = explode('|', $cf[$cfID]['possible_values']);
                     foreach ($vv as $value) {
-                        if (trim($value) == '') {
+                        if (trim($value) === '') {
                             $addBlank = false;
                             break;
                         }

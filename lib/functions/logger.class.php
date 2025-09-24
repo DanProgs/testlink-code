@@ -384,6 +384,8 @@ class tlLogger extends tlObject
 class tlTransaction extends tlDBObject
 {
 
+    public $entry_point;
+
     // the attached loggers
     protected $loggers;
 
@@ -855,7 +857,7 @@ class tlEvent extends tlDBObject
 
             $local = new stdClass();
             $local->objectID = is_null($this->objectID) ? 0 : $db->prepare_int(
-                    $this->objectID);
+                $this->objectID);
 
             $str2loop = [
                 'source',
@@ -864,7 +866,7 @@ class tlEvent extends tlDBObject
             ];
             foreach ($str2loop as $tg) {
                 $local->$tg = is_null($this->$tg) ? ('NULL') : "'" .
-                        $db->prepare_string($this->$tg) . "'";
+                    $db->prepare_string($this->$tg) . "'";
             }
 
             $query = "/* {$debugMsg} */ " .
@@ -1119,11 +1121,8 @@ class tlFileLogger extends tlObject
         }
 
         // this event logger supports tlMetaString and normal strings
-        if (is_object($e->description)) {
-            $description = $e->description->localize('en_GB');
-        } else {
-            $description = $e->description;
-        }
+        $description = is_object($e->description) ? $e->description->localize(
+            'en_GB') : $e->description;
 
         // build the logfile entry
         $subjects = [
@@ -1295,11 +1294,8 @@ class tlMailLogger extends tlObjectWithDB
         }
 
         // this event logger supports tlMetaString and normal strings
-        if (is_object($event->description)) {
-            $description = $event->description->localize('en_GB');
-        } else {
-            $description = $event->description;
-        }
+        $description = is_object($event->description) ? $event->description->localize(
+            'en_GB') : $event->description;
 
         // to avoid log writes related to log logic
         $this->disableLogging();
@@ -1432,7 +1428,7 @@ function watchPHPErrors($errno, $errstr, $errfile, $errline)
 /**
  * we need a save way to shutdown the logger, or the current transaction will not be closed
  */
-register_shutdown_function("shutdownLogger");
+register_shutdown_function(shutdownLogger(...));
 
 function shutdownLogger()
 {
@@ -1459,4 +1455,4 @@ if (! is_null(config_get('loggerFilter'))) {
 }
 
 $g_tlLogger->startTransaction();
-set_error_handler("watchPHPErrors");
+set_error_handler(watchPHPErrors(...));

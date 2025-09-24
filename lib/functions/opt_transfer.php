@@ -23,7 +23,7 @@ function opt_transf_cfg(&$opt_cfg, $right_list, $js_ot_name = 'ot')
     $a_right = [];
     $a_left = [];
 
-    if (trim($right_list) == "") {
+    if (trim($right_list) === "") {
         if (! is_null($opt_cfg->to->map)) {
             $a_right = $opt_cfg->to->map;
         }

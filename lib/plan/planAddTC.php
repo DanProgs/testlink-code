@@ -480,7 +480,7 @@ function initArgs(&$tproject_mgr)
     }
 
     // This has effect when 'show full (on right pane)' button is used
-    if ($args->tproject_id == $args->object_id && $args->topLevelTestSuite > 0) {
+    if ($args->tproject_id === $args->object_id && $args->topLevelTestSuite > 0) {
         $args->object_id = $args->topLevelTestSuite;
     }
 

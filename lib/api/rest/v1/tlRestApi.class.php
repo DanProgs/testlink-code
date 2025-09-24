@@ -41,6 +41,8 @@ require_once 'Slim/Slim.php';
 class tlRestApi
 {
 
+    public $app;
+
     public static $version = "1.0";
 
     /**
@@ -125,92 +127,34 @@ class tlRestApi
 
         // test route with anonymous function
         $this->app->get('/who',
-            function (): void {
+            static function (): void {
                 echo __CLASS__ . ' : Get Route /who';
             });
 
-        $this->app->get('/whoAmI', [
-            $this,
-            'authenticate'
-        ], [
-            $this,
-            'whoAmI'
-        ]);
-        $this->app->get('/testprojects', [
-            $this,
-            'authenticate'
-        ], [
-            $this,
-            'getProjects'
-        ]);
+        $this->app->get('/whoAmI', $this->authenticate(...), $this->whoAmI(...));
+        $this->app->get('/testprojects', $this->authenticate(...),
+            $this->getProjects(...));
 
-        $this->app->get('/testprojects/:id', [
-            $this,
-            'authenticate'
-        ], [
-            $this,
-            'getProjects'
-        ]);
-        $this->app->get('/testprojects/:id/testcases',
-            [
-                $this,
-                'authenticate'
-            ], [
-                $this,
-                'getProjectTestCases'
-            ]);
-        $this->app->get('/testprojects/:id/testplans',
-            [
-                $this,
-                'authenticate'
-            ], [
-                $this,
-                'getProjectTestPlans'
-            ]);
+        $this->app->get('/testprojects/:id', $this->authenticate(...),
+            $this->getProjects(...));
+        $this->app->get('/testprojects/:id/testcases', $this->authenticate(...),
+            $this->getProjectTestCases(...));
+        $this->app->get('/testprojects/:id/testplans', $this->authenticate(...),
+            $this->getProjectTestPlans(...));
 
-        $this->app->post('/testprojects', [
-            $this,
-            'authenticate'
-        ], [
-            $this,
-            'createTestProject'
-        ]);
-        $this->app->post('/executions', [
-            $this,
-            'authenticate'
-        ], [
-            $this,
-            'createTestCaseExecution'
-        ]);
-        $this->app->post('/testplans', [
-            $this,
-            'authenticate'
-        ], [
-            $this,
-            'createTestPlan'
-        ]);
-        $this->app->post('/testplans/:id', [
-            $this,
-            'authenticate'
-        ], [
-            $this,
-            'updateTestPlan'
-        ]);
+        $this->app->post('/testprojects', $this->authenticate(...),
+            $this->createTestProject(...));
+        $this->app->post('/executions', $this->authenticate(...),
+            $this->createTestCaseExecution(...));
+        $this->app->post('/testplans', $this->authenticate(...),
+            $this->createTestPlan(...));
+        $this->app->post('/testplans/:id', $this->authenticate(...),
+            $this->updateTestPlan(...));
 
-        $this->app->post('/testsuites', [
-            $this,
-            'authenticate'
-        ], [
-            $this,
-            'createTestSuite'
-        ]);
-        $this->app->post('/testcases', [
-            $this,
-            'authenticate'
-        ], [
-            $this,
-            'createTestCase'
-        ]);
+        $this->app->post('/testsuites', $this->authenticate(...),
+            $this->createTestSuite(...));
+        $this->app->post('/testcases', $this->authenticate(...),
+            $this->createTestCase(...));
 
         $this->db = new database(DB_TYPE);
         $this->db->db->SetFetchMode(ADODB_FETCH_ASSOC);
@@ -437,10 +381,9 @@ class tlRestApi
         try {
             $request = $this->app->request();
             $item = json_decode($request->getBody());
-            $op['id'] = $this->tprojectMgr->create($item,
-                [
-                    'doChecks' => true
-                ]);
+            $op['id'] = $this->tprojectMgr->create($item, [
+                'doChecks' => true
+            ]);
             $op = [
                 'status' => 'ok',
                 'message' => 'ok'

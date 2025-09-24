@@ -156,7 +156,7 @@ if (is_array($aa_tfp[$showFeature])) {
         $rightPane .= intval($_SESSION['testprojectID']);
     }
 
-    if ($showFeature == 'executeTest') {
+    if ($showFeature === 'executeTest') {
         $leftPane .= $args->tplan_id;
     }
 } else {

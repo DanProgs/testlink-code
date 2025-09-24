@@ -40,7 +40,7 @@ if ($assignment_count) {
         // their deletion has been confirmed, so delete them
         $assignment_mgr->delete_by_build_id($args->build_id);
         $gui->message = sprintf(lang_get('unassigned_all_tcs_msg'), $build_name);
-        $gui->refreshTree = $args->refreshTree ? true : false;
+        $gui->refreshTree = (bool) $args->refreshTree;
     } else {
         // there are assignments, but their deletion has still to be confirmed
         $gui->draw_tc_unassign_button = true;
@@ -73,7 +73,7 @@ function initArgs()
     $args->build_id = isset($_REQUEST['build_id']) ? intval(
         $_REQUEST['build_id']) : 0;
     $args->confirmed = isset($_REQUEST['confirmed']) &&
-        $_REQUEST['confirmed'] == 'yes' ? true : false;
+        $_REQUEST['confirmed'] == 'yes';
 
     $args->user_id = $_SESSION['userID'];
     $args->testproject_id = intval($_SESSION['testprojectID']);

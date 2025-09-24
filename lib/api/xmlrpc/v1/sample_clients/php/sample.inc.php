@@ -70,7 +70,7 @@ echo '<h1>Test Link XML-RPC API - PHP Samples </h1><br />';
 
 // substitute your Dev Key Here
 define("DEV_KEY", "dev01");
-if (DEV_KEY == "dev01") {
+if (DEV_KEY === "dev01") {
     echo '<h1>Attention: DEVKEY is still setted to demo value (' . DEV_KEY .
         ')</h1>';
     echo 'Please check if this VALUE is defined for a user on yout DB Installation<b>';

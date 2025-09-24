@@ -82,14 +82,12 @@ if (! isset($_GET['code'])) {
 
             $oap['response_type'] = 'code';
 
-            if ($oauth2Name == 'azuread') {
+            if ($oauth2Name === 'azuread') {
                 if (! is_null($oauthCfg['oauth_domain'])) {
                     $oap['domain_hint'] = $oauthCfg['oauth_domain'];
                 }
-            } else {
-                if ($oauthCfg['oauth_force_single']) {
-                    $oap['prompt'] = 'consent';
-                }
+            } elseif ($oauthCfg['oauth_force_single']) {
+                $oap['prompt'] = 'consent';
             }
 
             // http_build_query — Generate URL-encoded query string

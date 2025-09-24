@@ -87,7 +87,7 @@ function doExport(&$dbHandler, $filename)
         ]);
 
     // To solve issues with MAC OS
-    $tmp = (PHP_OS == 'Darwin') ? config_get('temp_dir') : null;
+    $tmp = (PHP_OS === 'Darwin') ? config_get('temp_dir') : null;
 
     $adodbXML = new ADODB_XML("1.0", "ISO-8859-1", $tmp);
     $sql = " SELECT name,label,type,possible_values,default_value,valid_regexp, " .

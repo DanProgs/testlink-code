@@ -256,7 +256,7 @@ function init_args(&$dbHandler)
         $user = tlUser::getByAPIKey($dbHandler, $args->apikey);
         $args->light = (count($user) == 1) ? 'green' : 'red';
     } else {
-        if (is_null($args->type) || trim($args->type) == '') {
+        if (is_null($args->type) || trim($args->type) === '') {
             throw new Exception("Aborting - Bad type", 1);
         }
 

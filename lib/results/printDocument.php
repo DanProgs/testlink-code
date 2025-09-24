@@ -165,7 +165,7 @@ $topText .= renderFirstPage($doc_info);
 renderTOC($printingOptions); // @TODO check if is really useful
 
 $tocPrefix = null;
-if ($showPlatforms = isset($treeForPlatform[0]) ? false : true) {
+if ($showPlatforms = !isset($treeForPlatform[0])) {
     $tocPrefix = 0;
 }
 
@@ -719,7 +719,7 @@ function buildContentForTestPlanBranch(&$dbHandler, $itemsTree, $ctx, &$docInfo,
 
     $children_tsuites = $tsuite->tree_manager->get_subtree_list($branchRoot,
         $decode['node_descr_id']['testsuite']);
-    if (! is_null($children_tsuites) && trim($children_tsuites) != "") {
+    if (! is_null($children_tsuites) && trim($children_tsuites) !== "") {
         $branch_tsuites = explode(',', $children_tsuites);
     }
     $branch_tsuites[] = $branchRoot;

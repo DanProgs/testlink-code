@@ -47,7 +47,7 @@ function get_home_url($opt)
         if (isset($_SERVER['HTTP_X_FORWARDED_PROTO'])) {
             $t_protocol = $_SERVER['HTTP_X_FORWARDED_PROTO'];
         } elseif (! empty($_SERVER['HTTPS']) &&
-            (strtolower($_SERVER['HTTPS']) != 'off')) {
+            (strtolower($_SERVER['HTTPS']) !== 'off')) {
             $t_protocol = 'https';
         }
         $t_protocol = $opt['force_https'] ? 'https' : $t_protocol;
@@ -55,8 +55,8 @@ function get_home_url($opt)
         // $_SERVER['SERVER_PORT'] is not defined in case of php-cgi.exe
         if (isset($_SERVER['SERVER_PORT'])) {
             $t_port = ':' . $_SERVER['SERVER_PORT'];
-            if ((':80' == $t_port && 'http' == $t_protocol) ||
-                (':443' == $t_port && 'https' == $t_protocol)) {
+            if ((':80' === $t_port && 'http' == $t_protocol) ||
+                (':443' === $t_port && 'https' == $t_protocol)) {
                 $t_port = '';
             }
         } else {
@@ -77,7 +77,7 @@ function get_home_url($opt)
         }
 
         $t_path = dirname($_SERVER['PHP_SELF']);
-        if ('/' == $t_path || '\\' == $t_path) {
+        if ('/' === $t_path || '\\' === $t_path) {
             $t_path = '';
         }
 
@@ -127,7 +127,7 @@ function checkConfiguration()
  */
 function checkInstallStatus()
 {
-    return defined('DB_TYPE') ? true : false;
+    return defined('DB_TYPE');
 }
 
 /**
@@ -177,7 +177,7 @@ function checkForInstallDir()
     $installerDir = TL_ABS_PATH . DIRECTORY_SEPARATOR . "install" .
         DIRECTORY_SEPARATOR;
     clearstatcache();
-    return (is_dir($installerDir)) ? true : false;
+    return is_dir($installerDir);
 }
 
 /**
@@ -229,10 +229,8 @@ function getSecurityNotes(&$db)
         if (! checkForLDAPExtension()) {
             $securityNotes[] = lang_get("ldap_extension_not_loaded");
         }
-    } else {
-        if (checkForAdminDefaultPwd($db)) {
-            $securityNotes[] = lang_get("sec_note_admin_default_pwd");
-        }
+    } elseif (checkForAdminDefaultPwd($db)) {
+        $securityNotes[] = lang_get("sec_note_admin_default_pwd");
     }
 
     if (! checkForBTSConnection()) {
@@ -300,10 +298,7 @@ function getSecurityNotes(&$db)
 function checkForBTSConnection()
 {
     global $g_bugInterface;
-    if ($g_bugInterface && ! $g_bugInterface->connect()) {
-        return false;
-    }
-    return true;
+    return !($g_bugInterface && ! $g_bugInterface->connect());
 }
 
 /**
@@ -315,7 +310,7 @@ function checkForBTSConnection()
 function isMSWindowsServer()
 {
     $osID = strtoupper(substr(PHP_OS, 0, 3));
-    return (strcmp('WIN', $osID) == 0) ? true : false;
+    return strcmp('WIN', $osID) == 0;
 }
 
 /*
@@ -330,7 +325,7 @@ function checkForRepositoryDir($the_dir)
 
     if (is_dir($the_dir)) {
         $ret['msg'] .= lang_get('exists') . ' ';
-        $ret['status_ok'] = (is_writable($the_dir)) ? true : false;
+        $ret['status_ok'] = is_writable($the_dir);
 
         if ($ret['status_ok']) {
             $ret['msg'] .= lang_get('directory_is_writable');
@@ -464,7 +459,7 @@ function checkEmailConfig()
 
     foreach ($key2get as $cfg_key) {
         $cfg_param = config_get($cfg_key);
-        if (trim($cfg_param) == "" || strpos($cfg_param, 'not_configured') > 0) {
+        if (trim($cfg_param) === "" || strpos($cfg_param, 'not_configured') > 0) {
             $msg[$idx ++] = $cfg_key;
         }
     }
@@ -559,7 +554,7 @@ function checkPhpExtensions(&$errCounter)
     $isPHPGTE7 = version_compare(phpversion(), "7.0.0", ">=");
 
     $extid = 'mssql';
-    if (PHP_OS == 'WINNT' || $isPHPGTE7) {
+    if (PHP_OS === 'WINNT' || $isPHPGTE7) {
         // Faced this problem when testing XAMPP 1.7.7 on Windows 7 with MSSQL 2008 Express
         // From PHP MANUAL - reganding mssql_* functions
         // These functions allow you to access MS SQL Server database.
@@ -812,47 +807,37 @@ function check_file_permissions(&$errCounter, $inst_type, $checked_filename,
         if (file_exists($checked_file)) {
             if (is_writable($checked_file)) {
                 $out .= "<td><span class='tab-success'>OK (writable)</span></td></tr>\n";
-            } else {
-                if ($isCritical) {
-                    $out .= "<td><span class='tab-error'>Failed! Please fix the file " .
-                        $checked_file .
-                        " permissions and reload the page.</span></td></tr>";
-                    $errCounter += 1;
-                } else {
-                    $out .= "<td><span class='tab-warning'>Not writable! Please fix the file " .
-                        $checked_file . " permissions.</span></td></tr>";
-                }
-            }
-        } else {
-            if (is_writable($checked_path)) {
-                $out .= "<td><span class='tab-success'>OK</span></td></tr>\n";
-            } else {
-                if ($isCritical) {
-                    $out .= "<td><span class='tab-error'>Directory is not writable! Please fix " .
-                        $checked_path .
-                        " permissions and reload the page.</span></td></tr>";
-                    $errCounter += 1;
-                } else {
-                    $out .= "<td><span class='tab-warning'>Directory is not writable! Please fix " .
-                        $checked_path . " permissions.</span></td></tr>";
-                }
-            }
-        }
-    } else {
-        if (file_exists($checked_file)) {
-            if (! is_writable($checked_file)) {
-                $out .= "<td><span class='tab-success'>OK (read only)</span></td></tr>\n";
-            } else {
-                $out .= "<td><span class='tab-warning'>It's recommended to have read only permission for security reason.</span></td></tr>";
-            }
-        } else {
-            if ($isCritical) {
-                $out .= "<td><span class='tab-error'>Failed! The file is not on place.</span></td></tr>";
+            } elseif ($isCritical) {
+                $out .= "<td><span class='tab-error'>Failed! Please fix the file " .
+                    $checked_file .
+                    " permissions and reload the page.</span></td></tr>";
                 $errCounter += 1;
             } else {
-                $out .= "<td><span class='tab-warning'>The file is not on place.</span></td></tr>";
+                $out .= "<td><span class='tab-warning'>Not writable! Please fix the file " .
+                    $checked_file . " permissions.</span></td></tr>";
             }
+        } elseif (is_writable($checked_path)) {
+            $out .= "<td><span class='tab-success'>OK</span></td></tr>\n";
+        } elseif ($isCritical) {
+            $out .= "<td><span class='tab-error'>Directory is not writable! Please fix " .
+                $checked_path .
+                " permissions and reload the page.</span></td></tr>";
+            $errCounter += 1;
+        } else {
+            $out .= "<td><span class='tab-warning'>Directory is not writable! Please fix " .
+                $checked_path . " permissions.</span></td></tr>";
         }
+    } elseif (file_exists($checked_file)) {
+        if (! is_writable($checked_file)) {
+            $out .= "<td><span class='tab-success'>OK (read only)</span></td></tr>\n";
+        } else {
+            $out .= "<td><span class='tab-warning'>It's recommended to have read only permission for security reason.</span></td></tr>";
+        }
+    } elseif ($isCritical) {
+        $out .= "<td><span class='tab-error'>Failed! The file is not on place.</span></td></tr>";
+        $errCounter += 1;
+    } else {
+        $out .= "<td><span class='tab-warning'>The file is not on place.</span></td></tr>";
     }
 
     return $out;
@@ -894,7 +879,7 @@ function check_dir_permissions(&$errCounter)
         " to understand how to change the defaults.</span>";
 
     $os = strtolower(PHP_OS);
-    if ($os == 'linux') {
+    if ($os === 'linux') {
         $final_msg .= '<br><span class="tab-success">Give a look to SELINUX section in README.md';
     }
     $final_msg .= "</td>";
@@ -1024,7 +1009,7 @@ function reportCheckingPermissions(&$errCounter, $installationType = 'none')
     echo check_dir_permissions($errCounter);
 
     // for $installationType='upgrade' existence of config_db.inc.php is not needed
-    $blockingCheck = $installationType == 'upgrade' ? false : true;
+    $blockingCheck = $installationType != 'upgrade';
     if ($installationType == 'new') {
         echo check_file_permissions($errCounter, $installationType,
             'config_db.inc.php', $blockingCheck);

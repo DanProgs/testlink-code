@@ -14,7 +14,7 @@ require_once 'displayMgr.php';
 $timerOn = microtime(true);
 $tplCfg = templateConfiguration();
 
-testlinkInitPage($db, 'init_project' == 'dont_init_project', true);
+testlinkInitPage($db, 'init_project' === 'dont_init_project', true);
 
 [$tplan_mgr, $args] = initArgsForReports($db);
 if (null == $tplan_mgr) {

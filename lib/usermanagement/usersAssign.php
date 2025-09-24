@@ -236,7 +236,7 @@ function checkRights(&$db, &$user)
         null, - 1);
 
     foreach ($answers as $key => $value) {
-        $answers->$key = $value == "yes" ? true : false;
+        $answers->$key = $value == "yes";
         $result |= $answers->$key;
     }
 

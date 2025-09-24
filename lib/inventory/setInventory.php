@@ -22,7 +22,7 @@ if ($_SESSION['currentUser']->hasRight($db, "project_inventory_management")) {
     $tproj_id = intval($_SESSION['testprojectID']);
     $tlIs = new tlInventory($tproj_id, $db);
     $data['success'] = $tlIs->setInventory($args);
-    $data['success'] = ($data['success'] == 1 /* $tlIs->OK */) ? true : false;
+    $data['success'] = $data['success'] == 1;
     $data['userfeedback'] = $tlIs->getUserFeedback();
     $data['record'] = $tlIs->getCurrentData();
 } else {

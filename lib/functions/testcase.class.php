@@ -419,12 +419,12 @@ class testcase extends tlObjectWithAttachments
 
         $my['options'] = array_merge($my['options'], (array) $options);
 
-        if (trim($summary) != '' && strpos($summary, self::NAME_PHOPEN) !== false &&
+        if (trim($summary) !== '' && strpos($summary, self::NAME_PHOPEN) !== false &&
             strpos($summary, self::NAME_PHCLOSE) !== false) {
             $name = $this->buildTCName($name, $summary);
         }
 
-        if (trim($preconditions) != '' &&
+        if (trim($preconditions) !== '' &&
             strpos($preconditions, self::NAME_PHOPEN) !== false &&
             strpos($preconditions, self::NAME_PHCLOSE) !== false) {
             $name = $this->buildTCName($name, $preconditions);
@@ -470,7 +470,7 @@ class testcase extends tlObjectWithAttachments
             $ix->estimatedExecDuration = $my['options']['estimatedExecDuration'];
 
             $op = $this->createVersion($ix);
-            if (trim($keywords_id) != "") {
+            if (trim($keywords_id) !== "") {
                 $a_keywords = explode(",", $keywords_id);
                 $auditContext = [
                     'on' => self::AUDIT_ON,
@@ -810,7 +810,7 @@ class testcase extends tlObjectWithAttachments
 
         if (! is_null($item->estimatedExecDuration)) {
             $v = trim($item->estimatedExecDuration);
-            if ($v != '') {
+            if ($v !== '') {
                 $sql .= ", estimated_exec_duration";
                 $sqlValues .= "," . floatval($v);
             }
@@ -1391,7 +1391,7 @@ class testcase extends tlObjectWithAttachments
         tLog(
             "TC UPDATE ID=({$id}): exec_type={$execution_type} importance={$importance}");
 
-        if (trim($summary) != '' && strpos($summary, self::NAME_PHOPEN) !== false &&
+        if (trim($summary) !== '' && strpos($summary, self::NAME_PHOPEN) !== false &&
             strpos($summary, self::NAME_PHCLOSE) !== false) {
             $name = $this->buildTCName($name, $summary);
         }
@@ -1479,7 +1479,7 @@ class testcase extends tlObjectWithAttachments
                 $dummy .= ", estimated_exec_duration=";
                 $v = trim($attrib['estimatedExecDuration']);
 
-                $dummy .= ($v == '') ? "NULL" : floatval($v);
+                $dummy .= ($v === '') ? "NULL" : floatval($v);
             }
 
             $dummy .= " WHERE id = " . $this->db->prepare_int($tcversion_id);
@@ -1547,7 +1547,7 @@ class testcase extends tlObjectWithAttachments
         }
 
         $items['requested'] = [];
-        if (trim($keywords_id) != "") {
+        if (trim($keywords_id) !== "") {
             $a_keywords = explode(",", trim($keywords_id));
             $sql = " SELECT id,keyword " . " FROM {$this->tables['keywords']} " .
                 " WHERE id IN (" . implode(',', $a_keywords) . ")";
@@ -1613,7 +1613,7 @@ class testcase extends tlObjectWithAttachments
                 ]);
 
             $status = 'linked_and_executed';
-            if (count($linked_tcversions) == count($linked_not_exec)) {
+            if (count($linked_tcversions) === count($linked_not_exec)) {
                 $status = 'linked_but_not_executed';
             }
         }
@@ -1724,9 +1724,8 @@ class testcase extends tlObjectWithAttachments
         $platform_id = $my['filters']['platform_id'];
 
         $active_filter = '';
-        if ($active_status != 'ALL') {
-            $active_filter = ' AND tcversions.active=' . $active_status ==
-                'ACTIVE' ? 1 : 0;
+        if ($active_status !== 'ALL') {
+            $active_filter = ' AND tcversions.active=' . $active_status === 'ACTIVE' ? 1 : 0;
         }
 
         $fields2get = 'tc_external_id,version,status,importance,active, is_open,execution_type,';
@@ -1965,7 +1964,7 @@ class testcase extends tlObjectWithAttachments
 
         if ($version_id == self::ALL_VERSIONS) {
 
-            if ($step_list != '') {
+            if ($step_list !== '') {
                 $sql[] = "/* {$debugMsg} */
                   DELETE FROM {$this->tables['execution_tcsteps_wip']}
                   WHERE tcstep_id IN ({$step_list})";
@@ -2040,7 +2039,7 @@ class testcase extends tlObjectWithAttachments
             // - get the tcversion_number (VNUM) for the tcversion_id (TARGET_TCVID)
             $myVersionNum = $this->getVersionNumber($version_id);
 
-            if ($step_list != '') {
+            if ($step_list !== '') {
 
                 $sql[] = "/* {$debugMsg} */
                   DELETE FROM {$this->tables['execution_tcsteps_wip']}
@@ -2821,17 +2820,15 @@ class testcase extends tlObjectWithAttachments
                 // when tcase ID has not been provided this can not be used
                 // will not do any check => leave it CRASH
                 $where_clause .= " AND TCV.version = {$my['filters']['version_number']} ";
-            } else {
-                if ($version_id != self::ALL_VERSIONS &&
-                    $version_id != self::LATEST_VERSION) {
-                    $where_clause .= $versionSQLOp . " TCV.id = {$version_id} ";
-                }
+            } elseif ($version_id != self::ALL_VERSIONS &&
+                $version_id != self::LATEST_VERSION) {
+                $where_clause .= $versionSQLOp . " TCV.id = {$version_id} ";
             }
 
             $active_status = strtoupper($my['filters']['active_status']);
-            if ($active_status != 'ALL') {
+            if ($active_status !== 'ALL') {
                 $active_filter = ' AND TCV.active=' .
-                    ($active_status == 'ACTIVE' ? 1 : 0) . ' ';
+                    ($active_status === 'ACTIVE' ? 1 : 0) . ' ';
             }
         }
 
@@ -3497,11 +3494,7 @@ class testcase extends tlObjectWithAttachments
         $keyword_filter = '';
         $subquery = '';
 
-        if (is_array($id)) {
-            $testcase_filter = " AND testcase_id IN (" . implode(',', $id) . ")";
-        } else {
-            $testcase_filter = " AND testcase_id = {$id} ";
-        }
+        $testcase_filter = is_array($id) ? " AND testcase_id IN (" . implode(',', $id) . ")" : " AND testcase_id = {$id} ";
 
         if (is_array($keyword_id)) {
             $keyword_filter = " AND keyword_id IN (" . implode(',', $keyword_id) .
@@ -3991,10 +3984,8 @@ class testcase extends tlObjectWithAttachments
         if (is_array($version_id)) {
             $versionid_list = implode(",", $version_id);
             $where_clause .= " AND tcversions.id IN ({$versionid_list}) ";
-        } else {
-            if ($version_id != self::ALL_VERSIONS) {
-                $where_clause .= " AND tcversions.id = {$version_id} ";
-            }
+        } elseif ($version_id != self::ALL_VERSIONS) {
+            $where_clause .= " AND tcversions.id = {$version_id} ";
         }
 
         if (! is_null($my['options']['exec_to_exclude'])) {
@@ -4137,12 +4128,10 @@ class testcase extends tlObjectWithAttachments
                 " AND NHA.id IN ({$versionid_list}) ";
             $where_clause_2 = $where_clause .
                 " AND tcversions.id IN ({$versionid_list}) ";
-        } else {
-            if ($version_id != self::ALL_VERSIONS) {
-                $where_clause_1 = $where_clause . " AND NHA.id = {$version_id} ";
-                $where_clause_2 = $where_clause .
-                    " AND tcversions.id = {$version_id} ";
-            }
+        } elseif ($version_id != self::ALL_VERSIONS) {
+            $where_clause_1 = $where_clause . " AND NHA.id = {$version_id} ";
+            $where_clause_2 = $where_clause .
+                " AND tcversions.id = {$version_id} ";
         }
 
         // This logic (is mine - franciscom) must be detailed better!!!!!
@@ -4170,8 +4159,8 @@ class testcase extends tlObjectWithAttachments
         // b) one record for each tcversion_id,build
 
         // 20101212 - franciscom - may be not the best logic but ...
-        $where_clause_1 = ($where_clause_1 == '') ? $where_clause : $where_clause_1;
-        $where_clause_2 = ($where_clause_2 == '') ? $where_clause : $where_clause_2;
+        $where_clause_1 = ($where_clause_1 === '') ? $where_clause : $where_clause_1;
+        $where_clause_2 = ($where_clause_2 === '') ? $where_clause : $where_clause_2;
 
         $sql = "/* {$debugMsg} */ " .
             " SELECT COALESCE(MAX(e.id),0) AS execution_id {$add_fields}" .
@@ -4185,12 +4174,8 @@ class testcase extends tlObjectWithAttachments
         $and_exec_id = '';
         if (! empty($recordset)) {
             $the_list = implode(",", array_keys($recordset));
-            if ($the_list != '') {
-                if (count($recordset) > 1) {
-                    $and_exec_id = " AND e.id IN ({$the_list}) ";
-                } else {
-                    $and_exec_id = " AND e.id = {$the_list} ";
-                }
+            if ($the_list !== '') {
+                $and_exec_id = count($recordset) > 1 ? " AND e.id IN ({$the_list}) " : " AND e.id = {$the_list} ";
             }
         }
 
@@ -4885,11 +4870,7 @@ class testcase extends tlObjectWithAttachments
         if (! is_null($itemSet)) {
             $loop2do = count($itemSet);
             for ($idx = 0; $idx < $loop2do; $idx ++) {
-                if (isset($mappings[$itemSet[$idx]['id']])) {
-                    $items[$idx] = $mappings[$itemSet[$idx]['id']];
-                } else {
-                    $items[$idx] = $itemSet[$idx]['id'];
-                }
+                $items[$idx] = isset($mappings[$itemSet[$idx]['id']]) ? $mappings[$itemSet[$idx]['id']] : $itemSet[$idx]['id'];
             }
             $req_mgr->assign_to_tcase($items, $to, $userID);
         }
@@ -5323,7 +5304,7 @@ class testcase extends tlObjectWithAttachments
                 }
             }
 
-            if ((trim($cf_smarty) != "") && $add_table) {
+            if ((trim($cf_smarty) !== "") && $add_table) {
                 $cf_smarty = "<table {$table_style}>" . $cf_smarty . "</table>";
             }
         }
@@ -5832,7 +5813,7 @@ class testcase extends tlObjectWithAttachments
 
             $xrayScan = null;
             foreach ($scan as $fn => $vf) {
-                if (trim($vf) != '' && strpos($vf, self::NAME_PHOPEN) !== false &&
+                if (trim($vf) !== '' && strpos($vf, self::NAME_PHOPEN) !== false &&
                     strpos($vf, self::NAME_PHCLOSE) !== false) {
                     $xrayScan[$fn] = $vf;
                 }
@@ -6419,7 +6400,7 @@ class testcase extends tlObjectWithAttachments
         foreach ($filterKeys as $fieldName) {
             $filterBy[$fieldName] = ''; // default -> no filter
 
-            if ($fieldName == 'platform_id' && $my['filters'][$fieldName] == - 1) {
+            if ($fieldName === 'platform_id' && $my['filters'][$fieldName] == - 1) {
                 continue;
             }
 
@@ -6444,10 +6425,8 @@ class testcase extends tlObjectWithAttachments
                 }
                 $where_clause .= ' AND TCV.id IN (' . implode(",", $version_id) .
                     ') ';
-            } else {
-                if ($version_id != self::ALL_VERSIONS) {
-                    $where_clause .= ' AND TCV.id = ' . intval($version_id);
-                }
+            } elseif ($version_id != self::ALL_VERSIONS) {
+                $where_clause .= ' AND TCV.id = ' . intval($version_id);
             }
         }
 
@@ -6867,7 +6846,7 @@ class testcase extends tlObjectWithAttachments
 
         $sql = "/* {$debugMsg} */ " . " UPDATE {$this->tables['tcversions']} " .
             " SET estimated_exec_duration=" .
-            ((is_null($safe) || $safe == '') ? 'NULL' : $safe) . " WHERE id = " .
+            ((is_null($safe) || $safe === '') ? 'NULL' : $safe) . " WHERE id = " .
             $this->db->prepare_int($tcversionID);
         $this->db->exec_query($sql);
         return [
@@ -7164,11 +7143,7 @@ class testcase extends tlObjectWithAttachments
         ];
         $safeID = [];
         foreach ($key2check as $key) {
-            if (property_exists($context, $key)) {
-                $safeID[$key] = intval($context->$key);
-            } else {
-                $safeID[$key] = - 1;
-            }
+            $safeID[$key] = property_exists($context, $key) ? intval($context->$key) : - 1;
         }
 
         if ($safeID['id'] <= 0 && $safeID['tcversion_id'] > 0) {
@@ -7654,7 +7629,7 @@ class testcase extends tlObjectWithAttachments
             if (isset($fieldsValues[$fkey])) {
                 $dummy[$ddx] = $fkey . " = ";
                 if (! is_null($fmethod)) {
-                    $sep = ($fmethod == 'prepare_string') ? "'" : "";
+                    $sep = ($fmethod === 'prepare_string') ? "'" : "";
                     $dummy[$ddx] .= $sep .
                         $this->db->$fmethod($fieldsValues[$fkey]) . $sep;
                 } else {
@@ -7993,7 +7968,7 @@ class testcase extends tlObjectWithAttachments
         $debugMsg = "/* {$this->debugMsg}" . __FUNCTION__ . ' */';
 
         $tcaseSet = (array) $id;
-        array_walk($tcaseSet, 'intval');
+        array_walk($tcaseSet, intval(...));
 
         // @since 1.9.18
         // Relations on test case versions
@@ -8820,7 +8795,7 @@ class testcase extends tlObjectWithAttachments
         $debugMsg = "/* {$this->debugMsg}" . __FUNCTION__ . ' */ ';
 
         $target = (array) $id;
-        array_walk($target, 'intval');
+        array_walk($target, intval(...));
 
         $sql = $debugMsg . " SELECT id AS tcversion_id " .
             " FROM {$this->tables['nodes_hierarchy']} NHTCV " .
@@ -9881,7 +9856,7 @@ class testcase extends tlObjectWithAttachments
         $adodbXML->setRootTagName('platforms');
         $adodbXML->setRowTagName('platform');
         return $adodbXML->ConvertToXMLString($this->db->db, $sql,
-            ('write_header' == 'no'));
+            ('write_header' === 'no'));
     }
 
     /**

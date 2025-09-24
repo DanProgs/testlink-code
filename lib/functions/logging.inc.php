@@ -125,11 +125,7 @@ function tlTimingCurrent($name = 'default')
     if (! isset($tlTimingStart[$name])) {
         return 0;
     }
-    if (! isset($tlTimingStop[$name])) {
-        $stopTime = explode(' ', microtime());
-    } else {
-        $stopTime = $tlTimingStop[$name];
-    }
+    $stopTime = isset($tlTimingStop[$name]) ? $tlTimingStop[$name] : explode(' ', microtime());
     // do the big numbers first so the small ones aren't lost
     $current = $stopTime[1] - $tlTimingStart[$name][1];
     $current += $stopTime[0] - $tlTimingStart[$name][0];

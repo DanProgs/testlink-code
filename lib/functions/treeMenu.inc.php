@@ -607,7 +607,7 @@ function prepareNode(&$db, &$node, &$map_node_tccount, $attr_map = null,
             }
         }
 
-        foreach ($tcase_counters as $key => $value) {
+        foreach (array_keys($tcase_counters) as $key) {
             $tcase_counters[$key] = 0;
         }
 
@@ -643,7 +643,7 @@ function prepareNode(&$db, &$node, &$map_node_tccount, $attr_map = null,
                 $tcase_counters[$key] += $counters_map[$key];
             }
         }
-        foreach ($tcase_counters as $key => $value) {
+        foreach (array_keys($tcase_counters) as $key) {
             $node[$key] = $tcase_counters[$key];
         }
 
@@ -1147,7 +1147,7 @@ function filter_by_cf_values(&$db, &$tcase_tree, &$cf_hash, $node_types)
              * so that each custom field only is contained ONCE in the result set.
              */
 
-            $passed = (count($rows) == count($cf_hash)) ? true : false;
+            $passed = count($rows) === count($cf_hash);
             // now delete node if no match was found
             if (! $passed) {
                 unset($tcase_tree[$key]);
@@ -1889,7 +1889,7 @@ function prepare_reqspec_treenode(&$db, $level, &$node, &$filtered_map,
     $child_req_count = 0;
     if (isset($node['childNodes']) && is_array($node['childNodes'])) {
         // node has childs, must be a specification (or testproject)
-        foreach ($node['childNodes'] as $key => $childnode) {
+        foreach (array_keys($node['childNodes']) as $key) {
             $current_childnode = &$node['childNodes'][$key];
             $current_childnode = prepare_reqspec_treenode($db, $level + 1,
                 $current_childnode, $filtered_map, $map_id_nodetype,
@@ -1971,7 +1971,7 @@ function prepare_reqspeccoverage_treenode(&$db, $level, &$node, &$filtered_map,
 
     if (isset($node['childNodes']) && is_array($node['childNodes'])) {
         // node has childs, must be a specification (or testproject)
-        foreach ($node['childNodes'] as $key => $childnode) {
+        foreach (array_keys($node['childNodes']) as $key) {
             $current_childnode = &$node['childNodes'][$key];
             $current_childnode = prepare_reqspeccoverage_treenode($db,
                 $level + 1, $current_childnode, $filtered_map, $map_id_nodetype,
@@ -2100,7 +2100,7 @@ function render_reqspec_treenode(&$db, &$node, &$filtered_map, &$map_id_nodetype
             }
             // BUGID 3765: load doc ID with if this req spec has no direct req child nodes.
             // Reason: in these cases we do not have a parent doc ID in $filtered_map
-            if ($doc_id == '') {
+            if ($doc_id === '') {
                 static $req_spec_mgr = null;
                 if (! $req_spec_mgr) {
                     $req_spec_mgr = new requirement_spec_mgr($db);
@@ -2195,7 +2195,7 @@ function render_reqspeccoverage_treenode(&$db, &$node, &$filtered_map,
             }
             // BUGID 3765: load doc ID with if this req spec has no direct req child nodes.
             // Reason: in these cases we do not have a parent doc ID in $filtered_map
-            if ($doc_id == '') {
+            if ($doc_id === '') {
                 static $req_spec_mgr = null;
                 if (! $req_spec_mgr) {
                     $req_spec_mgr = new requirement_spec_mgr($db);
@@ -2497,7 +2497,7 @@ function getTestSpecTree($tprojectID, &$tprojectMgr, &$fObj)
 
     if (isset($fObj['filter_testcase_name']) &&
         ! is_null($fObj['filter_testcase_name']) &&
-        ($dummy = trim($fObj['filter_testcase_name'])) != '') {
+        $dummy = trim($fObj['filter_testcase_name']) !== '') {
         $flt['testcase_name'] = $dummy;
     }
 

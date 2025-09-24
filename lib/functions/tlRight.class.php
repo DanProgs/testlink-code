@@ -136,11 +136,7 @@ class tlRight extends tlDBObject implements iDBBulkReadSerialization
 
         $clauses = null;
         if (($options & self::TLOBJ_O_SEARCH_BY_ID) !== 0) {
-            if (! is_array($ids)) {
-                $clauses[] = "id = {$ids}";
-            } else {
-                $clauses[] = "id IN (" . implode(",", $ids) . ")";
-            }
+            $clauses[] = is_array($ids) ? "id IN (" . implode(",", $ids) . ")" : "id = {$ids}";
         }
 
         if ($clauses) {
