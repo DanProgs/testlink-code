@@ -751,12 +751,8 @@ class tlTestPlanMetrics extends testplan
     {
         $debugMsg = 'Class:' . __CLASS__ . ' - Method: ' . __FUNCTION__;
         $safe_id = intval($id);
-        [
-            ,
-            ,
-            $union,
-            $platformSet
-        ] = $this->helperBuildSQLExecCounters($id, $filters, $opt);
+        list (, , , $union, $platformSet) = $this->helperBuildSQLExecCounters(
+            $id, $filters, $opt);
 
         $add2key = '';
         $addOnWhere = '';
@@ -1005,11 +1001,8 @@ class tlTestPlanMetrics extends testplan
         $opt = null)
     {
         $debugMsg = 'Class:' . __CLASS__ . ' - Method: ' . __FUNCTION__;
-        [
-            $builds,
-            ,
-            $union
-        ] = $this->helperBuildSQLExecCounters($id, $filters, $opt);
+        list (, $builds, , $union,) = $this->helperBuildSQLExecCounters($id,
+            $filters, $opt);
 
         if (is_null($builds) || empty($builds)) {
             return null; // >>---> Bye!
@@ -1056,10 +1049,8 @@ class tlTestPlanMetrics extends testplan
     {
         $debugMsg = 'Class:' . __CLASS__ . ' - Method: ' . __FUNCTION__;
         $safe_id = intval($id);
-        [
-            $builds,
-            $sqlStm
-        ] = $this->helperGetExecCounters($safe_id, $filters, $opt);
+        list (, $builds, $sqlStm) = $this->helperGetExecCounters($safe_id,
+            $filters, $opt);
 
         // Last Executions By Build and Platform (LEBBP)
         // Please remember that Platforms (when exists) has Multiplier effect on test cases
@@ -2312,10 +2303,7 @@ class tlTestPlanMetrics extends testplan
         $opt = null)
     {
         $debugMsg = 'Class:' . __CLASS__ . ' - Method: ' . __FUNCTION__;
-        [
-            $my,
-            $builds
-        ] = $this->helperGetExecCounters($id, $filters, $opt);
+        list ($my, $builds,) = $this->helperGetExecCounters($id, $filters, $opt);
 
         // particular options
         $my['opt'] = array_merge([
@@ -2433,13 +2421,8 @@ class tlTestPlanMetrics extends testplan
         $filters = null, $opt = null)
     {
         $debugMsg = 'Class:' . __CLASS__ . ' - Method: ' . __FUNCTION__;
-        [
-            $my,
-            $builds
-        ] = $this->helperGetExecCounters($id, $filters, $opt);
-        [
-            $buildsCfg
-        ] = $this->helperGetHits($id, null, $buildSet,
+        list ($my, $builds,) = $this->helperGetExecCounters($id, $filters, $opt);
+        list (, $buildsCfg,) = $this->helperGetHits($id, null, $buildSet,
             [
                 'ignorePlatform' => true
             ]);
@@ -2744,12 +2727,8 @@ class tlTestPlanMetrics extends testplan
 
         $my['opt'] = array_merge($my['opt'], (array) $opt);
 
-        [
-            $my,
-            ,
-            ,
-            $union
-        ] = $this->helperBuildSQLTestSuiteExecCounters($id, $filters, $my['opt']);
+        list ($my, , , $union) = $this->helperBuildSQLTestSuiteExecCounters($id,
+            $filters, $my['opt']);
 
         $sql = " /* {$debugMsg} UNION WITH ALL CLAUSE */ " .
             " {$union['exec']} UNION ALL {$union['not_run']} ";
