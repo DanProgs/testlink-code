@@ -12,5 +12,5 @@
  *
  *
  */
-require_once "xmlrpc.class.php";
+require_once 'xmlrpc.class.php';
 $XMLRPCServer = new TestlinkXMLRPCServer();
